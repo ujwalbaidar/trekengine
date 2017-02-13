@@ -5,12 +5,13 @@ let UserSchema = new mongoose.Schema({
 	middleName: String,
 	lastName: String,
 	role: Number,
+	email: String,
+	password: String,
 	loginAccess:[{
 		method: String,
 		accessToken: String,
 		refreshToken: String,
 		expireTime: Number,
-		email: String
 	}],
 	package: {
 		packageId: String,
