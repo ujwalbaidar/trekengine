@@ -1,0 +1,29 @@
+{
+  "name": "trek-engine",
+  "version": "1.0.0",
+  "description": "saas product for trekkings",
+  "main": "app.js",
+  "scripts": {
+    "start-dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/trek-engine/trek-engine.git"
+  },
+  "author": "ujwal baidar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/trek-engine/trek-engine/issues"
+  },
+  "homepage": "https://gitlab.com/trek-engine/trek-engine#README",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "ejs": "^2.5.5",
+    "express": "^4.14.1",
+    "google-auth-library": "^0.10.0",
+    "mongodb": "^2.2.22",
+    "mongoose": "^4.8.2",
+    "opn": "^4.0.2"
+  }
+}
