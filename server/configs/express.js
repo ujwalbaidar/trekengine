@@ -8,8 +8,8 @@ module.exports = function(app){
         extended: true
     }));
     app.use(bodyParser.json());
-    app.use(express.static(rootPath + '/public'));
-    app.set('views', rootPath + 'public');
+    app.use(express.static(rootPath + '/client'));
+    app.set('views', rootPath + 'client');
     app.engine('html', require('ejs').renderFile);
     app.set('view engine', 'html');
 }
