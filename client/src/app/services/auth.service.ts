@@ -7,4 +7,12 @@ export class AuthService {
 	getCookies(): Promise<Object> {
 		return Promise.resolve(this._cookieService.getAll());
 	}
+
+	setCookies(token:string){
+		this._cookieService.put('authToken', token);
+	}
+
+	clearCookies(){
+		this._cookieService.removeAll();
+	}
 }
