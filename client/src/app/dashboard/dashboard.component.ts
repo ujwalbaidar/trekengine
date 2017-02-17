@@ -13,6 +13,5 @@ export class DashboardComponent implements OnInit {
 	logout() {
 		this.authService.clearCookies();
 		this._route.navigate(['/login']);
-
 	}
 }
