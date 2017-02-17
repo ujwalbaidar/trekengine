@@ -8,5 +8,5 @@ router.get('/findAll', userController.findAllUser);
 router.get('/findOne', userController.fineOneUser);
 router.put('/update', userController.updateUser);
 router.delete('/delete/:userId', userController.deleteUser);
-
+router.get('/seedUser', userController.seedUser);
 module.exports = router;
