@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 				.subscribe(
 					loginUser=>{
 						this.authService.setCookies(loginUser.token);
-						this._route.navigate(['/dashboard']);
+						this._route.navigate(['/']);
 					}, error=>{
 						if(error.errBody.data.errorCode && error.errBody.data.errorCode == 'emailErr'){
 							this.errObj = {errType:'email', message: error.errBody.message};
