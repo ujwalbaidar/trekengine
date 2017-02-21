@@ -42,6 +42,24 @@ export class TripDetailsDialogComponent {
 	}
 
 	submitTrekDetails() {
-		this.movementServie.submitTripDetails(this.trip);
+		this.movementServie.submitTripDetails(this.trip)
+		.subscribe(
+					tripsDetail=>{
+						debugger;
+						// this.submitted = false;
+						// this.successMessage = "Registered Successfully!";
+						// setTimeout(()=>{ 
+						// 	this._route.navigate(['/login']);
+						// }, 3000);
+					}, error=>{
+						// if(error.errBody.data && error.errBody.data.code === 11000){
+						// 	this.errMessage = "Email Already Exists!";
+						// }else{
+						// 	this.errMessage = "Failed to Register User!";
+						// }
+						// setTimeout(()=>{ 
+						// 	this.errMessage = "";
+						// }, 3000);
+					});
 	}
 }
