@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'angular2-cookie/core';
 import { Http, Response }          from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Headers, RequestOptions } from '@angular/http';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -12,7 +13,9 @@ export class MovementsService {
 	constructor(public _cookieService:CookieService, private http: Http){}
 	
 	submitTripDetails(trip: Object){
-		return this.http.post('/api/movements/trip/create', trip)
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/movements/trips/create', trip, options)
             .map(this.extractData)
             .catch(this.handleError);
 	}
