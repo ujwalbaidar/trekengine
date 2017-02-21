@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { Trip } from './trip-details.model';
+import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { MovementsService } from '../../services/index';
 
 @Component({
     selector: 'trip-details',
@@ -31,6 +33,15 @@ export class TripDetailsComponent implements OnInit {
 })
 export class TripDetailsDialogComponent {
 	trip: Trip = <Trip>{};
-	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>) {
+
+	private myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd.mm.yyyy',
+    };
+
+	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService) {
+	}
+
+	submitTrekDetails() {
+		this.movementServie.submitTripDetails(this.trip);
 	}
 }

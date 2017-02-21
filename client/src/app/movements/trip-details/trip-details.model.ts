@@ -1,6 +1,6 @@
 export class Trip {
 	name: string;
-  	departureDate: string;
-  	arrivalDate: string;
+  	departureDate: any;
+  	arrivalDate: any;
   	guide: string;
 }

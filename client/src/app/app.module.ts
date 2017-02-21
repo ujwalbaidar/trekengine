@@ -4,9 +4,10 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
 // import 'hammerjs';
 import { MaterialModule } from '@angular/material';
 import { FormsModule }   from '@angular/forms';
+import { MyDatePickerModule } from 'mydatepicker';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AuthService, UserService } from './services/index';
+import { AuthService, UserService, MovementsService } from './services/index';
 
 import { AppComponent }  from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -19,6 +20,7 @@ import { MovementComponent, TripDetailsComponent, TripDetailsDialogComponent } f
 	imports: [ 
 		BrowserModule, 
 		MaterialModule, 
+    MyDatePickerModule,
 		AppRoutingModule,
 		FormsModule 
 	],
@@ -32,7 +34,7 @@ import { MovementComponent, TripDetailsComponent, TripDetailsDialogComponent } f
 	],
   	providers: [ 
   		CookieService,
-  		AuthService, UserService
+  		AuthService, UserService, MovementsService
   	],
   	bootstrap:    [ AppComponent ],
     entryComponents: [ TripDetailsDialogComponent ]
