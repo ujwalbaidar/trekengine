@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -11,19 +12,52 @@ import { MovementsService } from '../../services/index';
 })
 export class TripDetailsComponent implements OnInit {
 	selectedOption: string;
-	constructor(private _route: Router, public dialog: MdDialog){}
-	ngOnInit(){}
+	trip: Trip = <Trip>{};
+	trips:any;
+	constructor(private _route: Router, public dialog: MdDialog, public movementServie: MovementsService, public location: Location){}
+	ngOnInit(){
+		this.getTrips();
+	}
 
-	openAddTripModal(){
-		let dialogRef = this.dialog.open(TripDetailsDialogComponent, {
+	getTrips() {
+		this.movementServie.getTripDetails()
+		.subscribe(tripsDetail=>{
+				this.trips = tripsDetail;
+			}, error=>{
+				// 
+			});
+	}
+
+	deleteTrip(deleteId: string, index: number) {
+		this.movementServie.deleteTrip(deleteId)
+		.subscribe(deleteStatus=>{
+			this.trips.splice(index,1);
+		}, error => {
+			alert('failed to delete record')
+		})
+	}
+
+	openAddTripModal(editData:Trip=<Trip>{}){
+		let dialogOptions = {
 			height: '600px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
-		});
+		};
+
+		if(JSON.stringify(editData) !== '{}'){
+			dialogOptions["data"] = editData;
+		};
+
+		let dialogRef = this.dialog.open(TripDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
       		this.selectedOption = result;
+      		this.getTrips();
     	});
+	}
+
+	getDate(dateObj:any){
+		return new Date(dateObj.year, dateObj.month, dateObj.day);
 	}
 }
 
@@ -33,33 +67,46 @@ export class TripDetailsComponent implements OnInit {
 })
 export class TripDetailsDialogComponent {
 	trip: Trip = <Trip>{};
-
+	public departure_date: Object;
+	public arrival_date: Object;
+	public title: string = 'Add Trip Details';
 	private myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd.mm.yyyy',
+        dateFormat: 'dd-mm-yyyy',
     };
 
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService) {
+		if(this.dialogRef.config.data){
+			this.trip = Object.assign({}, this.dialogRef.config.data);
+			this.title = 'Edit Trip Details';
+		}
+	}
+	
+
+	submitTrekDetails(tripForm:any) {
+		if(tripForm.valid){
+			if(this.dialogRef.config.data){
+				this.updateTrekDetails();
+			}else{
+				this.saveTrekDetails();
+			}
+		}
 	}
 
-	submitTrekDetails() {
+	saveTrekDetails(){
 		this.movementServie.submitTripDetails(this.trip)
-		.subscribe(
-					tripsDetail=>{
-						debugger;
-						// this.submitted = false;
-						// this.successMessage = "Registered Successfully!";
-						// setTimeout(()=>{ 
-						// 	this._route.navigate(['/login']);
-						// }, 3000);
-					}, error=>{
-						// if(error.errBody.data && error.errBody.data.code === 11000){
-						// 	this.errMessage = "Email Already Exists!";
-						// }else{
-						// 	this.errMessage = "Failed to Register User!";
-						// }
-						// setTimeout(()=>{ 
-						// 	this.errMessage = "";
-						// }, 3000);
-					});
+			.subscribe(tripsDetail=>{
+				this.dialogRef.close(tripsDetail);
+			}, error=>{
+				this.dialogRef.close(error);
+			});
+	}
+
+	updateTrekDetails() {
+		this.movementServie.updateTrekDetails(this.trip)
+			.subscribe(tripsDetail=>{
+				this.dialogRef.close(tripsDetail);
+			}, error=>{
+				this.dialogRef.close(error);
+			});
 	}
 }
