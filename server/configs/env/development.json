@@ -16,6 +16,10 @@
 		"secretKey":"c0d3w1ng!!",
 		"expireTime": "1d",
 		"algorithm": "HS256"
+	},
+	"loginPassword": {
+		"secretKey":"c0d3w1ng",
+		"algorithm":"sha512"
 	}
 }
 

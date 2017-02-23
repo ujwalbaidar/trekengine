@@ -19,6 +19,7 @@ module.exports = function(app){
 			if(err){
 				res.status(401).send({success:false, message: 'Login is Required!'});
 			}else{
+				req.headers.userId = decoded.userId;
 				next();
 			}
 		});
