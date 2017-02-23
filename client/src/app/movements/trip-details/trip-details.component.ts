@@ -93,12 +93,15 @@ export class TripDetailsDialogComponent {
 	}
 
 	saveTrekDetails(){
-		this.movementServie.submitTripDetails(this.trip)
+		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
 				this.dialogRef.close(error);
-			});
+			}, () => { console.log('Completed'); });
+			setTimeout(() => {
+				saveRequest.unsubscribe();
+			},30)
 	}
 
 	updateTrekDetails() {

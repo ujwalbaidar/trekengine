@@ -5,6 +5,7 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../configs/config')[env];
 const async = require('async');
 const readline = require('readline');
+const crypto = require('crypto');
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -17,6 +18,9 @@ exports.createUser = function(req, res){
 	req.body.role = req.body.role?req.body.role:20;
 	req.body.createdDate = new Date();
 	req.body.updatedDate = new Date();
+	req.body.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+                   .update(req.body.password)
+                   .digest('hex');
 	let user = new User(req.body);
 	user.save((err, user)=>{
 		if(err){
@@ -76,9 +80,12 @@ exports.loginUser = function(req, res){
 			res.status(400).json({success:false, data:err});
 		}else{
 			if(user){
-				if(user.password == req.body.password){
+				let loginPassword = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+						.update(req.body.password)
+						.digest('hex');
+				if(user.password == loginPassword){
 					let token = jwt.sign(
-							{email:user.email}, 
+							{email:user.email, userId: user._id}, 
 							config.loginAuth.secretKey, 
 							{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 						);
@@ -119,12 +126,15 @@ exports.seedUser = function(req, res){
 					    }
 					],
 					function(err, results) {
+						let superAdminPassword = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+								.update(info.password)
+								.digest('hex');
 						rl.close();
 						option = {
 							firstName: 'Super',
 							lastName: 'Admin',
 							email: info.email,
-							password: info.password,
+							password: superAdminPassword,
 							role: 10,
 							createdDate: new Date(),
 							updatedDate: new Date()
