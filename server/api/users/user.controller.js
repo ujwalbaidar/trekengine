@@ -82,14 +82,6 @@ exports.loginUser = function(req, res){
 							config.loginAuth.secretKey, 
 							{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 						);
-
-					/*jwt.verify(token, 'abcdef', { algorithms: 'HS256' }, function(err, decoded) {
-						if(err){
-							console.log(err)
-						}else{
-							console.log(decoded) 
-						}
-					});*/
 					res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token}});
 				}else{
 					res.status(400).json({success:false, message: "Password doesn't match!", data: {errorCode:'passwordErr'}});
