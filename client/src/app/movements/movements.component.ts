@@ -12,6 +12,9 @@ export class MovementComponent implements OnInit {
 			menu: 'Bookings',
 			routePath: ''
 		},{
+			menu: 'Guide Details',
+			routePath: '/movements/guide-details'
+		},{
 			menu: 'Trip Details',
 			routePath: '/movements/trip-details'
 		},{

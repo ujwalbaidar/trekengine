@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MovementComponent, TripDetailsComponent } from './movements/index';
+import { MovementComponent, TripDetailsComponent, GuideDetailsComponent } from './movements/index';
 
 const appRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -18,7 +18,8 @@ const appRoutes: Routes = [
 				component: MovementComponent, 
 				children:[
 					// { path: 'bookings' },
-					{ path: 'trip-details', component: TripDetailsComponent}
+					{ path: 'trip-details', component: TripDetailsComponent},
+					{ path: 'guide-details', component: GuideDetailsComponent}
 				]
 			}
 		]
