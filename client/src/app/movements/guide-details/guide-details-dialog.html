@@ -1,0 +1,26 @@
+<form class="col s12" (ngSubmit)="submitGuideDetails(guideDetail.form)" #guideDetail="ngForm" novalidate>
+	<h4 md-dialog-title>{{ 'Add Guide' }}</h4>
+	<div md-dialog-content>
+		<div class="row">
+				<div class="row">
+					<div class="input-field col s12">
+						<label for="email">Email</label>
+						<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+						<div *ngIf="email.errors && (email.dirty || email.touched)"
+							class="alert alert-danger">
+							<div [hidden]="!email.errors.required">
+								This Field is Required!
+							</div>
+							<div [hidden]="!email.errors.pattern">
+								Email is Invalid!
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #009688 teal btn" (click)="submitGuideDetails(guideDetail.form)">Submit</button>
+		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
+	</div>
+</form>

@@ -14,7 +14,13 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MovementComponent, TripDetailsComponent, TripDetailsDialogComponent } from './movements/index';
+import { 
+  MovementComponent, 
+  TripDetailsComponent, 
+  TripDetailsDialogComponent, 
+  GuideDetailsComponent,
+  GuideDetailsDialogComponent
+} from './movements/index';
 
 @NgModule({
 	imports: [ 
@@ -29,7 +35,7 @@ import { MovementComponent, TripDetailsComponent, TripDetailsDialogComponent } f
   	LoginComponent,
     HomeComponent, 
   	DashboardComponent,
-    MovementComponent, TripDetailsComponent, TripDetailsDialogComponent,
+    MovementComponent, TripDetailsComponent, TripDetailsDialogComponent, GuideDetailsComponent, GuideDetailsDialogComponent,
   	RegisterComponent 
 	],
   	providers: [ 
@@ -37,7 +43,7 @@ import { MovementComponent, TripDetailsComponent, TripDetailsDialogComponent } f
   		AuthService, UserService, MovementsService
   	],
   	bootstrap:    [ AppComponent ],
-    entryComponents: [ TripDetailsDialogComponent ]
+    entryComponents: [ TripDetailsDialogComponent, GuideDetailsDialogComponent ]
 })
 
 export class AppModule { }

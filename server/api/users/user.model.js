@@ -16,6 +16,8 @@ let UserSchema = new mongoose.Schema({
 		expireDate: String,
 	},
 	createdDate: Date,
-	updatedDate: Date
+	updatedDate: Date,
+	guides:[],
+	admins: []
 });
 mongoose.model('User', UserSchema);

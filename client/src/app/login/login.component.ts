@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit {
 			this.userService.loginUser(this.user)
 				.subscribe(
 					loginUser=>{
-						this.authService.setCookies(loginUser.token);
+						this.authService.setCookies('authToken',loginUser['token']);
+						this.authService.setCookies('idx',loginUser['index']);
 						this._route.navigate(['/']);
 					}, error=>{
 						if(error.errBody.data.errorCode && error.errBody.data.errorCode == 'emailErr'){
