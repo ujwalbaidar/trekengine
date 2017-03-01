@@ -43,7 +43,7 @@ exports.findAllUser = function(req, res){
 }
 
 exports.fineOneUser = function(req, res){
-	User.findOne(req.query, (err, user)=>{
+	User.findOne(req.query, {_id:0}, (err, user)=>{
 		if(err){
 			res.status(400).json({success:false, data:err});
 		}else{
@@ -89,7 +89,7 @@ exports.loginUser = function(req, res){
 							config.loginAuth.secretKey, 
 							{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 						);
-					res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token}});
+					res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role}});
 				}else{
 					res.status(400).json({success:false, message: "Password doesn't match!", data: {errorCode:'passwordErr'}});
 				}
@@ -154,3 +154,67 @@ exports.seedUser = function(req, res){
 		});
 }
 
+exports.updateVendors = function(req, res){
+	User.findOne({email:req.body.from}, {_id:0}, (err, user)=>{
+		if(err){
+			res.status(400).json({success:false, data:err});
+		}else{
+			if(user && user.role && user.role<=20){
+				User.update({email:req.body.from},{ $addToSet: { guides: req.body.email }}, function(adminUserErr, adminUser){
+					if(adminUserErr){
+						res.status(400).json({success:false, data: adminUserErr})
+					}else{
+						User.update({email:req.body.email},{ $addToSet: { admins: req.body.from }}, function(guideUserErr, guideUser){
+							if(guideUserErr){
+								res.status(400).json({success:false, data: guideUserErr});
+							}else{
+								res.status(200).send({data:{success:true, message: 'Successfully assigned!'}});
+							}
+						});
+					}
+				});
+			}else{
+				res.status(200).json({data:{success:false, message:'Request sender has no right to add guide!'}});
+			}
+		}
+	});
+}
+
+exports.guideListByAdmin = function(req, res){
+	if(req.headers.userId){
+		User.findOne({_id:req.headers.userId}, {guides:1,_id:0,email:1}, function(err, user){
+			if(err){
+				res.status(400).json({success:false, data: err, message:"Failed to fetch User!"});
+			}else{
+				if(user.guides.length>0){
+					User.find( { email: { $in: user.guides } } , {_id:0, password:0} ,function(queryErr, userGuides){
+						if(err){
+							res.status(400).json({success:false, data: queryErr, message:"Failed to fetch guides listing!"});
+						}else{
+							res.status(200).json({success:true, data:{guides:userGuides, approver:user.email}});
+						}
+					});
+				}else{
+					res.status(200).json({success:true, data:[], message: "Guides are not assigned!"});
+				}
+			}
+		})
+		
+	}
+}
+
+exports.removeGuide = function(req, res){
+	User.update( { _id: req.headers.userId}, { $pull: { guides: req.headers.guide }}, function(err, user){
+		if(err){
+			res.status(400).json({success:false, data:err, message:'Failed to remove Guide!'});
+		}else{
+			User.update({email:req.headers.guide}, {$pull:{admins: req.headers.approver}}, function(guideErr, guideUser){
+				if(guideErr){
+					res.status(400).json({success:false, data:guideErr, message:'Failed to remove Guide!'});
+				}else{
+					res.status(200).json({success:true, data: guideUser, message: 'Removed Guide Successfully!'});
+				}
+			});
+		}
+	});
+}

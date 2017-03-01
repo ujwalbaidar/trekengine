@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from './register.model';
-import { UserService } from '../services/index';
-import { Router } from '@angular/router';
+import { UserService, AuthService } from '../services/index';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+
 
 @Component({
     selector: 'register',
@@ -13,10 +14,13 @@ export class RegisterComponent implements OnInit {
 	submitted: Boolean;
 	errMessage: string;
 	successMessage: string;
+	public urlParams:any;
 
-	constructor(private userService: UserService, private _route: Router){}
+	constructor(private userService: UserService, private authService: AuthService, private _route: Router, private activatedRoute: ActivatedRoute){}
 	
-	ngOnInit(){}
+	ngOnInit(){
+		this.getRouteParams();
+	}
 	
 	registerUser(form:any) {
 		this.submitted = true;
@@ -26,9 +30,15 @@ export class RegisterComponent implements OnInit {
 					registerUser=>{
 						this.submitted = false;
 						this.successMessage = "Registered Successfully!";
-						setTimeout(()=>{ 
-							this._route.navigate(['/login']);
-						}, 3000);
+						if(this.urlParams && this.urlParams['email'] !== undefined){
+							setTimeout(()=>{ 
+								this.addSender();
+							}, 2000);
+						}else{
+							setTimeout(()=>{ 
+								this._route.navigate(['/login']);
+							}, 3000);
+						}
 					}, error=>{
 						if(error.errBody.data && error.errBody.data.code === 11000){
 							this.errMessage = "Email Already Exists!";
@@ -40,5 +50,30 @@ export class RegisterComponent implements OnInit {
 						}, 3000);
 					});
 		}
+	}
+
+	getRouteParams():void {
+		this.activatedRoute.queryParams.subscribe((params:Params)=>{
+			if(params && params['email'] !== undefined){
+				this.urlParams = params;
+				this.user.email = params['email'];
+				this.user.role = 30;
+			}
+		});
+	}
+
+	addSender(){
+		this.userService.updateVendors(this.urlParams)
+			.subscribe(user=>{
+				if(user['success'] == true){
+					alert(user['message']);
+				}else{
+					alert(user['message']);
+				}
+				this.authService.clearCookies();
+				this._route.navigate(['/login']);
+			},updateError=>{
+				console.log(updateError);
+			});
 	}
 }

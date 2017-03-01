@@ -9,8 +9,8 @@ export class AuthService {
 		return Promise.resolve(this._cookieService.getAll());
 	}
 
-	setCookies(token:string){
-		this._cookieService.put('authToken', token);
+	setCookies(key:string, value:string){
+		this._cookieService.put(key, value);
 	}
 
 	clearCookies(){

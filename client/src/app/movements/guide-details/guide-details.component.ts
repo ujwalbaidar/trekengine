@@ -9,32 +9,46 @@ import { User } from '../../register/register.model';
     templateUrl: './src/app/movements/guide-details/guide-details.component.html'
 })
 export class GuideDetailsComponent implements OnInit  {
-	constructor(private _route: Router, public dialog: MdDialog, public movementServie: MovementsService, public location: Location){}
+	public guideUsers:any;
+	public approver: string;
+
+	constructor(private _route: Router, public dialog: MdDialog, public movementServie: MovementsService, public userService: UserService, public location: Location){}
 
 	ngOnInit() {
-		this.getGuides();
+		this.getGuideLists();
 	}
 
-	getGuides(){
-
+	getGuideLists(){
+		this.userService.getGuides()
+		.subscribe(users=>{
+					this.guideUsers = users['guides'];
+					this.approver = users['approver'];
+				}, userError=>{
+					console.log(userError);
+				});
 	}
+
+	removeGuide(userEmail:string, index:number) {
+		this.userService.removeUserFromList(userEmail, this.approver)
+		.subscribe(users=>{
+				this.guideUsers.splice(index, 1);
+			}, userError=>{
+				console.log(userError);
+			});
+	}
+
 	openAddGuideModal(){
 		let dialogOptions = {
-			height: '600px',
+			height: '300px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
 		};
 
-		// if(JSON.stringify(editData) !== '{}'){
-		// 	dialogOptions["data"] = editData;
-		// };
 
 		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-    		console.log(result)
-      		// this.selectedOption = result;
-      		// this.getTrips();
+    		console.log("http://localhost:5000/login?email="+result+"&&from="+this.approver);
     	});
 	}
 }
@@ -54,15 +68,6 @@ export class GuideDetailsDialogComponent {
 	}
 
 	saveGuideDetails(){
-		this.user.role = 30;
-		const saveRequest = this.userService.registerUser(this.user)
-			.subscribe(guidesDetail=>{
-					this.dialogRef.close(guidesDetail);
-				}, error=>{
-					this.dialogRef.close(error);
-				}, () => { console.log('Completed'); });
-				setTimeout(() => {
-					saveRequest.unsubscribe();
-				},30);
+		this.dialogRef.close(this.user.email);
 	}
 }
