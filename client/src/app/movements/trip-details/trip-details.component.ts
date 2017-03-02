@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { Trip } from './trip-details.model';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
-import { MovementsService } from '../../services/index';
+import { MovementsService, UserService } from '../../services/index';
 
 @Component({
     selector: 'trip-details',
@@ -14,7 +14,14 @@ export class TripDetailsComponent implements OnInit {
 	selectedOption: string;
 	trip: Trip = <Trip>{};
 	trips:any;
-	constructor(private _route: Router, public dialog: MdDialog, public movementServie: MovementsService, public location: Location){}
+
+	constructor(
+		private _route: Router, 
+		public dialog: MdDialog, 
+		public movementServie: MovementsService, 
+		public location: Location,
+		public userService: UserService
+	){}
 	ngOnInit(){
 		this.getTrips();
 	}
@@ -24,7 +31,7 @@ export class TripDetailsComponent implements OnInit {
 		.subscribe(tripsDetail=>{
 				this.trips = tripsDetail;
 			}, error=>{
-				// 
+				console.log(error);
 			});
 	}
 
@@ -65,7 +72,7 @@ export class TripDetailsComponent implements OnInit {
 	selector: 'trip-details-dialog',
 	templateUrl: './src/app/movements/trip-details/trip-details-dialog.html',
 })
-export class TripDetailsDialogComponent {
+export class TripDetailsDialogComponent implements OnInit {
 	trip: Trip = <Trip>{};
 	public departure_date: Object;
 	public arrival_date: Object;
@@ -73,14 +80,31 @@ export class TripDetailsDialogComponent {
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
     };
-
-	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService) {
+	guideUsers:any;
+	approver: string;
+    selectedValue: string;
+    
+	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
 		if(this.dialogRef.config.data){
 			this.trip = Object.assign({}, this.dialogRef.config.data);
 			this.title = 'Edit Trip Details';
 		}
 	}
 	
+	ngOnInit(){
+		this.getGuideLists();
+	}
+
+
+	getGuideLists(){
+		this.userService.getGuides()
+		.subscribe(users=>{
+				this.guideUsers = users['guides'];
+				this.approver = users['approver'];
+			}, userError=>{
+				console.log(userError);
+			});
+	}
 
 	submitTrekDetails(tripForm:any) {
 		if(tripForm.valid){
