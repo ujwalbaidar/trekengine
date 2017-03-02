@@ -37,14 +37,11 @@
 				</div>
 			</div>
 			<div class="input-field col s12">
-				<label for="guide">Assign Guide</label>
-				<input id="guide" type="text" class="validate" name="guide" [(ngModel)]="trip.guide" #guide="ngModel" required>
-				<div *ngIf="guide.errors && (guide.dirty || guide.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!guide.errors.required">
-						This Field is Required!
-					</div>
-				</div>
+				<md-select [(ngModel)]="trip.guide" name="guide" placeholder="Assign Guide" class="col s6">
+					<md-option *ngFor="let guideUser of guideUsers" [value]="guideUser.email">
+						{{guideUser.firstName+' ' +guideUser.lastName + ' ('+guideUser.email+')'}}
+					</md-option>
+				</md-select>
 			</div>
 
 		</div>
