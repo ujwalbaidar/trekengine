@@ -5,12 +5,14 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Router } from '@angular/router';
 import { AuthService } from './index';
 
+import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class MovementsService {
+	private observable: Observable<any>;
 	constructor(public _cookieService:CookieService, private http: Http, private _route: Router, public authService:AuthService){}
 	
 	submitTripDetails(trip: Object){
@@ -47,7 +49,44 @@ export class MovementsService {
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
-	
+
+	getBookings(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/movements/bookings/findAll', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	deleteBooking(deleteId: string){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), 'deleteId': deleteId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/movements/bookings/delete', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	submitBookingDetails(booking: Object):Promise<any>{
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/movements/bookings/create', booking, options)
+			.toPromise()
+			.then(this.extractData)
+    		.catch(this.handleError.bind(this));
+            // .map(this.extractData)
+            // .catch(this.handleError.bind(this))
+            // .share();
+	}
+
+	updateBookingDetails(booking:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/movements/bookings/update', booking, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

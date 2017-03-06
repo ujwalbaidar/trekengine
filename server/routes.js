@@ -9,6 +9,7 @@ module.exports = function(app){
 	app.use('/api/seed', require('./api/users'));
 	app.use('/api/movements/trips', auth ,require('./api/trips'));
 	app.use('/api/guides', auth, require('./api/users'));
+	app.use('/api/movements/bookings',auth, require('./api/bookings'));
 	app.route('*')
         .get((req, res) => {
             res.render('index');
