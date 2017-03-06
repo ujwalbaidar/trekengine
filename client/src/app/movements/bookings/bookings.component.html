@@ -1,0 +1,38 @@
+<div>
+	<a class="modal-trigger waves-effect waves-light btn" (click)="openAddBookingModal()">Add Booking Details</a>
+</div>
+<div>
+	<table>
+		<thead>
+			<tr>
+				<td>Booking Id</td>
+				<td>Group Name</td>
+				<td>Trip Name</td>
+				<td>Total Memebers</td>
+				<td>Total Cost</td>
+				<td>Trip Cost</td>
+				<td>Advance Paid</td>
+				<td>Due Amount</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let booking of bookings; let i = index;">
+				<td>{{ booking.bookingId }}</td>
+				<td>{{ booking.groupName }}</td>
+				<td>{{ booking.trips.name }}</td>
+				<td>{{ booking.travellerCount }}</td>
+				<td>{{ booking.totalCost }}</td>
+				<td>{{ booking.tripCost }}</td>
+				<td>{{ booking.advancePaid }}</td>
+				<td>{{ booking.dueAmount }}</td>
+				<td>{{ booking.status==true?'active':'inactive'}}</td>
+				<td>
+					<a (click)="openAddBookingModal(booking)">Edit</a>
+					<a (click)="deleteBooking(booking._id, i)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -19,7 +19,9 @@ import {
   TripDetailsComponent, 
   TripDetailsDialogComponent, 
   GuideDetailsComponent,
-  GuideDetailsDialogComponent
+  GuideDetailsDialogComponent,
+  BookingsComponent,
+  BookingsDialogComponent
 } from './movements/index';
 
 @NgModule({
@@ -35,7 +37,7 @@ import {
   	LoginComponent,
     HomeComponent, 
   	DashboardComponent,
-    MovementComponent, TripDetailsComponent, TripDetailsDialogComponent, GuideDetailsComponent, GuideDetailsDialogComponent,
+    MovementComponent, TripDetailsComponent, TripDetailsDialogComponent, GuideDetailsComponent, GuideDetailsDialogComponent,BookingsComponent, BookingsDialogComponent,
   	RegisterComponent 
 	],
   	providers: [ 
@@ -43,7 +45,7 @@ import {
   		AuthService, UserService, MovementsService
   	],
   	bootstrap:    [ AppComponent ],
-    entryComponents: [ TripDetailsDialogComponent, GuideDetailsDialogComponent ]
+    entryComponents: [ TripDetailsDialogComponent, GuideDetailsDialogComponent, BookingsDialogComponent ]
 })
 
 export class AppModule { }

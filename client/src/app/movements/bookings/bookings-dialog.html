@@ -1,0 +1,62 @@
+<form class="col s12" (ngSubmit)="submitBookingDetails(bookingDetail.form)" #bookingDetail="ngForm" novalidate>
+	<h4 md-dialog-title>{{ title }}</h4>
+	<div md-dialog-content>
+		<div class="row">
+			<div class="input-field col s12">
+				<label for="group-name">Group Name</label>
+				<input id="group-name" type="text" class="validate" name="groupName" [(ngModel)]="booking.groupName" #groupName="ngModel" required>
+				<div *ngIf="groupName.errors && (groupName.dirty || groupName.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!groupName.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s6">
+				<md-select [(ngModel)]="booking.trip" name="trip" placeholder="Trip Name" class="col s6">
+					<md-option *ngFor="let trip of trips" [value]="trip._id">
+						{{trip.name}}
+					</md-option>
+				</md-select>
+			</div>
+			<div class="input-field col s6">
+				<label for="Total Members">Total Members</label>
+				<input id="total-members" type="number" class="validate" name="travellerCount" [(ngModel)]="booking.travellerCount" #travellerCount="ngModel" required>
+				<div *ngIf="travellerCount.errors && (travellerCount.dirty || travellerCount.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!travellerCount.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s6">
+				<label for="trip-cost">Trip Cost</label>
+				<input id="trip-cost" type="number" class="validate" name="tripCost" [(ngModel)]="booking.tripCost" #tripCost="ngModel" required>
+				<div *ngIf="tripCost.errors && (tripCost.dirty || tripCost.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!tripCost.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+			<div class="input-field col s6">
+				<label for="advance-paid">Advance Paid</label>
+				<input id="advance-paid" type="number" class="validate" name="advancePaid" [(ngModel)]="booking.advancePaid" #advancePaid="ngModel" required>
+				<div *ngIf="advancePaid.errors && (advancePaid.dirty || advancePaid.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!advancePaid.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #009688 teal btn" type="submit">Submit</button>
+		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
+	</div>
+</form>

@@ -22,6 +22,7 @@ export class TripDetailsComponent implements OnInit {
 		public location: Location,
 		public userService: UserService
 	){}
+	
 	ngOnInit(){
 		this.getTrips();
 	}
@@ -41,7 +42,7 @@ export class TripDetailsComponent implements OnInit {
 			this.trips.splice(index,1);
 		}, error => {
 			alert('failed to delete record')
-		})
+		});
 	}
 
 	openAddTripModal(editData:Trip=<Trip>{}){
@@ -125,7 +126,7 @@ export class TripDetailsDialogComponent implements OnInit {
 			}, () => { console.log('Completed'); });
 			setTimeout(() => {
 				saveRequest.unsubscribe();
-			},30)
+			},30);
 	}
 
 	updateTrekDetails() {

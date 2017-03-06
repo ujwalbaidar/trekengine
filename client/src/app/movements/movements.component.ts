@@ -10,7 +10,7 @@ export class MovementComponent implements OnInit {
 	public sideMenuArr:any = [
 		{
 			menu: 'Bookings',
-			routePath: ''
+			routePath: '/movements/bookings'
 		},{
 			menu: 'Guide Details',
 			routePath: '/movements/guide-details'

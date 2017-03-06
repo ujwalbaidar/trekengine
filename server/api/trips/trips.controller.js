@@ -45,7 +45,7 @@ exports.updateTrips = function(req, res){
 			guideId: req.body.guideId,
 			status: req.body.status,
 			updateDate: new Date()
-		}
+		};
 		Trips.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, tripUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
