@@ -15,7 +15,7 @@ export class MovementsService {
 	private observable: Observable<any>;
 	constructor(public _cookieService:CookieService, private http: Http, private _route: Router, public authService:AuthService){}
 	
-	submitTripDetails(trip: Object){
+	submitTripDetails(trip: Object) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/movements/trips/create', trip, options)
@@ -33,7 +33,7 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
-	updateTrekDetails(trip: Object){
+	updateTrekDetails(trip: Object) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.put('/api/movements/trips/update', trip, options)
@@ -58,7 +58,7 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
-	deleteBooking(deleteId: string){
+	deleteBooking(deleteId: string) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), 'deleteId': deleteId});
     	let options = new RequestOptions({ headers: headers });
 		return this.http.delete('/api/movements/bookings/delete', options)
@@ -66,23 +66,55 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
-	submitBookingDetails(booking: Object):Promise<any>{
+	submitBookingDetails(booking: Object):Promise<any> {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/movements/bookings/create', booking, options)
 			.toPromise()
 			.then(this.extractData)
     		.catch(this.handleError.bind(this));
-            // .map(this.extractData)
-            // .catch(this.handleError.bind(this))
-            // .share();
 	}
 
-	updateBookingDetails(booking:Object){
+	updateBookingDetails(booking:Object) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.put('/api/movements/bookings/update', booking, options)
 			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getFlightDetails() {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/movements/flights/findAll', options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	submitFlightDetails(flight: Object) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/movements/flights/create', flight, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	updateFlightDetails(flight:Object) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/movements/flights/update', flight, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	deleteFlightDetails(deleteId: string) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), 'deleteId': deleteId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/movements/flights/delete', options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}

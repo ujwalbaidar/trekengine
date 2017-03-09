@@ -1,10 +1,16 @@
-import { NgModule }              from '@angular/core';
-import { RouterModule, Routes }  from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MovementComponent, TripDetailsComponent, GuideDetailsComponent, BookingsComponent } from './movements/index';
+import { 
+	MovementComponent, 
+	TripDetailsComponent, 
+	GuideDetailsComponent, 
+	BookingsComponent, 
+	FlightDetailsComponent 
+} from './movements/index';
 
 const appRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -18,8 +24,9 @@ const appRoutes: Routes = [
 				component: MovementComponent, 
 				children:[
 					{ path: 'bookings', component: BookingsComponent },
-					{ path: 'trip-details', component: TripDetailsComponent},
-					{ path: 'guide-details', component: GuideDetailsComponent}
+					{ path: 'trip-details', component: TripDetailsComponent },
+					{ path: 'guide-details', component: GuideDetailsComponent },
+					{ path: 'flight-details', component: FlightDetailsComponent }
 				]
 			}
 		]
