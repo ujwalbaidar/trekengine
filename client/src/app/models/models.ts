@@ -23,3 +23,22 @@ export class Booking {
 	dueAmount: number;
 	totalPaid: number;
 }
+
+export class Flight {
+	departure?: Departure;
+	arrival?: Arrival;
+}
+
+export class Departure {
+    name?: string;
+    date?: string;
+    time?: string;
+    cost?: number;
+}
+
+export class Arrival {
+    name?: string;
+    date?: string;
+    time?: string;
+    cost?: number;
+}

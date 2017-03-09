@@ -1,0 +1,38 @@
+<div>
+	<a class="modal-trigger waves-effect waves-light btn" (click)="openFlightModal()">Add Flight Details</a>
+</div>
+<div>
+	<table>
+		<thead>
+			<tr>
+				<td>Departure Flight Name</td>
+				<td>Departure Flight Date</td>
+				<td>Departure Flight Time</td>
+				<td>Departure Flight Cost</td>
+				<td>Arrival Flight Name</td>
+				<td>Arrival Flight Date</td>
+				<td>Arrival Flight Time</td>
+				<td>Arrival Flight Cost</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let flt of flights; let i = index;">
+				<td>{{ flt.departure.name }}</td>
+				<td>{{ flt.departure.dateTime.formatted }}</td>
+				<td></td>
+				<td>{{ flt.departure.cost }}</td>
+				<td>{{ flt.arrival.name }}</td>
+				<td>{{ flt.arrival.dateTime.formatted }}</td>
+				<td></td>
+				<td>{{ flt.arrival.cost }}</td>
+				<td>{{ flt.status==true?'active':'inactive'}}</td>
+				<td>
+					<a (click)="openFlightModal(flt)">Edit</a>
+					<a (click)="deleteFlight(flt._id, i)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

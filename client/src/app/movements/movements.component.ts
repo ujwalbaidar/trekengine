@@ -18,8 +18,8 @@ export class MovementComponent implements OnInit {
 			menu: 'Trip Details',
 			routePath: '/movements/trip-details'
 		},{
-			menu: 'Traveler Details',
-			routePath: ''
+			menu: 'Flight Details',
+			routePath: '/movements/flight-details'
 		}
 	];
 	constructor(private authService: AuthService, private _route: Router){}

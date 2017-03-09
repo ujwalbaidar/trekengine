@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { Trip } from './trip-details.model';
+import { Trip } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { MovementsService, UserService } from '../../services/index';
 
@@ -45,7 +45,7 @@ export class TripDetailsComponent implements OnInit {
 		});
 	}
 
-	openAddTripModal(editData:Trip=<Trip>{}){
+	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
