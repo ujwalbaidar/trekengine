@@ -11,7 +11,7 @@ import { MovementsService } from '../../services/index';
 })
 export class FlightDetailsComponent implements OnInit  {
 	selectedOption: string;
-	flight: Flight = <Flight>{departure:{}, arrival:{}};
+	flight: Flight = <Flight>{};
 	private flights: any;
 	constructor(
 		private _route: Router, 
@@ -65,9 +65,10 @@ export class FlightDetailsComponent implements OnInit  {
 	selector: 'flight-details-dialog',
 	templateUrl: './src/app/movements/flights/flight-details-dialog.html',
 })
-export class FlightDetailsDialogComponent {
-    private flight: Flight = <Flight>{departure:{}, arrival:{}};
-	public title: string = 'Add Trip Details';
+export class FlightDetailsDialogComponent implements OnInit {
+	bookings: any;
+    private flight: Flight = <Flight>{};
+	public title: string = 'Add Flight Details';
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
     };
@@ -76,8 +77,27 @@ export class FlightDetailsDialogComponent {
 		public movementServie: MovementsService) {
 		if(this.dialogRef.config.data){
 			this.flight = Object.assign({}, this.dialogRef.config.data);
-			this.title = 'Edit Trip Details';
+			this.flight.departure.date = this.flight.departure['dateTime'];
+			this.flight.arrival.date = this.flight.arrival['dateTime'];
+			this.title = 'Edit Flight Details';
+			console.log(this.flight);
+			this.flight.booking = this.flight['bookingId'];
+		}else{
+			this.flight = <Flight>{departure:{}, arrival:{}};
 		}
+	}
+
+	ngOnInit(){
+		this.getBookingDetails();
+	}
+
+	getBookingDetails(){
+		this.movementServie.getBookings()
+			.subscribe(bookings=>{
+				this.bookings = bookings;
+			},bookingErr=>{
+				console.log(bookingErr);
+			});
 	}
 
 	submitFlightDetails(flightForm:any) {

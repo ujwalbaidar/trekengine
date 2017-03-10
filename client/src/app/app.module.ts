@@ -22,6 +22,7 @@ import {
   GuideDetailsDialogComponent,
   BookingsComponent,
   BookingsDialogComponent,
+  BookingsViewComponent,
   FlightDetailsComponent, 
   FlightDetailsDialogComponent
 } from './movements/index';
@@ -42,7 +43,7 @@ import {
     MovementComponent, 
     TripDetailsComponent, TripDetailsDialogComponent, 
     GuideDetailsComponent, GuideDetailsDialogComponent,
-    BookingsComponent, BookingsDialogComponent,
+    BookingsComponent, BookingsDialogComponent, BookingsViewComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
   	RegisterComponent 
 	],
@@ -51,7 +52,7 @@ import {
   		AuthService, UserService, MovementsService
   	],
   	bootstrap:    [ AppComponent ],
-    entryComponents: [ TripDetailsDialogComponent, GuideDetailsDialogComponent, BookingsDialogComponent, FlightDetailsDialogComponent ]
+    entryComponents: [ TripDetailsDialogComponent, GuideDetailsDialogComponent, BookingsDialogComponent, BookingsViewComponent, FlightDetailsDialogComponent ]
 })
 
 export class AppModule { }

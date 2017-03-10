@@ -25,20 +25,31 @@ export class Booking {
 }
 
 export class Flight {
-	departure?: Departure;
-	arrival?: Arrival;
+	booking: string;
+	departure = {} as {
+		name: string;
+	    date: string;
+	    time: string;
+	    cost: number;
+	};
+	arrival = {} as {
+		name: string;
+	    date: string;
+	    time: string;
+	    cost: number;
+	};
 }
 
 export class Departure {
-    name?: string;
-    date?: string;
-    time?: string;
-    cost?: number;
+    name: string;
+    date: string;
+    time: string;
+    cost: number;
 }
 
 export class Arrival {
-    name?: string;
-    date?: string;
-    time?: string;
-    cost?: number;
+    name: string;
+    date: string;
+    time: string;
+    cost: number;
 }
