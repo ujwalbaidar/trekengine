@@ -68,6 +68,22 @@ export class BookingsComponent implements OnInit  {
       		this.getBookingList();
     	});
 	}
+
+	openDetailsModal(bookingId:string){
+		let dialogOptions = {
+			height: '500px',
+  			width: '600px',
+  			position: 'center'
+		};
+
+		dialogOptions["data"] = {};
+		dialogOptions["data"]["bookingId"] = bookingId;
+
+		let dialogRef = this.dialog.open(BookingsViewComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+      		this.getBookingList();
+    	});
+	}
 }
 
 @Component({
@@ -84,6 +100,7 @@ export class BookingsDialogComponent implements OnInit {
 			if(this.dialogRef.config.data.bookings){
 				this.booking = Object.assign({}, this.dialogRef.config.data.bookings);
 				this.title = 'Edit Booking Details';
+				this.booking['trip'] = this.booking['tripId'];
 			}
 		}
 	}
@@ -115,18 +132,29 @@ export class BookingsDialogComponent implements OnInit {
 		const saveRequest = this.movementServie.submitBookingDetails(this.booking)
 			.then(booking=>{
 				this.dialogRef.close(booking);
-			})
-		// .subscribe(booking=>{
-		// 		this.dialogRef.close(booking);
-		// 	}, error=>{
-		// 		this.dialogRef.close(error);
-		// 	}, () => { 
-		// 		saveRequest.unsubscribe();
-		// 	});
-		// debugger;
-		// setTimeout(() => {
-		// 		saveRequest.unsubscribe();
-		// 	},30);
+			});
 			
+	}
+}
+
+@Component({
+	selector: 'bookings-view-dialog',
+	templateUrl: './src/app/movements/bookings/bookings-view-dialog.html',
+})
+export class BookingsViewComponent {
+	flightDetails: Object;
+	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
+		if(this.dialogRef.config.data){
+			this.getFlightDetails(this.dialogRef.config.data.bookingId);
+		}
+	}
+
+	getFlightDetails(bookingId:string){
+		this.movementServie.getFlightDetailsByParams([{bookingId:bookingId}])
+			.subscribe(flightDetails=>{
+				this.flightDetails = flightDetails;
+			}, error=>{
+				this.dialogRef.close(error);
+			});
 	}
 }

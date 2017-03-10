@@ -3,8 +3,8 @@
 	<div md-dialog-content>
 		<div class="row">
 			<div class="input-field col s12">
-				<label for="group-name">Group Name</label>
-				<input id="group-name" type="text" class="validate" name="groupName" [(ngModel)]="booking.groupName" #groupName="ngModel" required>
+				<label for="group-name" [ngClass]="{'active':(booking.groupName!=undefined)}">Group Name</label>
+				<input id="group-name" type="text" class="validate" name="groupName" [(ngModel)]="booking.groupName" #groupName="ngModel" [value] = "booking.groupName" required>
 				<div *ngIf="groupName.errors && (groupName.dirty || groupName.touched)"
 					class="alert alert-danger">
 					<div [hidden]="!groupName.errors.required">
@@ -13,16 +13,16 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="row">
 			<div class="input-field col s6">
 				<md-select [(ngModel)]="booking.trip" name="trip" placeholder="Trip Name" class="col s6">
-					<md-option *ngFor="let trip of trips" [value]="trip._id">
+					<md-option *ngFor="let trip of trips" [value]="trip._id" (selected)="booking.tripId">
 						{{trip.name}}
 					</md-option>
 				</md-select>
 			</div>
 			<div class="input-field col s6">
-				<label for="Total Members">Total Members</label>
 				<input id="total-members" type="number" class="validate" name="travellerCount" [(ngModel)]="booking.travellerCount" #travellerCount="ngModel" required>
 				<div *ngIf="travellerCount.errors && (travellerCount.dirty || travellerCount.touched)"
 					class="alert alert-danger">
@@ -30,11 +30,12 @@
 						This Field is Required!
 					</div>
 				</div>
+				<label for="Total Members" [ngClass]="{'active':(booking.travellerCount!=undefined)}">Total Members</label>
 			</div>
 		</div>
 		<div class="row">
 			<div class="input-field col s6">
-				<label for="trip-cost">Trip Cost</label>
+				<label for="trip-cost" [ngClass]="{'active':(booking.tripCost!=undefined)}">Trip Cost</label>
 				<input id="trip-cost" type="number" class="validate" name="tripCost" [(ngModel)]="booking.tripCost" #tripCost="ngModel" required>
 				<div *ngIf="tripCost.errors && (tripCost.dirty || tripCost.touched)"
 					class="alert alert-danger">
@@ -44,7 +45,7 @@
 				</div>
 			</div>
 			<div class="input-field col s6">
-				<label for="advance-paid">Advance Paid</label>
+				<label for="advance-paid" [ngClass]="{'active':(booking.advancePaid!=undefined)}">Advance Paid</label>
 				<input id="advance-paid" type="number" class="validate" name="advancePaid" [(ngModel)]="booking.advancePaid" #advancePaid="ngModel" required>
 				<div *ngIf="advancePaid.errors && (advancePaid.dirty || advancePaid.touched)"
 					class="alert alert-danger">

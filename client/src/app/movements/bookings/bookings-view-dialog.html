@@ -1,0 +1,57 @@
+<h4>Flight Details</h4>
+<div class="row">
+	<div class="col s3">
+		BookingId
+	</div>
+	<div class="col s9">
+		{{flightDetails?.bookingId}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Departure Date
+	</div>
+	<div class="col s9">
+		{{flightDetails?.departure?.dateTime.formatted}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Departure Time
+	</div>
+	<div class="col s9">
+		{{'-'}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Departure Flight Cost
+	</div>
+	<div class="col s9">
+		{{flightDetails?.departure?.cost}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Arrival Date
+	</div>
+	<div class="col s9">
+		{{flightDetails?.arrival?.dateTime.formatted}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Arrival Time
+	</div>
+	<div class="col s9">
+		{{'-'}}
+	</div>
+</div>
+<div class="row">
+	<div class="col s3">
+		Arrival Flight Cost
+	</div>
+	<div class="col s9">
+		{{flightDetails?.arrival?.cost}}
+	</div>
+</div>
