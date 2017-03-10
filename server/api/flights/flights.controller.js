@@ -14,6 +14,7 @@ exports.createFlights = function(req, res) {
 				dateTime: req.body.arrival.date,
 				cost: req.body.arrival.cost
 		};
+		req.body.bookingId = req.body.booking;
 		let flights = new Flights(req.body);
 		flights.save((err, trip)=>{
 			if(err){
@@ -41,6 +42,21 @@ exports.getAllFlights = function(req, res) {
 	}
 }
 
+exports.getFlightsByQueryParams = function(req, res){
+	if(req.headers && req.headers.userId){
+		let findQuery = {userId: req.headers.userId };
+		Flights.findOne(Object.assign(findQuery, req.query), (err, trips)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success:true, data:trips});
+			}
+		});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
 exports.updateFlights = function(req, res){
 	if(req.headers && req.headers.userId){
 		let updateData = {
@@ -54,7 +70,8 @@ exports.updateFlights = function(req, res){
 				name: req.body.arrival.name,
 				dateTime: req.body.arrival.date,
 				cost: req.body.arrival.cost
-			}
+			},
+			bookingId: req.body.booking
 		};
 		Flights.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, flightUpdate)=>{
 			if(err){

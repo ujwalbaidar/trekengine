@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 let FlightSchema = new mongoose.Schema({
 	userId: String,
+	bookingId: String,
 	flightType: { type:Boolean, default: false },
 	departure: {
 		dateTime: Object,
