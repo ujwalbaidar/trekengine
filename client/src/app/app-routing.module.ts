@@ -9,7 +9,8 @@ import {
 	TripDetailsComponent, 
 	GuideDetailsComponent, 
 	BookingsComponent, 
-	FlightDetailsComponent 
+	FlightDetailsComponent,
+	TravellerDetailsComponent 
 } from './movements/index';
 
 const appRoutes: Routes = [
@@ -26,6 +27,7 @@ const appRoutes: Routes = [
 					{ path: 'bookings', component: BookingsComponent },
 					{ path: 'trip-details', component: TripDetailsComponent },
 					{ path: 'guide-details', component: GuideDetailsComponent },
+					{ path: 'traveller-details', component: TravellerDetailsComponent },
 					{ path: 'flight-details', component: FlightDetailsComponent }
 				]
 			}

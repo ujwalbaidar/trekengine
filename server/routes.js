@@ -11,6 +11,12 @@ module.exports = function(app){
 	app.use('/api/guides', auth, require('./api/users'));
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
 	app.use('/api/movements/flights',auth, require('./api/flights'));
+	app.post('/app/travellers/create', (req,res)=>{
+		console.log(req.body);
+	});
+	app.get('/app/travellers', (req, res) => {
+		res.render('public/traveller-details-form.template.ejs');
+	});
 	app.route('*')
         .get((req, res) => {
             res.render('index');

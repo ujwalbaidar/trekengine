@@ -3,3 +3,4 @@ export { TripDetailsComponent, TripDetailsDialogComponent } from './trip-details
 export { GuideDetailsComponent, GuideDetailsDialogComponent } from './guide-details/guide-details.component';
 export { BookingsComponent, BookingsDialogComponent, BookingsViewComponent } from './bookings/bookings.component';
 export { FlightDetailsComponent, FlightDetailsDialogComponent } from './flights/flight-details.component';
+export { TravellerDetailsComponent, TravellerDetailsDialogComponent } from './traveller-details/traveller-details.component';
