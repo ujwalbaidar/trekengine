@@ -1,0 +1,47 @@
+<h4>Travellers Details</h4>
+<div>
+	<table>
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Email</td>
+				<td>Nationality</td>
+				<td>Permanent Address</td>
+				<td>Telephone</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let travalerInfo of travelers; let i = index;">
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.firstName+' '+ travalerInfo.lastName }}
+				</td>
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.email }}
+				</td>
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.nationality }}
+				</td>
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.permanentAddress }}
+				</td>
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.telephone }}
+				</td>
+				<td>
+					{{ travalerInfo.status==true?'active':'inactive'}}
+				</td>
+				<td>
+					<a (click)="openTravellerModal(travalerInfo, 'edit')">Edit</a>
+					<a (click)="deleteTravelerDetails(travalerInfo._id, i)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div>
+	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openTravellerModal('', 'add')">
+		<i class="material-icons">add</i>
+	</a>
+</div>

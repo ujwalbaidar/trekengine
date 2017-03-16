@@ -133,6 +133,32 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getTravelerDetails() {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/movements/traveler/findAll', options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	updateTravelerDetails(traveler:Object) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/movements/traveler/update', traveler, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	deleteTravelerDetails(deleteId: string) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), 'deleteId': deleteId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/movements/traveler/delete', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };
