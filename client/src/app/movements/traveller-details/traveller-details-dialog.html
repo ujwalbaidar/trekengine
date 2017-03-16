@@ -1,0 +1,138 @@
+<div *ngIf="actionMode==='add'">
+	<div class="modal-content">
+		<h4>Traverller Details Form</h4>
+		<a (click)="dialogRef.close('Option 1')">X</a>
+		<iframe class="e2e-iframe-trusted-src" width="550" height="455" frameborder="0" [src]="travellerDetailUrl"></iframe>
+	</div>
+</div>
+
+<div *ngIf="actionMode==='view'">
+	<h4>Traveler Details</h4>
+	<div class="row">
+		<div class="col s3">
+			Name
+		</div>
+		<div class="col s9">
+			{{traveler.firstName + " " + traveler.lastName}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Nationality
+		</div>
+		<div class="col s9">
+			{{traveler.nationality}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Email
+		</div>
+		<div class="col s9">
+			{{traveler.email}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Telephone
+		</div>
+		<div class="col s9">
+			{{traveler.telephone}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Passport
+		</div>
+		<div class="col s9">
+			{{traveler.attachments.passport}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Insurance
+		</div>
+		<div class="col s9">
+			{{traveler.attachments.insurance}}
+		</div>
+	</div>
+
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Close</button>
+	</div>
+</div>
+
+<div *ngIf="actionMode==='edit'">
+	<form class="col s12" (ngSubmit)="submitTravelerDetails()" #trekDetail="ngForm" novalidate>
+		<h4 md-dialog-title>{{ 'Edit Traveler Details' }}</h4>
+		<div md-dialog-content>
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="first_name" class="active">First Name</label>
+					<input id="first_name" type="text" name="firstName" class="validate" [(ngModel)]="traveler.firstName">
+				</div>
+				<div class="input-field col s6">
+					<label for="last_name" class="active">Last Name</label>
+					<input id="last_name" type="text" name="lastName" class="validate" [(ngModel)]="traveler.lastName">
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="nationality" class="active">Nationality</label>
+					<input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality">
+				</div>
+				<div class="input-field col s6">
+					<label for="dob" class="active">Birth Date</label>
+					<input id="dob" type="date" name="dob" class="validate" [(ngModel)]="traveler.dob">
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="permanentAddress" class="active">Permanent Address</label>
+					<input id="permanentAddress" type="text" name="permanentAddress" class="validate" [(ngModel)]="traveler.permanentAddress">
+				</div>
+				<div class="input-field col s6">
+					<label for="email" class="active">Email</label>
+					<input id="email" type="text" name="email" class="validate" [(ngModel)]="traveler.email">
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="telephone" class="active">Telephone</label>
+					<input id="telephone" type="text" name="telephone" class="validate" [(ngModel)]="traveler.telephone">
+				</div>
+			</div>
+
+			<!-- <div class="row">
+				<label class="active">Passport Attachments</label>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Browse</span>
+						<input type="file" name="passportAttachment" file-model="traveler.passportAttachment" onchange="angular.element(this).scope().previewUpload('passportAttachment')">
+					</div>
+					<div class="file-path-wrapper">
+						<img class="passportAttachment" src="" height="200" alt="Image preview...">
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<label class="active">Insurance Attachments</label>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Browse</span>
+						<input type="file" name="insuranceAttachment" file-model="traveler.insuranceAttachment" onchange="angular.element(this).scope().previewUpload('insuranceAttachment')">
+					</div>
+					<div class="file-path-wrapper">
+						<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
+					</div>
+				</div>
+			</div> -->
+		</div>
+		<div md-dialog-actions>
+			<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
+			<button md-button class="waves-effect #009688 teal btn">Submit</button>
+		</div>
+	</form>
+</div>

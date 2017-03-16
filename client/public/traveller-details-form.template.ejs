@@ -1,0 +1,138 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	</head>
+	<body>
+		<div ng-app="travellersApp" ng-controller="appCtrl">
+			<div class="row">
+				<form class="col s12" ng-submit="submitTravellerDetails()">
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="first_name" class="active">First Name</label>
+							<input id="first_name" type="text" name="firstName" class="validate" ng-model="traveller.firstName">
+						</div>
+						<div class="input-field col s6">
+							<label for="last_name" class="active">Last Name</label>
+							<input id="last_name" type="text" name="lastName" class="validate" ng-model="traveller.lastName">
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="nationality" class="active">Nationality</label>
+							<input id="nationality" type="text" name="nationality" class="validate" ng-model="traveller.nationality">
+						</div>
+						<div class="input-field col s6">
+							<label for="dob" class="active">Birth Date</label>
+							<input id="dob" type="date" name="dob" class="validate" ng-model="traveller.dob">
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="permanentAddress" class="active">Permanent Address</label>
+							<input id="permanentAddress" type="text" name="permanentAddress" class="validate" ng-model="traveller.permanentAddress">
+						</div>
+						<div class="input-field col s6">
+							<label for="email" class="active">Email</label>
+							<input id="email" type="text" name="email" class="validate" ng-model="traveller.email">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="telephone" class="active">Telephone</label>
+							<input id="telephone" type="text" name="telephone" class="validate" ng-model="traveller.telephone">
+						</div>
+					</div>
+
+					<div class="row">
+						<label class="active">Passport Attachments</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="passportAttachment" file-model="traveller.passportAttachment" onchange="angular.element(this).scope().previewUpload('passportAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="passportAttachment" src="" height="200" alt="Image preview...">
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<label class="active">Insurance Attachments</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="insuranceAttachment" file-model="traveller.insuranceAttachment" onchange="angular.element(this).scope().previewUpload('insuranceAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
+							</div>
+						</div>
+					</div>
+
+					<div>
+						<button md-button class="waves-effect #009688 teal btn" type="submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script>
+			var app = angular.module('travellersApp', []);
+
+			app.directive('fileModel', ['$parse', function ($parse) {
+				return {
+					restrict: 'A',
+					link: function(scope, element, attrs) {
+						var model = $parse(attrs.fileModel);
+						var modelSetter = model.assign;
+
+						element.bind('change', function(){
+							scope.$apply(function(){
+								modelSetter(scope, element[0].files[0]);
+							});
+						});
+					}
+				};
+			}]);
+
+			app.controller('appCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
+				$scope.traveller = {};
+				$scope.traveller.passportAttachment = {};
+				$scope.traveller.insuranceAttachment = {};
+				$scope.previewUpload = function(uploadType){
+					var preview = document.querySelector('.'+uploadType);
+					setTimeout(function(){ 
+						var attachment = $scope.traveller[uploadType];
+						var reader  = new FileReader();
+						reader.addEventListener("load", function () {
+							preview.src = reader.result;
+							var dataObj = {
+								name: $scope.traveller[uploadType].name,
+								size: $scope.traveller[uploadType].size,
+								type: $scope.traveller[uploadType].type,
+								imageFile: reader.result
+							};
+							$scope.traveller[uploadType] = dataObj;
+						}, false);
+						if(attachment){
+							reader.readAsDataURL(attachment);
+						}
+					}, 0);
+				}
+
+				$scope.submitTravellerDetails = function(){
+					$http({method:'post', url: 'http://localhost:5000/app/travellers/create', data:$scope.traveller})
+						.then(saveResponse=>{
+							window.top.location.href = document.referrer;
+						})
+						.catch(errorResponse=>{
+							console.log(errorResponse)
+						});
+				}
+			}]);
+		</script>
+	</body>
+</html>

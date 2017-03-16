@@ -53,3 +53,15 @@ export class Arrival {
     time: string;
     cost: number;
 }
+
+export class Traveler {
+	insuranceAttachments: string;
+	passportAttachments: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	nationality: string;
+	permanentAddress: string;
+	status: boolean;
+	telephone: string;
+}
