@@ -2,29 +2,36 @@ const mongoose = require('mongoose');
 let TravelerSchema = new mongoose.Schema({
 	userId: String,
 	firstName: String,
+	middleName: String,
 	lastName: String,
 	nationality: String,
 	dob: String,
 	permanentAddress: String,
 	telephone: String,
 	email: String,
-	hotel: Object,
 	attachments: {
 		passport: String,
 		insurance: String,
-		photo: String
+		profile: String
 	},
 	emergencyContact: {
 		name: String,
-		phone: String,
+		number: String,
 		relation: String
 	},
-	airportReceive: {
-		date: Object,
-		time: String,
-		flightNumber: String
+	airportPickup: {
+		confirmation: { type:Boolean, default: false },
+		date: String,
+		time: String
 	},
-	status: { type: Boolean, default: true },
+	hotel: {
+		confirmation: { type:Boolean, default: false },
+		name: String,
+		address: String,
+		telephone: String
+	},
+	messageBox: String,
+	status: { type:Boolean, default: true },
 	createdDate: {
 		type: Date, 
 		default: new Date()

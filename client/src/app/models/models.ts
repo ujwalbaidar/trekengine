@@ -64,4 +64,27 @@ export class Traveler {
 	permanentAddress: string;
 	status: boolean;
 	telephone: string;
+	messageBox: string;
+	emergencyContact: EmergencyContact;
+	airportPickup: AirportPickup;
+	hotel: Hotel;
+}
+
+export class EmergencyContact {
+	name: string;
+	number: string;
+	relation: string;
+}
+
+export class AirportPickup {
+	confirmation: boolean;
+	date: string;
+	time: string;
+}
+
+export class Hotel {
+	confirmation: boolean;
+	name: string;
+	address: string;
+	telephone: string;
 }

@@ -5,6 +5,7 @@ import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { MovementsService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
+declare var jQuery:any;
 
 @Component({
     selector: 'traveller-details',
@@ -18,7 +19,9 @@ export class TravellerDetailsComponent implements OnInit {
 		private _route: Router, 
 		public dialog: MdDialog, 
 		public movementServie: MovementsService
-	){}
+	){
+		jQuery('.materialboxed').materialbox();
+	}
 	
 	ngOnInit(){
 		this.getTravelerDetails();
@@ -83,12 +86,26 @@ export class TravellerDetailsDialogComponent implements OnInit {
 		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/app/travellers');
 	}
 
-	submitTravelerDetails(){
-		this.movementService.updateTravelerDetails(this.traveler)
-			.subscribe(updateResponse=>{
-				this.dialogRef.close(updateResponse);
-			}, updateError=>{
-				this.dialogRef.close(updateError);
-			});
+	submitTravelerDetails(travelerDetail:any){
+		if(travelerDetail.valid){
+			this.movementService.updateTravelerDetails(this.traveler)
+				.subscribe(updateResponse=>{
+					this.dialogRef.close(updateResponse);
+				}, updateError=>{
+					this.dialogRef.close(updateError);
+				});
+		}
+	}
+
+	submitPickupConfirmation(isChecked:boolean){
+		if(isChecked){
+			this.traveler['airportPickup']['confirmation'] = false;
+		}else{
+			this.traveler['airportPickup']['confirmation'] = true;
+		}
+	}
+
+	previewImage(){
+		jQuery('.materialboxed').materialbox();
 	}
 }
