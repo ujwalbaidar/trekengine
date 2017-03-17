@@ -19,24 +19,28 @@ exports.getTravelerDetails = function(req, res) {
 exports.createTravellers = function(req, res) {
 	saveAttachments(req.body)
 		.then(saveRes=>{
-			let saveObj = {
-				userId: '58aeae6a5c2cf04ab738ba5c',
-				firstName: req.body.firstName?req.body.firstName:'',
-				lastName: req.body.lastName?req.body.lastName:'',
-				nationality: req.body.nationality?req.body.nationality:'',
-				attachments: {},
-				permanentAddress: req.body.permanentAddress?req.body.permanentAddress:'',
-				email: req.body.email?req.body.email:'',
-				dob: req.body.dob?req.body.dob:'',
-				telephone: req.body.telephone?req.body.telephone:''
-			};
+			req.body.userId = '58aeae6a5c2cf04ab738ba5c';
+			req.body.attachments = {};
+			req.body.dob=getIsoDateToString(req.body.dob);
+			if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
+				req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
+			}
+
+			if(req.body.profileAttachment && req.body.profileAttachment.name){
+				let profileAttachmentPath = saveRes.filter(pathObj=>{
+					if(pathObj['profileAttachment']){
+						return pathObj['profileAttachment'];
+					}
+				});
+				req.body.attachments.profile = profileAttachmentPath[0].profileAttachment;
+			}
 			if(req.body.passportAttachment && req.body.passportAttachment.name){
 				let passportAttachmentPath = saveRes.filter(pathObj=>{
 					if(pathObj['passportAttachment']){
 						return pathObj['passportAttachment'];
 					}
 				});
-				saveObj.attachments.passport = passportAttachmentPath[0].passportAttachment;
+				req.body.attachments.passport = passportAttachmentPath[0].passportAttachment;
 			}
 			if(req.body.insuranceAttachment && req.body.insuranceAttachment.name){
 				let insuranceAttachmentPath = saveRes.filter(pathObj=>{
@@ -44,10 +48,10 @@ exports.createTravellers = function(req, res) {
 						return pathObj['insuranceAttachment'];
 					}
 				});
-				saveObj.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
+				req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 			}
 
-			let travelers = new Travelers(saveObj);
+			let travelers = new Travelers(req.body);
 
 			travelers.save((err, traveler)=>{
 				if(err){
@@ -63,17 +67,17 @@ exports.createTravellers = function(req, res) {
 }
 
 function saveAttachments(dataObj) {
-	return new Promise((res, rej)=>{
-		let currentDateTime = new Date().getTime();
 
+	return new Promise((res, rej)=>{
 		let savePassportAttachments = new Promise((resolve, reject)=>{
-			if(dataObj.passportAttachment && dataObj.passportAttachment.name){
+			if(dataObj.passportAttachment && (dataObj.passportAttachment.name!==undefined)){
 				let passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
-				fs.writeFile("attachments/"+currentDateTime+"_"+dataObj.passportAttachment.name, passportAttachment, 'base64', function(err) {
+				let dateTime = new Date().getTime();
+				fs.writeFile("attachments/passport_"+ dateTime+"_"+dataObj.passportAttachment.name, passportAttachment, 'base64', function(err) {
 					if(err){
 						reject(err);
 					}else{
-						resolve({passportAttachment: "attachments/"+currentDateTime+"_"+dataObj.passportAttachment.name});
+						resolve({passportAttachment: "passport_" + dateTime+"_"+dataObj.passportAttachment.name});
 					}
 				});
 			}else{
@@ -82,13 +86,14 @@ function saveAttachments(dataObj) {
 		});
 
 		let insuranceAttachment = new Promise((resolve, reject)=>{
-			if(dataObj.insuranceAttachment && dataObj.insuranceAttachment.name){
+			if(dataObj.insuranceAttachment && (dataObj.insuranceAttachment.name!==undefined)){
 				let insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
-				fs.writeFile("attachments/"+currentDateTime+"_"+dataObj.insuranceAttachment.name, insuranceAttachment, 'base64', function(err) {
+				let dateTime = new Date().getTime();
+				fs.writeFile("attachments/insurance_" + dateTime+"_"+dataObj.insuranceAttachment.name, insuranceAttachment, 'base64', function(err) {
 					if(err){
 						reject(err);
 					}else{
-						resolve({insuranceAttachment: "attachments/"+currentDateTime+"_"+dataObj.insuranceAttachment.name});
+						resolve({insuranceAttachment: "insurance_" + dateTime+"_"+dataObj.insuranceAttachment.name});
 					}
 				});
 			}else{
@@ -96,7 +101,23 @@ function saveAttachments(dataObj) {
 			}
 		});
 
-		Promise.all([savePassportAttachments, insuranceAttachment])
+		let profileAttachment = new Promise((resolve, reject)=>{
+			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
+				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				let dateTime = new Date().getTime();
+				fs.writeFile("attachments/profile_"+dateTime+"_"+dataObj.profileAttachment.name, profileAttachment, 'base64', function(err) {
+					if(err){
+						reject(err);
+					}else{
+						resolve({profileAttachment: "profile_" + dateTime+"_"+dataObj.profileAttachment.name});
+					}
+				});
+			}else{
+				resolve({profileAttachment:""});
+			}
+		});
+
+		Promise.all([savePassportAttachments, profileAttachment, insuranceAttachment])
 			.then(values => {
 				res(values)
 			})
@@ -104,6 +125,23 @@ function saveAttachments(dataObj) {
 				rej(reason);
 			});
 	});
+}
+
+function getIsoDateToString(isoDate){
+	let date = new Date(isoDate);
+	let year = date.getFullYear();
+	let month = date.getMonth()+1;
+	let dt = date.getDate();
+
+	if (dt < 10) {
+		dt = '0' + dt;
+	}
+	
+	if (month < 10) {
+		month = '0' + month;
+	}
+	let stringDate = year+'-' + month + '-'+dt;
+	return stringDate;
 }
 
 exports.deleteTraveler = function(req, res){
@@ -114,10 +152,10 @@ exports.deleteTraveler = function(req, res){
 			}else{
 				let filePathArr = [];
 				if(travelerInfo.attachments && travelerInfo.attachments.insurance){
-					filePathArr.push(travelerInfo.attachments.insurance);
+					filePathArr.push("attachments/"+travelerInfo.attachments.insurance);
 				}
 				if(travelerInfo.attachments && travelerInfo.attachments.passport){
-					filePathArr.push(travelerInfo.attachments.passport);
+					filePathArr.push("attachments/"+travelerInfo.attachments.passport);
 				}
 				removeAttachments(filePathArr).then(()=>{
 					Travelers.remove({ _id:req.headers.deleteid, userId: req.headers.userId }, (removeErr, traveler)=>{
@@ -153,18 +191,29 @@ function removeAttachments(pathArr) {
 	});
 }
 
-exports.updateTrveler = function(req, res){
+exports.updateTraveler = function(req, res){
 	if(req.headers && req.headers.userId){
 		let updateData = {
 				firstName: req.body.firstName,
+				middleName: req.body.middleName,
 				lastName: req.body.lastName,
 				nationality: req.body.nationality,
 				permanentAddress: req.body.permanentAddress,
 				email: req.body.email,
-				dob: req.body.dob,
-				telephone: req.body.telephone
+				dob: getIsoDateToString(req.body.dob),
+				telephone: req.body.telephone,
+				airportPickup: req.body.airportPickup,
+				emergencyContact: req.body.emergencyContact,
+				messagebox: req.body.messageBox,
+				status: req.body.status,
+				updatedDate: new Date(),
+				hotel: req.body.hotel,
+				attachments: req.body.attachments
 			};
 
+		if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
+			updateData.airportPickup.date = getIsoDateToString(req.body.airportPickup.date);
+		}
 		Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, travelerUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
@@ -176,100 +225,3 @@ exports.updateTrveler = function(req, res){
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
 }
-/*exports.createFlights = function(req, res) {
-	if(req.headers && req.headers.userId){
-		req.body.userId = req.headers.userId;
-		req.body.departure = {
-				name: req.body.departure.name,
-				dateTime: req.body.departure.date,
-				cost: req.body.departure.cost
-		};
-		req.body.arrival = {
-				name: req.body.arrival.name,
-				dateTime: req.body.arrival.date,
-				cost: req.body.arrival.cost
-		};
-		req.body.bookingId = req.body.booking;
-		let flights = new Flights(req.body);
-		flights.save((err, trip)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:trip});
-			}
-		});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}
-
-exports.getAllFlights = function(req, res) {
-	if(req.headers && req.headers.userId){
-		Flights.find({userId: req.headers.userId }, (err, trips)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:trips});
-			}
-		});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}
-
-exports.getFlightsByQueryParams = function(req, res){
-	if(req.headers && req.headers.userId){
-		let findQuery = {userId: req.headers.userId };
-		Flights.findOne(Object.assign(findQuery, req.query), (err, trips)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:trips});
-			}
-		});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}
-
-exports.updateFlights = function(req, res){
-	if(req.headers && req.headers.userId){
-		let updateData = {
-			flightType: req.body.flightType,
-			departure: {
-				name: req.body.departure.name,
-				dateTime: req.body.departure.date,
-				cost: req.body.departure.cost
-			},
-			arrival: {
-				name: req.body.arrival.name,
-				dateTime: req.body.arrival.date,
-				cost: req.body.arrival.cost
-			},
-			bookingId: req.body.booking
-		};
-		Flights.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, flightUpdate)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:flightUpdate});
-			}
-		});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}
-
-exports.deleteFlights = function(req, res){
-	if(req.headers && req.headers.userId){
-		Flights.remove({ _id:req.headers.deleteid, userId: req.headers.userId }, (err, flight)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:flight});
-			}
-		});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}*/

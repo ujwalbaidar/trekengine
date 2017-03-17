@@ -8,6 +8,7 @@
 				<td>Nationality</td>
 				<td>Permanent Address</td>
 				<td>Telephone</td>
+				<td>Airport Pickup</td>
 				<td>Status</td>
 				<td>Actions</td>
 			</tr>
@@ -28,6 +29,9 @@
 				</td>
 				<td (click)="openTravellerModal(travalerInfo, 'view')">
 					{{ travalerInfo.telephone }}
+				</td>
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.airportPickup.confirmation }}
 				</td>
 				<td>
 					{{ travalerInfo.status==true?'active':'inactive'}}
