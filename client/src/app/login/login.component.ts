@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
 	constructor(private userService: UserService, private authService: AuthService, private _route: Router){}
 	ngOnInit(){}
 	loginUser(form:any){
+		debugger;
 		this.errObj = {};
 		if(form.valid == true){
 			this.userService.loginUser(this.user)
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
 					loginUser=>{
 						this.authService.setCookies('authToken',loginUser['token']);
 						this.authService.setCookies('idx',loginUser['index']);
+						this.authService.setCookies('hostOrigin', window.location.origin);
 						this._route.navigate(['/']);
 					}, error=>{
 						if(error.errBody.data.errorCode && error.errBody.data.errorCode == 'emailErr'){

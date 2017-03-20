@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Travelers = mongoose.model('Travelers');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('../../../server/configs/config')[env];
+const User = mongoose.model('User');
 
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -17,53 +21,64 @@ exports.getTravelerDetails = function(req, res) {
 }
 
 exports.createTravellers = function(req, res) {
-	saveAttachments(req.body)
-		.then(saveRes=>{
-			req.body.userId = '58aeae6a5c2cf04ab738ba5c';
-			req.body.attachments = {};
-			req.body.dob=getIsoDateToString(req.body.dob);
-			if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-				req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
-			}
+	validateIframe(req.headers)
+		.then(validateResponse=>{
+			if(validateResponse.success == true){
+				saveAttachments(req.body)
+					.then(saveRes=>{
+						req.body.userId = validateResponse.data;
+						req.body.attachments = {};
+						req.body.dob=getIsoDateToString(req.body.dob);
+						if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
+							req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
+						}
 
-			if(req.body.profileAttachment && req.body.profileAttachment.name){
-				let profileAttachmentPath = saveRes.filter(pathObj=>{
-					if(pathObj['profileAttachment']){
-						return pathObj['profileAttachment'];
-					}
-				});
-				req.body.attachments.profile = profileAttachmentPath[0].profileAttachment;
-			}
-			if(req.body.passportAttachment && req.body.passportAttachment.name){
-				let passportAttachmentPath = saveRes.filter(pathObj=>{
-					if(pathObj['passportAttachment']){
-						return pathObj['passportAttachment'];
-					}
-				});
-				req.body.attachments.passport = passportAttachmentPath[0].passportAttachment;
-			}
-			if(req.body.insuranceAttachment && req.body.insuranceAttachment.name){
-				let insuranceAttachmentPath = saveRes.filter(pathObj=>{
-					if(pathObj['insuranceAttachment']){
-						return pathObj['insuranceAttachment'];
-					}
-				});
-				req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
-			}
+						if(req.body.profileAttachment && req.body.profileAttachment.name){
+							let profileAttachmentPath = saveRes.filter(pathObj=>{
+								if(pathObj['profileAttachment']){
+									return pathObj['profileAttachment'];
+								}
+							});
+							req.body.attachments.profile = profileAttachmentPath[0].profileAttachment;
+						}
+						if(req.body.passportAttachment && req.body.passportAttachment.name){
+							let passportAttachmentPath = saveRes.filter(pathObj=>{
+								if(pathObj['passportAttachment']){
+									return pathObj['passportAttachment'];
+								}
+							});
+							req.body.attachments.passport = passportAttachmentPath[0].passportAttachment;
+						}
+						if(req.body.insuranceAttachment && req.body.insuranceAttachment.name){
+							let insuranceAttachmentPath = saveRes.filter(pathObj=>{
+								if(pathObj['insuranceAttachment']){
+									return pathObj['insuranceAttachment'];
+								}
+							});
+							req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
+						}
 
-			let travelers = new Travelers(req.body);
+						let travelers = new Travelers(req.body);
 
-			travelers.save((err, traveler)=>{
-				if(err){
-					res.status(400).json({success:false, data:err});
-				}else{
-					res.status(200).json({success:true, data:traveler});
-				}
-			});
+						travelers.save((err, traveler)=>{
+							if(err){
+								res.status(400).json({success:false, data:err});
+							}else{
+								res.status(200).json({success:true, data:traveler});
+							}
+						});
+					})
+					.catch(saveErr=>{
+						res.status(400).send({message:"Failed to save all attachments", error: JSON.stringify(saveErr)});
+					});
+			}else{
+				res.status(200).send(validateResponse);
+			}
 		})
-		.catch(saveErr=>{
-			res.status(400).send({message:"Failed to save all attachments", error: JSON.stringify(saveErr)});
+		.catch(iframeErr=>{
+			res.status(400).send(err);
 		});
+	
 }
 
 function saveAttachments(dataObj) {
@@ -157,6 +172,7 @@ exports.deleteTraveler = function(req, res){
 				if(travelerInfo.attachments && travelerInfo.attachments.passport){
 					filePathArr.push("attachments/"+travelerInfo.attachments.passport);
 				}
+
 				removeAttachments(filePathArr).then(()=>{
 					Travelers.remove({ _id:req.headers.deleteid, userId: req.headers.userId }, (removeErr, traveler)=>{
 						if(err){
@@ -178,15 +194,19 @@ exports.deleteTraveler = function(req, res){
 
 function removeAttachments(pathArr) {
 	return new Promise((resolve, reject)=>{
-		for(let i=0;i<pathArr.length;i++){
-			fs.unlink(pathArr[i], (err) => {
-				if (err) {
-					reject(err);
-				}
-				if(i == (pathArr.length-1)){
-					resolve();
-				}
-			});
+		if(pathArr.length>0){
+			for(let i=0;i<pathArr.length;i++){
+				fs.unlink(pathArr[i], (err) => {
+					if (err) {
+						reject(err);
+					}
+					if(i == (pathArr.length-1)){
+						resolve();
+					}
+				});
+			}
+		}else{
+			resolve();
 		}
 	});
 }
@@ -224,4 +244,41 @@ exports.updateTraveler = function(req, res){
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function validateIframe(headerData){
+	return new Promise((resolve, reject)=>{
+		let origin = headerData.weborigin;
+		if(origin == config.webHost){
+			auth(JSON.parse(headerData.webheader)).then(userId=>{
+				resolve({success: true, msg: '', data: userId});
+			}).catch(err=>{
+				reject(err);
+			});
+		}else{
+			User.findOne({domain:origin},(err, user)=>{
+				if(err){
+					reject(err);
+				}else{
+					if(user && user._id){
+						resolve({success: true, msg: '', data: user._id});
+					}else{
+						resolve({success:false, msg: `${origin} is not registered!`});
+					}
+				}
+			});
+		}
+	});
+}
+
+function auth(headerToken){
+	return new Promise((resolve, reject)=>{
+		jwt.verify(headerToken.authToken, config.loginAuth.secretKey, { algorithms: config.loginAuth.algorithm }, function(err, decoded) {
+			if(err){
+				reject(err);
+			}else{
+				resolve(decoded.userId);
+			}
+		});
+	});
 }

@@ -16,6 +16,7 @@ exports.createUser = function(req, res){
 	req.body.firstName = req.body.fname;
 	req.body.lastName = req.body.lname;
 	req.body.role = req.body.role?req.body.role:20;
+	req.body.domain = req.body.domain;
 	req.body.createdDate = new Date();
 	req.body.updatedDate = new Date();
 	req.body.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
