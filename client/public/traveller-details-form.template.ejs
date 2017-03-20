@@ -4,6 +4,7 @@
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
 	</head>
 	<body>
 		<div ng-app="travellersApp" ng-controller="appCtrl">
@@ -178,7 +179,7 @@
 			</div>
 		</div>
 		<script>
-			var app = angular.module('travellersApp', []);
+			var app = angular.module('travellersApp', ['ngCookies']);
 
 			app.directive('fileModel', ['$parse', function ($parse) {
 				return {
@@ -196,9 +197,10 @@
 				};
 			}]);
 
-			app.controller('appCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
+			app.controller('appCtrl', ['$scope', '$http', '$window', '$cookies', function($scope, $http, $window, $cookies) {
 				$scope.traveller = {};
 				$scope.submitted = false;
+
 				$scope.previewUpload = function(uploadType){
 					var preview = document.querySelector('.'+uploadType);
 					setTimeout(function(){ 
@@ -235,12 +237,24 @@
 				$scope.submitTravellerDetails = function(isValid){
 					$scope.submitted = true;
 					if(isValid){
-						$http({method:'post', url: 'http://localhost:5000/app/travellers/create', data:$scope.traveller})
+						$http({
+								method:'post', 
+								url: 'http://localhost:5000/app/travellers/create', 
+								data:$scope.traveller, 
+								headers:{
+									webHeader: JSON.stringify($cookies.getAll()),
+									webOrigin: window.location.origin
+								}
+							})
 							.then(saveResponse=>{
-								window.top.location.href = document.referrer;
+								if(saveResponse.data.success == true){
+									window.top.location.href = document.referrer;
+								}else{
+									alert(saveResponse.data.msg);
+								}
 							})
 							.catch(errorResponse=>{
-								console.log(errorResponse)
+								alert('Failed to save traveler details!!')
 							});
 					}
 				}
