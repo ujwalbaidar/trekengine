@@ -54,7 +54,7 @@ export class Arrival {
     cost: number;
 }
 
-export interface Traveler {
+export class Traveler {
 	firstName: string;
 	middleName: string;
 	lastName: string;

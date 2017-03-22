@@ -15,6 +15,20 @@ exports.getAllBooking = function(req,res){
 	}
 }
 
+exports.getBooking = function(req, res){
+	if(req.headers && req.headers.userId){
+		getByBookingQuyer(req.query)
+			.then(booking=>{
+				res.status(200).json({success: true, data: booking});
+			})
+			.catch(bookingErr=>{
+				res.status(400).json({success: false, data: bookingErr});
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
 exports.createBooking = function(req,res){
 	if(req.headers && req.headers.userId){
 		req.body.userId = req.headers.userId;
@@ -70,4 +84,16 @@ exports.deleteBooking = function(req,res){
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function getByBookingQuyer(query){
+	return new Promise((resolve, reject)=>{
+		Bookings.findOne(query,{_id:0}, (err, booking)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(booking);
+			}
+		});
+	})
 }

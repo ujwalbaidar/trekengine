@@ -23,6 +23,7 @@ import {
   BookingsComponent,
   BookingsDialogComponent,
   BookingsViewComponent,
+  BookingDetailsComponent,
   FlightDetailsComponent, 
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
@@ -45,7 +46,7 @@ import {
     MovementComponent, 
     TripDetailsComponent, TripDetailsDialogComponent, 
     GuideDetailsComponent, GuideDetailsDialogComponent,
-    BookingsComponent, BookingsDialogComponent, BookingsViewComponent,
+    BookingsComponent, BookingsDialogComponent, BookingsViewComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
     TravellerDetailsComponent, TravellerDetailsDialogComponent,
   	RegisterComponent 

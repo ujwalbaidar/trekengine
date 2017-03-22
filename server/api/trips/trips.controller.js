@@ -36,6 +36,32 @@ exports.getAllTrips = function(req, res) {
 	}
 }
 
+exports.getTrip = function(req, res){
+	if(req.headers && req.headers.userId){
+		getTripByQuery(req.query)
+			.then(trip=>{
+				res.status(200).json({success:true, data: trip});
+			})
+			.catch(tripErr=>{
+				res.status(400).json({success:false, data: err});
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
+function getTripByQuery(query){
+	return new Promise((resolve, reject)=>{
+		Trips.find(query, {_id:0}, (err, trip)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(trip);
+			}
+		});
+	});
+}
+
 exports.updateTrips = function(req, res){
 	if(req.headers && req.headers.userId){
 		let updateData = {

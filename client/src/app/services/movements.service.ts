@@ -33,6 +33,20 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getTripDetail(tripQuery:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<tripQuery.length;i++){
+			let key = Object.keys(tripQuery[i])[0];
+			let value = tripQuery[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/movements/trips/findOne', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	updateTrekDetails(trip: Object) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
@@ -56,6 +70,20 @@ export class MovementsService {
 		return this.http.get('/api/movements/bookings/findAll', options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
+	}
+
+	getBooking(bookingQuery:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<bookingQuery.length;i++){
+			let key = Object.keys(bookingQuery[i])[0];
+			let value = bookingQuery[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/movements/bookings/findOne', options)
+			.map(this.extractData)
+			.catch(this.handleError);
 	}
 
 	deleteBooking(deleteId: string) {
