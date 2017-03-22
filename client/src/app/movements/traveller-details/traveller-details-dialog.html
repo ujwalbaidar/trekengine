@@ -85,7 +85,7 @@
 			Profile Image
 		</div>
 		<div class="col s9">
-			<img (click)="previewImage()" class="materialboxed" width="250" src="{{traveler.attachments.profile}}">
+			<img (click)="previewImage()" *ngIf="traveler.attachments?.profile" class="materialboxed" width="250" src="{{traveler.attachments?.profile}}">
 		</div>
 	</div>
 	<div class="row">
@@ -93,7 +93,7 @@
 			Passport
 		</div>
 		<div class="col s9">
-			<img (click)="previewImage()" class="materialboxed" width="250" src="{{traveler.attachments.passport}}">
+			<img (click)="previewImage()" *ngIf="traveler.attachments?.passport" class="materialboxed" width="250" src="{{traveler.attachments?.passport}}">
 		</div>
 	</div>
 	<div class="row">
@@ -101,7 +101,7 @@
 			Insurance
 		</div>
 		<div class="col s9">
-			<img class="materialboxed" width="250" src="{{traveler.attachments.insurance}}">
+			<img (click)="previewImage()" *ngIf="traveler.attachments?.insurance" class="materialboxed" width="250" src="{{traveler.attachments?.insurance}}">
 		</div>
 	</div>
 
@@ -188,6 +188,45 @@
 			<div class="row">
 				<strong>Attachments</strong>
 			</div>
+			<div>
+				<label class="active">Profile Image</label>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Browse</span>
+						<input type="file" name="profileAttachment" (change)="updateImage($event, 'profile')">
+					</div>
+					<div class="file-path-wrapper">
+						<img class="profileAttachment" [src]="traveler.attachments?.profile" height="200" alt="Image preview...">
+					</div>
+				</div>
+				<a *ngIf="traveler.attachments?.profile" (click)="removeAttachment('profile')">X</a>
+			</div>
+			<div>
+				<label class="active">Passport Image</label>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Browse</span>
+						<input type="file" name="passportAttachment" (change)="updateImage($event, 'passport')">
+					</div>
+					<div class="file-path-wrapper">
+						<img class="passportAttachment" [src]="traveler.attachments?.passport" height="200" alt="Image preview...">
+					</div>
+				</div>
+				<a *ngIf="traveler.attachments?.passport" (click)="removeAttachment('passport')">X</a>
+			</div>
+			<div>
+				<label class="active">Insurance Image</label>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Browse</span>
+						<input type="file" name="insuranceAttachment" (change)="updateImage($event, 'insurance')">
+					</div>
+					<div class="file-path-wrapper">
+						<img class="insuranceAttachment" [src]="traveler.attachments?.insurance" height="200" alt="Image preview...">
+					</div>
+				</div>
+				<a *ngIf="traveler.attachments?.insurance" (click)="removeAttachment('insurance')">X</a>
+			</div>
 			<hr>
 			<div class="row">
 				<strong>Emergency Contacts</strong>
@@ -196,17 +235,17 @@
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="emergencyContactName" class="active">Name</label>
-					<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" [(ngModel)]="traveler.emergencyContact.name" #emergencyContactName="ngModel">
+					<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" [(ngModel)]="traveler.emergencyContactName" #emergencyContactName="ngModel">
 				</div>
 				<div class="input-field col s6">
 					<label for="emergencyContactNumber" class="active">Phone</label>
-					<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" [(ngModel)]="traveler.emergencyContact.number">
+					<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" [(ngModel)]="traveler.emergencyContactNumber">
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="emergencyContactRelation" class="active">Relation</label>
-					<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" [(ngModel)]="traveler.emergencyContact.relation">
+					<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" [(ngModel)]="traveler.emergencyContactRelation" #emergencyContactRelation="ngModel">
 				</div>
 			</div>
 			<hr>
@@ -244,21 +283,21 @@
 				<input type="checkbox" (click)=submitHotelConfirmation(traveler.hotel.confirmation) class="filled-in" id="hotelConfirmation" [checked]="traveler.hotel.confirmation"/>
 				<label for="hotelConfirmation">Have you Booked the Hotel?</label>
 			</div>
-			<div ng-if="traveler.hotel.confirmation">
+			<div *ngIf="traveler.hotel.confirmation">
 				<div class="row">
 					<div class="input-field col s6">
 						<label for="hotelName" class="active">Hotel Name</label>
-						<input id="hotelName" type="text" name="hotelName" class="validate" [(ngModel)]="traveler.hotel.name">
+						<input id="hotelName" type="text" name="hotelName" class="validate" [(ngModel)]="traveler.hotel.name" #hotelName="ngModel">
 					</div>
 					<div class="input-field col s6">
 						<label for="hotelAddress" class="active">Hotel Address</label>
-						<input id="hotelAddress" type="text" name="hotelAddress" class="validate" [(ngModel)]="traveler.hotel.address">
+						<input id="hotelAddress" type="text" name="hotelAddress" class="validate" [(ngModel)]="traveler.hotel.address" #hotelAddress="ngModel">
 					</div>
 				</div>
 				<div class="row">
 					<div class="input-field col s6">
 						<label for="hotelTelephone" class="active">Hotel Telephone</label>
-						<input id="hotelTelephone" type="text" name="hotelTelephone" class="validate" [(ngModel)]="traveler.hotel.telephone">
+						<input id="hotelTelephone" type="text" name="hotelTelephone" class="validate" [(ngModel)]="traveler.hotel.telephone" #hotelTelephone="ngModel">
 					</div>
 				</div>
 			</div>

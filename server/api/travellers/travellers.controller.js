@@ -24,7 +24,7 @@ exports.createTravellers = function(req, res) {
 	validateIframe(req.headers)
 		.then(validateResponse=>{
 			if(validateResponse.success == true){
-				saveAttachments(req.body)
+				saveAttachments(req.body, 'save')
 					.then(saveRes=>{
 						req.body.userId = validateResponse.data;
 						req.body.attachments = {};
@@ -81,12 +81,52 @@ exports.createTravellers = function(req, res) {
 	
 }
 
-function saveAttachments(dataObj) {
+function saveAttachments(dataObj, requestFor) {
 
 	return new Promise((res, rej)=>{
+		let profileAttachment = new Promise((resolve, reject)=>{
+			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
+				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
+					if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
+						fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
+							if(!err){
+								fs.unlink("attachments/"+dataObj.imageAttachments.profile, (err) => {
+									if (err) {
+										reject(err);
+									}
+								});
+							}
+						});
+						
+					}
+				}
+				let dateTime = new Date().getTime();
+				fs.writeFile("attachments/profile_"+dateTime+"_"+dataObj.profileAttachment.name, profileAttachment, 'base64', function(err) {
+					if(err){
+						reject(err);
+					}else{
+						resolve({profileAttachment: "profile_" + dateTime+"_"+dataObj.profileAttachment.name});
+					}
+				});
+			}else{
+				resolve({profileAttachment:""});
+			}
+		});
 		let savePassportAttachments = new Promise((resolve, reject)=>{
 			if(dataObj.passportAttachment && (dataObj.passportAttachment.name!==undefined)){
 				let passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.imageAttachments && dataObj.imageAttachments.passport){
+					fs.stat("attachments/"+dataObj.imageAttachments.passport, (err, stat) => {
+						if(!err){
+							fs.unlink("attachments/"+dataObj.imageAttachments.passport, (err) => {
+								if (err) {
+									reject(err);
+								}
+							});
+						}
+					});
+				}
 				let dateTime = new Date().getTime();
 				fs.writeFile("attachments/passport_"+ dateTime+"_"+dataObj.passportAttachment.name, passportAttachment, 'base64', function(err) {
 					if(err){
@@ -103,6 +143,18 @@ function saveAttachments(dataObj) {
 		let insuranceAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.insuranceAttachment && (dataObj.insuranceAttachment.name!==undefined)){
 				let insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
+					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
+						if(!err){
+							fs.unlink("attachments/"+dataObj.imageAttachments.insurance, (err) => {
+								if (err) {
+									reject(err);
+								}
+							});
+						}
+					});
+					
+				}
 				let dateTime = new Date().getTime();
 				fs.writeFile("attachments/insurance_" + dateTime+"_"+dataObj.insuranceAttachment.name, insuranceAttachment, 'base64', function(err) {
 					if(err){
@@ -116,25 +168,11 @@ function saveAttachments(dataObj) {
 			}
 		});
 
-		let profileAttachment = new Promise((resolve, reject)=>{
-			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
-				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
-				let dateTime = new Date().getTime();
-				fs.writeFile("attachments/profile_"+dateTime+"_"+dataObj.profileAttachment.name, profileAttachment, 'base64', function(err) {
-					if(err){
-						reject(err);
-					}else{
-						resolve({profileAttachment: "profile_" + dateTime+"_"+dataObj.profileAttachment.name});
-					}
-				});
-			}else{
-				resolve({profileAttachment:""});
-			}
-		});
+		
 
 		Promise.all([savePassportAttachments, profileAttachment, insuranceAttachment])
 			.then(values => {
-				res(values)
+				res(values);
 			})
 			.catch(reason=>{
 				rej(reason);
@@ -213,34 +251,51 @@ function removeAttachments(pathArr) {
 
 exports.updateTraveler = function(req, res){
 	if(req.headers && req.headers.userId){
-		let updateData = {
-				firstName: req.body.firstName,
-				middleName: req.body.middleName,
-				lastName: req.body.lastName,
-				nationality: req.body.nationality,
-				permanentAddress: req.body.permanentAddress,
-				email: req.body.email,
-				dob: getIsoDateToString(req.body.dob),
-				telephone: req.body.telephone,
-				airportPickup: req.body.airportPickup,
-				emergencyContact: req.body.emergencyContact,
-				messagebox: req.body.messageBox,
-				status: req.body.status,
-				updatedDate: new Date(),
-				hotel: req.body.hotel,
-				attachments: req.body.attachments
-			};
+		saveAttachments(req.body, 'update')
+			.then(attachments=>{
+				let updateData = {
+					firstName: req.body.firstName,
+					middleName: req.body.middleName,
+					lastName: req.body.lastName,
+					nationality: req.body.nationality,
+					permanentAddress: req.body.permanentAddress,
+					email: req.body.email,
+					dob: getIsoDateToString(req.body.dob),
+					telephone: req.body.telephone,
+					airportPickup: req.body.airportPickup,
+					emergencyContact: { 
+						name: req.body.emergencyContactName, 
+						number: req.body.emergencyContactNumber, 
+						relation: req.body.emergencyContactRelation
+					},
+					messagebox: req.body.messageBox,
+					status: req.body.status,
+					updatedDate: new Date(),
+					hotel: req.body.hotel,
+					attachments: req.body.attachments
+				};
 
-		if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-			updateData.airportPickup.date = getIsoDateToString(req.body.airportPickup.date);
-		}
-		Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, travelerUpdate)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:travelerUpdate});
-			}
-		});
+				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
+					updateData.airportPickup.date = getIsoDateToString(req.body.airportPickup.date);
+				}
+				if(attachments.length>0 && attachments[0]['passportAttachment']){
+					updateData['attachments']['passport'] = attachments[0]['passportAttachment'];
+				}
+				if(attachments.length>0 && attachments[2]['insuranceAttachment']){
+
+					updateData['attachments']['insurance'] = attachments[2]['insuranceAttachment'];
+				}
+				if(attachments.length>0 && attachments[1]['profileAttachment']){
+					updateData['attachments']['profile'] = attachments[1]['profileAttachment'];
+				}
+				Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, travelerUpdate)=>{
+					if(err){
+						res.status(400).json({success:false, data:err});
+					}else{
+						res.status(200).json({success:true, data:travelerUpdate});
+					}
+				});
+			});
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}

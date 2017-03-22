@@ -80,7 +80,6 @@ export class FlightDetailsDialogComponent implements OnInit {
 			this.flight.departure.date = this.flight.departure['dateTime'];
 			this.flight.arrival.date = this.flight.arrival['dateTime'];
 			this.title = 'Edit Flight Details';
-			console.log(this.flight);
 			this.flight.booking = this.flight['bookingId'];
 		}else{
 			this.flight = <Flight>{departure:{}, arrival:{}};

@@ -54,20 +54,20 @@ export class Arrival {
     cost: number;
 }
 
-export class Traveler {
-	insuranceAttachments: string;
-	passportAttachments: string;
-	email: string;
+export interface Traveler {
 	firstName: string;
+	middleName: string;
 	lastName: string;
 	nationality: string;
+	dob: string;
 	permanentAddress: string;
-	status: boolean;
+	email: string;
 	telephone: string;
-	messageBox: string;
 	emergencyContact: EmergencyContact;
 	airportPickup: AirportPickup;
 	hotel: Hotel;
+	messageBox: string;
+	status: boolean;
 }
 
 export class EmergencyContact {

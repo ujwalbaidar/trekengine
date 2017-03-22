@@ -52,6 +52,7 @@ export class TravellerDetailsComponent implements OnInit {
 
 		let dialogRef = this.dialog.open(TravellerDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
+			this.traveler['imageAttachments'] = {};
       		this.getTravelerDetails();
     	});
 	}
@@ -79,6 +80,14 @@ export class TravellerDetailsDialogComponent implements OnInit {
 		this.actionMode = this.dialogRef.config.data.mode;
 		if(this.dialogRef.config.data.travelerInfo){
 			this.traveler = Object.assign({}, this.dialogRef.config.data.travelerInfo);
+			if(this.traveler['attachments'] != undefined){
+				this.traveler['imageAttachments'] = Object.assign({}, this.traveler['attachments']);
+			}
+			if(this.traveler.emergencyContact != undefined){
+				this.traveler['emergencyContactName'] = this.traveler.emergencyContact.name;
+				this.traveler['emergencyContactNumber'] = this.traveler.emergencyContact.number;
+				this.traveler['emergencyContactRelation'] = this.traveler.emergencyContact.relation;
+			}
 		}
 	}
 
@@ -102,6 +111,39 @@ export class TravellerDetailsDialogComponent implements OnInit {
 			this.traveler['airportPickup']['confirmation'] = false;
 		}else{
 			this.traveler['airportPickup']['confirmation'] = true;
+		}
+	}
+
+	submitHotelConfirmation(isChecked:boolean){
+		if(isChecked){
+			this.traveler['hotel']['confirmation'] = false;
+		}else{
+			this.traveler['hotel']['confirmation'] = true;
+		}
+	}
+
+	removeAttachment(type: string){
+		this.traveler['attachments'][type] = '';
+	}
+
+	updateImage(event:any, uploadType: string){
+		if (event.target.files && event.target.files[0]) {
+		    var reader = new FileReader();
+
+		    reader.onload = (event) => {
+		    	if(this.traveler['attachments'] == undefined){
+		    		this.traveler['attachments'] = {};
+		    	}
+		    	this.traveler['attachments'][uploadType] = event.target['result'];
+				this.traveler[uploadType+'Attachment']['imageFile'] = event.target['result'];
+		    }
+		    let fileData = event.target.files[0];
+		    this.traveler[uploadType+'Attachment'] = {
+		    	name: fileData.name,
+		    	size:fileData.size,
+		    	type: fileData.type,
+		    };
+		    reader.readAsDataURL(event.target.files[0]);
 		}
 	}
 
