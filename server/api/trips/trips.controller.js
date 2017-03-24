@@ -5,7 +5,6 @@ exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
 		req.body.departureDate = req.body.departureDate;
 		req.body.arrivalDate = req.body.arrivalDate;
-		req.body.guideId = req.body.guide;
 		req.body.createdDate = new Date();
 		req.body.updatedDate = new Date();
 		req.body.userId = req.headers.userId;

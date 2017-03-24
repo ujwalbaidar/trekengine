@@ -1,7 +1,7 @@
 <form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form, flight)" #flightDetail="ngForm" novalidate>
 	<h4 md-dialog-title>{{ title }}</h4>
 	<div md-dialog-content>
-		<div class="row">
+		<!-- <div class="row">
 			<div class="input-field col s12">
 				<md-select [(ngModel)]="flight.booking" name="flightBooking" placeholder="Select Booking" class="col s6">
 					<md-option *ngFor="let booking of bookings" [value]="booking.bookingId">
@@ -9,7 +9,7 @@
 					</md-option>
 				</md-select>
 			</div>
-		</div>
+		</div> -->
 		<div class="row">
 			<h5>Departure Informations</h5>
 		</div>

@@ -31,7 +31,9 @@ let TravelerSchema = new mongoose.Schema({
 		telephone: String
 	},
 	messageBox: String,
+	selected: { type:Boolean, default: false },
 	status: { type:Boolean, default: true },
+	bookingId: String,
 	createdDate: {
 		type: Date, 
 		default: new Date()

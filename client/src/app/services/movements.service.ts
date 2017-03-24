@@ -112,6 +112,15 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	removeTraveler(updateObj:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/movements/bookings/removeTraveler', updateObj, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	getFlightDetails() {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
@@ -168,6 +177,20 @@ export class MovementsService {
 			.share()
             .map(this.extractData)
             .catch(this.handleError.bind(this));
+	}
+
+	queryTravelerDetails(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/movements/traveler/query', options)
+			.map(this.extractData)
+			.catch(this.handleError);
 	}
 
 	updateTravelerDetails(traveler:Object) {

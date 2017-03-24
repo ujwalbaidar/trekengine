@@ -2,7 +2,9 @@
 	<div class="col s12 m8">
 		<div class="card">
 			<div class="card-content">
-				<strong>Booking Details</strong>
+				<span class="card-title">
+					<strong>Booking Details</strong>
+				</span>
 			</div>
 			<div class="card-action">
 				<div class="row">
@@ -73,172 +75,259 @@
 		</div>
 	</div>
 </div>
-
 <div class="row">
 	<div class="col s12 m8">
 		<div class="card">
 			<div class="card-content">
-				<strong>Trip Details</strong>
+				<span class="card-title">
+					<strong>Trip Details</strong>
+				</span>
 			</div>
 			<div class="card-action">
-				<div class="row">
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Trip Name</strong>
+				<div *ngIf="trip && trip.name">
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Trip Name</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{trip?.name}}</span>
+							</div>
 						</div>
-						<div class="col s12 m9">
-							<span>{{trip?.name}}</span>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Departure Date</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{trip?.departureDate?.formatted}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Arrival Date</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{trip?.arrivalDate?.formatted}}</span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div [hidden]="trip && trip.name" class="row">
 					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Departure Date</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{trip?.departureDate?.formatted}}</span>
-						</div>
+						<p>Trip Details not added yet. Please add Trip Details!</p>
 					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Arrival Date</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{trip?.arrivalDate?.formatted}}</span>
-						</div>
+					<div class="col s6 m6 right-align">
+						<a class="btn-floating btn-large waves-effect waves-light green" (click)="openAddTripModal()"><i class="material-icons">add</i></a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 <div class="row">
 	<div class="col s12 m8">
 		<div class="card">
 			<div class="card-content">
-				<strong>Guide Details</strong>
+				<span class="card-title">
+					<strong>Guide Details</strong>
+				</span>
 			</div>
 			<div class="card-action">
-				<div class="row">
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Guide Name</strong>
+				<div *ngIf="guide && guide.firstName">
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Guide Name</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{guide?.firstName+' '+guide?.lastName}}</span>
+							</div>
 						</div>
-						<div class="col s12 m9">
-							<span>{{guide?.firstName+' '+guide?.lastName}}</span>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Email</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{guide?.email}}</span>
+							</div>
 						</div>
 					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Email</strong>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Contact Number</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{guide?.phone}}</span>
+							</div>
 						</div>
-						<div class="col s12 m9">
-							<span>{{guide?.email}}</span>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Address</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{guide?.address}}</span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div [hidden]="guide && guide.firstName" class="row">
 					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Contact Number</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{guide?.phone}}</span>
-						</div>
+						<p>Guide Details not added yet. Please add Guide Details!</p>
 					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Address</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{guide?.address}}</span>
-						</div>
+					<div class="col s6 m6 right-align">
+						<a class="btn-floating btn-large waves-effect waves-light green"><i class="material-icons">add</i></a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 <div class="row">
 	<div class="col s12 m8">
 		<div class="card">
 			<div class="card-content">
-				<strong>Flight Details</strong>
+				<span class="card-title">
+					<strong>Flight Details</strong>
+				</span>
+			</div>
+			<div class="card-action">
+				<div *ngIf="flight && flight.bookingId">
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Departure Flight</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.departure?.name}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Departure Cost</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.departure?.cost}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Departure Date</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.departure?.dateTime?.formatted}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Departure Time</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.departure?.time}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Arrival Flight</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.arrival?.name}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Arrival Cost</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.arrival?.cost}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Arrival Date</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.arrival?.dateTime?.formatted}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Arrival Time</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{flight?.departure?.time}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div [hidden]="flight && flight.bookingId" class="row">
+					<div class="col s6">
+						<p>Flight Details not added yet. Please add Flight Details!</p>
+					</div>
+					<div class="col s6 m6 right-align">
+						<a class="btn-floating btn-large waves-effect waves-light green" (click)="openFlightModal()"><i class="material-icons">add</i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col s12 m8">
+		<div class="card">
+			<div class="card-content">
+				<span class="card-title">
+					<strong>Traveller Lists</strong>
+				</span>
 			</div>
 			<div class="card-action">
 				<div class="row">
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Departure Flight</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.departure?.name}}</span>
-						</div>
+					<div class="col s6 m8">
+						<select class="browser-default" [(ngModel)]="selectedTraveler">
+							<option [value]="i" *ngFor="let traveler of travelers;let i=index;">
+								<span *ngIf="traveler && traveler.firstName && traveler.lastName && traveler.email">
+									{{traveler.firstName+' '+traveler.lastName+' ('+ traveler.email+')'}}
+								</span>
+								<span *ngIf="!traveler.firstName">Select Traveler</span>
+							</option>
+						</select>
 					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Departure Cost</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.departure?.cost}}</span>
-						</div>
+					<div class="col s6 m4">
+						<a class="waves-effect waves-light btn" (click)="selectTraveler()">Add</a>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Departure Date</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.departure?.dateTime?.formatted}}</span>
-						</div>
-					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Departure Time</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.departure?.time}}</span>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Arrival Flight</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.arrival?.name}}</span>
-						</div>
-					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Arrival Cost</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.arrival?.cost}}</span>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Arrival Date</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.arrival?.dateTime?.formatted}}</span>
-						</div>
-					</div>
-					<div class="col s6">
-						<div class="col s12 m3">
-							<strong>Arrival Time</strong>
-						</div>
-						<div class="col s12 m9">
-							<span>{{flight?.departure?.time}}</span>
-						</div>
+						<ul class="collection" *ngIf="selectedTravelerArr && selectedTravelerArr.length>0">
+							<li class="collection-item avatar" *ngFor="let traveler of selectedTravelerArr; let indx=index;">
+								<img src="{{traveler.attachments?.profile}}" class="circle">
+								<span class="title">{{traveler.firstName+' '+traveler.lastName}}</span>
+								<button md-icon-button [mdMenuTriggerFor]="menu">
+									<md-icon>more_vert</md-icon>
+								</button>
+								<md-menu #menu="mdMenu" position-x='100'>
+									<button md-menu-item (click)="removeTraveler(traveler._id, indx)">
+										<md-icon>remove</md-icon>
+										<span>Remove</span>
+									</button>
+									<button md-menu-item>
+										<md-icon>create</md-icon>
+										<span>Edit</span>
+									</button>
+								</md-menu>
+								<p>{{traveler.nationality}} <br>
+									{{traveler.email}}
+								</p>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

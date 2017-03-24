@@ -14,7 +14,7 @@ exports.createFlights = function(req, res) {
 				dateTime: req.body.arrival.date,
 				cost: req.body.arrival.cost
 		};
-		req.body.bookingId = req.body.booking;
+		req.body.bookingId = req.body.bookingId;
 		let flights = new Flights(req.body);
 		flights.save((err, trip)=>{
 			if(err){

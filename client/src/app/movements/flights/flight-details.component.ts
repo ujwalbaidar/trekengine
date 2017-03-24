@@ -75,7 +75,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 	constructor(
 		public dialogRef: MdDialogRef<FlightDetailsDialogComponent>, 
 		public movementServie: MovementsService) {
-		if(this.dialogRef.config.data){
+		if(this.dialogRef.config.data && this.dialogRef.config.data.records){
 			this.flight = Object.assign({}, this.dialogRef.config.data);
 			this.flight.departure.date = this.flight.departure['dateTime'];
 			this.flight.arrival.date = this.flight.arrival['dateTime'];
@@ -83,6 +83,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 			this.flight.booking = this.flight['bookingId'];
 		}else{
 			this.flight = <Flight>{departure:{}, arrival:{}};
+			this.flight["bookingId"] = this.dialogRef.config.data.bookingId;
 		}
 	}
 
@@ -101,7 +102,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 
 	submitFlightDetails(flightForm:any) {
 		if(flightForm.valid){
-			if(this.dialogRef.config.data){
+			if(this.dialogRef.config.data && this.dialogRef.config.data.records){
 				this.updateFlightDetails();
 			}else{
 				this.saveFlightDetails();

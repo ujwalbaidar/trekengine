@@ -15,6 +15,7 @@ let BookingSchema = new mongoose.Schema({
 	advancePaid: { type:Number, default:0 },
 	dueAmount: { type:Number, default:0 },
 	status: { type: Boolean, default: true },
+	travellers: [],
 	createdDate: {
 		type: Date, 
 		default: new Date()
