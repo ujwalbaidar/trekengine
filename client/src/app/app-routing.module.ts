@@ -9,6 +9,7 @@ import {
 	TripDetailsComponent, 
 	GuideDetailsComponent, 
 	BookingsComponent, 
+	BookingDetailsComponent,
 	FlightDetailsComponent,
 	TravellerDetailsComponent 
 } from './movements/index';
@@ -25,6 +26,7 @@ const appRoutes: Routes = [
 				component: MovementComponent, 
 				children:[
 					{ path: 'bookings', component: BookingsComponent },
+					{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent },
 					{ path: 'trip-details', component: TripDetailsComponent },
 					{ path: 'guide-details', component: GuideDetailsComponent },
 					{ path: 'traveller-details', component: TravellerDetailsComponent },

@@ -36,18 +36,18 @@
 					</div>
 				</div>
 			</div>
-			<div class="input-field col s12">
+			<!-- <div class="input-field col s12">
 				<md-select [(ngModel)]="trip.guide" name="guide" placeholder="Assign Guide" class="col s6">
 					<md-option *ngFor="let guideUser of guideUsers" [value]="guideUser.email">
 						{{guideUser.firstName+' ' +guideUser.lastName + ' ('+guideUser.email+')'}}
 					</md-option>
 				</md-select>
-			</div>
+			</div> -->
 
 		</div>
 	</div>
 	<div md-dialog-actions>
 		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
-		<button md-button class="waves-effect #009688 teal btn" (click)="submitTrekDetails(trekDetail.form)">Submit</button>
+		<button md-button class="waves-effect #009688 teal btn">Submit</button>
 	</div>
 </form>

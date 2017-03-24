@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 const User = mongoose.model('User');
+const Bookings = mongoose.model('Bookings');
 
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -272,7 +273,8 @@ exports.updateTraveler = function(req, res){
 					status: req.body.status,
 					updatedDate: new Date(),
 					hotel: req.body.hotel,
-					attachments: req.body.attachments
+					attachments: req.body.attachments,
+					selected: req.body.selected
 				};
 
 				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
@@ -288,11 +290,24 @@ exports.updateTraveler = function(req, res){
 				if(attachments.length>0 && attachments[1]['profileAttachment']){
 					updateData['attachments']['profile'] = attachments[1]['profileAttachment'];
 				}
+				if(req.body.bookingId){
+					updateData.bookingId = req.body.bookingId;
+				}
 				Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, travelerUpdate)=>{
 					if(err){
 						res.status(400).json({success:false, data:err});
 					}else{
-						res.status(200).json({success:true, data:travelerUpdate});
+						if(req.body.bookingId){
+							updateBooking({bookingId: req.body.bookingId},{$addToSet:{travellers:req.body._id}})
+								.then(updateBookingData=>{
+									res.status(200).json({success:true, data:travelerUpdate});
+								})
+								.catch(updateErr=>{
+									res.status(400).json({success:false, data:updateErr});
+								})
+						}else{
+							res.status(200).json({success:true, data:travelerUpdate});
+						}
 					}
 				});
 			});
@@ -333,6 +348,45 @@ function auth(headerToken){
 				reject(err);
 			}else{
 				resolve(decoded.userId);
+			}
+		});
+	});
+}
+
+exports.queryTravelerDetails = function(req, res){
+	if(req.headers && req.headers.userId){
+		queryTraveler(req.query)
+			.then(travelers=>{
+				res.status(200).json({success:true, data:travelers});
+
+			})
+			.catch(travelerErr=>{
+				res.status(400).json({success:false, data:travelerErr});
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
+function queryTraveler(query){
+	return new Promise((resolve, reject)=>{
+		Travelers.find(query, (err, traveler)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(traveler);
+			}
+		});
+	})
+}
+
+function updateBooking(query, updateData){
+	return new Promise((resolve, reject)=>{
+		Bookings.update(query, updateData, (err, updateReq)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(updateReq);
 			}
 		});
 	});

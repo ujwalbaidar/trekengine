@@ -15,13 +15,13 @@
 		</div>
 
 		<div class="row">
-			<div class="input-field col s6">
+			<!-- <div class="input-field col s6">
 				<md-select [(ngModel)]="booking.trip" name="trip" placeholder="Trip Name" class="col s6">
 					<md-option *ngFor="let trip of trips" [value]="trip._id" (selected)="booking.tripId">
 						{{trip.name}}
 					</md-option>
 				</md-select>
-			</div>
+			</div> -->
 			<div class="input-field col s6">
 				<input id="total-members" type="number" class="validate" name="travellerCount" [(ngModel)]="booking.travellerCount" #travellerCount="ngModel" required>
 				<div *ngIf="travellerCount.errors && (travellerCount.dirty || travellerCount.touched)"

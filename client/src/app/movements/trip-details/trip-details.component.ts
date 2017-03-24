@@ -86,9 +86,11 @@ export class TripDetailsDialogComponent implements OnInit {
     selectedValue: string;
     
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
+		let bookingId = this.dialogRef.config.data.bookingId;
+		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef.config.data){
-			this.trip = Object.assign({}, this.dialogRef.config.data);
-			this.title = 'Edit Trip Details';
+			// this.trip = Object.assign({}, this.dialogRef.config.data);
+			// this.title = 'Edit Trip Details';
 		}
 	}
 	
@@ -109,7 +111,7 @@ export class TripDetailsDialogComponent implements OnInit {
 
 	submitTrekDetails(tripForm:any) {
 		if(tripForm.valid){
-			if(this.dialogRef.config.data){
+			if(this.dialogRef.config.data && this.dialogRef.config.data.records){
 				this.updateTrekDetails();
 			}else{
 				this.saveTrekDetails();
@@ -123,10 +125,7 @@ export class TripDetailsDialogComponent implements OnInit {
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
 				this.dialogRef.close(error);
-			}, () => { console.log('Completed'); });
-			setTimeout(() => {
-				saveRequest.unsubscribe();
-			},30);
+			});
 	}
 
 	updateTrekDetails() {

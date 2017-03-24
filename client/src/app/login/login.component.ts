@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
 	constructor(private userService: UserService, private authService: AuthService, private _route: Router){}
 	ngOnInit(){}
 	loginUser(form:any){
-		debugger;
 		this.errObj = {};
 		if(form.valid == true){
 			this.userService.loginUser(this.user)
