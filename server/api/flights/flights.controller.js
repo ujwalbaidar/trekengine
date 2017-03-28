@@ -4,17 +4,8 @@ const Flights = mongoose.model('Flights');
 exports.createFlights = function(req, res) {
 	if(req.headers && req.headers.userId){
 		req.body.userId = req.headers.userId;
-		req.body.departure = {
-				name: req.body.departure.name,
-				dateTime: req.body.departure.date,
-				cost: req.body.departure.cost
-		};
-		req.body.arrival = {
-				name: req.body.arrival.name,
-				dateTime: req.body.arrival.date,
-				cost: req.body.arrival.cost
-		};
 		req.body.bookingId = req.body.bookingId;
+		console.log(req.body);
 		let flights = new Flights(req.body);
 		flights.save((err, trip)=>{
 			if(err){
@@ -59,21 +50,27 @@ exports.getFlightsByQueryParams = function(req, res){
 
 exports.updateFlights = function(req, res){
 	if(req.headers && req.headers.userId){
+		console.log(req.body.bookingId)
 		let updateData = {
-			flightType: req.body.flightType,
+			// flightType: req.body.flightType,
 			departure: {
 				name: req.body.departure.name,
-				dateTime: req.body.departure.date,
+				date: req.body.departure.date,
+				hrTime: req.body.departure.hrTime,
+				hrTime: req.body.departure.hrTime,
+				minTime: req.body.departure.minTime,
 				cost: req.body.departure.cost
 			},
 			arrival: {
 				name: req.body.arrival.name,
-				dateTime: req.body.arrival.date,
+				date: req.body.arrival.date,
+				hrTime: req.body.arrival.hrTime,
+				hrTime: req.body.arrival.hrTime,
+				minTime: req.body.arrival.minTime,
 				cost: req.body.arrival.cost
 			},
-			bookingId: req.body.booking
 		};
-		Flights.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, flightUpdate)=>{
+		Flights.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, flightUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{

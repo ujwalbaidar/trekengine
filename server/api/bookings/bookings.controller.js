@@ -61,6 +61,9 @@ exports.updateBooking = function(req,res){
 			dueAmount: (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid,
 			updateDate: new Date()
 		};
+		if(req.body.selectedGuide){
+			updateData.selectedGuide = req.body.selectedGuide;
+		}
 		Bookings.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, bookingUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
@@ -89,7 +92,7 @@ exports.deleteBooking = function(req,res){
 
 function getByBookingQuery(query){
 	return new Promise((resolve, reject)=>{
-		Bookings.findOne(query,{_id:0}, (err, booking)=>{
+		Bookings.findOne(query, (err, booking)=>{
 			if(err){
 				reject(err);
 			}else{

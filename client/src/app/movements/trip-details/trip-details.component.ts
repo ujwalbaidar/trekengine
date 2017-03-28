@@ -88,9 +88,9 @@ export class TripDetailsDialogComponent implements OnInit {
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
 		let bookingId = this.dialogRef.config.data.bookingId;
 		this.trip['bookingId'] = bookingId;
-		if(this.dialogRef.config.data){
-			// this.trip = Object.assign({}, this.dialogRef.config.data);
-			// this.title = 'Edit Trip Details';
+		if(this.dialogRef.config.data && this.dialogRef.config.data["records"]){
+			this.trip = Object.assign({}, this.dialogRef.config.data["records"]);
+			this.title = 'Edit Trip Details';
 		}
 	}
 	
@@ -111,7 +111,7 @@ export class TripDetailsDialogComponent implements OnInit {
 
 	submitTrekDetails(tripForm:any) {
 		if(tripForm.valid){
-			if(this.dialogRef.config.data && this.dialogRef.config.data.records){
+			if(this.dialogRef.config.data && this.dialogRef.config.data["records"]){
 				this.updateTrekDetails();
 			}else{
 				this.saveTrekDetails();
@@ -131,7 +131,7 @@ export class TripDetailsDialogComponent implements OnInit {
 	updateTrekDetails() {
 		this.movementServie.updateTrekDetails(this.trip)
 			.subscribe(tripsDetail=>{
-				this.dialogRef.close(tripsDetail);
+				this.dialogRef.close(this.trip);
 			}, error=>{
 				this.dialogRef.close(error);
 			});

@@ -179,6 +179,15 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	submitTravelerDetails(traveler:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/movements/traveler/add', traveler, options)
+			.share()
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	queryTravelerDetails(query:any){
 		let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<query.length;i++){

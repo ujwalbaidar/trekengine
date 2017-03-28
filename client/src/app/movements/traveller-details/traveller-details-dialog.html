@@ -1,10 +1,10 @@
-<div *ngIf="actionMode==='add'">
+<!-- <div *ngIf="actionMode==='add'">
 	<div class="modal-content">
 		<h4>Traverller Details Form</h4>
 		<a (click)="dialogRef.close('Option 1')">X</a>
 		<iframe class="e2e-iframe-trusted-src" width="550" height="455" frameborder="0" [src]="travellerDetailUrl"></iframe>
 	</div>
-</div>
+</div> -->
 
 <div *ngIf="actionMode==='view'">
 	<h4>Traveler Details</h4>
@@ -110,7 +110,7 @@
 	</div>
 </div>
 
-<div *ngIf="actionMode==='edit'">
+<div *ngIf="actionMode==='add' || actionMode==='edit'">
 	<form class="col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
 		<h4 md-dialog-title>{{ 'Edit Traveler Details' }}</h4>
 			<div class="row">
@@ -167,14 +167,16 @@
 				</div>
 				<div class="input-field col s6">
 					<label for="email" class="active">*Email</label>
-					<input id="email" type="text" name="email" class="validate" [(ngModel)]="traveler.email" #email="ngModel" required>
+					<input id="email" type="text" class="validate" name="email" [(ngModel)]="traveler.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
 					<div *ngIf="email.errors && (email.dirty || email.touched)"
 					class="alert alert-danger">
 						<div [hidden]="!email.errors.required">
 							This Field is Required!
 						</div>
+						<div [hidden]="!email.errors.pattern">
+							Email is Invalid!
+						</div>
 					</div>
-					<p>Email is not Valid!</p>
 				</div>
 			</div>
 
@@ -235,17 +237,17 @@
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="emergencyContactName" class="active">Name</label>
-					<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" [(ngModel)]="traveler.emergencyContactName" #emergencyContactName="ngModel">
+					<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" [(ngModel)]="traveler.emergencyContact.name" #emergencyContactName="ngModel">
 				</div>
 				<div class="input-field col s6">
 					<label for="emergencyContactNumber" class="active">Phone</label>
-					<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" [(ngModel)]="traveler.emergencyContactNumber">
+					<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" [(ngModel)]="traveler.emergencyContact.number">
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="emergencyContactRelation" class="active">Relation</label>
-					<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" [(ngModel)]="traveler.emergencyContactRelation" #emergencyContactRelation="ngModel">
+					<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" [(ngModel)]="traveler.emergencyContact.relation" #emergencyContactRelation="ngModel">
 				</div>
 			</div>
 			<hr>

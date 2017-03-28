@@ -1,6 +1,6 @@
-<div>
+<!-- <div>
 	<a class="modal-trigger waves-effect waves-light btn" (click)="openFlightModal()">Add Flight Details</a>
-</div>
+</div> -->
 <div>
 	<table class="table bordered responsive-table">
 		<thead>
@@ -20,12 +20,12 @@
 		<tbody>
 			<tr *ngFor="let flt of flights; let i = index;">
 				<td>{{ flt.departure.name }}</td>
-				<td>{{ flt.departure.dateTime.formatted }}</td>
-				<td></td>
+				<td>{{ flt.departure.date.formatted }}</td>
+				<td>{{ flt.departure.time }}</td>
 				<td>{{ flt.departure.cost }}</td>
 				<td>{{ flt.arrival.name }}</td>
-				<td>{{ flt.arrival.dateTime.formatted }}</td>
-				<td></td>
+				<td>{{ flt.arrival.date.formatted }}</td>
+				<td>{{ flt.arrival.time }}</td>
 				<td>{{ flt.arrival.cost }}</td>
 				<td>{{ flt.status==true?'active':'inactive'}}</td>
 				<td>

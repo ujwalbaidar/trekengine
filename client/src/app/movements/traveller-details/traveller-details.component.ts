@@ -83,11 +83,14 @@ export class TravellerDetailsDialogComponent implements OnInit {
 			if(this.traveler['attachments'] != undefined){
 				this.traveler['imageAttachments'] = Object.assign({}, this.traveler['attachments']);
 			}
-			if(this.traveler.emergencyContact != undefined){
-				this.traveler['emergencyContactName'] = this.traveler.emergencyContact.name;
-				this.traveler['emergencyContactNumber'] = this.traveler.emergencyContact.number;
-				this.traveler['emergencyContactRelation'] = this.traveler.emergencyContact.relation;
-			}
+			// if(this.traveler.emergencyContact != undefined){
+			// 	this.traveler['emergencyContactName'] = this.traveler.emergencyContact.name;
+			// 	this.traveler['emergencyContactNumber'] = this.traveler.emergencyContact.number;
+			// 	this.traveler['emergencyContactRelation'] = this.traveler.emergencyContact.relation;
+			// }
+		}else{
+			this.traveler = <Traveler>{emergencyContact:{},airportPickup:{},hotel:{}};
+			this.traveler['bookingId'] =  this.dialogRef.config.data.bookingId;
 		}
 	}
 
@@ -97,12 +100,21 @@ export class TravellerDetailsDialogComponent implements OnInit {
 
 	submitTravelerDetails(travelerDetail:any){
 		if(travelerDetail.valid){
-			this.movementService.updateTravelerDetails(this.traveler)
-				.subscribe(updateResponse=>{
-					this.dialogRef.close(updateResponse);
-				}, updateError=>{
-					this.dialogRef.close(updateError);
-				});
+			if(this.dialogRef.config.data.travelerInfo){
+				this.movementService.updateTravelerDetails(this.traveler)
+					.subscribe(updateResponse=>{
+						this.dialogRef.close(this.traveler);
+					}, updateError=>{
+						this.dialogRef.close(updateError);
+					});
+			}else{
+				this.movementService.submitTravelerDetails(this.traveler)
+					.subscribe(updateResponse=>{
+						this.dialogRef.close(this.traveler);
+					}, updateError=>{
+						this.dialogRef.close(updateError);
+					});
+			}
 		}
 	}
 

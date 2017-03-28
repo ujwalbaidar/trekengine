@@ -1,15 +1,6 @@
 <form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form, flight)" #flightDetail="ngForm" novalidate>
 	<h4 md-dialog-title>{{ title }}</h4>
 	<div md-dialog-content>
-		<!-- <div class="row">
-			<div class="input-field col s12">
-				<md-select [(ngModel)]="flight.booking" name="flightBooking" placeholder="Select Booking" class="col s6">
-					<md-option *ngFor="let booking of bookings" [value]="booking.bookingId">
-						{{booking.groupName + ' ['+booking.bookingId+']'}}
-					</md-option>
-				</md-select>
-			</div>
-		</div> -->
 		<div class="row">
 			<h5>Departure Informations</h5>
 		</div>
@@ -49,8 +40,24 @@
 				</div>
 			</div>
 			<div class="input-field col s6">
-				<label for="departureFlightTime" [ngClass]="{'active':(flight.departure.time!=undefined)}">Departure Time</label>
-				<input id="departureFlightTime" type="text" class="validate" name="departureFlightTime" [(ngModel)]="flight.departure.time" #departureFlightTime="ngModel" required>
+				<label for="departureFlightTime" class="active">Departure Time</label>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.departure.hrTime" name="departureFlightTimeHr" #departureFlightTimeHr="ngModel">
+						<option [value]="hr" *ngFor="let hr of hrs">
+							<span>{{hr}}</span>
+						</option>
+					</select>
+				</div>
+				<div class="col s1" style="padding: 10px">
+					<strong>:</strong>
+				</div>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.departure.minTime" name="departureFlightTimeMin" #departureFlightTimeMin="ngModel">
+						<option [value]="min" *ngFor="let min of mins">
+							<span>{{min}}</span>
+						</option>
+					</select>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -92,8 +99,24 @@
 				</div>
 			</div>
 			<div class="input-field col s6">
-				<label for="arrivalFlightTime" [ngClass]="{'active':(flight.arrival.time!=undefined)}">Arrival Time</label>
-				<input id="arrivalFlightTime" type="text" class="validate" name="arrivalFlightTime" [(ngModel)]="flight.arrival.time" #arrivalFlightTime="ngModel" required>
+				<label for="arrivalFlightTime" class="active">Arrival Time</label>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.arrival.hrTime" name="arrivalFlightTimeHr" #arrivalFlightTimeHr="ngModel">
+						<option [value]="hr" *ngFor="let hr of hrs">
+							<span>{{hr}}</span>
+						</option>
+					</select>
+				</div>
+				<div class="col s1" style="padding: 10px">
+					<strong>:</strong>
+				</div>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.arrival.minTime" name="arrivalFlightTimeMin" #arrivalFlightTimeMin="ngModel">
+						<option [value]="min" *ngFor="let min of mins">
+							<span>{{min}}</span>
+						</option>
+					</select>
+				</div>
 			</div>
 		</div>
 	</div>
