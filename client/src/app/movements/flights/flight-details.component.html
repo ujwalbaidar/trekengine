@@ -21,11 +21,11 @@
 			<tr *ngFor="let flt of flights; let i = index;">
 				<td>{{ flt.departure.name }}</td>
 				<td>{{ flt.departure.date.formatted }}</td>
-				<td>{{ flt.departure.time }}</td>
+				<td>{{ flt.departure.hrTime+':'+flt.departure.minTime }}</td>
 				<td>{{ flt.departure.cost }}</td>
 				<td>{{ flt.arrival.name }}</td>
 				<td>{{ flt.arrival.date.formatted }}</td>
-				<td>{{ flt.arrival.time }}</td>
+				<td>{{ flt.arrival.hrTime+':'+flt.departure.minTime }}</td>
 				<td>{{ flt.arrival.cost }}</td>
 				<td>{{ flt.status==true?'active':'inactive'}}</td>
 				<td>

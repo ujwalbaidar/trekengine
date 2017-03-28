@@ -22,7 +22,8 @@ let TravelerSchema = new mongoose.Schema({
 	airportPickup: {
 		confirmation: { type:Boolean, default: false },
 		date: String,
-		time: String
+		hrTime: String,
+		minTime: String
 	},
 	hotel: {
 		confirmation: { type:Boolean, default: false },

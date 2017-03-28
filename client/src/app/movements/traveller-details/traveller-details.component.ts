@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
-import { MovementsService } from '../../services/index';
+import { MovementsService, AuthService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
@@ -75,22 +75,58 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	travellerDetailUrl: SafeUrl;
 	actionMode: string;
 	traveler: Traveler = <Traveler>{};
+	title: string;
+	hrs: any;
+	mins: any;
 
-	constructor(public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, private sanitizer: DomSanitizer, public movementService: MovementsService){
-		this.actionMode = this.dialogRef.config.data.mode;
-		if(this.dialogRef.config.data.travelerInfo){
-			this.traveler = Object.assign({}, this.dialogRef.config.data.travelerInfo);
-			if(this.traveler['attachments'] != undefined){
-				this.traveler['imageAttachments'] = Object.assign({}, this.traveler['attachments']);
+	constructor(public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, private sanitizer: DomSanitizer, public movementService: MovementsService, public auth: AuthService){
+		let dialogConfigData = this.dialogRef.config.data;
+		this.actionMode = dialogConfigData.mode;
+		let timePicker = this.auth.developTimePicker();
+		this.hrs = timePicker.hrs;
+		this.mins = timePicker.mins;
+		this.traveler = <Traveler>{emergencyContact:{}, airportPickup:{hrTime:this.hrs[0],minTime:this.mins[0]}, hotel:{}};
+		if(dialogConfigData.records){
+			this.traveler = JSON.parse(JSON.stringify(dialogConfigData.records));
+			if(this.actionMode == 'edit'){
+				this.title = 'Edit Traveler Details';
+				if(this.traveler['emergencyContact']==undefined){
+					this.traveler['emergencyContact']={
+						name: '',
+						number: '',
+						relation: ''
+					};
+				}
+				if(this.traveler['emergencyContact']['name']==undefined){
+					this.traveler['emergencyContact']['name'] = '';
+				}
+				if(this.traveler['emergencyContact']['number']==undefined){
+					this.traveler['emergencyContact']['number'] = '';
+				}
+				if(this.traveler['emergencyContact']['relation']==undefined){
+					this.traveler['emergencyContact']['relation'] = '';
+				}
+				if(this.traveler['airportPickup']['hrTime'] == undefined){
+					this.traveler['airportPickup']['hrTime']=this.hrs[0];
+				}
+				if(this.traveler['airportPickup']['minTime'] == undefined){
+					this.traveler['airportPickup']['minTime']=this.mins[0];
+				}
+				if(this.traveler['attachments'] != undefined){
+					this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
+				}
 			}
-			// if(this.traveler.emergencyContact != undefined){
-			// 	this.traveler['emergencyContactName'] = this.traveler.emergencyContact.name;
-			// 	this.traveler['emergencyContactNumber'] = this.traveler.emergencyContact.number;
-			// 	this.traveler['emergencyContactRelation'] = this.traveler.emergencyContact.relation;
-			// }
 		}else{
-			this.traveler = <Traveler>{emergencyContact:{},airportPickup:{},hotel:{}};
+			this.title = 'Add Traveler Details';
 			this.traveler['bookingId'] =  this.dialogRef.config.data.bookingId;
+			if(this.traveler['airportPickup'] == undefined){
+				this.traveler['airportPickup'] = {
+					confirmation: false,
+					date: '',
+					hrTime:this.hrs[0],
+					minTime:this.mins[0]
+				}
+			}
 		}
 	}
 
@@ -99,8 +135,9 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	submitTravelerDetails(travelerDetail:any){
+		let dialogConfigData = this.dialogRef.config.data;
 		if(travelerDetail.valid){
-			if(this.dialogRef.config.data.travelerInfo){
+			if(dialogConfigData.records){
 				this.movementService.updateTravelerDetails(this.traveler)
 					.subscribe(updateResponse=>{
 						this.dialogRef.close(this.traveler);
