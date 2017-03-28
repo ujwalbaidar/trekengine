@@ -29,29 +29,17 @@ export class Flight {
 	departure = {} as {
 		name: string;
 	    date: string;
-	    time: string;
+	    hrTime: string;
+	    minTime: string;
 	    cost: number;
 	};
 	arrival = {} as {
 		name: string;
 	    date: string;
-	    time: string;
+	    hrTime: string;
+	    minTime: string;
 	    cost: number;
 	};
-}
-
-export class Departure {
-    name: string;
-    date: string;
-    time: string;
-    cost: number;
-}
-
-export class Arrival {
-    name: string;
-    date: string;
-    time: string;
-    cost: number;
 }
 
 export class Traveler {
@@ -63,28 +51,40 @@ export class Traveler {
 	permanentAddress: string;
 	email: string;
 	telephone: string;
-	emergencyContact: EmergencyContact;
-	airportPickup: AirportPickup;
-	hotel: Hotel;
+	emergencyContact={} as {
+		name: string;
+		number: string;
+		relation: string;
+	};
+	airportPickup = {} as {
+		confirmation: boolean;
+		date: string;
+		time: string;
+	};
+	hotel = {} as {
+		name: string;
+		number: string;
+		relation: string;
+	};
 	messageBox: string;
 	status: boolean;
 }
 
-export class EmergencyContact {
-	name: string;
-	number: string;
-	relation: string;
-}
+// export class EmergencyContact {
+// 	name: string;
+// 	number: string;
+// 	relation: string;
+// }
 
-export class AirportPickup {
-	confirmation: boolean;
-	date: string;
-	time: string;
-}
+// export class AirportPickup {
+// 	confirmation: boolean;
+// 	date: string;
+// 	time: string;
+// }
 
-export class Hotel {
-	confirmation: boolean;
-	name: string;
-	address: string;
-	telephone: string;
-}
+// export class Hotel {
+// 	confirmation: boolean;
+// 	name: string;
+// 	address: string;
+// 	telephone: string;
+// }

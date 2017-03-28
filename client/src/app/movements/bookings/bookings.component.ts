@@ -11,7 +11,6 @@ import { Booking } from '../../models/models';
 })
 export class BookingsComponent implements OnInit  {
 	bookings: any;
-	trips: any;
 	bookingErr: string;
 
 	constructor(public movementService:MovementsService, public dialog: MdDialog){}
@@ -22,19 +21,7 @@ export class BookingsComponent implements OnInit  {
 	getBookingList() {
 		this.movementService.getBookings()
 			.subscribe(bookings=>{
-				this.movementService.getTripDetails()
-				.subscribe(trips=>{
-					this.trips = trips;
-					for(var i=0; i< bookings['length'];i++){
-						let filter = this.trips.filter((trip:any) => {
-						 	return trip._id === bookings[i]['tripId'];
-						});
-						bookings[i]['trips'] = filter[0];
-					}
-					this.bookings = bookings;
-				}, tripsErr=>{
-					this.bookingErr = 'Failed to Load Trip Details';
-				});
+				this.bookings = bookings;
 			}, bookingErr=>{
 				this.bookingErr = 'Failed to Load Booking Details';
 			});
@@ -61,25 +48,7 @@ export class BookingsComponent implements OnInit  {
 		if(JSON.stringify(editData) !== '{}'){
 			dialogOptions["data"]["bookings"] = editData;
 		}
-		dialogOptions["data"]["trips"] = this.trips;
-
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
-    	dialogRef.afterClosed().subscribe(result => {
-      		this.getBookingList();
-    	});
-	}
-
-	openDetailsModal(bookingId:string){
-		let dialogOptions = {
-			height: '500px',
-  			width: '600px',
-  			position: 'center'
-		};
-
-		dialogOptions["data"] = {};
-		dialogOptions["data"]["bookingId"] = bookingId;
-
-		let dialogRef = this.dialog.open(BookingsViewComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
       		this.getBookingList();
     	});
@@ -92,15 +61,12 @@ export class BookingsComponent implements OnInit  {
 })
 export class BookingsDialogComponent implements OnInit {
 	booking: Booking = <Booking>{};
-	trips: any;
 	title: string = 'Add Booking Details';
 	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
 		if(this.dialogRef.config.data){
-			this.trips = this.dialogRef.config.data.trips;
 			if(this.dialogRef.config.data.bookings){
 				this.booking = Object.assign({}, this.dialogRef.config.data.bookings);
 				this.title = 'Edit Booking Details';
-				this.booking['trip'] = this.booking['tripId'];
 			}
 		}
 	}
@@ -109,8 +75,8 @@ export class BookingsDialogComponent implements OnInit {
 
 	}
 
-	submitBookingDetails(tripForm:any) {
-		if(tripForm.valid){
+	submitBookingDetails(bookingForm:any) {
+		if(bookingForm.valid){
 			if(this.dialogRef.config.data.bookings){
 				this.updateBookingDetails();
 			}else{
@@ -134,27 +100,5 @@ export class BookingsDialogComponent implements OnInit {
 				this.dialogRef.close(booking);
 			});
 			
-	}
-}
-
-@Component({
-	selector: 'bookings-view-dialog',
-	templateUrl: './src/app/movements/bookings/bookings-view-dialog.html',
-})
-export class BookingsViewComponent {
-	flightDetails: Object;
-	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
-		if(this.dialogRef.config.data){
-			this.getFlightDetails(this.dialogRef.config.data.bookingId);
-		}
-	}
-
-	getFlightDetails(bookingId:string){
-		this.movementServie.getFlightDetailsByParams([{bookingId:bookingId}])
-			.subscribe(flightDetails=>{
-				this.flightDetails = flightDetails;
-			}, error=>{
-				this.dialogRef.close(error);
-			});
 	}
 }

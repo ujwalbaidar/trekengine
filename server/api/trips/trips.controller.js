@@ -51,7 +51,7 @@ exports.getTrip = function(req, res){
 
 function getTripByQuery(query){
 	return new Promise((resolve, reject)=>{
-		Trips.find(query, {_id:0}, (err, trip)=>{
+		Trips.find(query, (err, trip)=>{
 			if(err){
 				reject(err);
 			}else{
@@ -63,6 +63,7 @@ function getTripByQuery(query){
 
 exports.updateTrips = function(req, res){
 	if(req.headers && req.headers.userId){
+		console.log(req.body);
 		let updateData = {
 			name: req.body.name,
 			departureDate: req.body.departureDate,
@@ -71,7 +72,7 @@ exports.updateTrips = function(req, res){
 			status: req.body.status,
 			updateDate: new Date()
 		};
-		Trips.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, tripUpdate)=>{
+		Trips.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, tripUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{

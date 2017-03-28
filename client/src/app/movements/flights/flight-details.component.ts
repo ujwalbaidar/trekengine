@@ -66,39 +66,64 @@ export class FlightDetailsComponent implements OnInit  {
 	templateUrl: './src/app/movements/flights/flight-details-dialog.html',
 })
 export class FlightDetailsDialogComponent implements OnInit {
-	bookings: any;
-    private flight: Flight = <Flight>{};
+	flight= <Flight>{};
+	hrs:any[];
+	mins: any[];
+
 	public title: string = 'Add Flight Details';
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
     };
 	constructor(
 		public dialogRef: MdDialogRef<FlightDetailsDialogComponent>, 
-		public movementServie: MovementsService) {
+		public movementServie: MovementsService
+	) {
+		this.developTimePicker();
 		if(this.dialogRef.config.data && this.dialogRef.config.data.records){
-			this.flight = Object.assign({}, this.dialogRef.config.data);
-			this.flight.departure.date = this.flight.departure['dateTime'];
-			this.flight.arrival.date = this.flight.arrival['dateTime'];
+			this.flight = JSON.parse(JSON.stringify(this.dialogRef.config.data.records));
+			this.flight.booking = this.dialogRef.config.data.bookingId;
 			this.title = 'Edit Flight Details';
-			this.flight.booking = this.flight['bookingId'];
 		}else{
-			this.flight = <Flight>{departure:{}, arrival:{}};
+			this.flight = <Flight>{departure:{hrTime:this.hrs[0], minTime:this.mins[0]}, arrival:{hrTime:this.hrs[0], minTime:this.mins[0]}};
 			this.flight["bookingId"] = this.dialogRef.config.data.bookingId;
 		}
 	}
 
 	ngOnInit(){
-		this.getBookingDetails();
+		// if(this.depar)
 	}
 
-	getBookingDetails(){
+	developTimePicker(){
+		for(let i=0; i<24;i++){
+			if(this.hrs == undefined){
+				this.hrs = [];
+			}
+			if(i<10){
+				this.hrs.push('0'+i);
+			}else{
+				this.hrs.push(JSON.stringify(i));
+			}
+		}
+		for(let i=0; i<=55;i+=5){
+			if(this.mins == undefined){
+				this.mins = [];
+			}
+			if(i<10){
+				this.mins.push('0'+i);
+			}else{
+				this.mins.push(JSON.stringify(i));
+			}
+		}
+	}
+
+	/*getBookingDetails(){
 		this.movementServie.getBookings()
 			.subscribe(bookings=>{
 				this.bookings = bookings;
 			},bookingErr=>{
 				console.log(bookingErr);
 			});
-	}
+	}*/
 
 	submitFlightDetails(flightForm:any) {
 		if(flightForm.valid){
@@ -122,7 +147,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 	updateFlightDetails() {
 		this.movementServie.updateFlightDetails(this.flight)
 			.subscribe(flightDetail=>{
-				this.dialogRef.close(flightDetail);
+				this.dialogRef.close(this.flight);
 			}, error=>{
 				this.dialogRef.close(error);
 			});

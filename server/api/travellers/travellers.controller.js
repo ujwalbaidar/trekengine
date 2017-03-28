@@ -391,3 +391,73 @@ function updateBooking(query, updateData){
 		});
 	});
 }
+
+exports.addTraveler = function(req, res){
+	if(req.headers && req.headers.userId){
+		saveAttachments(req.body, 'save')
+			.then(saveRes=>{
+				req.body.userId = req.headers.userId;
+				req.body.attachments = {};
+				if(req.body.dob){
+					req.body.dob=getIsoDateToString(req.body.dob);
+				}else{
+					req.body.dob = '';
+				}
+
+				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
+					req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
+				}else{
+					req.body.airportPickup = {};
+				}
+
+				if(req.body.hotel && req.body.hotel.confirmation==false){
+					req.body.hotel = {};
+				}
+
+				if(req.body.profileAttachment && req.body.profileAttachment.name){
+					let profileAttachmentPath = saveRes.filter(pathObj=>{
+						if(pathObj['profileAttachment']){
+							return pathObj['profileAttachment'];
+						}
+					});
+					req.body.attachments.profile = profileAttachmentPath[0].profileAttachment;
+				}
+				if(req.body.passportAttachment && req.body.passportAttachment.name){
+					let passportAttachmentPath = saveRes.filter(pathObj=>{
+						if(pathObj['passportAttachment']){
+							return pathObj['passportAttachment'];
+						}
+					});
+					req.body.attachments.passport = passportAttachmentPath[0].passportAttachment;
+				}
+				if(req.body.insuranceAttachment && req.body.insuranceAttachment.name){
+					let insuranceAttachmentPath = saveRes.filter(pathObj=>{
+						if(pathObj['insuranceAttachment']){
+							return pathObj['insuranceAttachment'];
+						}
+					});
+					req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
+				}
+				req.body.selected = true;
+				let travelers = new Travelers(req.body);
+				travelers.save((err, traveler)=>{
+					if(err){
+						res.status(400).json({success:false, data:err});
+					}else{
+						updateBooking({bookingId: traveler.bookingId},{$addToSet:{travellers:traveler._id}})
+							.then(updateBookingData=>{
+								res.status(200).json({success:true, data:traveler});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:updateErr});
+							});
+					}
+				});
+			})
+			.catch(saveErr=>{
+				res.status(400).send({message:"Failed to save all attachments", error: JSON.stringify(saveErr)});
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}

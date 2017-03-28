@@ -22,7 +22,6 @@ import {
   GuideDetailsDialogComponent,
   BookingsComponent,
   BookingsDialogComponent,
-  BookingsViewComponent,
   BookingDetailsComponent,
   FlightDetailsComponent, 
   FlightDetailsDialogComponent,
@@ -46,7 +45,7 @@ import {
     MovementComponent, 
     TripDetailsComponent, TripDetailsDialogComponent, 
     GuideDetailsComponent, GuideDetailsDialogComponent,
-    BookingsComponent, BookingsDialogComponent, BookingsViewComponent, BookingDetailsComponent,
+    BookingsComponent, BookingsDialogComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
     TravellerDetailsComponent, TravellerDetailsDialogComponent,
   	RegisterComponent 
@@ -62,7 +61,6 @@ import {
     TripDetailsDialogComponent, 
     GuideDetailsDialogComponent, 
     BookingsDialogComponent, 
-    BookingsViewComponent, 
     FlightDetailsDialogComponent,
     TravellerDetailsDialogComponent
   ]

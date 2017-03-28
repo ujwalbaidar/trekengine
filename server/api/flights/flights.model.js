@@ -4,14 +4,18 @@ let FlightSchema = new mongoose.Schema({
 	bookingId: String,
 	flightType: { type:Boolean, default: false },
 	departure: {
-		dateTime: Object,
+		date: Object,
 		cost: Number,
-		name: String
+		name: String,
+		hrTime: String,
+		minTime: String
 	},
 	arrival: {
-		dateTime: Object,
+		date: Object,
 		cost: Number,
-		name: String
+		name: String,
+		hrTime: String,
+		minTime: String
 	},
 	status: { type: Boolean, default: true },
 	createdDate: {

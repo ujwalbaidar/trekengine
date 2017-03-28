@@ -15,7 +15,6 @@
 
 			<div class="col s12">
 				<label for="departureDate">Departure Date</label>
-				<!-- <input id="departureDate" type="date" class="validate datePicker" name="departureDate" [(ngModel)]="trip.departureDate" #departureDate="ngModel" required> -->
 				<my-date-picker id="departureDate" class="validate" name="departureDate" [(ngModel)]="trip.departureDate" #departureDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
 				
 				<div *ngIf="departureDate.errors && (departureDate.dirty || departureDate.touched)"
