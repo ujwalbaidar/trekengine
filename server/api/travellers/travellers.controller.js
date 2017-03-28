@@ -89,7 +89,7 @@ function saveAttachments(dataObj, requestFor) {
 			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
 				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
 				if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
-					if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
+					if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
 						fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
 							if(!err){
 								fs.unlink("attachments/"+dataObj.imageAttachments.profile, (err) => {
@@ -111,7 +111,21 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				resolve({profileAttachment:""});
+				if(dataObj.attachments.profile == "" && dataObj.imageAttachments.profile){
+					fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
+						if(!err){
+							fs.unlink("attachments/"+dataObj.imageAttachments.profile, (err) => {
+								if (err) {
+									reject(err);
+								}else{
+									resolve({profileAttachment:""});
+								}
+							});
+						}
+					});
+				}else{
+					resolve({profileAttachment:""});
+				}
 			}
 		});
 		let savePassportAttachments = new Promise((resolve, reject)=>{
@@ -137,7 +151,21 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				resolve({passportAttachment:""});
+				if(dataObj.attachments.passport == "" && dataObj.imageAttachments.passport){
+					fs.stat("attachments/"+dataObj.imageAttachments.passport, (err, stat) => {
+						if(!err){
+							fs.unlink("attachments/"+dataObj.imageAttachments.passport, (err) => {
+								if (err) {
+									reject(err);
+								}else{
+									resolve({passportAttachment:""});
+								}
+							});
+						}
+					});
+				}else{
+					resolve({passportAttachment:""});
+				}
 			}
 		});
 
@@ -165,7 +193,21 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				resolve({insuranceAttachment:""});
+				if(dataObj.attachments.insurance == "" && dataObj.imageAttachments.insurance){
+					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
+						if(!err){
+							fs.unlink("attachments/"+dataObj.imageAttachments.insurance, (err) => {
+								if (err) {
+									reject(err);
+								}else{
+									resolve({insuranceAttachment:""});
+								}
+							});
+						}
+					});
+				}else{
+					resolve({insuranceAttachment:""});
+				}
 			}
 		});
 
@@ -264,11 +306,6 @@ exports.updateTraveler = function(req, res){
 					dob: getIsoDateToString(req.body.dob),
 					telephone: req.body.telephone,
 					airportPickup: req.body.airportPickup,
-					emergencyContact: { 
-						name: req.body.emergencyContactName, 
-						number: req.body.emergencyContactNumber, 
-						relation: req.body.emergencyContactRelation
-					},
 					messagebox: req.body.messageBox,
 					status: req.body.status,
 					updatedDate: new Date(),
@@ -276,7 +313,9 @@ exports.updateTraveler = function(req, res){
 					attachments: req.body.attachments,
 					selected: req.body.selected
 				};
-
+				if(req.body.emergencyContact){
+					updateData.emergencyContact = req.body.emergencyContact;
+				}
 				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
 					updateData.airportPickup.date = getIsoDateToString(req.body.airportPickup.date);
 				}
@@ -293,7 +332,7 @@ exports.updateTraveler = function(req, res){
 				if(req.body.bookingId){
 					updateData.bookingId = req.body.bookingId;
 				}
-				Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, travelerUpdate)=>{
+				Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, (err, travelerUpdate)=>{
 					if(err){
 						res.status(400).json({success:false, data:err});
 					}else{
@@ -444,7 +483,7 @@ exports.addTraveler = function(req, res){
 					if(err){
 						res.status(400).json({success:false, data:err});
 					}else{
-						updateBooking({bookingId: traveler.bookingId},{$addToSet:{travellers:traveler._id}})
+						updateBooking({bookingId: traveler.bookingId},{$addToSet:{travellers:traveler._id.toString()}})
 							.then(updateBookingData=>{
 								res.status(200).json({success:true, data:traveler});
 							})

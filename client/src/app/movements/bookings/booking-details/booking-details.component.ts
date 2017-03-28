@@ -209,28 +209,29 @@ export class BookingDetailsComponent implements OnInit  {
     	});
 	}
 
-	openTravelerModal(data:Traveler=<Traveler>{}, actionMode:string, index:number) {
+	openTravelerModal(travelerRecord:Traveler=<Traveler>{}, actionMode:string, index:number) {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
   			data: {
-  				bookingId: this.bookingId
+  				bookingId: this.bookingId,
+  				mode: actionMode
   			}
 		};
-		dialogOptions["data"]["mode"] = actionMode;
 
-		if(JSON.stringify(data) !== '{}'){
-			dialogOptions["data"]["travelerInfo"] = data;
+		if(JSON.stringify(travelerRecord) !== '{}'){
+			dialogOptions["data"]["records"] = travelerRecord;
 		};
 
 		let dialogRef = this.dialog.open(TravellerDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=="Option 1" && actionMode == 'edit'){
-    			this.selectedTravelerArr[index] = result; 
+    			this.getBookingDetails();
+    			// this.selectedTravelerArr[index] = result; 
     		}else if(result!=="Option 1" && actionMode == 'add'){
-    			this.selectedTravelerArr.push(result);
+    			this.getBookingDetails();
     		}
     	});
 	}

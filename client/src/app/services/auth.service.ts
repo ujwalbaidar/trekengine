@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
+	hrs:any[];
+	mins: any[];
 	constructor(public _cookieService:CookieService, private _route: Router){}
 	getCookies(): Promise<Object> {
 		return Promise.resolve(this._cookieService.getAll());
@@ -20,5 +22,30 @@ export class AuthService {
 	logout(){
 		this.clearCookies();
 		this._route.navigate(['/login']);
+	}
+
+	developTimePicker(){
+		for(let i=0; i<24;i++){
+			if(this.hrs == undefined){
+				this.hrs = [];
+			}
+			if(i<10){
+				this.hrs.push('0'+i);
+			}else{
+				this.hrs.push(JSON.stringify(i));
+			}
+		}
+		for(let i=0; i<=55;i+=5){
+			if(this.mins == undefined){
+				this.mins = [];
+			}
+			if(i<10){
+				this.mins.push('0'+i);
+			}else{
+				this.mins.push(JSON.stringify(i));
+			}
+		}
+		let time = {hrs:this.hrs,mins:this.mins};
+		return time;
 	}
 }

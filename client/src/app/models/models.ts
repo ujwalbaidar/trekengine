@@ -59,7 +59,8 @@ export class Traveler {
 	airportPickup = {} as {
 		confirmation: boolean;
 		date: string;
-		time: string;
+		hrTime:string;
+		minTime: string;
 	};
 	hotel = {} as {
 		name: string;
@@ -69,22 +70,3 @@ export class Traveler {
 	messageBox: string;
 	status: boolean;
 }
-
-// export class EmergencyContact {
-// 	name: string;
-// 	number: string;
-// 	relation: string;
-// }
-
-// export class AirportPickup {
-// 	confirmation: boolean;
-// 	date: string;
-// 	time: string;
-// }
-
-// export class Hotel {
-// 	confirmation: boolean;
-// 	name: string;
-// 	address: string;
-// 	telephone: string;
-// }

@@ -1,10 +1,10 @@
-<!-- <div *ngIf="actionMode==='add'">
+<div *ngIf="actionMode==='iframeAdd'">
 	<div class="modal-content">
 		<h4>Traverller Details Form</h4>
 		<a (click)="dialogRef.close('Option 1')">X</a>
 		<iframe class="e2e-iframe-trusted-src" width="550" height="455" frameborder="0" [src]="travellerDetailUrl"></iframe>
 	</div>
-</div> -->
+</div>
 
 <div *ngIf="actionMode==='view'">
 	<h4>Traveler Details</h4>
@@ -64,7 +64,7 @@
 			{{traveler.emergencyContact?.relation}}
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" *ngIf="traveler.airportPickup.confirmation">
 		<div class="col s3">
 			Airport Pickup Date
 		</div>
@@ -72,12 +72,12 @@
 			{{traveler.airportPickup?.date}}
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" *ngIf="traveler.airportPickup.confirmation">
 		<div class="col s3">
 			Airport Pickup Time
 		</div>
 		<div class="col s9">
-			{{traveler.airportPickup?.time}}
+			{{traveler.airportPickup?.hrTime+':'+traveler.airportPickup?.minTime}}
 		</div>
 	</div>
 	<div class="row">
@@ -112,7 +112,7 @@
 
 <div *ngIf="actionMode==='add' || actionMode==='edit'">
 	<form class="col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
-		<h4 md-dialog-title>{{ 'Edit Traveler Details' }}</h4>
+		<h4 md-dialog-title>{{ title }}</h4>
 			<div class="row">
 				<strong>Basic Informations</strong>
 			</div>
@@ -269,13 +269,23 @@
 
 					</div>
 					<div class="input-field col s6">
-						<label for="pickupTime" class="active">*Time</label>
-						<input id="pickupTime" type="text" name="pickupTime" class="validate"  [(ngModel)]="traveler.airportPickup.time" #pickupTime="ngModel" required>
-						<div *ngIf="traveler.airportPickup.confirmation && pickupTime.errors && (pickupTime.dirty || pickupTime.touched)"
-					class="alert alert-danger">
-							<div [hidden]="!pickupTime.errors.required">
-								This Field is Required!
-							</div>
+						<label for="pickupTime" class="active">Pickup Time</label>
+						<div class="col s4">
+							<select class="browser-default" [(ngModel)]="traveler.airportPickup.hrTime" name="travelerPickupTimeHr" #travelerPickupTimeHr="ngModel">
+								<option [value]="hr" *ngFor="let hr of hrs">
+									<span>{{hr}}</span>
+								</option>
+							</select>
+						</div>
+						<div class="col s1" style="padding: 10px">
+							<strong>:</strong>
+						</div>
+						<div class="col s4">
+							<select class="browser-default" [(ngModel)]="traveler.airportPickup.minTime" name="travelerPickupTimeMin" #travelerPickupTimeMin="ngModel">
+								<option [value]="min" *ngFor="let min of mins">
+									<span>{{min}}</span>
+								</option>
+							</select>
 						</div>
 					</div>
 				</div>

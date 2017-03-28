@@ -50,11 +50,14 @@ export class TripDetailsComponent implements OnInit {
 			height: '600px',
   			width: '600px',
   			position: 'center',
-  			disableClose: true
+  			disableClose: true,
+  			data:{
+  				bookingId: editData['bookingId']
+  			}
 		};
 
 		if(JSON.stringify(editData) !== '{}'){
-			dialogOptions["data"] = editData;
+			dialogOptions.data["records"] = editData;
 		};
 
 		let dialogRef = this.dialog.open(TripDetailsDialogComponent, dialogOptions);

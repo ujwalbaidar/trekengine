@@ -46,11 +46,14 @@ export class FlightDetailsComponent implements OnInit  {
 			height: '675px',
   			width: '600px',
   			position: 'center',
-  			disableClose: true
+  			disableClose: true,
+  			data:{
+  				bookingId:editData['bookingId']
+  			}
 		};
 
 		if(JSON.stringify(editData) !== '{}'){
-			dialogOptions["data"] = Object.assign({},editData);
+			dialogOptions['data']['records'] = Object.assign({},editData);
 		}
 
 		let dialogRef = this.dialog.open(FlightDetailsDialogComponent, dialogOptions);
@@ -90,7 +93,6 @@ export class FlightDetailsDialogComponent implements OnInit {
 	}
 
 	ngOnInit(){
-		// if(this.depar)
 	}
 
 	developTimePicker(){

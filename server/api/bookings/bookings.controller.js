@@ -128,6 +128,7 @@ function findTravelersByIds(idArr){
 exports.removeTraveler = function(req, res){
 	if(req.headers && req.headers.userId){
 		let query = {userId: req.headers.userId, bookingId: req.body.query};
+		console.log(req.body)
 		Bookings.update(query, {$pull:{travellers:req.body.data}}, (err, updateData)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
