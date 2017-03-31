@@ -1,0 +1,127 @@
+<form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form, flight)" #flightDetail="ngForm" novalidate>
+	<h4 md-dialog-title>{{ title }}</h4>
+	<div md-dialog-content>
+		<div class="row">
+			<h5>Departure Informations</h5>
+		</div>
+		<div class="row">
+			<div class="input-field col s6">
+				<label for="departureFlightName" [ngClass]="{'active':(flight.departure.name!=undefined)}">Flight Name</label>
+				<input id="departureFlightName" type="text" class="validate" name="departureFlightName" [(ngModel)]="flight.departure.name" #departureFlightName="ngModel"  required>
+				<div *ngIf="departureFlightName.errors && (departureFlightName.dirty || departureFlightName.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!departureFlightName.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+			<div class="input-field col s6">
+				<label for="departureFlightCost" [ngClass]="{'active':(flight.departure.cost!=undefined)}">Flight Cost</label>
+				<input id="departureFlightCost" type="number" class="validate" name="departureFlightCost" [(ngModel)]="flight.departure.cost" #departureFlightCost="ngModel" required>
+				<div *ngIf="departureFlightCost.errors && (departureFlightCost.dirty || departureFlightCost.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!departureFlightCost.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s6">
+				<label for="departureFlightDate" [ngClass]="{'active':(flight.departure.date!=undefined)}">Departure Date</label>
+				<my-date-picker id="departureFlightDate" class="validate" name="departureFlightDate" [(ngModel)]="flight.departure.date" #departureFlightDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div *ngIf="departureFlightDate.errors && (departureFlightDate.dirty || departureFlightDate.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!departureFlightDate.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+			<div class="input-field col s6">
+				<label for="departureFlightTime" class="active">Departure Time</label>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.departure.hrTime" name="departureFlightTimeHr" #departureFlightTimeHr="ngModel">
+						<option [value]="hr" *ngFor="let hr of hrs">
+							<span>{{hr}}</span>
+						</option>
+					</select>
+				</div>
+				<div class="col s1" style="padding: 10px">
+					<strong>:</strong>
+				</div>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.departure.minTime" name="departureFlightTimeMin" #departureFlightTimeMin="ngModel">
+						<option [value]="min" *ngFor="let min of mins">
+							<span>{{min}}</span>
+						</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<h5>Arrival Informations</h5>
+		</div>
+		<div class="row">
+			<div class="input-field col s6">
+				<label for="arrivalFlightName" [ngClass]="{'active':(flight.arrival.name!=undefined)}">Flight Name</label>
+				<input id="arrivalFlightName" type="text" class="validate" name="arrivalFlightName" [(ngModel)]="flight.arrival.name" #arrivalFlightName="ngModel" required>
+				<div *ngIf="arrivalFlightName.errors && (arrivalFlightName.dirty || arrivalFlightName.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!arrivalFlightName.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+			<div class="input-field col s6">
+				<label for="arrivalFlightCost" [ngClass]="{'active':(flight.arrival.cost!=undefined)}">Flight Cost</label>
+				<input id="arrivalFlightCost" type="number" class="validate" name="arrivalFlightCost" [(ngModel)]="flight.arrival.cost" #arrivalFlightCost="ngModel" required>
+				<div *ngIf="arrivalFlightCost.errors && (arrivalFlightCost.dirty || arrivalFlightCost.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!arrivalFlightCost.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s6">
+				<label for="arrivalFlightDate" [ngClass]="{'active':(flight.arrival.date!=undefined)}">Arrival Date</label>
+				<my-date-picker id="arrivalFlightDate" class="validate" name="arrivalFlightDate" [(ngModel)]="flight.arrival.date" #arrivalFlightDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div *ngIf="arrivalFlightDate.errors && (arrivalFlightDate.dirty || arrivalFlightDate.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!arrivalFlightDate.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+			<div class="input-field col s6">
+				<label for="arrivalFlightTime" class="active">Arrival Time</label>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.arrival.hrTime" name="arrivalFlightTimeHr" #arrivalFlightTimeHr="ngModel">
+						<option [value]="hr" *ngFor="let hr of hrs">
+							<span>{{hr}}</span>
+						</option>
+					</select>
+				</div>
+				<div class="col s1" style="padding: 10px">
+					<strong>:</strong>
+				</div>
+				<div class="col s4">
+					<select class="browser-default" [(ngModel)]="flight.arrival.minTime" name="arrivalFlightTimeMin" #arrivalFlightTimeMin="ngModel">
+						<option [value]="min" *ngFor="let min of mins">
+							<span>{{min}}</span>
+						</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #009688 teal btn" type="button" (click)="submitFlightDetails(flightDetail.form, flight)">Submit</button>
+		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
+	</div>
+</form>
