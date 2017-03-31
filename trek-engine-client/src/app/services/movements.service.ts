@@ -46,6 +46,20 @@ export class MovementsService {
 			.catch(this.handleError);
 	}
 
+	filterTrek(filterQuery:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<filterQuery.length;i++){
+			let key = Object.keys(filterQuery[i])[0];
+			let value = filterQuery[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/movements/trips/filter', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	updateTrekDetails(trip: Object) {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });

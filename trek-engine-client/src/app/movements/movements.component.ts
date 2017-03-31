@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
 export class MovementsComponent implements OnInit {
 	public sideMenuArr:any = [
 		{
+			menu: 'Movement Details',
+			routePath: '/movements/movement-details'
+		},
+		{
 			menu: 'Bookings',
 			routePath: '/movements/bookings'
 		},{

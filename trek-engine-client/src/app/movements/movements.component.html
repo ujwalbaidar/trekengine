@@ -1,8 +1,12 @@
-<div>
-	<ul>
-		<li *ngFor="let sideMenu of sideMenuArr">
-			<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
-		</li>
-	</ul>
+<div class="row">
+	<div class="col m1">
+		<ul>
+			<li *ngFor="let sideMenu of sideMenuArr">
+				<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col m11">
+		<router-outlet></router-outlet>
+	</div>
 </div>
-<router-outlet></router-outlet>

@@ -28,6 +28,7 @@ import {
   TravellerDetailsComponent,
   TravellerDetailsDialogComponent
 } from './movements/index';
+import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import {
     GuideDetailsComponent, GuideDetailsDialogComponent,
     BookingsComponent, BookingsDialogComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
-    TravellerDetailsComponent, TravellerDetailsDialogComponent
+    TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent
   ],
   imports: [
     BrowserModule,
