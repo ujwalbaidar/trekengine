@@ -84,6 +84,9 @@ export class TripDetailsDialogComponent implements OnInit {
 	public title: string = 'Add Trip Details';
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
     };
 	guideUsers:any;
 	approver: string;

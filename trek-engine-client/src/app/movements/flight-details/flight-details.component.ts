@@ -77,6 +77,9 @@ export class FlightDetailsDialogComponent implements OnInit {
 	public title: string = 'Add Flight Details';
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
     };
 	constructor(
 		public dialogRef: MdDialogRef<FlightDetailsDialogComponent>, 
@@ -118,15 +121,6 @@ export class FlightDetailsDialogComponent implements OnInit {
 			}
 		}
 	}
-
-	/*getBookingDetails(){
-		this.movementServie.getBookings()
-			.subscribe(bookings=>{
-				this.bookings = bookings;
-			},bookingErr=>{
-				console.log(bookingErr);
-			});
-	}*/
 
 	submitFlightDetails(flightForm:any) {
 		if(flightForm.valid){

@@ -26,7 +26,7 @@ const appRoutes: Routes = [
 				path: 'movements', 
 				component: MovementsComponent, 
 				children:[
-					{ path: 'movement-details', component: MovementDetailsComponent },
+					{ path: '', component: MovementDetailsComponent },
 					{ path: 'bookings', component: BookingsComponent },
 					{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent },
 					{ path: 'trip-details', component: TripDetailsComponent },

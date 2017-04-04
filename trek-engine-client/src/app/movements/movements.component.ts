@@ -7,11 +7,11 @@ import { Router } from '@angular/router';
   templateUrl: './movements.component.html',
   styleUrls: ['./movements.component.css']
 })
-export class MovementsComponent implements OnInit {
+export class MovementsComponent {
 	public sideMenuArr:any = [
 		{
 			menu: 'Movement Details',
-			routePath: '/movements/movement-details'
+			routePath: '/movements'
 		},
 		{
 			menu: 'Bookings',
@@ -30,6 +30,6 @@ export class MovementsComponent implements OnInit {
 			routePath: '/movements/flight-details'
 		}
 	];
-	constructor(private authService: AuthService, private _route: Router){}
-	ngOnInit(){}
+	constructor(private authService: AuthService, private _route: Router){
+	}
 }

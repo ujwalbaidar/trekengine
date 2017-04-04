@@ -14,7 +14,7 @@ module.exports = function(app){
 	app.use('/api/movements/traveler', auth, require('./api/travellers'));
 	app.post('/app/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
 	app.get('/app/travellers', (req, res) => {
-		res.render('public/traveller-details-form.template.ejs');
+		res.render('iframes/traveler-details-form.template.ejs');
 	});
 	app.route('*')
         .get((req, res) => {

@@ -1,8 +1,12 @@
-<h4>Travellers Details</h4>
 <div>
-	<table>
+	<h3>Traveler Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="travelers && travelers.length>0; else emptyTravelers">
 		<thead>
 			<tr>
+				<td>BookingId</td>
 				<td>Name</td>
 				<td>Email</td>
 				<td>Nationality</td>
@@ -15,6 +19,9 @@
 		</thead>
 		<tbody>
 			<tr *ngFor="let travalerInfo of travelers; let i = index;">
+				<td (click)="openTravellerModal(travalerInfo, 'view')">
+					{{ travalerInfo.bookingId }}
+				</td>
 				<td (click)="openTravellerModal(travalerInfo, 'view')">
 					{{ travalerInfo.firstName+' '+ travalerInfo.lastName }}
 				</td>
@@ -43,8 +50,11 @@
 			</tr>
 		</tbody>
 	</table>
+	<ng-template #emptyTravelers>
+		<h5 class="center-align">Traveler Record is empty! Please add records!</h5>
+	</ng-template>
 </div>
-<div>
+<div class="add-round-button-icon">
 	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openTravellerModal('', 'iframeAdd')">
 		<i class="material-icons">add</i>
 	</a>
