@@ -247,6 +247,9 @@ exports.deleteTraveler = function(req, res){
 				res.status(400).json({success:false, data:err});
 			}else{
 				let filePathArr = [];
+				if(travelerInfo.attachments && travelerInfo.attachments.profile){
+					filePathArr.push("attachments/"+travelerInfo.attachments.profile);
+				}
 				if(travelerInfo.attachments && travelerInfo.attachments.insurance){
 					filePathArr.push("attachments/"+travelerInfo.attachments.insurance);
 				}
@@ -277,14 +280,18 @@ function removeAttachments(pathArr) {
 	return new Promise((resolve, reject)=>{
 		if(pathArr.length>0){
 			for(let i=0;i<pathArr.length;i++){
-				fs.unlink(pathArr[i], (err) => {
-					if (err) {
-						reject(err);
-					}
-					if(i == (pathArr.length-1)){
-						resolve();
+				fs.stat(pathArr[i], (err, stat) => {
+					if(!err){
+						fs.unlink(pathArr[i], (err) => {
+							if (err) {
+								reject(err);
+							}
+						});
 					}
 				});
+				if(i == (pathArr.length-1)){
+					resolve();
+				}
 			}
 		}else{
 			resolve();

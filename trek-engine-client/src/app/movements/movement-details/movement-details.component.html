@@ -1,5 +1,9 @@
 <div>
 	<div>
+		<h3>Movement Details</h3>
+	</div>
+	<div class="divider"></div>
+	<div>
 		<md-grid-list cols="12" rowHeight="30px">
 			<md-grid-tile [colspan]="8" [rowspan]="3">
 				<div>
@@ -53,7 +57,7 @@
 		</div>
 	</div>
 	<div>
-		<table class="bordered responsive-table highlight">
+		<table class="bordered responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
 			<thead>
 				<tr>
 					<th>BookingID</th>
@@ -65,23 +69,26 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let trek of treks">
-					<td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.bookingId }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
 						<span *ngIf="trek.bookings.length>0">{{ trek.bookings[0].groupName }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.name }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.departureDate.formatted }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.arrivalDate.formatted }}</span>
 					</td>
 				</tr>
 			</tbody>
 		</table>
+		<ng-template #emptyTrekFilter>
+			<h5 class="center-align">Booking Records not found in selected filter!</h5>
+		</ng-template>
 	</div>
 </div>

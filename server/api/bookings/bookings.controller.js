@@ -96,7 +96,7 @@ function getByBookingQuery(query){
 			if(err){
 				reject(err);
 			}else{
-				if(booking.travellers && booking.travellers.length>0){
+				if(booking && booking.travellers && booking.travellers.length>0){
 					findTravelersByIds(booking.travellers)
 						.then(travelers=>{
 							booking.travellers = travelers;

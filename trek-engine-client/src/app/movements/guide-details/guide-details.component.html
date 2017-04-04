@@ -1,8 +1,9 @@
 <div>
-	<a class="modal-trigger waves-effect waves-light btn" (click)="openAddGuideModal()">Add Guide Details</a>
+	<h3>Guide Lists</h3>
 </div>
+<div class="divider"></div>
 <div>
-	<table>
+	<table class="bordered responsive-table highlight">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -20,4 +21,9 @@
 			</tr>
 		</tbody>
 	</table>
+</div>
+<div class="add-round-button-icon">
+	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
+		<i class="material-icons">add</i>
+	</a>
 </div>

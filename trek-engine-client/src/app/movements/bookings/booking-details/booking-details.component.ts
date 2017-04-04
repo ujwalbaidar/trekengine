@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovementsService, UserService } from '../../../services/index';
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent } from '../../index';
 declare var jQuery:any;
@@ -26,7 +26,12 @@ export class BookingDetailsComponent implements OnInit  {
 	selectedGuide: any;
 	bookingGuide: any;
 
-	constructor(public movementService:MovementsService, public userService: UserService, private route: ActivatedRoute, public dialog: MdDialog, ){
+	constructor(
+		public movementService:MovementsService, 
+		public userService: UserService, 
+		private route: ActivatedRoute, 
+		public dialog: MdDialog, private _route:Router
+	){
 		jQuery('select').material_select();
 		this.route.params.subscribe(params => {
 			this.bookingId = params['bookingId'];
@@ -46,8 +51,12 @@ export class BookingDetailsComponent implements OnInit  {
 	getBookingDetails(){
 		this.movementService.getBooking([{bookingId:this.bookingId}])
 			.subscribe(booking=>{
-				this.booking = booking;
-				this.selectedTravelerArr = booking['travellers'];
+				if(JSON.stringify(booking)=="{}"){
+					this._route.navigate(['/movements/bookings']);
+				}else{
+					this.booking = booking;
+					this.selectedTravelerArr = booking['travellers'];
+				}
 			}, bookingErr=>{
 				console.log(bookingErr);
 			});

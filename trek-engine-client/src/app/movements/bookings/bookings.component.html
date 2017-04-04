@@ -1,5 +1,9 @@
 <div>
-	<table>
+	<h3>Booking Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="bookings && bookings.length>0; else emptyBookings">
 		<thead>
 			<tr>
 				<td>Booking Id</td>
@@ -24,14 +28,17 @@
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount }}</td>
 				<td>{{ booking.status==true?'active':'inactive'}}</td>
 				<td>
-					<a (click)="openAddBookingModal(booking)">Edit</a>
+					<!-- <a (click)="openAddBookingModal(booking)">Edit</a> -->
 					<a (click)="deleteBooking(booking._id, i)">Delete</a>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<ng-template #emptyBookings>
+		<h5 class="center-align">Booking Record is empty! Please add records.</h5>
+	</ng-template>
 </div>
-<div>
+<div class="add-round-button-icon">
 	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddBookingModal()">
 		<i class="material-icons">add</i>
 	</a>

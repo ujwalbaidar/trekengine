@@ -1,8 +1,9 @@
-<!-- <div>
-	<a class="modal-trigger waves-effect waves-light btn" (click)="openFlightModal()">Add Flight Details</a>
-</div> -->
 <div>
-	<table class="table bordered responsive-table">
+	<h3>Flight Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="flights && flights.length>0; else emptyFlights">
 		<thead>
 			<tr>
 				<td>Departure Flight Name</td>
@@ -35,4 +36,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<ng-template #emptyFlights>
+		<h5 class="center-align">Flight Record is empty! Please add records to bookings.</h5>
+	</ng-template>
 </div>

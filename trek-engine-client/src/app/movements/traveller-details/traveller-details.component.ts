@@ -48,7 +48,7 @@ export class TravellerDetailsComponent implements OnInit {
 		dialogOptions["data"]["mode"] = actionMode;
 
 		if(JSON.stringify(data) !== '{}'){
-			dialogOptions["data"]["travelerInfo"] = data;
+			dialogOptions["data"]["records"] = data;
 		};
 
 		let dialogRef = this.dialog.open(TravellerDetailsDialogComponent, dialogOptions);
