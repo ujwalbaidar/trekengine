@@ -5,7 +5,6 @@ exports.createFlights = function(req, res) {
 	if(req.headers && req.headers.userId){
 		req.body.userId = req.headers.userId;
 		req.body.bookingId = req.body.bookingId;
-		console.log(req.body);
 		let flights = new Flights(req.body);
 		flights.save((err, trip)=>{
 			if(err){
@@ -50,9 +49,7 @@ exports.getFlightsByQueryParams = function(req, res){
 
 exports.updateFlights = function(req, res){
 	if(req.headers && req.headers.userId){
-		console.log(req.body.bookingId)
 		let updateData = {
-			// flightType: req.body.flightType,
 			departure: {
 				name: req.body.departure.name,
 				date: req.body.departure.date,

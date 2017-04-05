@@ -8,7 +8,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthService, UserService, MovementsService } from './services/index';
+import { 
+  AuthService, 
+  UserService, 
+  MovementsService, 
+  PackageService, 
+  FeaturesService 
+} from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -29,6 +35,9 @@ import {
   TravellerDetailsDialogComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
+import { PackageSetupComponent } from './package-setup/package-setup.component';
+import { FeaturesComponent } from './features/features.component';
+import { AppFeaturesDialogComponent } from './features/features.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +52,8 @@ import { MovementDetailsComponent } from './movements/movement-details/movement-
     GuideDetailsComponent, GuideDetailsDialogComponent,
     BookingsComponent, BookingsDialogComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
-    TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent
+    TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent, PackageSetupComponent, 
+    FeaturesComponent, AppFeaturesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +68,9 @@ import { MovementDetailsComponent } from './movements/movement-details/movement-
   	CookieService,
   	AuthService, 
     UserService, 
-    MovementsService
+    MovementsService,
+    PackageService,
+    FeaturesService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
@@ -66,7 +78,8 @@ import { MovementDetailsComponent } from './movements/movement-details/movement-
     GuideDetailsDialogComponent, 
     BookingsDialogComponent, 
     FlightDetailsDialogComponent,
-    TravellerDetailsDialogComponent
+    TravellerDetailsDialogComponent,
+    AppFeaturesDialogComponent
   ]
 })
 export class AppModule { }

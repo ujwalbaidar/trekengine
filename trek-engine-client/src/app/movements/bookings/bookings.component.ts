@@ -31,10 +31,10 @@ export class BookingsComponent implements OnInit  {
 	deleteBooking(deleteId: string, index: number) {
 		this.movementService.deleteBooking(deleteId)
 			.subscribe(deleteStatus=>{
-			this.bookings.splice(index,1);
-		}, error => {
-			this.bookingErr = 'Failed to Delete Booking Details';
-		});
+				this.bookings.splice(index,1);
+			}, error => {
+				this.bookingErr = 'Failed to Delete Booking Details';
+			});
 	}
 
 	openAddBookingModal(editData:Booking=<Booking>{}){
