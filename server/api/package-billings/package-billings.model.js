@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-let PackageSchema = new mongoose.Schema({
+let PackageBillingSchema = new mongoose.Schema({
 	userId: String,
 	packageType: String,
 	packageCost: Number,
@@ -19,4 +19,4 @@ let PackageSchema = new mongoose.Schema({
 		default: new Date()
 	}
 });
-mongoose.model('Packages', PackageSchema);
+mongoose.model('PackageBillings', PackageBillingSchema);

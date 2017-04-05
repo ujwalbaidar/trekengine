@@ -12,7 +12,7 @@ import {
   AuthService, 
   UserService, 
   MovementsService, 
-  PackageService, 
+  PackageBillingsService, 
   FeaturesService 
 } from './services/index';
 import { AppComponent } from './app.component';
@@ -20,6 +20,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PackageBillingsComponent } from './package-billings/package-billings.component';
 import { 
   MovementsComponent, 
   TripDetailsComponent, 
@@ -35,7 +36,6 @@ import {
   TravellerDetailsDialogComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
-import { PackageSetupComponent } from './package-setup/package-setup.component';
 import { FeaturesComponent } from './features/features.component';
 import { AppFeaturesDialogComponent } from './features/features.component';
 
@@ -52,8 +52,9 @@ import { AppFeaturesDialogComponent } from './features/features.component';
     GuideDetailsComponent, GuideDetailsDialogComponent,
     BookingsComponent, BookingsDialogComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
-    TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent, PackageSetupComponent, 
-    FeaturesComponent, AppFeaturesDialogComponent
+    TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent, 
+    FeaturesComponent, AppFeaturesDialogComponent,
+    PackageBillingsComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +70,7 @@ import { AppFeaturesDialogComponent } from './features/features.component';
   	AuthService, 
     UserService, 
     MovementsService,
-    PackageService,
+    PackageBillingsService,
     FeaturesService
   ],
   bootstrap: [AppComponent],

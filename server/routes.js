@@ -12,7 +12,7 @@ module.exports = function(app){
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
 	app.use('/api/movements/flights',auth, require('./api/flights'));
 	app.use('/api/movements/traveler', auth, require('./api/travellers'));
-	app.use('/api/packages', auth, require('./api/packages'));
+	app.use('/api/package-billings', auth, require('./api/package-billings'));
 	app.use('/api/features', superAuth, require('./api/features'));
 	app.post('/app/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
 	app.get('/app/travellers', (req, res) => {

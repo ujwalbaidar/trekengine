@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { PackageService, AuthService } from '../services';
-// import { FeaturePackage } from '../models/models';
+import { PackageBillingsService, AuthService } from '../services';
 import { FeaturePackage } from '../models/models';
 
+
 @Component({
-  selector: 'app-package-setup',
-  templateUrl: './package-setup.component.html',
-  styleUrls: ['./package-setup.component.css']
+  selector: 'app-package-billings',
+  templateUrl: './package-billings.component.html',
+  styleUrls: ['./package-billings.component.css']
 })
-export class PackageSetupComponent implements OnInit {
-	packages:any;
+export class PackageBillingsComponent implements OnInit {
+
+  	packages:any;
 	packageErr: any;
-	constructor(private packageService:PackageService, private auth:AuthService) { }
+	constructor(private packageBillingsService:PackageBillingsService, private auth:AuthService) { }
 
 	ngOnInit() {
 		this.getPackages();
 	}
 
   	getPackages(){
-  		this.packageService.getPackages()
+  		this.packageBillingsService.getPackages()
   			.then(packages=>{
   				this.packages = packages;
   			});
@@ -28,7 +29,7 @@ export class PackageSetupComponent implements OnInit {
   		this.auth.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj && cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
-					this.packageService.submitPackage(featurePackage)
+					this.packageBillingsService.submitPackage(featurePackage)
 						// .subscribe(packageInfo=>{
 						// 	// this.bookings.splice(index,1);
 						// }, error => {
@@ -37,4 +38,5 @@ export class PackageSetupComponent implements OnInit {
 				}
 			});
   	}
+
 }

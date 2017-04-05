@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Packages = mongoose.model('Packages');
+const PackageBillings = mongoose.model('PackageBillings');
 const AppEmail = require('../../library/appEmail/appEmail');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
@@ -7,7 +7,7 @@ let config = require('../../../server/configs/config')[env];
 exports.submitUserPackage = function(req, res){
 	var saveObj = {};
 	if(req.headers && req.headers.userId){
-		Packages.find({userId: req.headers.userId, status:true}).sort({ activatesOn:-1}).exec((getErr, package)=>{
+		PackageBillings.find({userId: req.headers.userId, status:true}).sort({ activatesOn:-1}).exec((getErr, package)=>{
 			if(getErr){
 				res.status(400).json({success:false, data:getErr});
 			}else{
@@ -72,8 +72,8 @@ exports.submitUserPackage = function(req, res){
 
 function saveUserPackage(saveData){
 	return new Promise((resolve, reject)=>{
-		let packages = new Packages(saveData);
-		packages.save((err, savePackage)=>{
+		let packageBillings = new PackageBillings(saveData);
+		packageBillings.save((err, savePackage)=>{
 			if(err){
 				reject(err);
 			}else{
