@@ -70,3 +70,18 @@ export class Traveler {
 	messageBox: string;
 	status: boolean;
 }
+
+export class FeaturePackage {
+	packageName: string;
+	packageValue: string;
+	packageDesc: string;
+	cost: number;
+	validDays: number;
+	features: any;
+}
+
+export class AppFeatures {
+	name: string;
+	description: string;
+	status: boolean;
+}

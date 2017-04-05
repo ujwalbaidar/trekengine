@@ -86,7 +86,7 @@ exports.loginUser = function(req, res){
 						.digest('hex');
 				if(user.password == loginPassword){
 					let token = jwt.sign(
-							{email:user.email, userId: user._id}, 
+							{email:user.email, userId: user._id, role: user.role}, 
 							config.loginAuth.secretKey, 
 							{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 						);

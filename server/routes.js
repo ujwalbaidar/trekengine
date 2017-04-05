@@ -12,6 +12,8 @@ module.exports = function(app){
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
 	app.use('/api/movements/flights',auth, require('./api/flights'));
 	app.use('/api/movements/traveler', auth, require('./api/travellers'));
+	app.use('/api/package-billings', auth, require('./api/package-billings'));
+	app.use('/api/features', superAuth, require('./api/features'));
 	app.post('/app/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
 	app.get('/app/travellers', (req, res) => {
 		res.render('iframes/traveler-details-form.template.ejs');
@@ -27,7 +29,25 @@ module.exports = function(app){
 				res.status(401).send({success:false, message: 'Login is Required!'});
 			}else{
 				req.headers.userId = decoded.userId;
+				req.headers.email = decoded.email;
 				next();
+			}
+		});
+    }
+
+    function superAuth(req, res, next){
+    	jwt.verify(req.headers.token, config.loginAuth.secretKey, { algorithms: config.loginAuth.algorithm }, function(err, decoded) {
+			if(err){
+				res.status(401).send({success:false, message: 'Login is Required!'});
+			}else{
+				if(decoded.role === 10){
+					req.headers.userId = decoded.userId;
+					req.headers.email = decoded.email;
+					req.headers.role = decoded.role;
+					next();
+				}else{
+					res.status(401).send({success:false, message: 'Unauthorised User!'});
+				}
 			}
 		});
     }

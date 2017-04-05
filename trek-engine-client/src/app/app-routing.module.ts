@@ -4,6 +4,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PackageBillingsComponent } from './package-billings/package-billings.component';
+import { FeaturesComponent } from './features/features.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -17,11 +19,14 @@ import {
 
 const appRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
+	{ path: 'pricings', component: PackageBillingsComponent },
 	{ 
 		path: '', 
 		component: HomeComponent, 
 		children:[
 			{ path:'', component: DashboardComponent},
+			{ path: 'package-billings', component: PackageBillingsComponent },
+			{ path: 'app-features', component: FeaturesComponent},
 			{ 
 				path: 'movements', 
 				component: MovementsComponent, 

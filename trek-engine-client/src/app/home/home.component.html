@@ -1,11 +1,59 @@
-<nav>
+<ul id="navDropdown" class="dropdown-content">
+		<li><a>Profile</a></li>
+		<li routerLink="/package-billings"><a>Package Billings</a></li>
+		<li class="divider"></li>
+		<li (click)="logout()"><a>Logout</a></li>
+</ul>
+<nav class="#7cb342 light-green darken-1">
 	<div class="nav-wrapper">
+		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul>
-			<li routerLink="/movements">Movements</li>
-			<li>Accounts</li>
-			<li>Analytics</li>
+			<li>
+				<a class="brand-logo" routerLink="/">Trek Engine</a>
+			</li>
 		</ul>
-    	<a class="right" (click)="logout()">Logout</a>
-    </div>
+
+		<ul class="right hide-on-med-and-down">
+			<li *ngIf="cookieData.idx==10">
+				<a routerLink="/app-features">Features</a>
+			</li>
+			<li>
+				<a routerLink="/movements">Movements</a>
+			</li>
+			<li>
+				<a>Accounts</a>
+			</li>
+			<li>
+				<a>Analytics</a>
+			</li>
+			<li (click)="dropDownNav()">
+				<a class="dropdown-button" data-activates="navDropdown">
+					Settings
+					<i class="material-icons right">arrow_drop_down</i>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-nav" id="mobile-demo">
+			<li>
+				<a routerLink="/movements">Movements</a>
+			</li>
+			<li>
+				<a>Accounts</a>
+			</li>
+			<li>
+				<a>Analytics</a>
+			</li>
+			<li class="divider"></li>
+			<li> Settings </li>
+			<li>
+				<a>Profile</a>
+			</li>
+			<li>
+				<a routerLink="/package-billings">Package Billings</a>
+			</li>
+			<li class="divider"></li>
+			<li (click)="logout()"><a>Logout</a></li>
+		</ul>
+	</div>
 </nav>
 <router-outlet></router-outlet>
