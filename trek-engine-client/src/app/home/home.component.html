@@ -17,6 +17,9 @@
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app-features">Features</a>
 			</li>
+			<li *ngIf="cookieData.idx==10">
+				<a routerLink="/app-packages">Packages</a>
+			</li>
 			<li>
 				<a routerLink="/movements">Movements</a>
 			</li>
@@ -34,6 +37,13 @@
 			</li>
 		</ul>
 		<ul class="side-nav" id="mobile-demo">
+			<li *ngIf="cookieData.idx==10">
+				<a routerLink="/app-features">Features</a>
+			</li>
+			<li *ngIf="cookieData.idx==10">
+				<a routerLink="/app-packages">Packages</a>
+			</li>
+			<li class="divider" *ngIf="cookieData.idx==10"></li>
 			<li>
 				<a routerLink="/movements">Movements</a>
 			</li>

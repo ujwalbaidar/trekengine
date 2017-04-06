@@ -10,7 +10,7 @@ import { FeaturePackage } from '../models/models';
 })
 export class PackageBillingsComponent implements OnInit {
 
-  	packages:any;
+  	packageDetails:any;
 	packageErr: any;
 	constructor(private packageBillingsService:PackageBillingsService, private auth:AuthService) { }
 
@@ -20,9 +20,11 @@ export class PackageBillingsComponent implements OnInit {
 
   	getPackages(){
   		this.packageBillingsService.getPackages()
-  			.then(packages=>{
-  				this.packages = packages;
-  			});
+  			.subscribe(packageDetails=>{
+  				this.packageDetails = packageDetails;
+  			}, error=>{
+  				this.packageErr = 'Failed to retrive package billings';
+  			})
   	}
 
   	selectPackage(featurePackage:FeaturePackage=<FeaturePackage>{}){
@@ -30,11 +32,11 @@ export class PackageBillingsComponent implements OnInit {
 			.then(cookieObj=>{
 				if(cookieObj && cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
 					this.packageBillingsService.submitPackage(featurePackage)
-						// .subscribe(packageInfo=>{
-						// 	// this.bookings.splice(index,1);
-						// }, error => {
-						// 	this.packageErr = 'Failed to Setup Package';
-						// });
+						.subscribe(packageInfo=>{
+							alert(packageInfo);
+						}, error => {
+							this.packageErr = 'Failed to Setup Package';
+						});
 				}
 			});
   	}

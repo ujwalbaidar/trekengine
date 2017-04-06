@@ -13,7 +13,8 @@ import {
   UserService, 
   MovementsService, 
   PackageBillingsService, 
-  FeaturesService 
+  FeaturesService ,
+  PackagesService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -38,6 +39,8 @@ import {
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
 import { AppFeaturesDialogComponent } from './features/features.component';
+import { PackagesComponent } from './packages/packages.component';
+import { PackageDetailsComponent } from './packages/package-details/package-details.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,9 @@ import { AppFeaturesDialogComponent } from './features/features.component';
     FlightDetailsComponent, FlightDetailsDialogComponent,
     TravellerDetailsComponent, TravellerDetailsDialogComponent, MovementDetailsComponent, 
     FeaturesComponent, AppFeaturesDialogComponent,
-    PackageBillingsComponent
+    PackageBillingsComponent,
+    PackagesComponent,
+    PackageDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { AppFeaturesDialogComponent } from './features/features.component';
     UserService, 
     MovementsService,
     PackageBillingsService,
-    FeaturesService
+    FeaturesService,
+    PackagesService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

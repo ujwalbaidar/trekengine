@@ -6,6 +6,8 @@ import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PackageBillingsComponent } from './package-billings/package-billings.component';
 import { FeaturesComponent } from './features/features.component';
+import { PackagesComponent } from './packages/packages.component';
+import { PackageDetailsComponent } from './packages/package-details/package-details.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -26,7 +28,10 @@ const appRoutes: Routes = [
 		children:[
 			{ path:'', component: DashboardComponent},
 			{ path: 'package-billings', component: PackageBillingsComponent },
-			{ path: 'app-features', component: FeaturesComponent},
+			{ path: 'app-features', component: FeaturesComponent },
+			{ path: 'app-packages', component: PackagesComponent },
+			{ path: 'app-packages/details', component: PackageDetailsComponent },
+			{ path: 'app-packages/details/edit/:packageId', component: PackageDetailsComponent },
 			{ 
 				path: 'movements', 
 				component: MovementsComponent, 
