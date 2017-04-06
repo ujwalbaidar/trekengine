@@ -85,3 +85,11 @@ export class AppFeatures {
 	description: string;
 	status: boolean;
 }
+
+export class AppPackage {
+	name: string;
+	description: string;
+	cost: number;
+	validDays: number;
+	features: AppFeatures[];
+}

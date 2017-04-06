@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { AppFeatures } from '../models/models';
 import { FeaturesService } from '../services';
-declare var jQuery:any;
 
 @Component({
   selector: 'app-features',

@@ -18,63 +18,18 @@ export class PackageBillingsService {
   	}
   	
   	getPackages(){
-	  	var packages = [{
-	  		packageName: 'Basic',
-	  		packageValue: 'basic',
-	  		packageDesc: 'Basic Trek Engine Features',
-	  		cost: 50,
-	  		validDays: 30,
-	  		features: [
-	  			'Business email through Gmail',
-				'Video and voice conferencing',
-				'Smart shared calendars',
-				'Documents, spreadsheets, and presentations',
-				'24/7 support by phone, email, and online',
-				'Security and administration controls',
-				'30GB cloud storage'
-	  		]
-	  	},{
-	  		packageName: 'Business',
-	  		packageValue: 'business',
-	  		packageDesc: 'Business Trek Engine Features',
-	  		cost: 100,
-	  		validDays: 60,
-	  		features: [
-	  			'Business email through Gmail',
-				'Video and voice conferencing',
-				'Smart shared calendars',
-				'Documents, spreadsheets, and presentations',
-				'24/7 support by phone, email, and online',
-				'Security and administration controls',
-				'30GB cloud storage'
-	  		]
-	  	},{
-	  		packageName: 'Enterprise',
-	  		packageValue: 'enterprise',
-	  		packageDesc: 'Enterprise Trek Engine Features',
-	  		cost: 500,
-	  		validDays: 90,
-	  		features: [
-	  			'Business email through Gmail',
-				'Video and voice conferencing',
-				'Smart shared calendars',
-				'Documents, spreadsheets, and presentations',
-				'24/7 support by phone, email, and online',
-				'Security and administration controls',
-				'30GB cloud storage'
-	  		]
-	  	}];
-	  	return new Promise(resolve=>{
-	  		resolve(packages);
-	  	});
+  		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/package-billings/get', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
 	}
 
 	submitPackage(featurePackage:any){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.post('/api/package-billings/submit', featurePackage, options)
-			.toPromise()
-			.then(this.extractData)
+			.map(this.extractData)
     		.catch(this.handleError.bind(this));
 	}
 
