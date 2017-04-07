@@ -1,15 +1,41 @@
 const CronJob = require('cron').CronJob;
-const job = new CronJob({
+const billingCtrl = require('../package-billings/package-billings.controller');
+
+const billingDaysJob = new CronJob({
   cronTime: '00 00 */1 * * *',
   onTick: function() {
-    console.log(new Date());
-    /*
-     * Runs every weekday (Monday through Friday)
-     * at 11:30:00 AM. It does not run on Saturday
-     * or Sunday.
-     */
+    billingCtrl.updateBillingDays()
+      .then(updateResponse=>{
+        console.log('cron run at:'+ new Date()+'for udpdate Billing Days');
+      })
   },
   start: false,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'Asia/Kathmandu'
 });
-job.start();
+billingDaysJob.start();
+
+const billingStatusJob = new CronJob({
+  cronTime: '10 00 */1 * * *',
+  onTick: function() {
+    billingCtrl.updateBillingStatus()
+      .then(updateResponse=>{
+        console.log('cron run at:'+ new Date()+'for udpdate Billing Status');
+      })
+  },
+  start: false,
+  timeZone: 'Asia/Kathmandu'
+});
+billingStatusJob.start();
+
+const billingOnHoldJob = new CronJob({
+  cronTime: '20 00 */1 * * *',
+  onTick: function() {
+    billingCtrl.updateBillingOnHold()
+      .then(updateResponse=>{
+        console.log('cron run at:'+ new Date()+'for udpdate Billing OnHold');
+      })
+  },
+  start: false,
+  timeZone: 'Asia/Kathmandu'
+});
+billingOnHoldJob.start();

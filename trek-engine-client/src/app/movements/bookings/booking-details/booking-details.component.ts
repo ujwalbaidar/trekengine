@@ -39,7 +39,6 @@ export class BookingDetailsComponent implements OnInit  {
 	}
 
 	ngOnInit(){
-		// this.developTimePicker();
 		this.getBookingDetails();
 		this.getTripDetails();
 		this.getFlightDetails();
