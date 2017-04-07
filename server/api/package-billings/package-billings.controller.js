@@ -50,8 +50,8 @@ exports.submitUserPackage = function(req, res){
 				res.status(400).json({success:false, data:getErr});
 			}else{
 				if(package.length>0){
-					let activateDate = package[0]['expiresOn']+24*60*60;
-					let expireDate = activateDate+(req.body.packages.days*24*60*60);
+					let activateDate = package[0]['expiresOn'];
+					let expireDate = activateDate+(req.body.packages.days*24*3600);
 					var saveObj = {
 						userId: req.headers.userId,
 						packageType: req.body.packages.name,
@@ -66,13 +66,17 @@ exports.submitUserPackage = function(req, res){
 						status: true
 					}
 				}else{
-					let currentDateTime = Math.floor(new Date().getTime()/1000);
+					let currentDateTime = new Date();
+					currentDateTime.setHours(0,0,0,0);
+					let activateDate = Math.floor(currentDateTime/1000);
+					let expireDate = activateDate+30*24*3600;
+
 					var saveObj = {
 						userId: req.headers.userId,
 						packageType: req.body.packages.name,
 						packageCost: req.body.packages.cost,
-						activatesOn: currentDateTime,
-						expiresOn: currentDateTime+(req.body.packages.days*24*60*60),
+						activatesOn: activateDate,
+						expiresOn: expireDate,
 						remainingDays: req.body.packages.days,
 						features: req.body.packages.featureIds,
 						usesDays: 0,
@@ -81,7 +85,6 @@ exports.submitUserPackage = function(req, res){
 						status: true
 					}
 				}
-
 				let mailOptions = {};
 				mailOptions = {
 					from: config.appEmail.senderAddress,
@@ -134,5 +137,64 @@ function sendEmail(mailOptions){
 			.catch(emailError=>{
 				reject(emailError);
 			});
+	});
+}
+
+exports.updateBillingDays = function(){
+		return new Promise((resolve, reject)=>{
+			PackageBillings.update({
+				status:true, onHold: false, remainingDays: { $gt: 0 }
+			},{
+			    $inc:{ remainingDays:-1, usesDays:1 }
+			},{
+			    multi:true
+			}).exec((err, update)=>{
+				if(err){
+					reject(err);
+				}else{
+					resolve(update);
+				}
+			});
+		});
+}
+
+exports.updateBillingStatus = function() {
+	return new Promise((resolve, reject)=>{
+		PackageBillings.update({
+			remainingDays: { $eq: 0 }
+		},{
+		    status: false
+		},{
+		    multi:true
+		}).exec((err, update)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(update);
+			}
+		});
+	});
+}
+
+exports.updateBillingOnHold = function() {
+	return new Promise((resolve, reject)=>{
+		let currentDateTime = new Date();
+		currentDateTime.setHours(0,0,0,0);
+		let activateDate = currentDateTime.getTime()+24*3600*1000;
+		let activatesOn = activateDate/1000;
+		let activateDateTime = Math.floor(currentDateTime/1000);
+		PackageBillings.update({
+			status: true, onHold: true, remainingDays: 0, activatesOn: activatesOn
+		},{
+		    onHold: false
+		},{
+		    multi:true
+		}).exec((err, update)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(update);
+			}
+		});
 	});
 }
