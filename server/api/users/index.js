@@ -7,6 +7,7 @@ router.post('/login', userController.loginUser);
 router.post('/updateVendors', userController.updateVendors);
 router.get('/findAll', userController.findAllUser);
 router.get('/findOne', userController.fineOneUser);
+router.get('/findByQuery', userController.fineUserByQuery);
 router.put('/update', userController.updateUser);
 router.delete('/delete/:userId', userController.deleteUser);
 router.get('/seedUser', userController.seedUser);

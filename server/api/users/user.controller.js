@@ -53,6 +53,16 @@ exports.fineOneUser = function(req, res){
 	});
 }
 
+exports.fineUserByQuery = function(req, res){
+	User.find(req.query, (err, users)=>{
+		if(err){
+			res.status(400).json({success:false, data:err});
+		}else{
+			res.status(200).json({success:true, data:users});
+		}
+	});
+}
+
 exports.updateUser = function(req, res){
 	let updateQuery = req.query;
 	let updateData = req.body;

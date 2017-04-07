@@ -31,6 +31,7 @@ module.exports = function(app){
 			}else{
 				req.headers.userId = decoded.userId;
 				req.headers.email = decoded.email;
+				req.headers.role = decoded.role;
 				next();
 			}
 		});

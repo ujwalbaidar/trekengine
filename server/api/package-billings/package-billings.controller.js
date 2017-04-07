@@ -45,7 +45,12 @@ exports.getUserPackage = function(req, res){
 exports.submitUserPackage = function(req, res){
 	var saveObj = {};
 	if(req.headers && req.headers.userId){
-		PackageBillings.find({userId: req.headers.userId, status:true}).sort({ activatesOn:-1}).exec((getErr, package)=>{
+		if(req.headers.role === 10){
+			var userId = req.body.selectedBillingUser;
+		}else{
+			var userId = req.headers.userId;
+		}
+		PackageBillings.find({userId: userId, status:true}).sort({ activatesOn:-1}).exec((getErr, package)=>{
 			if(getErr){
 				res.status(400).json({success:false, data:getErr});
 			}else{
@@ -53,7 +58,7 @@ exports.submitUserPackage = function(req, res){
 					let activateDate = package[0]['expiresOn'];
 					let expireDate = activateDate+(req.body.packages.days*24*3600);
 					var saveObj = {
-						userId: req.headers.userId,
+						userId: userId,
 						packageType: req.body.packages.name,
 						packageCost: req.body.packages.cost,
 						activatesOn: activateDate,
@@ -72,7 +77,7 @@ exports.submitUserPackage = function(req, res){
 					let expireDate = activateDate+30*24*3600;
 
 					var saveObj = {
-						userId: req.headers.userId,
+						userId: userId,
 						packageType: req.body.packages.name,
 						packageCost: req.body.packages.cost,
 						activatesOn: activateDate,
@@ -184,7 +189,7 @@ exports.updateBillingOnHold = function() {
 		let activatesOn = activateDate/1000;
 		let activateDateTime = Math.floor(currentDateTime/1000);
 		PackageBillings.update({
-			status: true, onHold: true, remainingDays: 0, activatesOn: activatesOn
+			status: true, onHold: true, usesDays: 0, activatesOn: activateDateTime
 		},{
 		    onHold: false
 		},{
