@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { MovementsService, UserService } from '../../services/index';
+import { MovementsService, UserService, AuthService } from '../../services/index';
 import { Booking } from '../../models/models';
 
 @Component({
@@ -13,8 +13,16 @@ import { Booking } from '../../models/models';
 export class BookingsComponent implements OnInit  {
 	bookings: any;
 	bookingErr: string;
+	isAvailable: boolean = false;
 
-	constructor(public movementService:MovementsService, public dialog: MdDialog){}
+	constructor(public movementService:MovementsService, public dialog: MdDialog, private authService: AuthService){
+		this.authService.getCookies()
+			.then(cookieObj=>{
+				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
+					this.isAvailable = true;
+				}
+			});
+	}
 	ngOnInit(){
 		this.getBookingList();
 	}

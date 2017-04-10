@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const PackageBillings = mongoose.model('PackageBillings');
 const Packages = mongoose.model('Packages');
 const Features = mongoose.model('Features');
+const User = mongoose.model('User');
 const AppEmail = require('../../library/appEmail/appEmail');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
@@ -227,4 +228,31 @@ exports.updateUserPackage = function(req, res){
 
 		}
 	});
+}
+
+exports.emailOnExpired = function(){
+	return new Promise(resolve=>{
+		PackageBillings.find({status:true, remainingDays:{$lte:2}}, {_id:0, userId:1, expiresOn:1}, function(err, billingUser){
+			if(billingUser.length>0){
+				for(let i=0;i<billingUser.length; i++){
+					User.findOne({_id:billingUser[i].userId},{_id:0, email:1}, (err, user)=>{
+						mailOptions = {
+							from: config.appEmail.senderAddress,
+						    to: user.email, 
+						    subject: 'Going to expire',
+						    text: `Your billing for trek enging is going to expire on ${new Date(billingUser[i].expiresOn*1000).toString()}. Please renew.`,
+						    html: `<p>Your billing for trek enging is going to expire on ${new Date(billingUser[i].expiresOn*1000).toString()}. Please renew.</p>` 
+						};
+						sendEmail(mailOptions)
+							.then(mailInfo=>{
+								console.log('email sent', mailInfo);
+							})
+							.catch(emailErr=>{
+								console.log('failed to send email', emailErr);
+							});
+					})
+				}
+			}
+		});
+	})
 }

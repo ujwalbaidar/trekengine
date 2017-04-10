@@ -31,10 +31,18 @@ module.exports = function(app){
 			if(err){
 				res.status(401).send({success:false, message: 'Login is Required!'});
 			}else{
-				req.headers.userId = decoded.userId;
-				req.headers.email = decoded.email;
-				req.headers.role = decoded.role;
-				next();
+				if(decoded.role == 20){
+					req.headers.userId = decoded.userId;
+					req.headers.email = decoded.email;
+					req.headers.role = decoded.role;
+					req.headers.remainingDays = decoded.remainingDays;
+					next();
+				}else{
+					req.headers.userId = decoded.userId;
+					req.headers.email = decoded.email;
+					req.headers.role = decoded.role;
+					next();
+				}
 			}
 		});
     }

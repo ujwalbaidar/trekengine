@@ -16,6 +16,7 @@ billingDaysJob.start();
 
 const billingStatusJob = new CronJob({
   cronTime: '10 00 */1 * * *',
+
   onTick: function() {
     billingCtrl.updateBillingStatus()
       .then(updateResponse=>{
@@ -39,3 +40,13 @@ const billingOnHoldJob = new CronJob({
   timeZone: 'Asia/Kathmandu'
 });
 billingOnHoldJob.start();
+
+const emailOnExpired = new CronJob({
+  cronTime: '30 00 */1 * * *',
+  onTick: function() {
+    billingCtrl.emailOnExpired()
+  },
+  start: false,
+  timeZone: 'Asia/Kathmandu'
+});
+emailOnExpired.start();
