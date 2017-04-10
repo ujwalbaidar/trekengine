@@ -54,6 +54,12 @@ export class PackageBillingsComponent implements OnInit {
 					if(parseInt(cookieObj['idx'])===10){
 						if(this.selectedBillingUser!==undefined){
 							featurePackage['selectedBillingUser']=this.selectedBillingUser;
+							let filterEmail = this.users.filter(user=>{
+								if(user._id == this.selectedBillingUser){
+									return user;
+							    }
+							});
+							featurePackage['selectedBillingUserEmail']=filterEmail[0]['email'];
 							this.packageBillingsService.submitPackage(featurePackage)
 								.subscribe(packageInfo=>{
 									this.selectedBillingUser = undefined;

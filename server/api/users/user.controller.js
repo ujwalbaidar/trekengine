@@ -138,7 +138,7 @@ exports.loginUser = function(req, res){
 						.update(req.body.password)
 						.digest('hex');
 				if(user.password == loginPassword){
-					if (user.role==10 || user.role==20) {
+					if (user.role==20) {
 						PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
 							if (billingErr) {
 								res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});

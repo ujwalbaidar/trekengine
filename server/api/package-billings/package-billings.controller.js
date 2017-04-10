@@ -92,9 +92,14 @@ exports.submitUserPackage = function(req, res){
 					}
 				}
 				let mailOptions = {};
+				if(req.body.selectedBillingUserEmail){
+					var sendTo = req.body.selectedBillingUserEmail;
+				}else{
+					var sendTo = req.headers.email;
+				}
 				mailOptions = {
 					from: config.appEmail.senderAddress,
-				    to: req.headers.email, 
+				    to: sendTo, 
 				    subject: 'Billing Receipt',
 				    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
 				    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
