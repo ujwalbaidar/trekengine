@@ -1,30 +1,49 @@
-<div>
-  <h5 class="center-align">Choose your Trek Engine plan. Try it free for 30 days.</h5>
+<div *ngIf="!loggedIn">
+	<h5 class="center-align">Choose your Trek Engine plan. Try it free for 30 days.</h5>
+	<div class="divider"></div>
 </div>
-<div class="divider"></div>
+
+<div *ngIf="loggedIn && users && users.length>0">
+	<div class="row">
+		<div class="col s6 m8">
+			<select class="browser-default" [(ngModel)]="selectedBillingUser" name="selectedBillingUser">
+				<option [value]="user._id" *ngFor="let user of users;let i=index;">
+					<span *ngIf="user && user.email">
+						{{user.email}}
+					</span>
+				</option>
+			</select>
+		</div>
+	</div>
+</div>
 <div class="row">
-  <div class="col s12 m3" *ngFor="let packageDetail of packageDetails">
-    <div class="card">
-      <div class="card-content">
-        <div class="center-align">
-          <span class="card-title">{{packageDetail.packages.name}}</span>
-          <p>{{packageDetail.packages.description}}</p>
-          <span class="card-title">
-            {{packageDetail.packages.cost|currency:'USD':true}}
-          </span>
-          <p>{{'for '+packageDetail.packages.days+' days'}}</p>
-          <div>
-            <a (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn">get started</a>
-          </div>
-        </div>
-        <div>
-          <ul>
-            <li *ngFor="let feature of packageDetail.features">
-              {{ feature.name }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="col s12 m3" *ngFor="let packageDetail of packageDetails">
+		<div class="card">
+			<div class="card-content">
+				<div class="center-align">
+					<span class="card-title">{{packageDetail.packages.name}}</span>
+					<p>{{packageDetail.packages.description}}</p>
+					<span class="card-title">
+						{{packageDetail.packages.cost|currency:'USD':true}}
+					</span>
+					<p>{{'for '+packageDetail.packages.days+' days'}}</p>
+					<div>
+						<a *ngIf="loggedIn; else publicBilling" (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn">get started</a>
+						<ng-template #publicBilling>
+							<a class="waves-effect #64dd17 light-green accent-4 btn" [routerLink]="['/register/service', packageDetail.packages.name]">
+								get started
+							</a>
+						</ng-template>
+					</div>
+				</div>
+				<div>
+					<ul>
+						<li *ngFor="let feature of packageDetail.features">
+							{{ feature.name }}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

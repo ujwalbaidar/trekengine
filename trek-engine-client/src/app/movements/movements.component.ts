@@ -11,23 +11,23 @@ export class MovementsComponent {
 	public sideMenuArr:any = [
 		{
 			menu: 'Movement Details',
-			routePath: '/movements'
+			routePath: '/app/movements'
 		},
 		{
 			menu: 'Bookings',
-			routePath: '/movements/bookings'
+			routePath: '/app/movements/bookings'
 		},{
 			menu: 'Guide Details',
-			routePath: '/movements/guide-details'
+			routePath: '/app/movements/guide-details'
 		},{
 			menu: 'Trip Details',
-			routePath: '/movements/trip-details'
+			routePath: '/app/movements/trip-details'
 		},{
 			menu: 'Traveler Details',
-			routePath: '/movements/traveller-details'
+			routePath: '/app/movements/traveller-details'
 		},{
 			menu: 'Flight Details',
-			routePath: '/movements/flight-details'
+			routePath: '/app/movements/flight-details'
 		}
 	];
 	constructor(private authService: AuthService, private _route: Router){

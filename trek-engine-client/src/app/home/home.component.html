@@ -1,6 +1,6 @@
 <ul id="navDropdown" class="dropdown-content">
 		<li><a>Profile</a></li>
-		<li routerLink="/package-billings"><a>Package Billings</a></li>
+		<li routerLink="/app/package-billings"><a>Package Billings</a></li>
 		<li class="divider"></li>
 		<li (click)="logout()"><a>Logout</a></li>
 </ul>
@@ -9,19 +9,19 @@
 		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul>
 			<li>
-				<a class="brand-logo" routerLink="/">Trek Engine</a>
+				<a class="brand-logo" routerLink="/app">Trek Engine</a>
 			</li>
 		</ul>
 
 		<ul class="right hide-on-med-and-down">
 			<li *ngIf="cookieData.idx==10">
-				<a routerLink="/app-features">Features</a>
+				<a routerLink="/app/app-features">Features</a>
 			</li>
 			<li *ngIf="cookieData.idx==10">
-				<a routerLink="/app-packages">Packages</a>
+				<a routerLink="/app/app-packages">Packages</a>
 			</li>
 			<li>
-				<a routerLink="/movements">Movements</a>
+				<a routerLink="/app/movements">Movements</a>
 			</li>
 			<li>
 				<a>Accounts</a>
@@ -38,14 +38,14 @@
 		</ul>
 		<ul class="side-nav" id="mobile-demo">
 			<li *ngIf="cookieData.idx==10">
-				<a routerLink="/app-features">Features</a>
+				<a routerLink="/app/app-features">Features</a>
 			</li>
 			<li *ngIf="cookieData.idx==10">
-				<a routerLink="/app-packages">Packages</a>
+				<a routerLink="/app/app-packages">Packages</a>
 			</li>
 			<li class="divider" *ngIf="cookieData.idx==10"></li>
 			<li>
-				<a routerLink="/movements">Movements</a>
+				<a routerLink="/app/movements">Movements</a>
 			</li>
 			<li>
 				<a>Accounts</a>
@@ -59,7 +59,7 @@
 				<a>Profile</a>
 			</li>
 			<li>
-				<a routerLink="/package-billings">Package Billings</a>
+				<a routerLink="/app/package-billings">Package Billings</a>
 			</li>
 			<li class="divider"></li>
 			<li (click)="logout()"><a>Logout</a></li>

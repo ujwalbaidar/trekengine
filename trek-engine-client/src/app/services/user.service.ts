@@ -36,6 +36,18 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	findByQuery(queries:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<queries.length;i++){
+			let key = Object.keys(queries[i])[0];
+			let value = queries[i][key];
+			params.set(key, value);
+		}
+		return this.http.get('/api/users/findByQuery', {search: params})
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getGuides(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });

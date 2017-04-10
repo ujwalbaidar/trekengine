@@ -8,6 +8,7 @@ import { PackageBillingsComponent } from './package-billings/package-billings.co
 import { FeaturesComponent } from './features/features.component';
 import { PackagesComponent } from './packages/packages.component';
 import { PackageDetailsComponent } from './packages/package-details/package-details.component';
+import { PublicHomeComponent } from './public-home/public-home.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -20,10 +21,17 @@ import {
 } from './movements/index';
 
 const appRoutes: Routes = [
-	{ path: 'login', component: LoginComponent },
-	{ path: 'pricings', component: PackageBillingsComponent },
 	{ 
 		path: '', 
+		component: PublicHomeComponent, 
+		children:[
+			{ path: 'login', component: LoginComponent },
+			{ path: 'pricings', component: PackageBillingsComponent },
+			{ path: 'register/service/:serviceType', component: RegisterComponent }
+		] 
+	},
+	{ 
+		path: 'app', 
 		component: HomeComponent, 
 		children:[
 			{ path:'', component: DashboardComponent},
@@ -47,7 +55,7 @@ const appRoutes: Routes = [
 			}
 		]
 	},
-	{ path: 'register', component: RegisterComponent }
+	{ path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
 @NgModule({

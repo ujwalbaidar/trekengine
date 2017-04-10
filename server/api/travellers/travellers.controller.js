@@ -111,7 +111,7 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				if(dataObj.attachments.profile == "" && dataObj.imageAttachments.profile){
+				if(dataObj.attachments && dataObj.attachments.profile == "" && dataObj.imageAttachments.profile){
 					fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
 						if(!err){
 							fs.unlink("attachments/"+dataObj.imageAttachments.profile, (err) => {
@@ -151,7 +151,7 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				if(dataObj.attachments.passport == "" && dataObj.imageAttachments.passport){
+				if(dataObj.attachments && dataObj.attachments.passport == "" && dataObj.imageAttachments.passport){
 					fs.stat("attachments/"+dataObj.imageAttachments.passport, (err, stat) => {
 						if(!err){
 							fs.unlink("attachments/"+dataObj.imageAttachments.passport, (err) => {
@@ -193,7 +193,7 @@ function saveAttachments(dataObj, requestFor) {
 					}
 				});
 			}else{
-				if(dataObj.attachments.insurance == "" && dataObj.imageAttachments.insurance){
+				if(dataObj.attachments && dataObj.attachments.insurance == "" && dataObj.imageAttachments.insurance){
 					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
 						if(!err){
 							fs.unlink("attachments/"+dataObj.imageAttachments.insurance, (err) => {

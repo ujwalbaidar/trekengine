@@ -20,7 +20,7 @@ export class PackageBillingsService {
   	getPackages(){
   		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/package-billings/get', options)
+		return this.http.get('/app/package-billings', options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
@@ -28,9 +28,17 @@ export class PackageBillingsService {
 	submitPackage(featurePackage:any){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.post('/api/package-billings/submit', featurePackage, options)
+		return this.http.post('/app/package-billings', featurePackage, options)
 			.map(this.extractData)
     		.catch(this.handleError.bind(this));
+	}
+
+	updateAppPackage(packageBilling: Object) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/app/package-billings', packageBilling, options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
 	}
 
 	private extractData(res: Response) {
