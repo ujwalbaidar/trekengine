@@ -85,7 +85,9 @@ export class BookingDetailsComponent implements OnInit  {
 	getGuideLists(){
 		this.userService.getGuides()
 		.subscribe(guide=>{
-			guide['guides'].unshift({});
+			if(guide.length>0){
+				guide['guides'].unshift({});
+			}
 			this.guides = guide['guides'];
 			if(this.booking && this.booking.selectedGuide){
 				for(let i=0;i<this.guides.length;i++){
