@@ -104,7 +104,7 @@ exports.filterTrip = function(req, res){
 		let arrivalDate = JSON.parse(req.query.arrivalDate).epoc;
 		getFilterResultQuery(departureDate, arrivalDate)
 			.then(result=>{
-				filterByDates(result)
+				filterByDates(req.headers.userId, result)
 				.then(trips=>{
 					res.status(200).json({success:true, data:trips});
 				})
@@ -117,9 +117,10 @@ exports.filterTrip = function(req, res){
 	}
 }
 
-function filterByDates(Result){
+function filterByDates(userId, Result){
 	return new Promise((resolve, reject)=>{
 		Trips.aggregate([
+			{ $match: { userId: userId } },
 			{
 				$project:{
 					name:1,
