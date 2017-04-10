@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 						this.authService.setCookies('authToken',loginUser['token']);
 						this.authService.setCookies('idx',loginUser['index']);
 						this.authService.setCookies('hostOrigin', window.location.origin);
-						this._route.navigate(['/']);
+						this._route.navigate(['/app']);
 					}, error=>{
 						if(error.errBody.data.errorCode && error.errBody.data.errorCode == 'emailErr'){
 							this.errObj = {errType:'email', message: error.errBody.message};

@@ -74,7 +74,7 @@ exports.submitUserPackage = function(req, res){
 					let currentDateTime = new Date();
 					currentDateTime.setHours(0,0,0,0);
 					let activateDate = Math.floor(currentDateTime/1000);
-					let expireDate = activateDate+30*24*3600;
+					let expireDate = activateDate+parseInt(req.body.packages.days)*24*3600;
 
 					var saveObj = {
 						userId: userId,
@@ -201,5 +201,30 @@ exports.updateBillingOnHold = function() {
 				resolve(update);
 			}
 		});
+	});
+}
+
+exports.updateUserPackage = function(req, res){
+	let updateObj = {
+		userId: req.body.userId,
+		packageType: req.body.packageType,
+		packageCost: req.body.packageCost,
+		activatesOn: req.body.activatesOn,
+		expiresOn: req.body.expiresOn,
+		remainingDays: req.body.remainingDays,
+		usesDays: req.body.usesDays,
+		features: req.body.features,
+		freeUser: req.body.freeUser,
+		onHold: req.body.onHold,
+		status: req.body.status,
+		updateDate: new Date()
+	};
+	PackageBillings.update({_id:req.body._id}, updateObj, function(err, updateResponse){
+		if(err){
+			res.status(400).json({success:false, data:err});
+		}else{
+			res.status(200).json({success: true, data: 'Payment for Billing is set up successfully'});
+
+		}
 	});
 }

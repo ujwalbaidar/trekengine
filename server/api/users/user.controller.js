@@ -6,6 +6,9 @@ let config = require('../../configs/config')[env];
 const async = require('async');
 const readline = require('readline');
 const crypto = require('crypto');
+const Packages = mongoose.model('Packages');
+const PackageBillings = mongoose.model('PackageBillings');
+const AppEmail = require('../../library/appEmail/appEmail');
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -23,13 +26,53 @@ exports.createUser = function(req, res){
                    .update(req.body.password)
                    .digest('hex');
 	let user = new User(req.body);
-	user.save((err, user)=>{
-		if(err){
-			res.status(400).json({success:false, data:err});
-		}else{
-			res.status(200).json({success:true, data:user});
+
+
+	if(req.body.serviceType){
+		var serviceType = req.body.serviceType;
+		if(req.body.serviceType == 'free'){
+			var serviceType ='Enterprise';
 		}
-	});
+		Packages.find({name:serviceType}, (packageErr, package)=>{
+			if(packageErr){
+				res.status(400).json({success:false, data:err});
+			}else{
+				if(package.length>0){
+					user.save((err, user)=>{
+						if(err){
+							res.status(400).json({success:false, data:err});
+						}else{
+							let userInfo = {
+								userId: user._id,
+								email: user.email
+							};
+							let packageService = true;
+							saveUserPackageBilling(userInfo, package[0], packageService)
+								.then(billingResponse=>{
+									user.billingResponse = billingResponse;
+									res.status(200).json({success:true, data:{user:user,billingInfo:billingResponse}});
+								})
+								.catch(billingError=>{
+									res.status(400).json({success:false, data:err});
+								})
+						}
+					});
+				}else{
+					res.status(400).json({success:false, data:'Selected Package is Invalid'});
+				}
+			}
+		})
+	}else{
+		user.save((err, user)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success:true, data:user});
+			}
+		});
+	}
+	
+	
 }
 
 exports.findAllUser = function(req, res){
@@ -227,5 +270,76 @@ exports.removeGuide = function(req, res){
 				}
 			});
 		}
+	});
+}
+
+function saveUserPackageBilling(user, package, freeUser){
+	return new Promise((resolve, reject)=>{
+		let currentDateTime = new Date();
+		currentDateTime.setHours(0,0,0,0);
+		let activateDate = Math.floor(currentDateTime/1000);
+		let expireDate = activateDate+30*24*3600;
+
+		var saveObj = {
+			userId: user.userId,
+			packageType: package.name,
+			packageCost: package.cost,
+			activatesOn: activateDate,
+			expiresOn: expireDate,
+			remainingDays: package.days,
+			features: package.featureIds,
+			usesDays: 0,
+			freeUser: freeUser,
+			onHold: false,
+			status: true
+		}
+		let mailOptions = {};
+		mailOptions = {
+			from: config.appEmail.senderAddress,
+		    to: user.email, 
+		    subject: 'Billing Receipt',
+		    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
+		    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+		};
+		saveUserPackage(saveObj)
+			.then(savePackageResponse=>{
+				sendEmail(mailOptions).
+				then(mailInfo=>{
+					resolve(savePackageResponse);
+				})
+				.catch(err=>{
+					reject(err);
+				});
+			})
+			.catch(err=>{
+				reject(err);
+			});
+	});
+}
+
+function saveUserPackage(saveData){
+	return new Promise((resolve, reject)=>{
+		let packageBillings = new PackageBillings(saveData);
+		packageBillings.save((err, savePackage)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(savePackage);
+			}
+		});
+	})
+}
+
+function sendEmail(mailOptions){
+	return new Promise((resolve, reject)=>{
+		config.appEmail.mailOptions = mailOptions;
+		let appEmail = new AppEmail(config.appEmail);
+		appEmail.sendEmail()
+			.then(emailInfo=>{
+				resolve(emailInfo);
+			})
+			.catch(emailError=>{
+				reject(emailError);
+			});
 	});
 }

@@ -28,7 +28,12 @@
 					</span>
 					<p>{{'for '+packageDetail.packages.days+' days'}}</p>
 					<div>
-						<a (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn">get started</a>
+						<a *ngIf="loggedIn; else publicBilling" (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn">get started</a>
+						<ng-template #publicBilling>
+							<a class="waves-effect #64dd17 light-green accent-4 btn" [routerLink]="['/register/service', packageDetail.packages.name]">
+								get started
+							</a>
+						</ng-template>
 					</div>
 				</div>
 				<div>

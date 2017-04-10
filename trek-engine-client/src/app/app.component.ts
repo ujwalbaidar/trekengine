@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
 									}else{
 										alert('Request to Assign you as guide has been suspended');
 										if(cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
-											this._route.navigate(['/']);
+											this._route.navigate(['/app']);
 										}else{
 											this._route.navigate(['/login']);
 										}
@@ -106,7 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
 					alert(user['message']);
 				}
 				if(cookieObj && cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
-					this._route.navigate(['/']);
+					this._route.navigate(['/app']);
 				}else{
 					this._route.navigate(['/login']);
 				}
@@ -117,16 +117,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	navigatePage(cookieObj:Object) {
 		if(cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
-			if(this.location.path() !=='/login' || this.location.path() !=='/register'){
-				this._route.navigate([this.location.path()]);
+			if(this.location.path() == ''){
+				this._route.navigate(['/app']);
 			}else{
-				this._route.navigate(['/']);
+				if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/pricings'){
+					this._route.navigate(['/app']);
+				}else{
+					this._route.navigate([this.location.path()]);
+				}
 			}
 		}else{
 			if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/pricings'){
 				this._route.navigate([this.location.path()]);
 			}else{
-				this._route.navigate(['/login']);
+				this._route.navigate(['/pricings']);
 			}
 		}
 	}

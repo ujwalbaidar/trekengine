@@ -99,7 +99,7 @@ export class PackageDetailsComponent implements OnInit {
 	updatePackageDetails(){
 		this.packageService.updateAppPackage(this.appPackage)
 			.subscribe(appPackage=>{
-				this._route.navigate(['/app-packages']);
+				this._route.navigate(['/app/app-packages']);
 			}, error=>{
 				this.selectedFeatureArr = error;
 			});
@@ -111,7 +111,7 @@ export class PackageDetailsComponent implements OnInit {
 		}
 		this.packageService.submitAppPackage(this.appPackage)
 			.subscribe(appPackage=>{
-				this._route.navigate(['/app-packages']);
+				this._route.navigate(['/app/app-packages']);
 			}, error=>{
 				this.selectedFeatureArr = error;
 			});
