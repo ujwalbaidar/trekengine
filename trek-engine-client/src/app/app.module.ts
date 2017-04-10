@@ -42,6 +42,7 @@ import { AppFeaturesDialogComponent } from './features/features.component';
 import { PackagesComponent } from './packages/packages.component';
 import { PackageDetailsComponent } from './packages/package-details/package-details.component';
 import { PublicHomeComponent } from './public-home/public-home.component';
+import { BillingHistoryComponent } from './billing-history/billing-history.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { PublicHomeComponent } from './public-home/public-home.component';
     PackageBillingsComponent,
     PackagesComponent,
     PackageDetailsComponent,
-    PublicHomeComponent
+    PublicHomeComponent,
+    BillingHistoryComponent
   ],
   imports: [
     BrowserModule,
