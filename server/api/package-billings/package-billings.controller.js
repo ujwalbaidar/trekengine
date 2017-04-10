@@ -43,6 +43,19 @@ exports.getUserPackage = function(req, res){
 	});
 }
 
+exports.getUsersBillings = function(req, res){
+	console.log(req.headers)
+	if(req.headers && req.headers.userId){
+		PackageBillings.find({userId: req.headers.userId}, (err, billings)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success:true, data:billings});
+			}
+		});
+	}
+}
+
 exports.submitUserPackage = function(req, res){
 	var saveObj = {};
 	if(req.headers && req.headers.userId){
