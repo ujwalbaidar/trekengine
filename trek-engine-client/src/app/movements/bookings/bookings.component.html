@@ -38,7 +38,7 @@
 		<h5 class="center-align">Booking Record is empty! Please add records.</h5>
 	</ng-template>
 </div>
-<div class="add-round-button-icon">
+<div class="add-round-button-icon" *ngIf="isAvailable">
 	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddBookingModal()">
 		<i class="material-icons">add</i>
 	</a>

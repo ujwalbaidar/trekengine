@@ -31,7 +31,7 @@ exports.getBooking = function(req, res){
 }
 
 exports.createBooking = function(req,res){
-	if(req.headers && req.headers.userId){
+	if(req.headers && req.headers.userId && req.headers.remainginDays>=1){
 		req.body.userId = req.headers.userId;
 		req.body.tripId = req.body.trip;
 		req.body.totalCost = req.body.travellerCount*req.body.tripCost;
