@@ -13,12 +13,12 @@ module.exports = function(app){
 	app.use('/api/movements/flights',auth, require('./api/flights'));
 	app.use('/api/movements/traveler', auth, require('./api/travellers'));
 	app.use('/api/package-billings', auth, require('./api/package-billings'));
-	app.get('/app/package-billings', require('./api/package-billings/package-billings.controller').getUserPackage);
-	app.put('/app/package-billings', require('./api/package-billings/package-billings.controller').updateUserPackage);
+	app.get('/trekengineApp/package-billings', require('./api/package-billings/package-billings.controller').getUserPackage);
+	app.put('/trekengineApp/package-billings', require('./api/package-billings/package-billings.controller').updateUserPackage);
 	app.use('/api/features', superAuth, require('./api/features'));
 	app.use('/api/packages', superAuth, require('./api/packages'));
-	app.post('/app/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
-	app.get('/app/travellers', (req, res) => {
+	app.post('/trekengineApp/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
+	app.get('/trekengineApp/travellers', (req, res) => {
 		res.render('iframes/traveler-details-form.template.ejs');
 	});
 	app.route('*')

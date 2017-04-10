@@ -132,7 +132,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	ngOnInit(){
-		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/app/travellers');
+		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/trekengineApp/travellers');
 	}
 
 	submitTravelerDetails(travelerDetail:any){
