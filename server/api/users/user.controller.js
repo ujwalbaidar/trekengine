@@ -143,12 +143,21 @@ exports.loginUser = function(req, res){
 							if (billingErr) {
 								res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
 							}else{
-								let token = jwt.sign(
-										{email:user.email, userId: user._id, role: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}, 
-										config.loginAuth.secretKey, 
-										{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
-									);
-								res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}});
+								if(billingResponse){
+									let token = jwt.sign(
+											{email:user.email, userId: user._id, role: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}, 
+											config.loginAuth.secretKey, 
+											{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+										);
+									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}});
+								}else{
+									let token = jwt.sign(
+											{email:user.email, userId: user._id, role: user.role}, 
+											config.loginAuth.secretKey, 
+											{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+										);
+									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role}});
+								}
 							}
 						});
 					}else{
