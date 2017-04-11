@@ -16,7 +16,6 @@ export class BillingHistoryComponent implements OnInit {
   	getBillingHistory(){
 		this.billingService.getUserBillings()
 			.subscribe(billings=>{
-				console.log(billings)
 				this.billings = billings;
 			}, error=>{
 				this.billingError = error;
