@@ -26,10 +26,10 @@
 					{{billing.packageCost}}
 				</td>
 				<td>
-					{{billing.activatesOn}}
+					{{billing.activatesOn*1000 | date}}
 				</td>
 				<td>
-					{{billing.expiresOn}}
+					{{billing.expiresOn*1000 | date}}
 				</td>
 				<td>
 					{{billing.remainingDays}}
