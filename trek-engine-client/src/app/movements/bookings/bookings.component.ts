@@ -58,7 +58,7 @@ export class BookingsComponent implements OnInit  {
 			dialogOptions["data"]["bookings"] = editData;
 		}
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
-    	dialogRef.afterClosed().subscribe(result => {
+		dialogRef.afterClosed().subscribe(result => {
       		this.getBookingList();
     	});
 	}
@@ -72,9 +72,9 @@ export class BookingsDialogComponent implements OnInit {
 	booking: Booking = <Booking>{};
 	title: string = 'Add Booking Details';
 	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
-		if(this.dialogRef.config.data){
-			if(this.dialogRef.config.data.bookings){
-				this.booking = Object.assign({}, this.dialogRef.config.data.bookings);
+		if(this.dialogRef._containerInstance.dialogConfig.data){
+			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
+				this.booking = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.bookings);
 				this.title = 'Edit Booking Details';
 			}
 		}
@@ -86,7 +86,7 @@ export class BookingsDialogComponent implements OnInit {
 
 	submitBookingDetails(bookingForm:any) {
 		if(bookingForm.valid){
-			if(this.dialogRef.config.data.bookings){
+			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
 				this.updateBookingDetails();
 			}else{
 				this.saveBookingDetails();

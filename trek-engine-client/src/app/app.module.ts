@@ -2,7 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
-import { MaterialModule } from '@angular/material';
+import { MaterialModule, OverlayContainer } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -93,4 +93,8 @@ import { BillingHistoryComponent } from './billing-history/billing-history.compo
     AppFeaturesDialogComponent
   ]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(overlayContainer: OverlayContainer) {
+    overlayContainer.themeClass = 'deeppurple-amber';
+  }
+}

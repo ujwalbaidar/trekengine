@@ -86,13 +86,13 @@ export class FlightDetailsDialogComponent implements OnInit {
 		public movementServie: MovementsService
 	) {
 		this.developTimePicker();
-		if(this.dialogRef.config.data && this.dialogRef.config.data.records){
-			this.flight = JSON.parse(JSON.stringify(this.dialogRef.config.data.records));
-			this.flight.booking = this.dialogRef.config.data.bookingId;
+		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.records){
+			this.flight = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data.records));
+			this.flight.booking = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 			this.title = 'Edit Flight Details';
 		}else{
 			this.flight = <Flight>{departure:{hrTime:this.hrs[0], minTime:this.mins[0]}, arrival:{hrTime:this.hrs[0], minTime:this.mins[0]}};
-			this.flight["bookingId"] = this.dialogRef.config.data.bookingId;
+			this.flight["bookingId"] = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		}
 	}
 
@@ -124,7 +124,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 
 	submitFlightDetails(flightForm:any) {
 		if(flightForm.valid){
-			if(this.dialogRef.config.data && this.dialogRef.config.data.records){
+			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.records){
 				this.updateFlightDetails();
 			}else{
 				this.saveFlightDetails();

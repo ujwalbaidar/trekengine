@@ -81,7 +81,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	mins: any;
 
 	constructor(public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, private sanitizer: DomSanitizer, public movementService: MovementsService, public auth: AuthService){
-		let dialogConfigData = this.dialogRef.config.data;
+		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		this.actionMode = dialogConfigData.mode;
 		let timePicker = this.auth.developTimePicker();
 		this.hrs = timePicker.hrs;
@@ -119,7 +119,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 			}
 		}else{
 			this.title = 'Add Traveler Details';
-			this.traveler['bookingId'] =  this.dialogRef.config.data.bookingId;
+			this.traveler['bookingId'] =  this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 			if(this.traveler['airportPickup'] == undefined){
 				this.traveler['airportPickup'] = {
 					confirmation: false,
@@ -136,7 +136,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	submitTravelerDetails(travelerDetail:any){
-		let dialogConfigData = this.dialogRef.config.data;
+		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		if(travelerDetail.valid){
 			if(dialogConfigData.records){
 				this.movementService.updateTravelerDetails(this.traveler)

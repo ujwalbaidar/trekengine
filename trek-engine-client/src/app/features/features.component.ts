@@ -67,9 +67,9 @@ export class AppFeaturesDialogComponent implements OnInit {
 	appFeatures: AppFeatures = <AppFeatures>{};
 	title: string = 'Add Feature Details';
 	constructor(public dialogRef: MdDialogRef<AppFeaturesDialogComponent>, public featuresService: FeaturesService){
-		if(this.dialogRef.config.data){
-			if(this.dialogRef.config.data.features){
-				this.appFeatures = Object.assign({}, this.dialogRef.config.data.features);
+		if(this.dialogRef._containerInstance.dialogConfig.data){
+			if(this.dialogRef._containerInstance.dialogConfig.data.features){
+				this.appFeatures = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.features);
 				this.title = 'Edit Feature Details';
 			}
 		}
@@ -81,7 +81,7 @@ export class AppFeaturesDialogComponent implements OnInit {
 
 	submitAppFeatures(featureForm:any){
 		if(featureForm.valid){
-			if(this.dialogRef.config.data.features){
+			if(this.dialogRef._containerInstance.dialogConfig.data.features){
 				this.updateFeatureDetails();
 			}else{
 				this.saveFeatureDetails();

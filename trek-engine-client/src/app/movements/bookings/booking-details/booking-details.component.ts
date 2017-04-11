@@ -128,7 +128,9 @@ export class BookingDetailsComponent implements OnInit  {
 
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-      		this.getBookingDetails();
+    		if(result!=='cancel'){
+      			this.getBookingDetails();
+    		}
     	});
 	}
 
