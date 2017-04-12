@@ -44,7 +44,6 @@ exports.getUserPackage = function(req, res){
 }
 
 exports.getUsersBillings = function(req, res){
-	console.log(req.headers)
 	if(req.headers && req.headers.userId){
 		PackageBillings.find({userId: req.headers.userId}, (err, billings)=>{
 			if(err){

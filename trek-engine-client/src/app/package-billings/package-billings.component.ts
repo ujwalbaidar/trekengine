@@ -15,6 +15,7 @@ export class PackageBillingsComponent implements OnInit {
 	packageErr: any;
 	users: any;
 	selectedBillingUser: any;
+	disableBillingBtn: boolean = false;
 
 	constructor(private packageBillingsService:PackageBillingsService, private auth:AuthService, private _cookieService:CookieService, private userService:UserService) { }
 
@@ -51,6 +52,7 @@ export class PackageBillingsComponent implements OnInit {
   		this.auth.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj && cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
+					this.disableBillingBtn = true;
 					if(parseInt(cookieObj['idx'])===10){
 						if(this.selectedBillingUser!==undefined){
 							featurePackage['selectedBillingUser']=this.selectedBillingUser;
@@ -62,19 +64,24 @@ export class PackageBillingsComponent implements OnInit {
 							featurePackage['selectedBillingUserEmail']=filterEmail[0]['email'];
 							this.packageBillingsService.submitPackage(featurePackage)
 								.subscribe(packageInfo=>{
+									this.disableBillingBtn = false;
 									this.selectedBillingUser = undefined;
 									alert(packageInfo);
 								}, error => {
+									this.disableBillingBtn = false;
 									this.packageErr = 'Failed to Setup Package';
 								});
 						}else{
+							this.disableBillingBtn = false;
 							alert('User Not selected for Billing');
 						}
 					}else{
 						this.packageBillingsService.submitPackage(featurePackage)
 							.subscribe(packageInfo=>{
+								this.disableBillingBtn = false;
 								alert(packageInfo);
 							}, error => {
+								this.disableBillingBtn = false;
 								this.packageErr = 'Failed to Setup Package';
 							});
 					}

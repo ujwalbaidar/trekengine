@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'angular2-cookie/core';
 import { Router } from '@angular/router';
+import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import * as io from "socket.io-client/dist/socket.io";
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthService {
 	hrs:any[];
 	mins: any[];
-	constructor(public _cookieService:CookieService, private _route: Router){}
+	public url = 'http://localhost:5000';  
+ 	private socket;
+ 	public validatedUser = false;
+
+	constructor(public _cookieService:CookieService, private _route: Router, private http: Http){
+		this.broadCastSocketValue();
+	}
+
 	getCookies(): Promise<Object> {
 		return Promise.resolve(this._cookieService.getAll());
 	}
@@ -14,6 +24,23 @@ export class AuthService {
 	setCookies(key:string, value:string){
 		this._cookieService.put(key, value);
 	}
+
+	broadCastSocketValue() {
+		this.socket = io(this.url);
+
+		this.socket.on('transfer-cookie', (data) => {
+			this.socket.emit('user-cookie', this._cookieService.get('authToken'));
+		});
+		this.socket.on('updateRemainingDays', (billing)=>{
+			if(billing.remainingDays>0) {
+				this.validatedUser = true;
+			}else{
+				this.validatedUser = false;
+			}
+			this._cookieService.put('remainingDays', billing.remainingDays);
+			this._cookieService.put('packageType', billing.packageType);
+		});
+	}  
 
 	clearCookies(){
 		this._cookieService.removeAll();

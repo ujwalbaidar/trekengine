@@ -15,7 +15,7 @@ export class BookingsComponent implements OnInit  {
 	bookingErr: string;
 	isAvailable: boolean = false;
 
-	constructor(public movementService:MovementsService, public dialog: MdDialog, private authService: AuthService){
+	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService){
 		this.authService.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
