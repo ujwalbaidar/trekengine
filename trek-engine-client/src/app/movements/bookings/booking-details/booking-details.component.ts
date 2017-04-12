@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MovementsService, UserService } from '../../../services/index';
+import { AuthService, MovementsService, UserService } from '../../../services/index';
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -27,6 +27,7 @@ export class BookingDetailsComponent implements OnInit  {
 	bookingGuide: any;
 
 	constructor(
+		public authService: AuthService,
 		public movementService:MovementsService, 
 		public userService: UserService, 
 		private route: ActivatedRoute, 
