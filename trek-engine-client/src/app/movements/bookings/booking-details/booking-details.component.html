@@ -11,7 +11,7 @@
 						<strong>Booking Details</strong>
 					</span>
 					<div class="right">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" (click)="openBookingModal()">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openBookingModal()">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
@@ -93,7 +93,7 @@
 						<strong>Trip Details</strong>
 					</span>
 					<div class="right" *ngIf="trip && trip.name">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" (click)="openAddTripModal(trip)">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openAddTripModal(trip)">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
@@ -220,7 +220,7 @@
 						<strong>Flight Details</strong>
 					</span>
 					<div class="right" *ngIf="flight && flight.bookingId">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" (click)="openFlightModal(flight)">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openFlightModal(flight)">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
