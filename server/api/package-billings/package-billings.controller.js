@@ -273,3 +273,42 @@ exports.emailOnExpired = function(){
 		});
 	})
 }
+
+exports.queryUserBilling = function(req, res){
+	PackageBillings.find(req.query, (err, billings)=>{
+		if(err){
+			res.status(400).json({success:false, data:err});
+		}else{
+			res.status(200).json({success: true, data: billings});
+		}
+	});
+}
+
+exports.updateUserBilling = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.role===10){
+		let requestBody = req.body;
+		let activateDate = req.body.activatedDate.date;
+		let activatesOn = new Date(activateDate.year, activateDate.month-1, activateDate.day).getTime();
+		let expiryDate = req.body.expiryDate.date;
+		let expiresOn = new Date(expiryDate.year, expiryDate.month-1, expiryDate.day).getTime();
+		let updateObj = {
+			"packageType" : requestBody.packageType,
+		    "packageCost" : requestBody.packageCost,
+		    "activatesOn" : activatesOn/1000,
+		    "expiresOn" : expiresOn/1000,
+		    "remainingDays" : requestBody.remainingDays,
+		    "usesDays" : requestBody.usesDays,
+		    "updateDate" : new Date(),
+		    "status" : requestBody.status,
+		    "onHold" : requestBody.onHold,
+		    "freeUser" : requestBody.freeUser,
+		}
+		PackageBillings.update({_id:req.body._id, userId: req.body.userId}, updateObj, (err, updateRes)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success: true, data: updateRes});
+			}
+		});
+	}
+}

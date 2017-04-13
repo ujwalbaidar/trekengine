@@ -49,6 +49,28 @@ export class PackageBillingsService {
             .catch(this.handleError.bind(this));
 	}
 
+	queryUserBillings(billingQuery:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<billingQuery.length;i++){
+			let key = Object.keys(billingQuery[i])[0];
+			let value = billingQuery[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/auth/package-billings/queryUserBilling', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	updateBillingDetails(billingData: any){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/auth/package-billings/updateUserBilling', billingData, options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

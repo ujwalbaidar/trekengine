@@ -14,7 +14,8 @@ import {
   MovementsService, 
   PackageBillingsService, 
   FeaturesService ,
-  PackagesService
+  PackagesService,
+  AuthResolverService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -42,7 +43,8 @@ import { AppFeaturesDialogComponent } from './features/features.component';
 import { PackagesComponent } from './packages/packages.component';
 import { PackageDetailsComponent } from './packages/package-details/package-details.component';
 import { PublicHomeComponent } from './public-home/public-home.component';
-import { BillingHistoryComponent } from './billing-history/billing-history.component';
+import { BillingHistoryComponent, BillingDialogComponent } from './billing-history';
+import { AppUsersComponent } from './app-users/app-users.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,8 @@ import { BillingHistoryComponent } from './billing-history/billing-history.compo
     PackagesComponent,
     PackageDetailsComponent,
     PublicHomeComponent,
-    BillingHistoryComponent
+    BillingHistoryComponent, BillingDialogComponent,
+    AppUsersComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +84,8 @@ import { BillingHistoryComponent } from './billing-history/billing-history.compo
     MovementsService,
     PackageBillingsService,
     FeaturesService,
-    PackagesService
+    PackagesService,
+    AuthResolverService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
@@ -90,7 +94,8 @@ import { BillingHistoryComponent } from './billing-history/billing-history.compo
     BookingsDialogComponent, 
     FlightDetailsDialogComponent,
     TravellerDetailsDialogComponent,
-    AppFeaturesDialogComponent
+    AppFeaturesDialogComponent,
+    BillingDialogComponent
   ]
 })
 export class AppModule { 
