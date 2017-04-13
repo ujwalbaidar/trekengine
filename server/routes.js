@@ -13,6 +13,7 @@ module.exports = function(app){
 	app.use('/api/movements/flights',auth, require('./api/flights'));
 	app.use('/api/movements/traveler', auth, require('./api/travellers'));
 	app.use('/api/package-billings', auth, require('./api/package-billings'));
+	app.use('/api/auth/package-billings', superAuth, require('./api/package-billings'));
 	app.get('/trekengineApp/package-billings', require('./api/package-billings/package-billings.controller').getUserPackage);
 	app.put('/trekengineApp/package-billings', require('./api/package-billings/package-billings.controller').updateUserPackage);
 	app.use('/api/features', superAuth, require('./api/features'));

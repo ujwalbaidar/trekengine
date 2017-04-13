@@ -1,0 +1,89 @@
+<form class="col s12" (ngSubmit)="submitBillingDetails(billingDetail.form)" #billingDetail="ngForm" novalidate>
+	<h4 md-dialog-title>{{ title }}</h4>
+	<div md-dialog-content>
+
+		<div class="row">
+			<div class="input-field col s6">
+				<input id="packageCost" type="number" class="validate" name="packageCost" [(ngModel)]="billingHistory.packageCost" #packageCost="ngModel" required>
+				<div *ngIf="packageCost.errors && (packageCost.dirty || packageCost.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!packageCost.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+				<label for="packageCost" [ngClass]="{'active':(billingHistory.packageCost!=undefined)}">Package Cost</label>
+			</div>
+			<div class="input-field col s6">
+				<md-select name="packageType" [(ngModel)]="billingHistory.packageType">
+		   			<md-option *ngFor="let package of packages" [value]="package.name">{{ package.name }}</md-option>
+				</md-select>
+				<label for="packageType" [ngClass]="{'active':(billingHistory.packageType!=undefined)}">Package Name</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="input-field col s6">
+				<input id="remainingDays" type="number" class="validate" name="remainingDays" [(ngModel)]="billingHistory.remainingDays" #remainingDays="ngModel" required>
+				<div *ngIf="remainingDays.errors && (remainingDays.dirty || remainingDays.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!remainingDays.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+				<label for="remainingDays" [ngClass]="{'active':(billingHistory.remainingDays!=undefined)}">Remaining Days</label>
+			</div>
+			<div class="input-field col s6">
+				<input id="usesDays" type="number" class="validate" name="usesDays" [(ngModel)]="billingHistory.usesDays" #usesDays="ngModel" required>
+				<div *ngIf="usesDays.errors && (usesDays.dirty || usesDays.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!usesDays.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+				<label for="usesDays" [ngClass]="{'active':(billingHistory.usesDays!=undefined)}">Uses Days</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s6">
+				<label for="activatesOn" [ngClass]="{'active':(billingHistory.activatesOn!=undefined)}">Activate Date</label>
+				<my-date-picker id="activatesOn" class="validate" name="activatesOn" [(ngModel)]="billingHistory.activatedDate" #activatesOn="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div *ngIf="activatesOn.errors && (activatesOn.dirty || activatesOn.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!activatesOn.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+			<div class="col s6">
+				<label for="expiresOn" [ngClass]="{'active':(billingHistory.expiresOn!=undefined)}">Expire Date</label>
+				<my-date-picker id="expiresOn" class="validate" name="expiresOn" [(ngModel)]="billingHistory.expiryDate" #expiresOn="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div *ngIf="expiresOn.errors && (expiresOn.dirty || expiresOn.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!expiresOn.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s4">
+				<md-checkbox id="status" name="status" class="example-margin" [(ngModel)]="billingHistory.status">Status</md-checkbox>
+			</div>
+			<div class="col s4">
+				<md-checkbox id="freeUser" name="freeUser" class="example-margin" [(ngModel)]="billingHistory.freeUser">Free User</md-checkbox>
+			</div>
+			<div class="col s4">
+				<md-checkbox id="onHold" name="onHold" class="example-margin" [(ngModel)]="billingHistory.onHold">On Hold</md-checkbox>
+			</div>
+		</div>
+
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #009688 teal btn" type="submit">Submit</button>
+		<a class="btn waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('cancel')">Cancel</a>
+	</div>
+</form>

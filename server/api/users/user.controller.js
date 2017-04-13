@@ -97,7 +97,7 @@ exports.fineOneUser = function(req, res){
 }
 
 exports.fineUserByQuery = function(req, res){
-	User.find(req.query, (err, users)=>{
+	User.find(req.query, { password:0 }, (err, users)=>{
 		if(err){
 			res.status(400).json({success:false, data:err});
 		}else{

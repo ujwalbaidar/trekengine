@@ -10,7 +10,7 @@ import { PackagesComponent } from './packages/packages.component';
 import { PackageDetailsComponent } from './packages/package-details/package-details.component';
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent } from './billing-history/billing-history.component';
-
+import { AppUsersComponent } from './app-users/app-users.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -21,6 +21,7 @@ import {
 	TravellerDetailsComponent,
 	MovementDetailsComponent 
 } from './movements/index';
+import { AuthResolverService } from './services';
 
 const appRoutes: Routes = [
 	{ 
@@ -36,7 +37,15 @@ const appRoutes: Routes = [
 		path: 'app', 
 		component: HomeComponent, 
 		children:[
-			{ path:'', component: DashboardComponent},
+			{ path: '', component: DashboardComponent},
+			{ 
+				path: 'app-users', 
+				component: AppUsersComponent, 
+				resolve: {
+              		crisis: AuthResolverService
+            	}
+        	},
+        	{ path: 'app-users/:userId/billing-history', component: BillingHistoryComponent },
 			{ path: 'package-billings', component: PackageBillingsComponent },
 			{ path: 'billing-history', component: BillingHistoryComponent },
 			{ path: 'app-features', component: FeaturesComponent },
@@ -58,7 +67,7 @@ const appRoutes: Routes = [
 			}
 		]
 	},
-	{ path: '**', redirectTo: '/', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/', pathMatch: 'full' }
 ];
 
 @NgModule({

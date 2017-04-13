@@ -93,3 +93,18 @@ export class AppPackage {
 	validDays: number;
 	features: AppFeatures[];
 }
+
+export class BillingHistory {
+    packageType : string;
+    packageCost : number;
+    activatesOn : any;
+    expiresOn : number;
+    remainingDays : number;
+    usesDays : number;
+    status : boolean;
+    onHold : boolean;
+    freeUser : boolean;
+    features : any;
+    activatedDate: Object;
+    expiryDate: Object;
+}
