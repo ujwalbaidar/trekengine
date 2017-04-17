@@ -55,7 +55,15 @@ export class UserService {
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
-	
+
+	addGuideToAdmin(guideUser:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/guides/addGuideToAdmin', guideUser, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+	}
+
 	updateUser(userObj: Object, queryParams:string){
 		let params: URLSearchParams = new URLSearchParams();
 		params.set('email', queryParams);

@@ -22,11 +22,11 @@ export class GuideDetailsComponent implements OnInit  {
 	getGuideLists(){
 		this.userService.getGuides()
 		.subscribe(users=>{
-					this.guideUsers = users['guides'];
-					this.approver = users['approver'];
-				}, userError=>{
-					console.log(userError);
-				});
+			this.guideUsers = users['guides'];
+			this.approver = users['approver'];
+		}, userError=>{
+			console.log(userError);
+		});
 	}
 
 	removeGuide(userEmail:string, index:number) {
@@ -40,7 +40,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideModal(){
 		let dialogOptions = {
-			height: '300px',
+			height: '400px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -49,7 +49,10 @@ export class GuideDetailsComponent implements OnInit  {
 
 		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-    		console.log("http://localhost:5000/login?email="+result+"&&from="+this.approver);
+    		if(result!=='opt2'){
+    			this.getGuideLists();
+    			// console.log("http://localhost:5000/login?email="+result+"&&from="+this.approver);
+    		}
     	});
 	}
 }
@@ -64,7 +67,12 @@ export class GuideDetailsDialogComponent {
 
 	submitGuideDetails(guideForm:any){
 		if(guideForm.valid){
-			this.saveGuideDetails();
+			this.userService.addGuideToAdmin(this.user)
+				.subscribe(successResponse=>{
+					this.dialogRef.close(successResponse);
+				}, error=>{
+					this.dialogRef.close(error);
+				});
 		}
 	}
 

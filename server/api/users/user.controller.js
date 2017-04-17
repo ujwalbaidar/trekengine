@@ -8,12 +8,14 @@ const readline = require('readline');
 const crypto = require('crypto');
 const Packages = mongoose.model('Packages');
 const PackageBillings = mongoose.model('PackageBillings');
+const Notifications = mongoose.model('Notifications');
 const AppEmail = require('../../library/appEmail/appEmail');
 
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
+const randomstring = require("randomstring");
 
 exports.createUser = function(req, res){
 	req.body.firstName = req.body.fname;
@@ -258,6 +260,92 @@ exports.updateVendors = function(req, res){
 	});
 }
 
+
+exports.addGuideToAdmin = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.role == 20){
+		let currentDateTime = new Date();
+		let expireDateTime = currentDateTime.getTime()+24*3600*1000;
+
+		queryUser({email:req.body.email})
+			.then(userInfo=>{
+				if(userInfo && userInfo.length>0){
+					let saveObj = {
+						sentTo: userInfo[0]._id,
+						sentBy: req.headers.email,
+						subject: 'add-as-guide'
+					}
+					createNotifications(saveObj)
+						.then((notificationData)=>{
+							mailOptions = {
+								from: config.appEmail.senderAddress,
+							    to: userInfo[0].email, 
+							    subject: 'Request to assign as Guide',
+							    text: `You have been requested to accept role of guide for ${req.headers.email}. Please Login to ${config.webHost}, to accept the request, using your credentials: Email: ${userInfo[0].email} `,
+							    html: `<p>You have been requested to accept role of guide for ${req.headers.email}.</p>
+							    	<p> Please Login to ${config.webHost}, to accept the request, using your credentials: </p>
+							    	<p>Email: ${userInfo[0].email} </p>`,
+							};
+							sendEmail(mailOptions)
+								.then(mailInfo=>{
+									res.status(200).send({success: true, data: mailInfo });
+								})
+								.catch(mailErr=>{
+									res.status(400).json({success:false, data: mailErr});
+								});
+						})
+						.catch(notificationError=>{
+							res.status(400).json({success:false, data: notificationError});
+						});
+				}else{
+					let guideInfo = {
+						firstName: req.body.firstName,
+						lastName: req.body.lastName,
+						email: req.body.email,
+						role: 30,
+						admins: [req.headers.email]
+					};
+					createGuide(guideInfo, req.headers.userId, true)
+						.then(guideDetails=>{
+							User.update(
+								{ email: req.headers.email },
+								{ $addToSet: { guides: req.body.email }}, 
+								(adminUserErr, adminUser)=>{
+									if(adminUserErr){
+										res.status(400).json({success:false, data: adminUserErr});
+									}else{
+										mailOptions = {
+											from: config.appEmail.senderAddress,
+										    to: guideDetails.email, 
+										    subject: 'Request to assign as Guide',
+										    text: `You have been assinged as guide by ${req.headers.email}. Please Login to ${config.webHost}, using following credentials: Email: ${guideDetails.email} Password: ${guideDetails.password} Note: Please update your profile to secure your details`,
+										    html: `<p>You have been assinged as guide by ${req.headers.email}.</p>
+										    	<p> Please Login to ${config.webHost}, using following credentials: </p>
+										    	<p>Email: ${guideDetails.email} </p>
+										    	<p>Password: ${guideDetails.password}</p>
+										    	<p>Note: Please update your profile to secure your details</p>`,
+										};
+										sendEmail(mailOptions)
+											.then(mailInfo=>{
+												res.status(200).send({success: true, data: mailInfo });
+											})
+											.catch(mailErr=>{
+												res.status(400).json({success:false, data: mailErr});
+											});
+									}
+								});
+							
+						})
+						.catch(guideErr=>{
+							res.status(400).json({success:false, data: guideErr});
+						});
+				}
+			})
+			.catch(userInfoErr=>{
+				res.status(400).json({success:false, data: userInfoErr});
+			});
+	}
+}
+
 exports.guideListByAdmin = function(req, res){
 	if(req.headers.userId){
 		User.findOne({_id:req.headers.userId}, {guides:1,_id:0,email:1}, function(err, user){
@@ -365,5 +453,50 @@ function sendEmail(mailOptions){
 			.catch(emailError=>{
 				reject(emailError);
 			});
+	});
+}
+
+function queryUser(query){
+	return new Promise((resolve, reject)=>{
+		User.find(query, {password:0}, (err, user)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(user);
+			}
+		});
+	});
+}
+
+function createGuide(params, assignee, generatePassword){
+	return new Promise((resolve, reject)=>{
+		if(generatePassword == true){
+			var randomPassword = randomstring.generate(7);
+			params.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+                   .update(randomPassword)
+                   .digest('hex');
+		}
+		let user = new User(params);
+		user.save((err, user)=>{
+			if(err){
+				reject(err);
+			}else{
+				user.password = randomPassword;
+				resolve(user);
+			}
+		});
+	});
+}
+
+function createNotifications(notificationData){
+	return new Promise((resolve, reject)=>{
+		let notification  = new Notifications(notificationData);
+		notification.save((err, notificationInfo)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(notificationInfo);
+			}
+		});
 	});
 }
