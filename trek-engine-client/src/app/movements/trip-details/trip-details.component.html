@@ -1,0 +1,34 @@
+<div>
+	<h3>Trip Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="trips && trips.length>0; else emptyTrips">
+		<thead>
+			<tr>
+				<td>BookingId</td>
+				<td>Name</td>
+				<td>Departure Date</td>
+				<td>Arrival Date</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let trip of trips; let i = index;">
+				<td>{{ trip.bookingId }}</td>
+				<td>{{ trip.name }}</td>
+				<td>{{ trip.departureDate.jsdate | date }}</td>
+				<td>{{ trip.arrivalDate.jsdate | date }}</td>
+				<td>{{ trip.status }}</td>
+				<td>
+					<a (click)="openAddTripModal(trip)">Edit</a>
+					<a (click)="deleteTrip(trip._id, i)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<ng-template #emptyTrips>
+		<h5 class="center-align">Trip Record is empty! Please add trip to bookings.</h5>
+	</ng-template>
+</div>

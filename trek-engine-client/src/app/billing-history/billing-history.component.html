@@ -1,0 +1,59 @@
+<div>
+	<h3>Billing History</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="billings && billings.length>0; else emptybillings">
+		<thead>
+			<tr>
+				<td>Package Type</td>
+				<td>Package Cost</td>
+				<td>Activated On</td>
+				<td>Expire On</td>
+				<td>Remaining Days</td>
+				<td>Uses Days</td>
+				<td>On Hold</td>
+				<td>Is Free</td>
+				<td>Status</td>
+				<td *ngIf="cookieIndex===10 && userId !== undefined">Action</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let billing of billings; let i = index;">
+				<td>
+					{{billing.packageType}}
+				</td>
+				<td>
+					{{billing.packageCost}}
+				</td>
+				<td>
+					{{billing.activatesOn*1000 | date}}
+				</td>
+				<td>
+					{{billing.expiresOn*1000 | date}}
+				</td>
+				<td>
+					{{billing.remainingDays}}
+				</td>
+				<td>
+					{{billing.usesDays}}
+				</td>
+				<td>
+					{{billing.onHold}}
+				</td>
+				<td>
+					{{billing.freeUser}}
+				</td>
+				<td>
+					{{ billing.status==true?'active':'inactive'}}
+				</td>
+				<td *ngIf="cookieIndex===10 && userId !== undefined">
+					<a (click)="openBillingModal(billing)">Edit</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<ng-template #emptybillings>
+		<h5 class="center-align">Unable to find billing History</h5>
+	</ng-template>
+</div>

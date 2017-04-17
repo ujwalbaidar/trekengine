@@ -1,0 +1,29 @@
+<div>
+	<h3>User Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="adminUsers && adminUsers.length>0">
+		<thead>
+			<tr>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>Email</td>
+				<td>Role</td>
+				<td>Status</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let user of adminUsers; let i = index;">
+				<td>{{ user.firstName }}</td>
+				<td>{{ user.lastName }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.role }}</td>
+				<td>{{ user.status==true?'active':'inactive'}}</td>
+				<td>
+					<a [routerLink]="[user._id, 'billing-history']">Billing History</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,378 @@
+<div>
+	<h3>Booking Details</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<div class="row">
+		<div class="col s12 m8">
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title">
+						<strong>Booking Details</strong>
+					</span>
+					<div class="right">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openBookingModal()">
+							<i class="material-icons">edit</i>
+						</a>
+					</div>
+				</div>
+				<div class="card-action">
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Booking ID</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.bookingId}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Group Name</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.groupName}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Total Members</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.travellerCount}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Trip Cost</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.tripCost}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Total Cost</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.totalCost}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Advance Paid</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.advancePaid}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Due Amount</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.dueAmount}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m8">
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title">
+						<strong>Trip Details</strong>
+					</span>
+					<div class="right" *ngIf="trip && trip.name">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openAddTripModal(trip)">
+							<i class="material-icons">edit</i>
+						</a>
+					</div>
+				</div>
+				<div class="card-action">
+					<div *ngIf="trip && trip.name">
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Trip Name</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{trip?.name}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Departure Date</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{trip?.departureDate?.formatted}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Arrival Date</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{trip?.arrivalDate?.formatted}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div [hidden]="trip && trip.name" class="row">
+						<div class="col s6">
+							<p>Trip Details not added yet. Please add Trip Details!</p>
+						</div>
+						<div class="col s6 m6 right-align">
+							<a class="btn-floating btn-large waves-effect waves-light green" (click)="openAddTripModal()"><i class="material-icons">add</i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m8">
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title">
+						<strong>Guide Details</strong>
+					</span>
+				</div>
+				<div class="card-action">
+					<div class="row">
+						<div class="col s6 m8">
+							<select class="browser-default" [(ngModel)]="selectedGuide">
+								<option [value]="i" *ngFor="let guide of guides;let i=index;">
+									<span *ngIf="guide && guide.firstName && guide.lastName && guide.email">
+										{{guide.firstName+' '+guide.lastName+' ('+ guide.email+')'}}
+									</span>
+									<span *ngIf="!guide.firstName">Select Guide</span>
+								</option>
+							</select>
+						</div>
+						<div class="col s6 m4">
+							<a class="waves-effect waves-light btn" (click)="selectGuide()">Submit</a>
+						</div>
+					</div>
+					<div *ngIf="booking&&booking.selectedGuide">
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Guide Name</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{bookingGuide?.firstName+' '+bookingGuide?.lastName}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Email</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{bookingGuide?.email}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Contact Number</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{bookingGuide?.phone}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Address</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{bookingGuide?.address}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div [hidden]="booking&&booking.selectedGuide" class="row">
+						<div class="col s12">
+							<p>Guide Details not added yet. Please add Guide Details!</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m8">
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title">
+						<strong>Flight Details</strong>
+					</span>
+					<div class="right" *ngIf="flight && flight.bookingId">
+						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openFlightModal(flight)">
+							<i class="material-icons">edit</i>
+						</a>
+					</div>
+				</div>
+				<div class="card-action">
+					<div *ngIf="flight && flight.bookingId">
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Departure Flight</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.departure?.name}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Departure Cost</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.departure?.cost}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Departure Date</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.departure?.date?.formatted}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Departure Time</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.departure?.hrTime+':'+flight?.departure?.minTime}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Arrival Flight</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.arrival?.name}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Arrival Cost</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.arrival?.cost}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Arrival Date</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.arrival?.date?.formatted}}</span>
+								</div>
+							</div>
+							<div class="col s6">
+								<div class="col s12 m3">
+									<strong>Arrival Time</strong>
+								</div>
+								<div class="col s12 m9">
+									<span>{{flight?.arrival?.hrTime+':'+flight?.arrival?.minTime}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div [hidden]="flight && flight.bookingId" class="row">
+						<div class="col s6">
+							<p>Flight Details not added yet. Please add Flight Details!</p>
+						</div>
+						<div class="col s6 m6 right-align">
+							<a class="btn-floating btn-large waves-effect waves-light green" (click)="openFlightModal()"><i class="material-icons">add</i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 m8">
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title">
+						<strong>Traveller Lists</strong>
+					</span>
+					<div class="right">
+						<a class="btn-floating waves-effect waves-light green" (click)="openTravelerModal('', 'add')">
+							<i class="material-icons">add</i>
+						</a>
+					</div>
+				</div>
+				<div class="card-action">
+					<div class="row">
+						<div class="col s6 m8">
+							<select class="browser-default" [(ngModel)]="selectedTraveler">
+								<option [value]="i" *ngFor="let traveler of travelers;let i=index;">
+									<span *ngIf="traveler && traveler.firstName && traveler.lastName && traveler.email">
+										{{traveler.firstName+' '+traveler.lastName+' ('+ traveler.email+')'}}
+									</span>
+									<span *ngIf="!traveler.firstName">Select Traveler</span>
+								</option>
+							</select>
+						</div>
+						<div class="col s6 m4">
+							<a class="waves-effect waves-light btn" (click)="selectTraveler()">Add</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<ul class="collection" *ngIf="selectedTravelerArr && selectedTravelerArr.length>0">
+								<li class="collection-item avatar" *ngFor="let traveler of selectedTravelerArr; let indx=index;">
+									<img src="{{traveler.attachments?.profile}}" class="circle">
+									<span class="title">{{traveler.firstName+' '+traveler.lastName}}</span>
+									<button md-icon-button [mdMenuTriggerFor]="menu">
+										<md-icon>more_vert</md-icon>
+									</button>
+									<md-menu #menu="mdMenu" position-x='100'>
+										<button md-menu-item (click)="openTravelerModal(traveler, 'view')">
+											<md-icon>visibility</md-icon>
+											<span>View</span>
+										</button>
+										<button md-menu-item (click)="openTravelerModal(traveler, 'edit', indx)">
+											<md-icon>create</md-icon>
+											<span>Edit</span>
+										</button>
+										<button md-menu-item (click)="removeTraveler(traveler._id, indx)">
+											<md-icon>remove</md-icon>
+											<span>Remove</span>
+										</button>
+									</md-menu>
+									<p>{{traveler.nationality}} <br>
+										{{traveler.email}}
+									</p>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

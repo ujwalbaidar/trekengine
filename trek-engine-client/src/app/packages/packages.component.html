@@ -1,0 +1,50 @@
+<div>
+	<h3>Package Lists</h3>
+</div>
+<div class="divider"></div>
+<div>
+	<table class="bordered responsive-table highlight" *ngIf="packages && packages.length>0; else emptyPackages">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Description</td>
+				<td>Cost</td>
+				<td>Valid Days</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let package of packages; let i = index;">
+				<td>
+					{{package.name}}
+				</td>
+				<td>
+					{{package.description}}
+				</td>
+				<td>
+					{{package.cost}}
+				</td>
+				<td>
+					{{package.days}}
+				</td>
+				<td>
+					{{ package.status==true?'active':'inactive'}}
+				</td>
+				<td>
+					<a [routerLink]="['details', 'edit', package._id]">Edit</a>
+					<a (click)="deletePackages(package._id, i)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<ng-template #emptyPackages>
+		<h5 class="center-align">Package Record is empty! Please add Packages!</h5>
+	</ng-template>
+</div>
+
+<div class="add-round-button-icon">
+	<a class="btn-floating btn-large waves-effect waves-light green" [routerLink]="['details']">
+		<i class="material-icons">add</i>
+	</a>
+</div>

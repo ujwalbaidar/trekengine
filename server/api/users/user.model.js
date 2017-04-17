@@ -5,6 +5,7 @@ let UserSchema = new mongoose.Schema({
 	role: Number,
 	email: {type: String, unique: true, required: true, dropDups: true},
 	password: String,
+	domain: String,
 	loginAccess:[{
 		method: String,
 		accessToken: String,
@@ -15,8 +16,15 @@ let UserSchema = new mongoose.Schema({
 		packageId: String,
 		expireDate: String,
 	},
-	createdDate: Date,
-	updatedDate: Date,
+	status: { type:Boolean, default: true },
+	createdDate: {
+		type: Date, 
+		default: new Date()
+	},
+	updateDate: {
+		type: Date, 
+		default: new Date()
+	},
 	guides:[],
 	admins: []
 });

@@ -1,0 +1,94 @@
+<div>
+	<div>
+		<h3>Movement Details</h3>
+	</div>
+	<div class="divider"></div>
+	<div>
+		<md-grid-list cols="12" rowHeight="30px">
+			<md-grid-tile [colspan]="8" [rowspan]="3">
+				<div>
+					<h5>Filter By</h5>
+				</div>
+			</md-grid-tile>
+			
+			<md-grid-tile [colspan]="2" [rowspan]="1">
+				<p>
+					<input class="with-gap" name="movementFilter" type="radio" id="weeklyFilter" value="weekly" [(ngModel)]="filterOpt" (change)="getFilterDate()"/>
+					<label for="weeklyFilter">Weekly</label>
+				</p>
+			</md-grid-tile>
+			
+			<md-grid-tile [colspan]="2" [rowspan]="1">
+				<p>
+					<input class="with-gap" name="movementFilter" type="radio" id="dailyFilter" value="daily" [(ngModel)]="filterOpt" (change)="getFilterDate()"/>
+					<label for="dailyFilter">Today</label>
+				</p>
+			</md-grid-tile>
+			
+			<md-grid-tile [colspan]="2" [rowspan]="1">
+				<p>
+					<input class="with-gap" name="movementFilter" type="radio" id="monthlyFilter" value="monthly" [(ngModel)]="filterOpt" (change)="getFilterDate()"/>
+					<label for="monthlyFilter">Monthly</label>
+				</p>
+			</md-grid-tile>
+			
+			<md-grid-tile [colspan]="2" [rowspan]="1">
+				<p>
+					<input class="with-gap" name="movementFilter" type="radio" id="yearlyFilter" value="yearly" [(ngModel)]="filterOpt" (change)="getFilterDate()"/>
+					<label for="yearlyFilter">Yearly</label>
+				</p>
+			</md-grid-tile>
+			
+			<md-grid-tile [colspan]="2" [rowspan]="1">
+				<p>
+					<input class="with-gap" name="movementFilter" type="radio" id="customFilter" value="custom" [(ngModel)]="filterOpt" (change)="getFilterDate()"/>
+					<label for="customFilter">Custom</label>
+				</p>
+			</md-grid-tile>
+
+		</md-grid-list>
+	</div>
+	<div class="row">
+		<div class="col s12 m2 right">
+			<my-date-picker name="arrival" [options]="myDatePickerOptions" [(ngModel)]="arrivalDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+		</div>
+		<div class="col s12 m2 right">
+			<my-date-picker name="departure" [options]="myDatePickerOptions" [(ngModel)]="departureDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+		</div>
+	</div>
+	<div>
+		<table class="bordered responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
+			<thead>
+				<tr>
+					<th>BookingID</th>
+					<th>Group Name</th>
+					<th>Trek</th>
+					<th>Departure Date</th>
+					<th>Arrival Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let trek of treks">
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
+						<span>{{ trek.bookingId }}</span>
+					</td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
+						<span *ngIf="trek.bookings.length>0">{{ trek.bookings[0].groupName }}</span>
+					</td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
+						<span>{{ trek.name }}</span>
+					</td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
+						<span>{{ trek.departureDate.formatted }}</span>
+					</td>
+					<td [routerLink]="['bookings/booking-details', trek.bookingId]">
+						<span>{{ trek.arrivalDate.formatted }}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-template #emptyTrekFilter>
+			<h5 class="center-align">Booking Records not found in selected filter!</h5>
+		</ng-template>
+	</div>
+</div>

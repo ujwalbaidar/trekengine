@@ -2,6 +2,7 @@
 	"db": "",
 	"host": "localhost",
 	"port": 5000,
+	"webHost": "http://localhost:5000",
 	"dbURI": "mongodb://localhost/trek-engine",
 	"google":{
 		"client_id":"275605026401-vgsd7k40spgmpc32e7dcg1gk03lc47kb.apps.googleusercontent.com",
@@ -20,6 +21,12 @@
 	"loginPassword": {
 		"secretKey":"c0d3w1ng",
 		"algorithm":"sha512"
+	},
+	"appEmail":{
+		"service": "gmail",
+		"address":"trekengine.solution@gmail.com",
+		"password":"treakengine123456789",
+		"senderAddress": "codewings<donotreply@codewings.com>"
 	}
 }
 

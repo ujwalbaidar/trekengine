@@ -1,0 +1,264 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
+	</head>
+	<body>
+		<div ng-app="travellersApp" ng-controller="appCtrl">
+			<div class="row">
+				<form class="col s12" ng-submit="submitTravellerDetails(travelerDetailForm.$valid)" name="travelerDetailForm" novalidate>
+					<div class="row">
+						<strong>Basic Informations</strong>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="first_name" class="active">*First Name</label>
+							<input id="first_name" type="text" name="firstName" class="validate" ng-model="traveller.firstName" required>
+							<p ng-if="submitted && travelerDetailForm.firstName.$error.required">This Field is Requierd!</p>
+						</div>
+						<div class="input-field col s6">
+							<label for="middle_name" class="active">Middle Name</label>
+							<input id="middle_name" type="text" name="middleName" class="validate" ng-model="traveller.middleName">
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="lastName" class="active">*Last Name</label>
+							<input id="lastName" type="text" name="lastName" class="validate" ng-model="traveller.lastName" required>
+							<p ng-if="submitted && travelerDetailForm.lastName.$error.required">This Field is Requierd!</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="nationality" class="active">*Nationality</label>
+							<input id="nationality" type="text" name="nationality" class="validate" ng-model="traveller.nationality" required>
+							<p ng-if="submitted && travelerDetailForm.nationality.$error.required">This Field is Requierd!</p>
+						</div>
+						<div class="input-field col s6">
+							<label for="dob" class="active">Birth Date</label>
+							<input id="dob" type="date" name="dob" class="validate" ng-model="traveller.dob">
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="permanentAddress" class="active">Permanent Address</label>
+							<input id="permanentAddress" type="text" name="permanentAddress" class="validate" ng-model="traveller.permanentAddress">
+						</div>
+						<div class="input-field col s6">
+							<label for="email" class="active">*Email</label>
+							<input id="email" type="text" name="email" class="validate" ng-model="traveller.email" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/" required>
+							<p ng-if="submitted && travelerDetailForm.email.$error.required">This Field is Requierd!</p>
+							<p ng-if="submitted && travelerDetailForm.email.$error.pattern">Email Does not Match!</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="telephone" class="active">Telephone</label>
+							<input id="telephone" type="text" name="telephone" class="validate" ng-model="traveller.telephone">
+						</div>
+					</div>
+					<div class="row">
+						<strong>Attachments</strong>
+					</div>
+					<hr>
+					<div class="row">
+						<label class="active">Profile Image</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="profileAttachment" file-model="traveller.profileAttachment" onchange="angular.element(this).scope().previewUpload('profileAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="profileAttachment" src="" height="200" alt="Image preview...">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<label class="active">Passport Attachments</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="passportAttachment" file-model="traveller.passportAttachment" onchange="angular.element(this).scope().previewUpload('passportAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="passportAttachment" src="" height="200" alt="Image preview...">
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<label class="active">Insurance Attachments</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="insuranceAttachment" file-model="traveller.insuranceAttachment" onchange="angular.element(this).scope().previewUpload('insuranceAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<strong>Emergency Contacts</strong>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="emergencyContactName" class="active">Name</label>
+							<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" ng-model="traveller.emergencyContact.name">
+						</div>
+						<div class="input-field col s6">
+							<label for="emergencyContactNumber" class="active">Phone</label>
+							<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" ng-model="traveller.emergencyContact.number">
+						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+							<label for="emergencyContactRelation" class="active">Relation</label>
+							<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" ng-model="traveller.emergencyContact.relation">
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<input type="checkbox" ng-click=submitPickupConfirmation(traveller.airportPickup.confirmation) class="filled-in" id="pickupConfirmation" ng-model="traveller.airportPickup.confirmation"/>
+						<label for="pickupConfirmation">Do you want Airport Pickup?</label>
+					</div>
+					<div ng-if="traveller.airportPickup.confirmation">
+						<div class="row">
+							<div class="input-field col s6">
+								<label for="pickupDate" class="active">*Date</label>
+								<input id="pickupDate" type="date" name="pickupDate" class="validate" ng-model="traveller.airportPickup.date" required>
+								<p ng-if="traveller.pickupConfirmation && submitted && travelerDetailForm.pickupDate.$error.required">This Field is Requierd!</p>
+							</div>
+							<div class="input-field col s6">
+								<label for="pickupTime" class="active">*Time</label>
+								<input id="pickupTime" type="text" name="pickupTime" class="validate" ng-model="traveller.airportPickup.time" required>
+								<p ng-if="traveller.pickupConfirmation && submitted && travelerDetailForm.pickupTime.$error.required">This Field is Requierd!</p>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<input type="checkbox" ng-click=submitHotelConfirmation(traveller.hotel.confirmation) class="filled-in" id="hotelConfirmation" ng-model="traveller.hotel.confirmation"/>
+						<label for="hotelConfirmation">Have you Booked the Hotel?</label>
+					</div>
+					<div ng-if="traveller.hotel.confirmation">
+						<div class="row">
+							<div class="input-field col s6">
+								<label for="hotelName" class="active">Hotel Name</label>
+								<input id="hotelName" type="text" name="hotelName" class="validate" ng-model="traveller.hotel.name">
+							</div>
+							<div class="input-field col s6">
+								<label for="hotelAddress" class="active">Hotel Address</label>
+								<input id="hotelAddress" type="text" name="hotelAddress" class="validate" ng-model="traveller.hotel.address">
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s6">
+								<label for="hotelTelephone" class="active">Hotel Telephone</label>
+								<input id="hotelTelephone" type="text" name="hotelTelephone" class="validate" ng-model="traveller.hotel.telephone">
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="input-field col s12">
+							<textarea id="messageBox" class="materialize-textarea" data-length="120" ng-model="traveller.messageBox"></textarea>
+							<label for="messageBox">Message Box</label>
+						</div>
+			        </div>
+					<div>
+						<button md-button class="waves-effect #009688 teal btn" type="submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script>
+			var app = angular.module('travellersApp', ['ngCookies']);
+
+			app.directive('fileModel', ['$parse', function ($parse) {
+				return {
+					restrict: 'A',
+					link: function(scope, element, attrs) {
+						var model = $parse(attrs.fileModel);
+						var modelSetter = model.assign;
+
+						element.bind('change', function(){
+							scope.$apply(function(){
+								modelSetter(scope, element[0].files[0]);
+							});
+						});
+					}
+				};
+			}]);
+
+			app.controller('appCtrl', ['$scope', '$http', '$window', '$cookies', function($scope, $http, $window, $cookies) {
+				$scope.traveller = {};
+				$scope.submitted = false;
+
+				$scope.previewUpload = function(uploadType){
+					var preview = document.querySelector('.'+uploadType);
+					setTimeout(function(){ 
+						var attachment = $scope.traveller[uploadType];
+						var reader  = new FileReader();
+						reader.addEventListener("load", function () {
+							preview.src = reader.result;
+							var dataObj = {
+								name: $scope.traveller[uploadType].name,
+								size: $scope.traveller[uploadType].size,
+								type: $scope.traveller[uploadType].type,
+								imageFile: reader.result
+							};
+							$scope.traveller[uploadType] = dataObj;
+						}, false);
+						if(attachment){
+							reader.readAsDataURL(attachment);
+						}
+					}, 0);
+				}
+
+				$scope.submitPickupConfirmation = function(isConfirmed){
+					if(!isConfirmed){
+						$scope.traveller.airportPickup = {};
+					}
+				}
+
+				$scope.submitHotelConfirmation = function(isConfirmed){
+					if(!isConfirmed){
+						$scope.traveller.hotel = {};
+					}
+				}
+
+				$scope.submitTravellerDetails = function(isValid){
+					$scope.submitted = true;
+					if(isValid){
+						$http({
+								method:'post', 
+								url: 'http://localhost:5000/trekengineApp/travellers/create', 
+								data:$scope.traveller, 
+								headers:{
+									webHeader: JSON.stringify($cookies.getAll()),
+									webOrigin: window.location.origin
+								}
+							})
+							.then(saveResponse=>{
+								if(saveResponse.data.success == true){
+									window.top.location.href = document.referrer;
+								}else{
+									alert(saveResponse.data.msg);
+								}
+							})
+							.catch(errorResponse=>{
+								alert('Failed to save traveler details!!')
+							});
+					}
+				}
+			}]);
+		</script>
+	</body>
+</html>

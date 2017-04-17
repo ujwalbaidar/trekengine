@@ -1,0 +1,45 @@
+<form class="col s12" (ngSubmit)="submitTrekDetails(trekDetail.form)" #trekDetail="ngForm" novalidate>
+	<h4 md-dialog-title>{{ title }}</h4>
+	<div md-dialog-content>
+		<div class="row">
+			<div class="input-field col s12">
+				<label for="name">Name</label>
+				<input id="name" type="text" class="validate" name="name" [(ngModel)]="trip.name" #name="ngModel" required>
+				<div *ngIf="name.errors && (name.dirty || name.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!name.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+			<div class="col s12">
+				<label for="departureDate">Departure Date</label>
+				<my-date-picker id="departureDate" class="validate" name="departureDate" [(ngModel)]="trip.departureDate" #departureDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div *ngIf="departureDate.errors && (departureDate.dirty || departureDate.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!departureDate.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+			<div class="col s12">
+				<label for="arrivalDate">Arrival Date</label>
+				<my-date-picker id="arrivalDate" class="validate" name="arrivalDate" [(ngModel)]="trip.arrivalDate" #arrivalDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				<div *ngIf="arrivalDate.errors && (arrivalDate.dirty || arrivalDate.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!arrivalDate.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
+		<button md-button class="waves-effect #009688 teal btn">Submit</button>
+	</div>
+</form>
