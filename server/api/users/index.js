@@ -13,4 +13,5 @@ router.delete('/delete/:userId', userController.deleteUser);
 router.get('/seedUser', userController.seedUser);
 router.get('/listByAdmin', userController.guideListByAdmin);
 router.delete('/remove', userController.removeGuide);
+router.post('/addGuideToAdmin', userController.addGuideToAdmin);
 module.exports = router;

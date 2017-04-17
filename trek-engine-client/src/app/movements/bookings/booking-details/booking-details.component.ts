@@ -86,7 +86,7 @@ export class BookingDetailsComponent implements OnInit  {
 	getGuideLists(){
 		this.userService.getGuides()
 		.subscribe(guide=>{
-			if(guide.length>0){
+			if(guide['guides'].length>0){
 				guide['guides'].unshift({});
 			}
 			this.guides = guide['guides'];

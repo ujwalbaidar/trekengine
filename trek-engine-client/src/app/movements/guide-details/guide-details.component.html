@@ -3,7 +3,7 @@
 </div>
 <div class="divider"></div>
 <div>
-	<table class="bordered responsive-table highlight">
+	<table class="bordered responsive-table highlight" *ngIf="guideUsers && guideUsers.length>0; else emptyGuides">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -26,4 +26,7 @@
 	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
 		<i class="material-icons">add</i>
 	</a>
+	<ng-template #emptyGuides>
+		<h5 class="center-align">Guide Record is empty! Please add guide records.</h5>
+	</ng-template>
 </div>
