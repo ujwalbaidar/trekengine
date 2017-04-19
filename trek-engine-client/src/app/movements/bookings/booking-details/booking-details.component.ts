@@ -222,8 +222,7 @@ export class BookingDetailsComponent implements OnInit  {
     		}
     	});
 	}
-
-	openTravelerModal(travelerRecord:Traveler=<Traveler>{}, actionMode:string, index:number) {
+	openTravelerModal(travelerRecord:any, actionMode:string) {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
@@ -243,7 +242,6 @@ export class BookingDetailsComponent implements OnInit  {
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=="Option 1" && actionMode == 'edit'){
     			this.getBookingDetails();
-    			// this.selectedTravelerArr[index] = result; 
     		}else if(result!=="Option 1" && actionMode == 'add'){
     			this.getBookingDetails();
     		}

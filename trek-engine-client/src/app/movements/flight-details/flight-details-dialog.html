@@ -1,4 +1,4 @@
-<form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form, flight)" #flightDetail="ngForm" novalidate>
+<form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form)" #flightDetail="ngForm" novalidate>
 	<h4 md-dialog-title>{{ title }}</h4>
 	<div md-dialog-content>
 		<div class="row">
@@ -121,7 +121,7 @@
 		</div>
 	</div>
 	<div md-dialog-actions>
-		<button md-button class="waves-effect #009688 teal btn" type="button" (click)="submitFlightDetails(flightDetail.form, flight)">Submit</button>
+		<button md-button class="waves-effect #009688 teal btn" type="button" (click)="submitFlightDetails(flightDetail.form)">Submit</button>
 		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
 	</div>
 </form>

@@ -82,7 +82,7 @@ export class TripDetailsDialogComponent implements OnInit {
 	public departure_date: Object;
 	public arrival_date: Object;
 	public title: string = 'Add Trip Details';
-	private myDatePickerOptions: IMyOptions = {
+	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
         sunHighlight: false,

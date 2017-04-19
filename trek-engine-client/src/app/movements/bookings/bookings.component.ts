@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { MovementsService, UserService, AuthService } from '../../services/index';
+import { MovementsService, AuthService } from '../../services/index';
 import { Booking } from '../../models/models';
 
 @Component({

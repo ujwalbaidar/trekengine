@@ -1,6 +1,8 @@
 export class User {
 	fname: string;
   	lname: string;
+  	firstName: string;
+  	lastName: string;
   	email: string;
   	password: string;
   	role: number;
@@ -91,6 +93,7 @@ export class AppPackage {
 	description: string;
 	cost: number;
 	validDays: number;
+	days: number;
 	features: AppFeatures[];
 }
 

@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 export class AppComponent implements OnInit, OnDestroy { 
 	public urlParams:any;
 	public sub: any;
-	constructor(private auth:AuthService, private userService:UserService, private _route:Router, private activatedRoute: ActivatedRoute, private location: Location){
+	constructor(private auth:AuthService, public userService:UserService, private _route:Router, private activatedRoute: ActivatedRoute, private location: Location){
 	}
 
 	ngOnInit(){
