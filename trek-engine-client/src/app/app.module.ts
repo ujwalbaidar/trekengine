@@ -45,6 +45,8 @@ import { PackageDetailsComponent } from './packages/package-details/package-deta
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent, BillingDialogComponent } from './billing-history';
 import { AppUsersComponent } from './app-users/app-users.component';
+import { ProfileComponent } from './profile/profile.component';
+import { EqualValidatorDirective } from './directive/equal-validator.directive';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,9 @@ import { AppUsersComponent } from './app-users/app-users.component';
     PackageDetailsComponent,
     PublicHomeComponent,
     BillingHistoryComponent, BillingDialogComponent,
-    AppUsersComponent
+    AppUsersComponent,
+    ProfileComponent,
+    EqualValidatorDirective
   ],
   imports: [
     BrowserModule,

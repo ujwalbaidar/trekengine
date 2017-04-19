@@ -7,6 +7,7 @@ let config = require('./configs/config')[env];
 module.exports = function(app){
 	app.use('/api/users', require('./api/users'));
 	app.use('/api/seed', require('./api/users'));
+	app.use('/api/userInfo', auth ,require('./api/users'));
 	app.use('/api/movements/trips', auth ,require('./api/trips'));
 	app.use('/api/guides', auth, require('./api/users'));
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
@@ -36,7 +37,7 @@ module.exports = function(app){
 					req.headers.userId = decoded.userId;
 					req.headers.email = decoded.email;
 					req.headers.role = decoded.role;
-					req.headers.remainingDays = decoded.remainingDays;
+					req.headers.remainingDays = decoded.remainingDays?decoded.remainingDays:0;
 					next();
 				}else{
 					req.headers.userId = decoded.userId;

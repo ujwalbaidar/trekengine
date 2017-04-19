@@ -500,3 +500,63 @@ function createNotifications(notificationData){
 		});
 	});
 }
+
+exports.getUserProfile = function(req, res){
+	if(req.headers && req.headers.userId){
+		User.findOne({_id:req.headers.userId}, (err, user)=>{
+			if(err){
+				res.status(400).json({success: false, data: err, message:"Failed to fetch user info!"});
+			}else{
+				res.status(200).json({success: true, data: user});
+			}
+		});
+	}
+}
+
+exports.updateUserProfile = function(req, res){
+	if(req.headers && req.headers.userId){
+		let updateObj = {
+			firstName: req.body.firstName,
+			middleName: req.body.middleName,
+			lastName: req.body.lastName,
+			updateDate: new Date(),
+			mobile: req.body.mobile,
+			telephone: req.body.telephone,
+			street: req.body.street,
+			city: req.body.city,
+			country: req.body.country,
+			birthday: req.body.birthday,
+			gender: req.body.gender,
+			domain: req.body.domain,
+			organizationName: req.body.organizationName,
+			organizationContact: req.body.organizationContact,
+			organizationEmail: req.body.organizationEmail,
+			organizationStreet: req.body.organizationStreet,
+			organizationCity: req.body.organizationCity,
+			organizationCountry: req.body.organizationCountry
+		};
+
+		User.update({_id:req.headers.userId}, updateObj, (err, updateData)=>{
+			if(err){
+				res.status(400).json({success: false, data: err, message:"Failed to update user info!"});
+			}else{
+				res.status(200).json({success: true, data: updateData});
+			}
+		});
+	}
+}
+
+exports.updateUserPassword = function(req, res){
+	if(req.headers && req.headers.userId){
+		let password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+                   .update(req.body.userPassword)
+                   .digest('hex');
+		User.update({_id:req.headers.userId}, {password: password}, (err, updateData)=>{
+			if(err){
+				res.status(400).json({success: false, data: err, message:"Failed to update user password!"});
+			}else{
+				res.status(200).json({success: true, data: updateData});
+			}
+		});
+	}
+}

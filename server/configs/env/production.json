@@ -1,5 +1,31 @@
 {
 	"db": "",
-	"host": "192.168.1.11",
-	"port": 5000 
+	"host": "localhost",
+	"port": 5000,
+	"webHost": "http://localhost:5000",
+	"dbURI": "mongodb://baidarujwal:123456789@ds163010.mlab.com:63010/trek-engine",
+	"google":{
+		"client_id":"275605026401-vgsd7k40spgmpc32e7dcg1gk03lc47kb.apps.googleusercontent.com",
+		"project_id":"trek-engine",
+		"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+		"token_uri":"https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+		"client_secret":"03LwvunUmlGf9sAVUz3uU9xw",
+		"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
+	},
+	"loginAuth":{
+		"secretKey":"c0d3w1ng!!",
+		"expireTime": "1d",
+		"algorithm": "HS256"
+	},
+	"loginPassword": {
+		"secretKey":"c0d3w1ng",
+		"algorithm":"sha512"
+	},
+	"appEmail":{
+		"service": "gmail",
+		"address":"trekengine.solution@gmail.com",
+		"password":"treakengine123456789",
+		"senderAddress": "codewings<donotreply@codewings.com>"
+	}
 }
