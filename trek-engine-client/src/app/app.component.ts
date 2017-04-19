@@ -21,7 +21,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.getRouteParams().then(hasParams=>{
 					if(hasParams === true){
 						this.checkParamQueries().then(hasUser=>{
-							debugger;
 							if(hasUser['check']==true){
 								if(hasUser['data']['role']>20){
 									this.addSender(cookieObj);
