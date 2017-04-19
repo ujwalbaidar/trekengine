@@ -79,7 +79,7 @@ export class BillingDialogComponent implements OnInit {
 	title: string = 'Add User Billings';
 	packages: any;
 
-	private myDatePickerOptions: IMyOptions = {
+	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
         sunHighlight: false,

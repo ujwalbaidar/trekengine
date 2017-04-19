@@ -17,8 +17,8 @@ export class MovementDetailsComponent implements OnInit {
         editableDateField: false
     };
     treks: any;
-    private arrivalDate: Object;
-    private departureDate: Object;
+    public arrivalDate: Object;
+    public departureDate: Object;
 
   	constructor(public movementService: MovementsService) {
   		

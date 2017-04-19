@@ -13,7 +13,7 @@ import { MovementsService } from '../../services/index';
 export class FlightDetailsComponent implements OnInit  {
 	selectedOption: string;
 	flight: Flight = <Flight>{};
-	private flights: any;
+	public flights: any;
 	constructor(
 		private _route: Router, 
 		public dialog: MdDialog, 
@@ -75,7 +75,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 	mins: any[];
 
 	public title: string = 'Add Flight Details';
-	private myDatePickerOptions: IMyOptions = {
+	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
         sunHighlight: false,

@@ -320,7 +320,7 @@
 						<strong>Traveller Lists</strong>
 					</span>
 					<div class="right">
-						<a class="btn-floating waves-effect waves-light green" (click)="openTravelerModal('', 'add')">
+						<a class="btn-floating waves-effect waves-light green" (click)="openTravelerModal({}, 'add')">
 							<i class="material-icons">add</i>
 						</a>
 					</div>
@@ -355,7 +355,7 @@
 											<md-icon>visibility</md-icon>
 											<span>View</span>
 										</button>
-										<button md-menu-item (click)="openTravelerModal(traveler, 'edit', indx)">
+										<button md-menu-item (click)="openTravelerModal(traveler, 'edit')">
 											<md-icon>create</md-icon>
 											<span>Edit</span>
 										</button>
