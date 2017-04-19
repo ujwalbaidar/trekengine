@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
@@ -47,6 +47,8 @@ import { BillingHistoryComponent, BillingDialogComponent } from './billing-histo
 import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
+
+// enableProdMode();
 
 @NgModule({
   declarations: [
