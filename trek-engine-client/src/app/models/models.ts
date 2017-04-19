@@ -108,3 +108,8 @@ export class BillingHistory {
     activatedDate: Object;
     expiryDate: Object;
 }
+
+export class ProfilePassword {
+	userPassword: string;
+	confirmPassword: string;
+}

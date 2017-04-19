@@ -3,8 +3,7 @@ const billingCtrl = require('../package-billings/package-billings.controller');
 const socketScheduler = require('../../socket/socket.js');
 module.exports = function(io) {
     const billingDaysJob = new CronJob({
-        // cronTime: '00 00 */1 * * *',
-        cronTime: '00 */1 * * * *',
+        cronTime: '00 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingDays()
                 .then(updateResponse => {
@@ -17,8 +16,7 @@ module.exports = function(io) {
     billingDaysJob.start();
 
     const billingStatusJob = new CronJob({
-        // cronTime: '10 00 */1 * * *',
-        cronTime: '05 */1 * * * *',
+        cronTime: '10 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingStatus()
                 .then(updateResponse => {
@@ -31,8 +29,7 @@ module.exports = function(io) {
     billingStatusJob.start();
 
     const billingOnHoldJob = new CronJob({
-        // cronTime: '20 00 */1 * * *',
-        cronTime: '10 */1 * * * *',
+        cronTime: '20 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingOnHold()
                 .then(updateResponse => {
@@ -45,7 +42,7 @@ module.exports = function(io) {
     billingOnHoldJob.start();
 
     const emailOnExpired = new CronJob({
-        cronTime: '15 */1 * * * *',
+        cronTime: '25 00 */1 * * *',
         onTick: function() {
             billingCtrl.emailOnExpired()
         },
@@ -55,7 +52,7 @@ module.exports = function(io) {
     emailOnExpired.start();
 
     const billingOnSocket = new CronJob({
-        cronTime: '*/5 * * * * *',
+        cronTime: '30 00 */1 * * *',
         onTick: function() {
             console.log('cron run at:' + new Date() + 'for billing socket');
             io.emit('transfer-cookie', 'tick');
