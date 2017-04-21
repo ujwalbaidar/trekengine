@@ -48,7 +48,7 @@ export class AuthService {
 
 	logout(){
 		this.clearCookies();
-		this._route.navigate(['/login']);
+		this._route.navigate(['/home']);
 	}
 
 	developTimePicker(){
