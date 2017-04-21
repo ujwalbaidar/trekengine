@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { PackageBillingsService, AuthService, UserService } from '../services';
 import { FeaturePackage } from '../models/models';
 import { CookieService } from 'angular2-cookie/core';
-
+import { MdDialog } from '@angular/material';
+import { RegisterComponent } from '../register/register.component';
+import { Router } from '@angular/router';
+import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-package-billings',
@@ -17,7 +20,15 @@ export class PackageBillingsComponent implements OnInit {
 	selectedBillingUser: any;
 	disableBillingBtn: boolean = false;
 
-	constructor(private packageBillingsService:PackageBillingsService, private auth:AuthService, private _cookieService:CookieService, private userService:UserService) { }
+	constructor(
+		public dialog: MdDialog,
+		public _route: Router,
+		private packageBillingsService:PackageBillingsService, 
+		private auth:AuthService, 
+		private _cookieService:CookieService, 
+		private userService:UserService,
+		public snackBar: MdSnackBar
+	) { }
 
 	ngOnInit() {
 		let cookieVal = this._cookieService.getAll();
@@ -34,6 +45,9 @@ export class PackageBillingsComponent implements OnInit {
   		this.packageBillingsService.getPackages()
   			.subscribe(packageDetails=>{
   				this.packageDetails = packageDetails;
+  				this.packageDetails.sort(function (a, b) {
+					return a.packages.cost - b.packages.cost;
+				});
   			}, error=>{
   				this.packageErr = 'Failed to retrive package billings';
   			})
@@ -89,4 +103,26 @@ export class PackageBillingsComponent implements OnInit {
 			});
   	}
 
+  	openRegisterModal(featurePackage:FeaturePackage=<FeaturePackage>{}){
+		let dialogOptions = {
+			height: '550px',
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		if(JSON.stringify(featurePackage) !== '{}'){
+			dialogOptions["data"]["featurePackage"] = featurePackage;
+		}
+
+		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
+		dialogRef.afterClosed().subscribe(result => {
+			if(result && result!=='opt-cancel'){
+				this.snackBar.open('Registered Successfully! Please Login !', '', {
+					duration: 5000,
+    			});
+			}
+    	});
+	}
 }
