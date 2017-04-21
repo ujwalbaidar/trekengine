@@ -33,7 +33,7 @@
 						<a *ngIf="loggedIn; else publicBilling;" (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn full-width-btn" [attr.disabled]="(disableBillingBtn==true)?true:null">pay bill</a>
 						<ng-template #publicBilling>
 							<a class="waves-effect waves-light btn #7cb342 light-blue darken-1 full-width-btn" (click)="openRegisterModal(packageDetail.packages)">
-								{{ (packageDetail.packages.cost==0) ? 'Start Now' : 'Start 30 days Trial' }}
+								{{ (packageDetail.packages.cost==0) ? 'Start Now' : 'Start '+ packageDetail.packages.trialPeriod + ' days Trial' }}
 							</a>
 						</ng-template>
 					</div>

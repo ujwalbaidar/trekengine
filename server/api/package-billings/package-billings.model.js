@@ -7,6 +7,7 @@ let PackageBillingSchema = new mongoose.Schema({
 	expiresOn: Number,
 	remainingDays: Number,
 	usesDays: Number,
+	trialPeriod: Number,
 	features: Array,
 	freeUser: { type:Boolean, default: true },
 	onHold: { type:Boolean, default: false },
