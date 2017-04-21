@@ -43,6 +43,7 @@ exports.createUser = function(req, res){
 				packageType: req.body.selectedPackage.name,
 				packageCost: req.body.selectedPackage.cost,
 				trialPeriod: req.body.selectedPackage.trialPeriod,
+				priorityLevel: req.body.selectedPackage.priorityLevel,
 				activatesOn: activateDate,
 				expiresOn: expireDate,
 				remainingDays: req.body.selectedPackage.trialPeriod,

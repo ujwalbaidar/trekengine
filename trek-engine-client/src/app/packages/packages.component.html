@@ -11,6 +11,7 @@
 				<td>Cost</td>
 				<td>Valid Days</td>
 				<td>Trial Period</td>
+				<td>Priority Level</td>
 				<td>Status</td>
 				<td>Actions</td>
 			</tr>
@@ -31,6 +32,9 @@
 				</td>
 				<td>
 					{{(package.trialPeriod===0)?'Unlimited':package.trialPeriod}}
+				</td>
+				<td>
+					{{package.priorityLevel}}
 				</td>
 				<td>
 					{{ package.status==true?'active':'inactive'}}
