@@ -10,6 +10,7 @@
 				<td>Description</td>
 				<td>Cost</td>
 				<td>Valid Days</td>
+				<td>Trial Period</td>
 				<td>Status</td>
 				<td>Actions</td>
 			</tr>
@@ -26,7 +27,10 @@
 					{{package.cost}}
 				</td>
 				<td>
-					{{package.days}}
+					{{(package.days==0)?'Unlimited':package.days}}
+				</td>
+				<td>
+					{{(package.trialPeriod===0)?'Unlimited':package.trialPeriod}}
 				</td>
 				<td>
 					{{ package.status==true?'active':'inactive'}}

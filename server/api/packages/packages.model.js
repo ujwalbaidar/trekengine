@@ -5,6 +5,7 @@ let PackagesSchema = new mongoose.Schema({
 	description: String,
 	cost: Number,
 	days: Number,
+	trialPeriod: Number,
 	featureIds: Array,
 	status: { type:Boolean, default: true },
 	createdDate: {

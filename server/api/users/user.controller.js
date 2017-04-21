@@ -36,30 +36,34 @@ exports.createUser = function(req, res){
 			let activateDate = Math.floor(currentDateTime/1000);
 			var	expireDate=0;
 			if(req.body.selectedPackage.cost>0){
-				expireDate = activateDate+30*24*3600;
+				expireDate = activateDate+req.body.selectedPackage.trialPeriod*24*3600;
 			}
 			let packageObj = {
 				userId: userData._id,
 				packageType: req.body.selectedPackage.name,
 				packageCost: req.body.selectedPackage.cost,
+				trialPeriod: req.body.selectedPackage.trialPeriod,
 				activatesOn: activateDate,
 				expiresOn: expireDate,
-				remainingDays: req.body.selectedPackage.days,
+				remainingDays: req.body.selectedPackage.trialPeriod,
 				features: req.body.selectedPackage.featureIds,
 				usesDays: 0,
 				freeUser: true,
 				onHold: false,
 				status: true
-			}
+			};
 			saveUserPackage(packageObj)
 				.then(billingData=>{
+					if(req.body.selectedPackage.cost === 0){
+						req.body.selectedPackage.trialPeriod = 'Unlimited'
+					}
 					let mailOptions = {};
 					mailOptions = {
 						from: config.appEmail.senderAddress,
 					    to: userData.email, 
 					    subject: 'Trek Engine: Registration Success',
-					    text: `You have been registered successfully in Trek Engine with ${req.body.selectedPackage.days} days ${req.body.selectedPackage.name} Package.`,
-					    html: `<p>You have been registered successfully in Trek Engine with ${req.body.selectedPackage.days} days ${req.body.selectedPackage.name} Package.</p>` 
+					    text: `You have been registered successfully in Trek Engine with ${req.body.selectedPackage.trialPeriod} days ${req.body.selectedPackage.name} Package.`,
+					    html: `<p>You have been registered successfully in Trek Engine with ${req.body.selectedPackage.trialPeriod} days ${req.body.selectedPackage.name} Package.</p>` 
 					};
 					sendEmail(mailOptions)
 						.then(mailInfo=>{

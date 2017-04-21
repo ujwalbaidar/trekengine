@@ -94,6 +94,7 @@ export class AppPackage {
 	cost: number;
 	validDays: number;
 	days: number;
+	trialPeriod: number;
 	features: AppFeatures[];
 }
 
