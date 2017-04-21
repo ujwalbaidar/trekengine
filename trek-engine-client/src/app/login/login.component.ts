@@ -29,6 +29,9 @@ export class LoginComponent implements OnInit {
 						if(loginUser['packageType'] && loginUser['remainingDays']) {
 							this.authService.setCookies('packageType',loginUser['packageType']);
 							this.authService.setCookies('remainingDays',loginUser['remainingDays']);
+							if(loginUser['remainingDays']>0){
+								this.authService['validatedUser'] = true;
+							}
 						}
 						this.dialogRef.close('loginUser');
 					}, error=>{

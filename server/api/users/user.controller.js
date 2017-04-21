@@ -17,6 +17,13 @@ const rl = readline.createInterface({
 });
 const randomstring = require("randomstring");
 
+
+/**
+* Create User on register
+* set billing Object and update
+* mail user about registration and selected package trial periods
+**/
+
 exports.createUser = function(req, res){
 	req.body.firstName = req.body.fname;
 	req.body.lastName = req.body.lname;
@@ -43,6 +50,7 @@ exports.createUser = function(req, res){
 				packageType: req.body.selectedPackage.name,
 				packageCost: req.body.selectedPackage.cost,
 				trialPeriod: req.body.selectedPackage.trialPeriod,
+				priorityLevel: req.body.selectedPackage.priorityLevel,
 				activatesOn: activateDate,
 				expiresOn: expireDate,
 				remainingDays: req.body.selectedPackage.trialPeriod,
@@ -167,11 +175,28 @@ exports.loginUser = function(req, res){
 							}else{
 								if(billingResponse){
 									let token = jwt.sign(
-											{email:user.email, userId: user._id, role: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}, 
+											{
+												email:user.email, 
+												userId: user._id, 
+												role: user.role, 
+												remainingDays: billingResponse.remainingDays, 
+												packageType: billingResponse.priorityLevel
+											}, 
 											config.loginAuth.secretKey, 
-											{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+											{
+												expiresIn: config.loginAuth.expireTime, 
+												algorithm: config.loginAuth.algorithm 
+											}
 										);
-									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType}});
+									res.status(200).json({
+										success:true, 
+										message: "Authorised Successfully",
+										data: {
+											token: token, 
+											index: user.role, 
+											remainingDays: billingResponse.remainingDays, 
+											packageType: billingResponse.priorityLevel
+										}});
 								}else{
 									let token = jwt.sign(
 											{email:user.email, userId: user._id, role: user.role}, 

@@ -47,7 +47,7 @@ export class BookingsComponent implements OnInit  {
 
 	openAddBookingModal(editData:Booking=<Booking>{}){
 		let dialogOptions = {
-			height: '600px',
+			height: '420px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -71,6 +71,8 @@ export class BookingsComponent implements OnInit  {
 export class BookingsDialogComponent implements OnInit {
 	booking: Booking = <Booking>{};
 	title: string = 'Add Booking Details';
+	submittedBookingForm: boolean = false;
+
 	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
 		if(this.dialogRef._containerInstance.dialogConfig.data){
 			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
@@ -85,6 +87,7 @@ export class BookingsDialogComponent implements OnInit {
 	}
 
 	submitBookingDetails(bookingForm:any) {
+		this.submittedBookingForm = true;
 		if(bookingForm.valid){
 			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
 				this.updateBookingDetails();
@@ -97,6 +100,7 @@ export class BookingsDialogComponent implements OnInit {
 	updateBookingDetails() {
 		this.movementServie.updateBookingDetails(this.booking)
 			.subscribe(booking=>{
+				this.submittedBookingForm = false;
 				this.dialogRef.close(booking);
 			}, error=>{
 				this.dialogRef.close(error);
@@ -106,6 +110,7 @@ export class BookingsDialogComponent implements OnInit {
 	saveBookingDetails() {
 		const saveRequest = this.movementServie.submitBookingDetails(this.booking)
 			.then(booking=>{
+				this.submittedBookingForm = false;
 				this.dialogRef.close(booking);
 			});
 			
