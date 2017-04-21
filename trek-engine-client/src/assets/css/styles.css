@@ -8,3 +8,23 @@
     right: 35px;
     padding-bottom: 100px;
 }
+
+.required-label-mark {
+	color: #e85858;
+}
+
+.clear-dialogBox {
+	color: #b1b1b1;
+}
+
+.full-width-btn {
+	width: 100%
+}
+
+.full-width-btn-div {
+	width: 90%
+}
+
+.full-width-btn-div .btn {
+	width: 100%
+}

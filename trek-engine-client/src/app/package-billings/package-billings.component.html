@@ -1,8 +1,3 @@
-<div *ngIf="!loggedIn">
-	<h5 class="center-align">Choose your Trek Engine plan. Try it free for 30 days.</h5>
-	<div class="divider"></div>
-</div>
-
 <div *ngIf="loggedIn && users && users.length>0">
 	<div class="row">
 		<div class="col s6 m8">
@@ -26,12 +21,19 @@
 					<span class="card-title">
 						{{packageDetail.packages.cost|currency:'USD':true}}
 					</span>
-					<p>{{'for '+packageDetail.packages.days+' days'}}</p>
+					<p *ngIf="packageDetail.packages.cost===0;else limitedPeriod">
+						{{'Unlimited Period'}}
+					</p>
+					<ng-template #limitedPeriod>
+						<p>
+							{{'for '+packageDetail.packages.days+' days'}}
+						</p>
+					</ng-template>
 					<div>
-						<a *ngIf="loggedIn; else publicBilling" (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn" [attr.disabled]="(disableBillingBtn==true)?true:null">pay bill</a>
+						<a *ngIf="loggedIn; else publicBilling;" (click)="selectPackage(packageDetail)" class="waves-effect #64dd17 light-green accent-4 btn full-width-btn" [attr.disabled]="(disableBillingBtn==true)?true:null">pay bill</a>
 						<ng-template #publicBilling>
-							<a class="waves-effect #64dd17 light-green accent-4 btn" [routerLink]="['/register/service', packageDetail.packages.name]">
-								get started
+							<a class="waves-effect waves-light btn #7cb342 light-blue darken-1 full-width-btn" (click)="openRegisterModal(packageDetail.packages)">
+								{{ (packageDetail.packages.cost==0) ? 'Start Now' : 'Start 30 days Trial' }}
 							</a>
 						</ng-template>
 					</div>

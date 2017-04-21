@@ -13,7 +13,7 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingDaysJob.start();
+    // billingDaysJob.start();
 
     const billingStatusJob = new CronJob({
         cronTime: '10 00 */1 * * *',
@@ -26,7 +26,7 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingStatusJob.start();
+    // billingStatusJob.start();
 
     const billingOnHoldJob = new CronJob({
         cronTime: '20 00 */1 * * *',
@@ -39,7 +39,7 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingOnHoldJob.start();
+    // billingOnHoldJob.start();
 
     const emailOnExpired = new CronJob({
         cronTime: '25 00 */1 * * *',
@@ -49,10 +49,10 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    emailOnExpired.start();
+    // emailOnExpired.start();
 
     const billingOnSocket = new CronJob({
-        cronTime: '30 00 */1 * * *',
+        cronTime: '*/5 * * * * *',
         onTick: function() {
             console.log('cron run at:' + new Date() + 'for billing socket');
             io.emit('transfer-cookie', 'tick');
@@ -60,5 +60,5 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingOnSocket.start();
+    // billingOnSocket.start();
 }

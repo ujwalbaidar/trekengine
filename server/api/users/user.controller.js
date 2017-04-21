@@ -21,60 +21,76 @@ exports.createUser = function(req, res){
 	req.body.firstName = req.body.fname;
 	req.body.lastName = req.body.lname;
 	req.body.role = req.body.role?req.body.role:20;
-	req.body.domain = req.body.domain;
 	req.body.createdDate = new Date();
 	req.body.updatedDate = new Date();
 	req.body.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
                    .update(req.body.password)
                    .digest('hex');
-	let user = new User(req.body);
-
-
-	if(req.body.serviceType){
-		var serviceType = req.body.serviceType;
-		if(req.body.serviceType == 'free'){
-			var serviceType ='Enterprise';
-		}
-		Packages.find({name:serviceType}, (packageErr, package)=>{
-			if(packageErr){
-				res.status(400).json({success:false, data:err});
-			}else{
-				if(package.length>0){
-					user.save((err, user)=>{
-						if(err){
-							res.status(400).json({success:false, data:err});
-						}else{
-							let userInfo = {
-								userId: user._id,
-								email: user.email
-							};
-							let packageService = true;
-							saveUserPackageBilling(userInfo, package[0], packageService)
-								.then(billingResponse=>{
-									user.billingResponse = billingResponse;
-									res.status(200).json({success:true, data:{user:user,billingInfo:billingResponse}});
-								})
-								.catch(billingError=>{
-									res.status(400).json({success:false, data:err});
-								})
-						}
-					});
-				}else{
-					res.status(400).json({success:false, data:'Selected Package is Invalid'});
-				}
+    if(req.body.domain){
+    	req.body.domain = req.body.domain;
+    }
+	saveUser(req.body)
+		.then(userData=>{
+			let currentDateTime = new Date();
+			currentDateTime.setHours(0,0,0,0);
+			let activateDate = Math.floor(currentDateTime/1000);
+			var	expireDate=0;
+			if(req.body.selectedPackage.cost>0){
+				expireDate = activateDate+30*24*3600;
 			}
+			let packageObj = {
+				userId: userData._id,
+				packageType: req.body.selectedPackage.name,
+				packageCost: req.body.selectedPackage.cost,
+				activatesOn: activateDate,
+				expiresOn: expireDate,
+				remainingDays: req.body.selectedPackage.days,
+				features: req.body.selectedPackage.featureIds,
+				usesDays: 0,
+				freeUser: true,
+				onHold: false,
+				status: true
+			}
+			saveUserPackage(packageObj)
+				.then(billingData=>{
+					let mailOptions = {};
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: userData.email, 
+					    subject: 'Trek Engine: Registration Success',
+					    text: `You have been registered successfully in Trek Engine with ${req.body.selectedPackage.days} days ${req.body.selectedPackage.name} Package.`,
+					    html: `<p>You have been registered successfully in Trek Engine with ${req.body.selectedPackage.days} days ${req.body.selectedPackage.name} Package.</p>` 
+					};
+					sendEmail(mailOptions)
+						.then(mailInfo=>{
+							res.status(200).json({success:true, data:{user:userData,billingInfo:billingData}});
+						})
+						.catch(mailErr=>{
+							res.status(200).json({success:true, data:{user:userData,billingInfo:billingData}});
+						});
+				})
+				.catch(billingErr=>{
+					User.remove({_id:userData._id}, (err, user)=>{
+						res.status(400).json({success:false, data:billingErr});
+					});
+				});
 		})
-	}else{
+		.catch(userErr=>{
+			res.status(400).json({success:false, data:userErr});
+		});
+}
+
+function saveUser(userObj){
+	return new Promise((resolve, reject)=>{
+		let user = new User(userObj);
 		user.save((err, user)=>{
 			if(err){
-				res.status(400).json({success:false, data:err});
+				reject(err);
 			}else{
-				res.status(200).json({success:true, data:user});
+				resolve(user);
 			}
 		});
-	}
-	
-	
+	})
 }
 
 exports.findAllUser = function(req, res){
@@ -409,9 +425,9 @@ function saveUserPackageBilling(user, package, freeUser){
 		mailOptions = {
 			from: config.appEmail.senderAddress,
 		    to: user.email, 
-		    subject: 'Billing Receipt',
-		    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
-		    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+		    subject: 'Trek Engine: Registration Success',
+		    text: `You have been registered successfully in Trek Engine with ${package.days} days ${package.name} Package.`,
+		    html: `<p>You have been registered successfully in Trek Engine with ${package.days} days ${package.name} Package.</p>` 
 		};
 		saveUserPackage(saveObj)
 			.then(savePackageResponse=>{
