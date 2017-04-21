@@ -30,7 +30,7 @@ const appRoutes: Routes = [
 		component: PublicHomeComponent, 
 		children:[
 			{ path: 'login', component: LoginComponent },
-			{ path: 'pricings', component: PackageBillingsComponent },
+			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent }
 		] 
 	},
