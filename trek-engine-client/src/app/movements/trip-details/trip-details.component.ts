@@ -48,7 +48,7 @@ export class TripDetailsComponent implements OnInit {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '600px',
+			height: '700px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -91,7 +91,8 @@ export class TripDetailsDialogComponent implements OnInit {
 	guideUsers:any;
 	approver: string;
     selectedValue: string;
-    
+    submittedTripForm: boolean = false;
+
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
@@ -117,6 +118,7 @@ export class TripDetailsDialogComponent implements OnInit {
 	}
 
 	submitTrekDetails(tripForm:any) {
+		this.submittedTripForm = true;
 		if(tripForm.valid){
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 				this.updateTrekDetails();
@@ -129,8 +131,10 @@ export class TripDetailsDialogComponent implements OnInit {
 	saveTrekDetails(){
 		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
+				this.submittedTripForm = false;
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
+				this.submittedTripForm = false;
 				this.dialogRef.close(error);
 			});
 	}
@@ -138,8 +142,10 @@ export class TripDetailsDialogComponent implements OnInit {
 	updateTrekDetails() {
 		this.movementServie.updateTrekDetails(this.trip)
 			.subscribe(tripsDetail=>{
+				this.submittedTripForm = false;
 				this.dialogRef.close(this.trip);
 			}, error=>{
+				this.submittedTripForm = false;
 				this.dialogRef.close(error);
 			});
 	}

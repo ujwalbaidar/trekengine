@@ -1,11 +1,22 @@
 <form class="col s12" (ngSubmit)="submitFlightDetails(flightDetail.form)" #flightDetail="ngForm" novalidate>
-	<h4 md-dialog-title>{{ title }}</h4>
 	<div md-dialog-content>
+
+		<div class="row">
+			<div class="col s6">
+				<h5>
+					{{title}}
+				</h5>
+			</div>
+			<div class="col s6 right-align">
+				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+
 		<div class="row">
 			<h5>Departure Informations</h5>
 		</div>
 		<div class="row">
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="departureFlightName" [ngClass]="{'active':(flight.departure.name!=undefined)}">Flight Name</label>
 				<input id="departureFlightName" type="text" class="validate" name="departureFlightName" [(ngModel)]="flight.departure.name" #departureFlightName="ngModel"  required>
 				<div *ngIf="departureFlightName.errors && (departureFlightName.dirty || departureFlightName.touched)"
@@ -16,7 +27,7 @@
 				</div>
 			</div>
 
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="departureFlightCost" [ngClass]="{'active':(flight.departure.cost!=undefined)}">Flight Cost</label>
 				<input id="departureFlightCost" type="number" class="validate" name="departureFlightCost" [(ngModel)]="flight.departure.cost" #departureFlightCost="ngModel" required>
 				<div *ngIf="departureFlightCost.errors && (departureFlightCost.dirty || departureFlightCost.touched)"
@@ -39,7 +50,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="departureFlightTime" class="active">Departure Time</label>
 				<div class="col s4">
 					<select class="browser-default" [(ngModel)]="flight.departure.hrTime" name="departureFlightTimeHr" #departureFlightTimeHr="ngModel">
@@ -64,7 +75,7 @@
 			<h5>Arrival Informations</h5>
 		</div>
 		<div class="row">
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="arrivalFlightName" [ngClass]="{'active':(flight.arrival.name!=undefined)}">Flight Name</label>
 				<input id="arrivalFlightName" type="text" class="validate" name="arrivalFlightName" [(ngModel)]="flight.arrival.name" #arrivalFlightName="ngModel" required>
 				<div *ngIf="arrivalFlightName.errors && (arrivalFlightName.dirty || arrivalFlightName.touched)"
@@ -75,7 +86,7 @@
 				</div>
 			</div>
 
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="arrivalFlightCost" [ngClass]="{'active':(flight.arrival.cost!=undefined)}">Flight Cost</label>
 				<input id="arrivalFlightCost" type="number" class="validate" name="arrivalFlightCost" [(ngModel)]="flight.arrival.cost" #arrivalFlightCost="ngModel" required>
 				<div *ngIf="arrivalFlightCost.errors && (arrivalFlightCost.dirty || arrivalFlightCost.touched)"
@@ -98,7 +109,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="input-field col s6">
+			<div class="col s6">
 				<label for="arrivalFlightTime" class="active">Arrival Time</label>
 				<div class="col s4">
 					<select class="browser-default" [(ngModel)]="flight.arrival.hrTime" name="arrivalFlightTimeHr" #arrivalFlightTimeHr="ngModel">
