@@ -6,7 +6,8 @@
   "scripts": {
     "seed-data": "node -e \"require('./seeds/seed').seed()\"",
     "start-dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "start-prod":"NODE_ENV=production forever start app.js"
   },
   "repository": {
     "type": "git",

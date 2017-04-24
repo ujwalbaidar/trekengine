@@ -8,7 +8,7 @@ const CronJob = require('cron').CronJob;
 
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('./server/configs/config')[env];
-
+console.log(env);
 require('./server/configs/express')(app);
 require('./server/configs/mongoose')(config);
 require('./server/models');
