@@ -3,8 +3,7 @@ const billingCtrl = require('../package-billings/package-billings.controller');
 const socketScheduler = require('../../socket/socket.js');
 module.exports = function(io) {
     const billingDaysJob = new CronJob({
-        // cronTime: '00 00 */1 * * *',
-        cronTime: '00 */1 * * * *',
+        cronTime: '00 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingDays()
                 .then(updateResponse => {
@@ -14,11 +13,10 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingDaysJob.start();
+    // billingDaysJob.start();
 
     const billingStatusJob = new CronJob({
-        // cronTime: '10 00 */1 * * *',
-        cronTime: '05 */1 * * * *',
+        cronTime: '10 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingStatus()
                 .then(updateResponse => {
@@ -28,11 +26,10 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingStatusJob.start();
+    // billingStatusJob.start();
 
     const billingOnHoldJob = new CronJob({
-        // cronTime: '20 00 */1 * * *',
-        cronTime: '10 */1 * * * *',
+        cronTime: '20 00 */1 * * *',
         onTick: function() {
             billingCtrl.updateBillingOnHold()
                 .then(updateResponse => {
@@ -42,17 +39,17 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingOnHoldJob.start();
+    // billingOnHoldJob.start();
 
     const emailOnExpired = new CronJob({
-        cronTime: '15 */1 * * * *',
+        cronTime: '25 00 */1 * * *',
         onTick: function() {
             billingCtrl.emailOnExpired()
         },
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    emailOnExpired.start();
+    // emailOnExpired.start();
 
     const billingOnSocket = new CronJob({
         cronTime: '*/5 * * * * *',
@@ -63,5 +60,5 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    billingOnSocket.start();
+    // billingOnSocket.start();
 }

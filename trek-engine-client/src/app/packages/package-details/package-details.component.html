@@ -48,6 +48,32 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="input-field col s3">
+				<label for="package-trial-period" [ngClass]="{'active':(appPackage.trialPeriod!=undefined)}">
+					*Trial Period
+				</label>
+				<input id="package-trial-period" type="number" class="validate" name="trialPeriod" [(ngModel)]="appPackage.trialPeriod" #trialPeriod="ngModel" [value] = "appPackage.trialPeriod" required>
+				<div *ngIf="trialPeriod.errors && (trialPeriod.dirty || trialPeriod.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!trialPeriod.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+			<div class="input-field col s3">
+				<label for="package-priorityLevel" [ngClass]="{'active':(appPackage.priorityLevel!=undefined)}">
+					*Priority Level
+				</label>
+				<input id="package-priorityLevel" type="number" class="validate" name="priorityLevel" [(ngModel)]="appPackage.priorityLevel" #priorityLevel="ngModel" [value] = "appPackage.priorityLevel" required>
+				<div *ngIf="priorityLevel.errors && (priorityLevel.dirty || priorityLevel.touched)"
+					class="alert alert-danger">
+					<div [hidden]="!priorityLevel.errors.required">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col s6 m8">
 				<select class="browser-default" [(ngModel)]="selectedFeature" name="selectPackageFeature" (change)="addFeature()">
 					<option [value]="appFeature._id" *ngFor="let appFeature of appFeatures;let i=index;">

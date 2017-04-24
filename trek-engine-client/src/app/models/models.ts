@@ -1,6 +1,8 @@
 export class User {
 	fname: string;
   	lname: string;
+  	firstName: string;
+  	lastName: string;
   	email: string;
   	password: string;
   	role: number;
@@ -91,6 +93,8 @@ export class AppPackage {
 	description: string;
 	cost: number;
 	validDays: number;
+	days: number;
+	trialPeriod: number;
 	features: AppFeatures[];
 }
 
@@ -107,4 +111,9 @@ export class BillingHistory {
     features : any;
     activatedDate: Object;
     expiryDate: Object;
+}
+
+export class ProfilePassword {
+	userPassword: string;
+	confirmPassword: string;
 }

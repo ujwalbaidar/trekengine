@@ -9,6 +9,5 @@ export class AuthResolverService implements Resolve<any> {
 
 	}
 	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
-		// debugger;
 	}
 }

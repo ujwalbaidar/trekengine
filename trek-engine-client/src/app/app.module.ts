@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
@@ -45,6 +45,10 @@ import { PackageDetailsComponent } from './packages/package-details/package-deta
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent, BillingDialogComponent } from './billing-history';
 import { AppUsersComponent } from './app-users/app-users.component';
+import { ProfileComponent } from './profile/profile.component';
+import { EqualValidatorDirective } from './directive/equal-validator.directive';
+
+// enableProdMode();
 
 @NgModule({
   declarations: [
@@ -66,7 +70,9 @@ import { AppUsersComponent } from './app-users/app-users.component';
     PackageDetailsComponent,
     PublicHomeComponent,
     BillingHistoryComponent, BillingDialogComponent,
-    AppUsersComponent
+    AppUsersComponent,
+    ProfileComponent,
+    EqualValidatorDirective
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,9 @@ export class AuthService {
  	public validatedUser = false;
 
 	constructor(public _cookieService:CookieService, private _route: Router, private http: Http){
+		if(this._cookieService.get('remainingDays') && parseInt(this._cookieService.get('remainingDays'))>0){
+			this.validatedUser = true;
+		}
 		this.broadCastSocketValue();
 	}
 
@@ -48,7 +51,7 @@ export class AuthService {
 
 	logout(){
 		this.clearCookies();
-		this._route.navigate(['/login']);
+		this._route.navigate(['/home']);
 	}
 
 	developTimePicker(){

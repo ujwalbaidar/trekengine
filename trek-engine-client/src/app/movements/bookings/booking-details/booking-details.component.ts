@@ -86,7 +86,7 @@ export class BookingDetailsComponent implements OnInit  {
 	getGuideLists(){
 		this.userService.getGuides()
 		.subscribe(guide=>{
-			if(guide['guides'].length>0){
+			if(guide['guides'] && guide['guides'].length>0){
 				guide['guides'].unshift({});
 			}
 			this.guides = guide['guides'];
@@ -118,7 +118,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openBookingModal(){
 		let dialogOptions = {
-			height: '600px',
+			height: '420px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -167,7 +167,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '400px',
+			height: '460px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -182,7 +182,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 		let dialogRef = this.dialog.open(TripDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-    		if(result!=="Option 1"){
+    		if(result!=="opt-cancel"){
       			this.trip = result;
     		}
     	});
@@ -222,8 +222,7 @@ export class BookingDetailsComponent implements OnInit  {
     		}
     	});
 	}
-
-	openTravelerModal(travelerRecord:Traveler=<Traveler>{}, actionMode:string, index:number) {
+	openTravelerModal(travelerRecord:any, actionMode:string) {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
@@ -243,7 +242,6 @@ export class BookingDetailsComponent implements OnInit  {
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=="Option 1" && actionMode == 'edit'){
     			this.getBookingDetails();
-    			// this.selectedTravelerArr[index] = result; 
     		}else if(result!=="Option 1" && actionMode == 'add'){
     			this.getBookingDetails();
     		}

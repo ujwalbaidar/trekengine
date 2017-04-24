@@ -14,4 +14,7 @@ router.get('/seedUser', userController.seedUser);
 router.get('/listByAdmin', userController.guideListByAdmin);
 router.delete('/remove', userController.removeGuide);
 router.post('/addGuideToAdmin', userController.addGuideToAdmin);
+router.get('/getProfile', userController.getUserProfile);
+router.put('/updateProfile', userController.updateUserProfile);
+router.put('/updatePassword', userController.updateUserPassword);
 module.exports = router;

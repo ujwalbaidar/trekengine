@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 let UserSchema = new mongoose.Schema({
 	firstName: String,
+	middleName: String,
 	lastName: String,
 	role: Number,
 	email: {type: String, unique: true, required: true, dropDups: true},
@@ -17,6 +18,19 @@ let UserSchema = new mongoose.Schema({
 		expireDate: String,
 	},
 	status: { type:Boolean, default: true },
+	mobile: String,
+	telephone: String,
+	street: String,
+	city: String,
+	country: String,
+	birthday: Object,
+	gender: String,
+	organizationName: String,
+	organizationContact: String,
+	organizationEmail: String,
+	organizationStreet: String,
+	organizationCity: String,
+	organizationCountry: String,
 	createdDate: {
 		type: Date, 
 		default: new Date()

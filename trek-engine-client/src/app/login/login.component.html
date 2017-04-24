@@ -1,48 +1,52 @@
-<div>
-	<div>
-		<form class="col s12" (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
-		
-		<div class="row">
-			<div class="input-field col s12">
-				<label for="email">Email</label>
-				<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-				<div *ngIf="email.errors && (email.dirty || email.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!email.errors.required">
+<form class="col s12" (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
+	
+	<div md-dialog-content>
+			<div class="row">
+				<div class="col s6">
+					<h5>
+						{{'Login'}}
+					</h5>
+				</div>
+				<div class="col s6 right-align">
+					<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<label for="email" [ngClass]="{'active':(user.email!=undefined)}">
+						<strong>{{'Email'}}</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+					<div *ngIf="email?.errors?.required && submittedLoginForm">
 						This Field is Required!
 					</div>
-					<div [hidden]="!email.errors.pattern">
+					<div *ngIf="email?.errors?.pattern && submittedLoginForm">
 						Email is Invalid!
 					</div>
-				</div>
-				<div *ngIf="errObj?.errType=='email'">
-					{{errObj?.message}}
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="input-field col s12">
-				<label for="password">Password</label>
-				<input id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
-				<div *ngIf="password.errors && (password.dirty || password.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!password.errors.required">
-						This Field is Required!
+					<div *ngIf="errObj?.errType=='email'">
+						{{errObj?.message}}
 					</div>
 				</div>
-				<div *ngIf="errObj?.errType=='password'">
-					{{errObj?.message}}
+			</div>
+
+			<div class="row">
+				<div class="col s12">
+					<label for="password" [ngClass]="{'active':(user.password!=undefined)}">
+						<strong>{{'Password'}}</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
+					<div *ngIf="password?.errors?.required && submittedLoginForm">
+						This Field is Required!
+					</div>
+					<div *ngIf="errObj?.errType=='password'">
+						{{errObj?.message}}
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<div>
-			<button class="waves-effect #009688 teal btn" [disabled]="!loginForm.form.valid">Submit</button>
-		</div>
-	</form>
 	</div>
-	<div>
-		<a>Forgot Password</a>
+	<div md-dialog-actions class="center-align login-submit-btn">
+		<button class="waves-effect waves-light btn #7cb342 light-blue darken-1">{{'Login'}}</button>
 	</div>
-</div>
+</form>

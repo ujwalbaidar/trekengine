@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 export class AppComponent implements OnInit, OnDestroy { 
 	public urlParams:any;
 	public sub: any;
-	constructor(private auth:AuthService, private userService:UserService, private _route:Router, private activatedRoute: ActivatedRoute, private location: Location){
+	constructor(private auth:AuthService, public userService:UserService, private _route:Router, private activatedRoute: ActivatedRoute, private location: Location){
 	}
 
 	ngOnInit(){
@@ -21,7 +21,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.getRouteParams().then(hasParams=>{
 					if(hasParams === true){
 						this.checkParamQueries().then(hasUser=>{
-							debugger;
 							if(hasUser['check']==true){
 								if(hasUser['data']['role']>20){
 									this.addSender(cookieObj);
@@ -121,17 +120,17 @@ export class AppComponent implements OnInit, OnDestroy {
 			if(this.location.path() == ''){
 				this._route.navigate(['/app']);
 			}else{
-				if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/pricings'){
+				if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/home'){
 					this._route.navigate(['/app']);
 				}else{
 					this._route.navigate([this.location.path()]);
 				}
 			}
 		}else{
-			if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/pricings'){
+			if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/home'){
 				this._route.navigate([this.location.path()]);
 			}else{
-				this._route.navigate(['/pricings']);
+				this._route.navigate(['/home']);
 			}
 		}
 	}

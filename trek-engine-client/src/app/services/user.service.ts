@@ -86,6 +86,30 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	getUserInfo(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/userInfo/getProfile', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	updateUserInfo(updateData:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/userInfo/updateProfile', updateData, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	updateUserPassword(updateData:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/userInfo/updatePassword', updateData, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

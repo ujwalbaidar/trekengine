@@ -11,6 +11,7 @@ import { PackageDetailsComponent } from './packages/package-details/package-deta
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent } from './billing-history/billing-history.component';
 import { AppUsersComponent } from './app-users/app-users.component';
+import { ProfileComponent } from './profile/profile.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -29,7 +30,7 @@ const appRoutes: Routes = [
 		component: PublicHomeComponent, 
 		children:[
 			{ path: 'login', component: LoginComponent },
-			{ path: 'pricings', component: PackageBillingsComponent },
+			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent }
 		] 
 	},
@@ -64,10 +65,11 @@ const appRoutes: Routes = [
 					{ path: 'traveller-details', component: TravellerDetailsComponent },
 					{ path: 'flight-details', component: FlightDetailsComponent }
 				]
-			}
+			},
+			{ path: 'profile', component: ProfileComponent }
 		]
 	},
-	{ path: '**', redirectTo: '/', pathMatch: 'full' }
+	{ path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
 
 @NgModule({
