@@ -10,7 +10,7 @@ export class AuthService {
 	hrs:any[];
 	mins: any[];
 	// public url = 'http://localhost:5000';  
-	public url = 'http://www.trekengine.com';  
+	public url = 'https://www.trekengine.com';  
  	private socket;
  	public validatedUser = false;
 
