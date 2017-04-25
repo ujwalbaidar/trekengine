@@ -1,9 +1,9 @@
 {
 	"db": "",
-	"host": "107.170.55.81",
+	"host": "localhost",
 	"port": 5000,
-	"webHost": "http://107.170.55.81:5000",
-	"dbURI": "mongodb://107.170.55.81:37037/trek-engine",
+	"webHost": "http://localhost:5000",
+	"dbURI": "mongodb://localhost:37037/trek-engine",
 	"google":{
 		"client_id":"275605026401-vgsd7k40spgmpc32e7dcg1gk03lc47kb.apps.googleusercontent.com",
 		"project_id":"trek-engine",
