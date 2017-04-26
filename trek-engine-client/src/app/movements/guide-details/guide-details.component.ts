@@ -40,7 +40,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideModal(){
 		let dialogOptions = {
-			height: '400px',
+			height: '440px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -51,7 +51,6 @@ export class GuideDetailsComponent implements OnInit  {
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=='opt2'){
     			this.getGuideLists();
-    			// console.log("http://localhost:5000/login?email="+result+"&&from="+this.approver);
     		}
     	});
 	}
@@ -63,14 +62,23 @@ export class GuideDetailsComponent implements OnInit  {
 })
 export class GuideDetailsDialogComponent {
 	user: User = <User>{};
+	submittedGuideForm: boolean = false;
+	disableButton: boolean = false;
+
 	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {}
 
 	submitGuideDetails(guideForm:any){
+		this.submittedGuideForm = true;
 		if(guideForm.valid){
+			this.disableButton = true;
 			this.userService.addGuideToAdmin(this.user)
 				.subscribe(successResponse=>{
+					this.submittedGuideForm = false;
+					this.disableButton = false;
 					this.dialogRef.close(successResponse);
 				}, error=>{
+					this.submittedGuideForm = false;
+					this.disableButton = false;
 					this.dialogRef.close(error);
 				});
 		}

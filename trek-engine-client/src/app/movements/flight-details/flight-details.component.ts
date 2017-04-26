@@ -73,6 +73,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 	flight= <Flight>{};
 	hrs:any[];
 	mins: any[];
+	submittedFlightForm: boolean = false;
 
 	public title: string = 'Add Flight Details';
 	public myDatePickerOptions: IMyOptions = {
@@ -123,6 +124,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 	}
 
 	submitFlightDetails(flightForm:any) {
+		this.submittedFlightForm = true;
 		if(flightForm.valid){
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.records){
 				this.updateFlightDetails();
@@ -135,8 +137,10 @@ export class FlightDetailsDialogComponent implements OnInit {
 	saveFlightDetails() {
 		const saveRequest = this.movementServie.submitFlightDetails(this.flight)
 			.subscribe(flightDetail=>{
+			this.submittedFlightForm = false;
 				this.dialogRef.close(flightDetail);
 			}, error=>{
+			this.submittedFlightForm = false;
 				this.dialogRef.close(error);
 			});
 	}
@@ -144,8 +148,10 @@ export class FlightDetailsDialogComponent implements OnInit {
 	updateFlightDetails() {
 		this.movementServie.updateFlightDetails(this.flight)
 			.subscribe(flightDetail=>{
+			this.submittedFlightForm = false;
 				this.dialogRef.close(this.flight);
 			}, error=>{
+			this.submittedFlightForm = false;
 				this.dialogRef.close(error);
 			});
 	}

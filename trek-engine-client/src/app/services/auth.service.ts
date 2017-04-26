@@ -9,8 +9,7 @@ import { Observable } from 'rxjs/Observable';
 export class AuthService {
 	hrs:any[];
 	mins: any[];
-	// public url = 'http://localhost:5000';  
-	public url = 'https://www.trekengine.com';  
+	public url = 'http://localhost:5000';  
  	private socket;
  	public validatedUser = false;
 
