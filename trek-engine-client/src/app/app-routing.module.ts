@@ -12,6 +12,7 @@ import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent } from './billing-history/billing-history.component';
 import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -66,6 +67,7 @@ const appRoutes: Routes = [
 					{ path: 'flight-details', component: FlightDetailsComponent }
 				]
 			},
+			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent }
 		]
 	},

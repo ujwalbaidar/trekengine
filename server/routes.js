@@ -23,6 +23,8 @@ module.exports = function(app){
 	app.get('/trekengineApp/travellers', (req, res) => {
 		res.render('iframes/traveler-details-form.template.ejs');
 	});
+	app.use('/api/notifications', auth, require('./api/notifications'));
+	
 	app.route('*')
         .get((req, res) => {
             res.render('index');

@@ -55,7 +55,7 @@ export class GuideDetailsComponent implements OnInit  {
     	});
 	}
 }
-
+ 
 @Component({
 	selector: 'guide-details-dialog',
 	templateUrl: './guide-details-dialog.html',
