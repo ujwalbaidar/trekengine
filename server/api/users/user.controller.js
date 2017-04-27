@@ -315,9 +315,10 @@ exports.addGuideToAdmin = function(req, res){
 			.then(userInfo=>{
 				if(userInfo && userInfo.length>0){
 					let saveObj = {
-						sentTo: userInfo[0]._id,
+						sentTo: userInfo[0].email,
 						sentBy: req.headers.email,
-						subject: 'add-as-guide'
+						subject: 'add-as-guide',
+						notificationType: 'request'
 					}
 					createNotifications(saveObj)
 						.then((notificationData)=>{

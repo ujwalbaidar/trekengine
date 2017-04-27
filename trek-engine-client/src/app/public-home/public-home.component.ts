@@ -32,20 +32,4 @@ export class PublicHomeComponent implements OnInit {
 			}
     	});
 	}
-
-	/*openRegisterModal(){
-		let dialogOptions = {
-			height: '550px',
-  			width: '600px',
-  			position: 'center',
-  			disableClose: true
-		};
-
-		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
-		dialogRef.afterClosed().subscribe(result => {
-			if(result && result!=='opt-cancel'){
-				this._route.navigate(['/app']);
-			}
-    	});
-	}*/
 }

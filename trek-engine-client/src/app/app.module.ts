@@ -15,7 +15,8 @@ import {
   PackageBillingsService, 
   FeaturesService ,
   PackagesService,
-  AuthResolverService
+  AuthResolverService,
+  NotificationsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -47,8 +48,9 @@ import { BillingHistoryComponent, BillingDialogComponent } from './billing-histo
 import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
+import { NotificationsComponent } from './notifications/notifications.component';
 
-// enableProdMode();
+enableProdMode();
 
 @NgModule({
   declarations: [
@@ -72,7 +74,8 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     BillingHistoryComponent, BillingDialogComponent,
     AppUsersComponent,
     ProfileComponent,
-    EqualValidatorDirective
+    EqualValidatorDirective,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +94,8 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     PackageBillingsService,
     FeaturesService,
     PackagesService,
-    AuthResolverService
+    AuthResolverService,
+    NotificationsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
