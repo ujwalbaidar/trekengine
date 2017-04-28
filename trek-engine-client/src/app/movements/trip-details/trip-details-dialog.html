@@ -20,8 +20,15 @@
 					</strong>
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
-				<input id="name" type="text" class="validate" name="name" [(ngModel)]="trip.name" #name="ngModel" required>
-				<div *ngIf="name?.errors?.required && submittedTripForm">
+
+				<input mdInput name="name" [ngModel]="trip.name" [mdAutocomplete]="auto" [formControl]="tripInfosCtrl" required>
+
+				<md-autocomplete #auto="mdAutocomplete">
+					<md-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name">
+						{{ tripInfo.name }}
+					</md-option>
+				</md-autocomplete>
+				<div *ngIf="emptyTripName === true && submittedTripForm">
 					This Field is Required!
 				</div>
 			</div>
