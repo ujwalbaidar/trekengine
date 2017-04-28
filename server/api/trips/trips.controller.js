@@ -1,19 +1,30 @@
 const mongoose = require('mongoose');
 const Trips = mongoose.model('Trips');
+const TripInfos = mongoose.model('TripInfos');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
+		let trekName = req.body.name.replace(/\w\S*/g, txt=>{
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
 		req.body.departureDate = req.body.departureDate;
 		req.body.arrivalDate = req.body.arrivalDate;
 		req.body.createdDate = new Date();
 		req.body.updatedDate = new Date();
 		req.body.userId = req.headers.userId;
+		req.body.name = trekName;
 		let trips = new Trips(req.body);
 		trips.save((err, trip)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{
-				res.status(200).json({success:true, data:trip});
+				updateTripInfos({name: trekName},{userId: req.headers.userId})
+					.then(updateTrekInf=>{
+						res.status(200).json({success:true, data:trip});
+					})
+					.catch(updateErr=>{
+						res.status(401).json({success:false, message: 'Failed to Create Trip Informations.'});
+					});
 			}
 		});
 	}else{
@@ -63,9 +74,11 @@ function getTripByQuery(query){
 
 exports.updateTrips = function(req, res){
 	if(req.headers && req.headers.userId){
-		console.log(req.body);
+		let trekName = req.body.name.replace(/\w\S*/g, txt=>{
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
 		let updateData = {
-			name: req.body.name,
+			name: trekName,
 			departureDate: req.body.departureDate,
 			arrivalDate: req.body.arrivalDate,
 			guideId: req.body.guideId,
@@ -76,7 +89,13 @@ exports.updateTrips = function(req, res){
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{
-				res.status(200).json({success:true, data:tripUpdate});
+				updateTripInfos({name: trekName},{userId: req.headers.userId, updateDate: new Date()})
+					.then(updateTrekInf=>{
+						res.status(200).json({success:true, data:updateTrekInf});
+					})
+					.catch(updateErr=>{
+						res.status(401).json({success:false, message: 'Failed to create Trip Informations.'});
+					});
 			}
 		});
 	}else{
@@ -164,5 +183,17 @@ function getFilterResultQuery(departureDate, arrivalDate){
         	}]
   		};
   		resolve(result);
+	});
+}
+
+function updateTripInfos(query, updateObj){
+	return new Promise((resolve, reject)=>{
+		TripInfos.update(query, updateObj, {upsert: true}, (err, updateResp)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(updateResp);
+			}
+		});
 	});
 }

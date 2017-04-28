@@ -24,6 +24,7 @@ module.exports = function(app){
 		res.render('iframes/traveler-details-form.template.ejs');
 	});
 	app.use('/api/notifications', auth, require('./api/notifications'));
+	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
 	
 	app.route('*')
         .get((req, res) => {
