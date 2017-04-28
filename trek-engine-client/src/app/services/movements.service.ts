@@ -223,6 +223,14 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getUserTrekInfos(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/movements/tripinfos/findUserTripsData', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

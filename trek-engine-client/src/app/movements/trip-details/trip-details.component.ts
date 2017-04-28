@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { Trip } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { FormControl } from '@angular/forms';
+import 'rxjs/add/operator/startWith';
 import { MovementsService, UserService } from '../../services/index';
 
 @Component({
@@ -79,6 +81,9 @@ export class TripDetailsComponent implements OnInit {
 })
 export class TripDetailsDialogComponent implements OnInit {
 	trip: Trip = <Trip>{};
+	tripInfosCtrl: FormControl;
+	filteredTripInfos: any;
+	tripInfos: any;
 	public departure_date: Object;
 	public arrival_date: Object;
 	public title: string = 'Add Trip Details';
@@ -92,8 +97,14 @@ export class TripDetailsDialogComponent implements OnInit {
 	approver: string;
     selectedValue: string;
     submittedTripForm: boolean = false;
+	emptyTripName:boolean = false;
 
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
+		this.tripInfosCtrl = new FormControl();
+		this.filteredTripInfos = this.tripInfosCtrl.valueChanges
+	        .startWith(null)
+	        .map(name => this.filterTripInfos(name));
+
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
@@ -103,23 +114,23 @@ export class TripDetailsDialogComponent implements OnInit {
 	}
 	
 	ngOnInit(){
-		this.getGuideLists();
+		this.getTripLists();
 	}
 
 
-	getGuideLists(){
-		this.userService.getGuides()
-		.subscribe(users=>{
-				this.guideUsers = users['guides'];
-				this.approver = users['approver'];
-			}, userError=>{
-				console.log(userError);
-			});
+	getTripLists(){
+		this.movementServie.getUserTrekInfos()
+			.subscribe(tripInfos=>{
+				this.tripInfos = tripInfos;
+			}, error=>{
+				this.dialogRef.close(error);
+			})
 	}
-
+	
 	submitTrekDetails(tripForm:any) {
 		this.submittedTripForm = true;
-		if(tripForm.valid){
+		if(tripForm.valid && !this.emptyTripName){
+			this.trip.name = this.tripInfosCtrl.value;
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 				this.updateTrekDetails();
 			}else{
@@ -132,6 +143,7 @@ export class TripDetailsDialogComponent implements OnInit {
 		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripForm = false;
+				this.getTripLists();
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
 				this.submittedTripForm = false;
@@ -143,10 +155,20 @@ export class TripDetailsDialogComponent implements OnInit {
 		this.movementServie.updateTrekDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripForm = false;
+				this.getTripLists();
 				this.dialogRef.close(this.trip);
 			}, error=>{
 				this.submittedTripForm = false;
 				this.dialogRef.close(error);
 			});
+	}
+
+	filterTripInfos(val: string) {
+		if(this.tripInfosCtrl.value !== undefined && this.tripInfosCtrl.value.length > 0){
+			this.emptyTripName = false;
+		}else{
+			this.emptyTripName = true;
+		}
+		return val ? this.tripInfos.filter(s => new RegExp(`^${val}`, 'gi').test(s.name)): this.tripInfos;
 	}
 }

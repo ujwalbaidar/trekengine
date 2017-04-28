@@ -4,7 +4,7 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AppRoutingModule } from './app-routing.module';
@@ -84,6 +84,7 @@ enableProdMode();
     MyDatePickerModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
   providers: [
