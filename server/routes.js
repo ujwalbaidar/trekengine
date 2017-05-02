@@ -25,7 +25,8 @@ module.exports = function(app){
 	});
 	app.use('/api/notifications', auth, require('./api/notifications'));
 	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
-	
+	app.get('/trekengineApp/authorizaiton/activateUser', require('./api/users/user.controller').activateUser);
+
 	app.route('*')
         .get((req, res) => {
             res.render('index');

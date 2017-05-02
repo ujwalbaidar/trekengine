@@ -27,5 +27,10 @@
 		"address":"trekengine.solution@gmail.com",
 		"password":"treakengine123456789",
 		"senderAddress": "codewings<donotreply@codewings.com>"
+	},
+	"activateAccount":{
+		"secretKey":"c0d3w1ngR3g15ter!!",
+		"expireTime": "1d",
+		"algorithm": "HS256"
 	}
 }

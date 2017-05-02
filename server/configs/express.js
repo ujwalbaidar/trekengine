@@ -11,8 +11,7 @@ module.exports = function(app){
     app.use(bodyParser.json({limit: '10mb'}));
     app.use(express.static(rootPath + '/attachments'));
     app.use(express.static(rootPath + 'trek-engine-client/dist'));
-    app.set('views', [rootPath + 'trek-engine-client/dist', rootPath + 'public']);
-
+    app.set('views', [rootPath + 'trek-engine-client/dist', rootPath + 'public', rootPath + 'server/templates']);
     app.engine('html', require('ejs').renderFile);
     app.set('view engine', 'html');
 }

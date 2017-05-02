@@ -3,7 +3,7 @@ import { PackageBillingsService, AuthService, UserService } from '../services';
 import { FeaturePackage } from '../models/models';
 import { CookieService } from 'angular2-cookie/core';
 import { MdDialog } from '@angular/material';
-import { RegisterComponent } from '../register/register.component';
+import { RegisterComponent, RegisterSuccessDialogComponent } from '../register/register.component';
 import { Router } from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 
@@ -119,10 +119,21 @@ export class PackageBillingsComponent implements OnInit {
 		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
 			if(result && result!=='opt-cancel'){
-				this.snackBar.open('Registered Successfully! Please Login !', '', {
-					duration: 5000,
-    			});
+				this.showRegisterSuccess();
 			}
     	});
 	}
+
+	showRegisterSuccess(){
+	
+		let dialogOptions = {
+			height: '210px',
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		let dialogRef = this.dialog.open(RegisterSuccessDialogComponent, dialogOptions);
+    }
+
 }

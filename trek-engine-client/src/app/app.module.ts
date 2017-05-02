@@ -2,7 +2,7 @@ import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
-import { MaterialModule, OverlayContainer } from '@angular/material';
+import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -20,7 +20,7 @@ import {
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent, RegisterSuccessDialogComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PackageBillingsComponent } from './package-billings/package-billings.component';
@@ -49,6 +49,7 @@ import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { ActivateTokenComponent } from './register/activate-token/activate-token.component';
 
 enableProdMode();
 
@@ -75,11 +76,14 @@ enableProdMode();
     AppUsersComponent,
     ProfileComponent,
     EqualValidatorDirective,
-    NotificationsComponent
+    NotificationsComponent,
+    RegisterSuccessDialogComponent,
+    ActivateTokenComponent
   ],
   imports: [
     BrowserModule,
     MaterialModule,
+    MdSelectModule,
     BrowserAnimationsModule,
     MyDatePickerModule,
     AppRoutingModule,
@@ -106,7 +110,8 @@ enableProdMode();
     FlightDetailsDialogComponent,
     TravellerDetailsDialogComponent,
     AppFeaturesDialogComponent,
-    BillingDialogComponent
+    BillingDialogComponent,
+    RegisterSuccessDialogComponent
   ]
 })
 export class AppModule { 

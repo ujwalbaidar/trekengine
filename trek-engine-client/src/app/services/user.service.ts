@@ -110,6 +110,14 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	authorizeRegistrationToken(registrationToken:string){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'registrationToken': registrationToken });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/trekengineApp/authorizaiton/activateUser', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };
