@@ -38,10 +38,10 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Total Members</strong>
+								<strong>Trip Name</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.travellerCount}}</span>
+								<span>{{booking?.tripName}}</span>
 							</div>
 						</div>
 						<div class="col s6">
@@ -56,12 +56,22 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
+								<strong>Total Members</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.travellerCount}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
 								<strong>Total Cost</strong>
 							</div>
 							<div class="col s12 m9">
 								<span>{{booking?.totalCost}}</span>
 							</div>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
 								<strong>Advance Paid</strong>
@@ -70,8 +80,6 @@
 								<span>{{booking?.advancePaid}}</span>
 							</div>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
 								<strong>Due Amount</strong>

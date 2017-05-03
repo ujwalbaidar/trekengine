@@ -21,7 +21,7 @@ export class Trip {
 
 export class Booking {
 	groupName: string;
-	trip: string;
+	tripName: string;
 	travellerCount: number;
 	totalCost: number;
 	tripCost: number;

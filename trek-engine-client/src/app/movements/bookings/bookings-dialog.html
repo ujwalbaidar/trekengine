@@ -40,6 +40,28 @@
 		</div>
 
 		<div class="row">
+			<div class="col s12">
+				<label for="tripName">
+					<strong>
+						{{'Trip Nepal'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+
+				<input mdInput name="tripName" [ngModel]="booking.tripName" [mdAutocomplete]="auto" [formControl]="tripInfosCtrl" required>
+
+				<md-autocomplete #auto="mdAutocomplete">
+					<md-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name">
+						{{ tripInfo.name }}
+					</md-option>
+				</md-autocomplete>
+				<div *ngIf="emptyTripName === true && submittedBookingForm">
+					This Field is Required!
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
 			<div class="col s6">
 				<label for="trip-cost" [ngClass]="{'active':(booking.tripCost!=undefined)}">
 					<strong>
@@ -65,6 +87,7 @@
 				</div>
 			</div>
 		</div>
+		
 	</div>
 	<div md-dialog-actions>
 		<button md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>

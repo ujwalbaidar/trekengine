@@ -52,7 +52,7 @@ export class BookingDetailsComponent implements OnInit  {
 		this.movementService.getBooking([{bookingId:this.bookingId}])
 			.subscribe(booking=>{
 				if(JSON.stringify(booking)=="{}"){
-					this._route.navigate(['/movements/bookings']);
+					this._route.navigate(['/app/bookings']);
 				}else{
 					this.booking = booking;
 					this.selectedTravelerArr = booking['travellers'];
