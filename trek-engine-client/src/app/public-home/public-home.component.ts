@@ -19,7 +19,7 @@ export class PublicHomeComponent implements OnInit {
 
 	openLoginModal(){
 		let dialogOptions = {
-			height: '410px',
+			height: '460px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
