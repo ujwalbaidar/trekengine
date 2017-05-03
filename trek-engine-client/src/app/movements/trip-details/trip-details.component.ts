@@ -81,9 +81,6 @@ export class TripDetailsComponent implements OnInit {
 })
 export class TripDetailsDialogComponent implements OnInit {
 	trip: Trip = <Trip>{};
-	// tripInfosCtrl: FormControl;
-	// filteredTripInfos: any;
-	// tripInfos: any;
 	public departure_date: Object;
 	public arrival_date: Object;
 	public title: string = 'Add Trip Details';
@@ -97,14 +94,8 @@ export class TripDetailsDialogComponent implements OnInit {
 	approver: string;
     selectedValue: string;
     submittedTripForm: boolean = false;
-	// emptyTripName:boolean = false;
 
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
-		/*this.tripInfosCtrl = new FormControl();
-		this.filteredTripInfos = this.tripInfosCtrl.valueChanges
-	        .startWith(null)
-	        .map(name => this.filterTripInfos(name));
-*/
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
@@ -115,21 +106,10 @@ export class TripDetailsDialogComponent implements OnInit {
 	
 	ngOnInit(){
 	}
-
-
-	/*getTripLists(){
-		this.movementServie.getUserTrekInfos()
-			.subscribe(tripInfos=>{
-				this.tripInfos = tripInfos;
-			}, error=>{
-				this.dialogRef.close(error);
-			})
-	}*/
 	
 	submitTrekDetails(tripForm:any) {
 		this.submittedTripForm = true;
 		if(tripForm.valid){
-			// this.trip.name = this.tripInfosCtrl.value;
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 				this.updateTrekDetails();
 			}else{
@@ -160,12 +140,4 @@ export class TripDetailsDialogComponent implements OnInit {
 			});
 	}
 
-	/*filterTripInfos(val: string) {
-		if(this.tripInfosCtrl.value !== undefined && this.tripInfosCtrl.value.length > 0){
-			this.emptyTripName = false;
-		}else{
-			this.emptyTripName = true;
-		}
-		return val ? this.tripInfos.filter(s => new RegExp(`^${val}`, 'gi').test(s.name)): this.tripInfos;
-	}*/
 }
