@@ -12,10 +12,6 @@ export class MovementsComponent {
 		{
 			menu: 'Movement Details',
 			routePath: '/app/movements'
-		},
-		{
-			menu: 'Bookings',
-			routePath: '/app/movements/bookings'
 		},{
 			menu: 'Guide Details',
 			routePath: '/app/movements/guide-details'

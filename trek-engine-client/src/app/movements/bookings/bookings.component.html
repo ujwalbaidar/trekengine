@@ -9,8 +9,9 @@
 				<td>Booking Id</td>
 				<td>Group Name</td>
 				<td>Total Memebers</td>
-				<td>Total Cost</td>
+				<td>Trip Name</td>
 				<td>Trip Cost</td>
+				<td>Total Cost</td>
 				<td>Advance Paid</td>
 				<td>Due Amount</td>
 				<td>Status</td>
@@ -22,13 +23,13 @@
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.bookingId }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.groupName }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.travellerCount }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripName }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount }}</td>
 				<td>{{ booking.status==true?'active':'inactive'}}</td>
 				<td>
-					<!-- <a (click)="openAddBookingModal(booking)">Edit</a> -->
 					<a (click)="deleteBooking(booking._id, i)">Delete</a>
 				</td>
 			</tr>

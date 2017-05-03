@@ -65,14 +65,15 @@ const appRoutes: Routes = [
 				component: MovementsComponent, 
 				children:[
 					{ path: '', component: MovementDetailsComponent },
-					{ path: 'bookings', component: BookingsComponent },
-					{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent },
+					// { path: 'bookings', component: BookingsComponent },
 					{ path: 'trip-details', component: TripDetailsComponent },
 					{ path: 'guide-details', component: GuideDetailsComponent },
 					{ path: 'traveller-details', component: TravellerDetailsComponent },
 					{ path: 'flight-details', component: FlightDetailsComponent }
 				]
 			},
+			{ path: 'bookings', component: BookingsComponent },
+			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent }
 		]
