@@ -47,21 +47,23 @@ exports.createUser = function(req, res){
 			    to: userData.email, 
 			    subject: 'Trek Engine: Registration Success',
 			};
-			let token = jwt.sign(
-				{
-					email: req.body.email,
-					packageType: req.body.selectedPackage.name,
-					packageCost: req.body.selectedPackage.cost,
-					trialPeriod: req.body.selectedPackage.trialPeriod,
-					priorityLevel: req.body.selectedPackage.priorityLevel,
-					features: JSON.stringify(req.body.selectedPackage.featureIds)
-				}, 
-				config.activateAccount.secretKey, 
-				{
-					expiresIn: config.activateAccount.expireTime, 
-					algorithm: config.activateAccount.algorithm 
-				}
-			);
+
+			let jwtSignData = {
+				email: req.body.email,
+				packageType: req.body.selectedPackage.name,
+				packageCost: req.body.selectedPackage.cost,
+				trialPeriod: req.body.selectedPackage.trialPeriod,
+				priorityLevel: req.body.selectedPackage.priorityLevel,
+				features: JSON.stringify(req.body.selectedPackage.featureIds)
+			};
+
+			let jwtSignOptions = {
+				expiresIn: config.activateAccount.expireTime, 
+				algorithm: config.activateAccount.algorithm 
+			};
+
+			let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+
 			let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
 			mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
 			sendEmail(mailOptions)
@@ -679,4 +681,101 @@ exports.activateUser = function(req, res){
 				})
 			}
 		});
+}
+
+exports.forgotPasswordEmail = function(req, res){
+	queryUser(req.body)
+		.then(user => {
+			if(user.length>0){
+				if(user[0].status == true){
+
+					let jwtSignData = {
+						email: req.body.email
+					};
+
+					let jwtSignOptions = {
+						expiresIn: '1h', 
+						algorithm: config.activateAccount.algorithm 
+					};
+
+					let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+			
+					let templateString = fs.readFileSync('server/templates/forgottenPasswordRequest.ejs', 'utf-8');
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: req.body.email, 
+					    subject: 'Trek Engine: Forgotten Password Request',
+					};
+					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					sendEmail(mailOptions)
+						.then(mailInfo=>{
+							res.status(200).json({success:true, data:mailInfo});
+						})
+						.catch(mailErr=>{
+							res.status(400).json({success:false, data:mailErr});
+						});
+
+				}else{
+					res.status(200).json({success: false, data: 'inactive-account'});
+				}
+			}else{
+				res.status(200).json({success: false, data: 'wrong-email'});
+			}
+		})
+		.catch(userQueryErr=>{
+			res.status(400).json({success:false, data:userQueryErr});
+		})
+}
+
+exports.resetUserPassword = function(req, res){
+	if(req.headers.resettoken){
+		jwt.verify(req.headers.resettoken, config.activateAccount.secretKey, { algorithms: config.activateAccount.algorithm }, (err, decoded) =>{
+			if(err){
+				if(err.name == 'TokenExpiredError'){
+					let decodedToken = jwt.decode(req.headers.resettoken);
+					let jwtSignData = {
+						email: decodedToken.email
+					};
+
+					let jwtSignOptions = {
+						expiresIn: '1h', 
+						algorithm: config.activateAccount.algorithm 
+					};
+
+					let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+			
+					let templateString = fs.readFileSync('server/templates/forgottenPasswordRequest.ejs', 'utf-8');
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: decodedToken.email, 
+					    subject: 'Trek Engine: Forgotten Password Request',
+					};
+					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					sendEmail(mailOptions)
+						.then(mailInfo=>{
+							res.status(200).send({success:false, data: 'token-expired'});
+						})
+						.catch(mailErr=>{
+							res.status(400).json({success:false, data:mailErr});
+						});
+				}else{
+					res.status(400).send({success:false, data: err, message: 'Invalid Token!'});
+				}
+			}else{
+				let userPassword = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+                   .update(req.body.userPassword)
+                   .digest('hex');
+
+				User.update({email:decoded.email}, {password: userPassword}, (userUpdateErr, updateData)=>{
+					if(userUpdateErr){
+						res.status(400).json({success: false, data: userUpdateErr});
+					}else{
+						res.status(200).send({success:true, data: updateData});
+					}
+				});
+			}
+		});
+	}else{
+		res.status(400).json({success: false, data: 'empty-token'});
+	}
 }

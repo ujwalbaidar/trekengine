@@ -17,4 +17,6 @@ router.post('/addGuideToAdmin', userController.addGuideToAdmin);
 router.get('/getProfile', userController.getUserProfile);
 router.put('/updateProfile', userController.updateUserProfile);
 router.put('/updatePassword', userController.updateUserPassword);
+router.post('/forgotPasswordEmail', userController.forgotPasswordEmail);
+router.put('/resetUserPassword', userController.resetUserPassword);
 module.exports = router;

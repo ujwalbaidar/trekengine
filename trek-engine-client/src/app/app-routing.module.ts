@@ -14,6 +14,7 @@ import { BillingHistoryComponent } from './billing-history/billing-history.compo
 import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -35,7 +36,9 @@ const appRoutes: Routes = [
 			{ path: 'login', component: LoginComponent },
 			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
-			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent }
+			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },
+			{ path: 'forgot-password/token/:token/reset-password', component: ForgotPasswordComponent },
+
 		] 
 	},
 	{ 

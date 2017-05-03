@@ -5,7 +5,7 @@ import { CookieService } from 'angular2-cookie/core';
 import { MdDialog } from '@angular/material';
 import { RegisterComponent, RegisterSuccessDialogComponent } from '../register/register.component';
 import { Router } from '@angular/router';
-import {MdSnackBar} from '@angular/material';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-package-billings',

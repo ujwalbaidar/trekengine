@@ -50,6 +50,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ActivateTokenComponent } from './register/activate-token/activate-token.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 enableProdMode();
 
@@ -78,7 +79,8 @@ enableProdMode();
     EqualValidatorDirective,
     NotificationsComponent,
     RegisterSuccessDialogComponent,
-    ActivateTokenComponent
+    ActivateTokenComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

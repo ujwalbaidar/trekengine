@@ -118,6 +118,20 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	submitForgotPasswordEmail(userEmail:string){
+		return this.http.post('/api/users/forgotPasswordEmail', {email:userEmail})
+            .map(this.extractData)
+            .catch(this.handleError);
+	}
+
+	resetUserPassword(resetToken: string, userPasswordObj:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'resetToken': resetToken});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/users/resetUserPassword', userPasswordObj, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };
