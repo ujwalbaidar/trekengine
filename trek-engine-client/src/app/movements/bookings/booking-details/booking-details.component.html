@@ -49,7 +49,7 @@
 								<strong>Trip Cost</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.tripCost}}</span>
+								<span>{{booking?.tripCost | currency:'USD':true}}</span>
 							</div>
 						</div>
 					</div>
@@ -67,7 +67,7 @@
 								<strong>Total Cost</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.totalCost}}</span>
+								<span>{{booking?.totalCost | currency:'USD':true}}</span>
 							</div>
 						</div>
 					</div>
@@ -77,7 +77,7 @@
 								<strong>Advance Paid</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.advancePaid}}</span>
+								<span>{{booking?.advancePaid | currency:'USD':true}}</span>
 							</div>
 						</div>
 						<div class="col s6">
@@ -85,7 +85,7 @@
 								<strong>Due Amount</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.dueAmount}}</span>
+								<span>{{booking?.dueAmount | currency:'USD':true}}</span>
 							</div>
 						</div>
 					</div>
@@ -98,7 +98,7 @@
 			<div class="card">
 				<div class="card-content">
 					<span class="card-title">
-						<strong>Trip Details</strong>
+						<strong>Trip Departure and Arrival Dates</strong>
 					</span>
 					<div class="right" *ngIf="trip && trip.name">
 						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openAddTripModal(trip)">
@@ -107,17 +107,7 @@
 					</div>
 				</div>
 				<div class="card-action">
-					<div *ngIf="trip && trip.name">
-						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Trip Name</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{trip?.name}}</span>
-								</div>
-							</div>
-						</div>
+					<div *ngIf="trip">
 						<div class="row">
 							<div class="col s6">
 								<div class="col s12 m3">
@@ -137,7 +127,7 @@
 							</div>
 						</div>
 					</div>
-					<div [hidden]="trip && trip.name" class="row">
+					<div [hidden]="trip" class="row">
 						<div class="col s6">
 							<p>Trip Details not added yet. Please add Trip Details!</p>
 						</div>

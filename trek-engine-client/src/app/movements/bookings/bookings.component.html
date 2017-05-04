@@ -24,10 +24,10 @@
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.groupName }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.travellerCount }}</td>
 				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripName }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost | currency:'USD':true }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD':true }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD':true }}</td>
+				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD':true }}</td>
 				<td>{{ booking.status==true?'active':'inactive'}}</td>
 				<td>
 					<a (click)="deleteBooking(booking._id, i)">Delete</a>

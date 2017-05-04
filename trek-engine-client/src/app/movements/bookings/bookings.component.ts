@@ -115,6 +115,12 @@ export class BookingsDialogComponent implements OnInit {
 		return val ? this.tripInfos.filter(s => new RegExp(`^${val}`, 'gi').test(s.name)): this.tripInfos;
 	}
 
+	selectedTrip(tripInfo: object){
+		if(this.booking['tripCost'] == null || this.booking['tripCost'] == undefined){
+			this.booking['tripCost'] = tripInfo['cost'];
+		}
+	}
+
 	submitBookingDetails(bookingForm:any) {
 		this.submittedBookingForm = true;
 		if(bookingForm.valid && !this.emptyTripName){

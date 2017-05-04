@@ -66,7 +66,6 @@ exports.updateTrips = function(req, res){
 		let updateData = {
 			departureDate: req.body.departureDate,
 			arrivalDate: req.body.arrivalDate,
-			guideId: req.body.guideId,
 			status: req.body.status,
 			updateDate: new Date()
 		};
