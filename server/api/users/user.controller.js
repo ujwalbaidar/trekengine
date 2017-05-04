@@ -38,9 +38,6 @@ exports.createUser = function(req, res){
     }
 	saveUser(req.body)
 		.then(userData=>{
-			if(req.body.selectedPackage.cost === 0){
-				req.body.selectedPackage.trialPeriod = 'Unlimited'
-			}
 			let mailOptions = {};
 			mailOptions = {
 				from: config.appEmail.senderAddress,
@@ -56,6 +53,7 @@ exports.createUser = function(req, res){
 				priorityLevel: req.body.selectedPackage.priorityLevel,
 				features: JSON.stringify(req.body.selectedPackage.featureIds)
 			};
+
 
 			let jwtSignOptions = {
 				expiresIn: config.activateAccount.expireTime, 
@@ -649,6 +647,8 @@ exports.activateUser = function(req, res){
 										var	expireDate=0;
 										if(decoded.packageCost>0){
 											expireDate = activateDate+decoded.trialPeriod*24*3600;
+										}else{
+											expireDate = activateDate+1*24*3600;
 										}
 										let packageObj = {
 											userId: userData._id,
@@ -658,13 +658,14 @@ exports.activateUser = function(req, res){
 											priorityLevel: decoded.priorityLevel,
 											activatesOn: activateDate,
 											expiresOn: expireDate,
-											remainingDays: decoded.trialPeriod,
+											remainingDays: (decoded.packageCost>0)?decoded.trialPeriod:1,
 											features: JSON.parse(decoded.features),
 											usesDays: 0,
 											freeUser: true,
 											onHold: false,
 											status: true
 										};
+										
 										saveUserPackage(packageObj)
 											.then(billingData=>{
 												res.status(200).json({success: false, data: 'already-active'});

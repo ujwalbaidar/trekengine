@@ -166,7 +166,7 @@ function sendEmail(mailOptions){
 exports.updateBillingDays = function(){
 		return new Promise((resolve, reject)=>{
 			PackageBillings.update({
-				status:true, onHold: false, remainingDays: { $gt: 0 }
+				status:true, onHold: false, remainingDays: { $gt: 0 }, packageCost: { $gt: 0 }
 			},{
 			    $inc:{ remainingDays:-1, usesDays:1 }
 			},{
@@ -249,7 +249,14 @@ exports.updateUserPackage = function(req, res){
 
 exports.emailOnExpired = function(){
 	return new Promise(resolve=>{
-		PackageBillings.find({status:true, remainingDays:{$lte:2}}, {_id:0, userId:1, expiresOn:1}, function(err, billingUser){
+		PackageBillings.find(
+			{
+				status:true, 
+				remainingDays:{ $lte: 2 }, 
+				packageCost: { $gt: 0 }
+			}, {
+				_id:0, userId:1, expiresOn:1
+			}, function(err, billingUser){
 			if(billingUser.length>0){
 				for(let i=0;i<billingUser.length; i++){
 					User.findOne({_id:billingUser[i].userId},{_id:0, email:1}, (err, user)=>{
