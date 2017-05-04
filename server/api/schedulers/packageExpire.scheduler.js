@@ -2,8 +2,13 @@ const CronJob = require('cron').CronJob;
 const billingCtrl = require('../package-billings/package-billings.controller');
 const socketScheduler = require('../../socket/socket.js');
 module.exports = function(io) {
+    /**
+    * Runs every day at 00:00:00
+    * decrease remaining days and increase uses days of active billing whose cost gt 0
+    * i.e. does not update free user
+    **/
     const billingDaysJob = new CronJob({
-        cronTime: '00 00 */1 * * *',
+        cronTime: '00 00 00 * * *',
         onTick: function() {
             billingCtrl.updateBillingDays()
                 .then(updateResponse => {
@@ -13,10 +18,15 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    // billingDaysJob.start();
+    billingDaysJob.start();
 
+    /**
+    * Runs every day at 00:00:10
+    * checks if remaining days == 0
+    * if true set status false
+    **/
     const billingStatusJob = new CronJob({
-        cronTime: '10 00 */1 * * *',
+        cronTime: '10 00 00 * * *',
         onTick: function() {
             billingCtrl.updateBillingStatus()
                 .then(updateResponse => {
@@ -26,10 +36,16 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    // billingStatusJob.start();
+    billingStatusJob.start();
+
+    /**
+    * Runs every day at 00:00:15
+    * checks if status:true, onhold:true, usesdays:0 and activateDate: today's date
+    * if true set onhold false
+    **/
 
     const billingOnHoldJob = new CronJob({
-        cronTime: '20 00 */1 * * *',
+        cronTime: '15 00 00 * * *',
         onTick: function() {
             billingCtrl.updateBillingOnHold()
                 .then(updateResponse => {
@@ -39,26 +55,33 @@ module.exports = function(io) {
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    // billingOnHoldJob.start();
+    billingOnHoldJob.start();
 
+    /**
+    * Runs every day at 00:00:20
+    * send email if remaining days <= 2 to the active billings and cost >0
+    **/
     const emailOnExpired = new CronJob({
-        cronTime: '25 00 */1 * * *',
+        cronTime: '20 00 00 * * *',
         onTick: function() {
             billingCtrl.emailOnExpired()
         },
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    // emailOnExpired.start();
+    emailOnExpired.start();
 
+    /**
+    * tick socket every 5 second and send billing data
+    **/
     const billingOnSocket = new CronJob({
         cronTime: '*/5 * * * * *',
         onTick: function() {
-            console.log('cron run at:' + new Date() + 'for billing socket');
+            // console.log('cron run at:' + new Date() + 'for billing socket');
             io.emit('transfer-cookie', 'tick');
         },
         start: false,
         timeZone: 'Asia/Kathmandu'
     });
-    // billingOnSocket.start();
+    billingOnSocket.start();
 }

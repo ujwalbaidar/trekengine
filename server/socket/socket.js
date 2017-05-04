@@ -37,9 +37,11 @@ module.exports = function(io){
 								console.log(billingErr)
 							}else{
 								if(billingResponse){
-									resolve({remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType});
+									resolve({remainingDays: billingResponse.remainingDays, packageType: billingResponse.priorityLevel});
+									// resolve({remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType});
 								}else{
-									resolve({remainingDays: 0, packageType: 'Basic'});
+									resolve({remainingDays: billingResponse.remainingDays, packageType: 1});
+									// resolve({remainingDays: 0, packageType: 'Basic'});
 								}
 							}
 						});
