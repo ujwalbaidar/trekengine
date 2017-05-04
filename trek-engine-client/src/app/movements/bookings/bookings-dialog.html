@@ -51,7 +51,7 @@
 				<input mdInput name="tripName" [ngModel]="booking.tripName" [mdAutocomplete]="auto" [formControl]="tripInfosCtrl" required>
 
 				<md-autocomplete #auto="mdAutocomplete">
-					<md-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name">
+					<md-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name" (onSelectionChange)="selectedTrip(tripInfo)">
 						{{ tripInfo.name }}
 					</md-option>
 				</md-autocomplete>
@@ -63,25 +63,43 @@
 
 		<div class="row">
 			<div class="col s6">
-				<label for="trip-cost" [ngClass]="{'active':(booking.tripCost!=undefined)}">
-					<strong>
-						{{'Trip Cost'}}
-					</strong>
-					<span class="required-label-mark">{{' *'}}</span>
-				</label>
-				<input id="trip-cost" type="number" class="validate" name="tripCost" [(ngModel)]="booking.tripCost" #tripCost="ngModel" required>
+				<div>
+					<label for="trip-cost" [ngClass]="{'active':(booking.tripCost!=undefined)}">
+						<strong>
+							{{'Trip Cost'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+				</div>
+				<div>
+					<div class="col s1" style="padding-top: 11px">
+						<span>$</span>
+					</div>
+					<div class="col s10">
+						<input id="trip-cost" type="number" class="validate" name="tripCost" [(ngModel)]="booking.tripCost" #tripCost="ngModel" required>
+					</div>
+				</div>
 				<div *ngIf="tripCost?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
 			<div class="col s6">
-				<label for="advance-paid" [ngClass]="{'active':(booking.advancePaid!=undefined)}">
-					<strong>
-						{{'Advance Paid'}}
-					</strong>
-					<span class="required-label-mark">{{' *'}}</span>
-				</label>
-				<input id="advance-paid" type="number" class="validate" name="advancePaid" [(ngModel)]="booking.advancePaid" #advancePaid="ngModel" required>
+				<div>
+					<label for="advance-paid" [ngClass]="{'active':(booking.advancePaid!=undefined)}">
+						<strong>
+							{{'Advance Paid'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+				</div>
+				<div>
+					<div class="col s1" style="padding-top: 11px">
+						<span>$</span>
+					</div>
+					<div class="col s10">
+						<input id="advance-paid" type="number" class="validate" name="advancePaid" [(ngModel)]="booking.advancePaid" #advancePaid="ngModel" required>
+					</div>
+				</div>
 				<div *ngIf="advancePaid?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
