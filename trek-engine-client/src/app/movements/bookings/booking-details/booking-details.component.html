@@ -100,7 +100,7 @@
 					<span class="card-title">
 						<strong>Trip Departure and Arrival Dates</strong>
 					</span>
-					<div class="right" *ngIf="trip && trip.name">
+					<div class="right" *ngIf="trip">
 						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openAddTripModal(trip)">
 							<i class="material-icons">edit</i>
 						</a>

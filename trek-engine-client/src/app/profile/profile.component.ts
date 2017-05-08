@@ -69,6 +69,33 @@ export class ProfileComponent implements OnInit {
 		}
 	}
 
+	toggleDailyNotification(notification:boolean){
+		if (notification==true) {
+			this.profile['dailyTripNotification'] = false;
+		}else{
+			this.profile['dailyTripNotification'] = true;
+		}
+		this.updateUserProfile(this.profile);
+	}
+
+	toggleWeeklyNotification(notification:boolean){
+		if (notification==true) {
+			this.profile['weeklyTripNotification'] = false;
+		}else{
+			this.profile['weeklyTripNotification'] = true;
+		}
+		this.updateUserProfile(this.profile);
+	}
+
+	updateUserProfile(userDataObj: object){
+		this.userService.updateUserInfo(userDataObj)
+			.subscribe(updateData=>{
+				this.getUserInfo();
+			}, error=>{
+				this.userErr = error;
+			});
+	}
+
 	submitPasswordInfo(option:string, passwordForm:any, passwordData: object){
 		if(option==='opt-cancel'){
 			this.showPasswordForm = false;

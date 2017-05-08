@@ -564,7 +564,9 @@ exports.updateUserProfile = function(req, res){
 			organizationEmail: req.body.organizationEmail,
 			organizationStreet: req.body.organizationStreet,
 			organizationCity: req.body.organizationCity,
-			organizationCountry: req.body.organizationCountry
+			organizationCountry: req.body.organizationCountry,
+			dailyTripNotification: req.body.dailyTripNotification,
+			weeklyTripNotification: req.body.weeklyTripNotification
 		};
 
 		User.update({_id:req.headers.userId}, updateObj, (err, updateData)=>{
