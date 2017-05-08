@@ -14,7 +14,7 @@ module.exports = function(io) {
     dailyTripNotifyJob.start();
 
     const weeklyTripNotifyJob = new CronJob({
-        cronTime: '00 30 17 * * 1',
+        cronTime: '00 30 17 * * 0',
         onTick: function() {
             console.log('cron run at:' + new Date() + 'for weekly trip notification');
             tripCtrl.weeklyTripNotification()
