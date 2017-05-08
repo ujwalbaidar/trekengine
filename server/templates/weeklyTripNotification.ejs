@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Daily Trip Notification</title>
+</head>
+<body>
+	<div>
+		<p>Hi <%= trip['userName'][0] %>,</p>
+	</div>
+	<div>
+		You have Following Trip arriving/departuring this week:
+	</div>
+	<div>
+		<strong>Departures</strong>
+	</div>
+	<div>
+		<% if(trip.departures.length>0){ %>
+			<table>
+				<thead>
+					<tr>
+						<th>Booking Id</th>
+						<th>Group Name</th>
+						<th>Trip Name</th>
+						<th>Total Member</th>
+						<th>Departure Date</th>
+						<th>Arrival Date</th>
+					</tr>
+				</thead>
+				<% for(var i=0; i < trip.departures.length; i++) { %>
+   				<tr>
+     				<td><%= trip.departures[i].bookings.bookingId %></td>
+     				<td><%= trip.departures[i].bookings.groupName %></td>
+     				<td><%= trip.departures[i].bookings.tripName %></td>
+     				<td><%= trip.departures[i].bookings.travellerCount %></td>
+     				<td><%= (new Date(trip.departures[i].departureDate.epoc * 1000)).toLocaleDateString() %></td>
+     				<td><%= (new Date(trip.departures[i].arrivalDate.epoc * 1000)).toLocaleDateString() %></td>
+   				</tr>
+				<% } %>
+			</table>
+		<% }else{ %>
+			<span>No any departure records for this week</span>
+		<% } %>
+	</div>
+
+	<div>
+		<strong>Arrivals</strong>
+	</div>
+	<div>
+		<% if(trip.arrivals.length>0){ %>
+			<table>
+				<thead>
+					<tr>
+						<th>Booking Id</th>
+						<th>Group Name</th>
+						<th>Trip Name</th>
+						<th>Total Member</th>
+						<th>Departure Date</th>
+						<th>Arrival Date</th>
+					</tr>
+				</thead>
+				<% for(var i=0; i < trip.arrivals.length; i++) { %>
+   				<tr>
+     				<td><%= trip.arrivals[i].bookings.bookingId %></td>
+     				<td><%= trip.arrivals[i].bookings.groupName %></td>
+     				<td><%= trip.arrivals[i].bookings.tripName %></td>
+     				<td><%= trip.arrivals[i].bookings.travellerCount %></td>
+     				<td><%= (new Date(trip.arrivals[i].departureDate.epoc * 1000)).toLocaleDateString() %></td>
+     				<td><%= (new Date(trip.arrivals[i].arrivalDate.epoc * 1000)).toLocaleDateString() %></td>
+   				</tr>
+				<% } %>
+			</table>
+		<% }else{ %>
+			<span>No any arrival records for this week.</span>
+		<% } %>
+	</div>
+	
+	<div>
+		<strong>Kind Regards,</strong><br>
+		<strong>Trek Engine Team</strong>
+	</div>
+</body>
+</html>

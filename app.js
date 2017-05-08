@@ -14,6 +14,7 @@ require('./server/configs/mongoose')(config);
 require('./server/models');
 require('./server/routes')(app);
 require('./server/api/schedulers/packageExpire.scheduler')(io);
+require('./server/api/schedulers/tripnotificaiton.scheduler')(io);
 const reqSocket = require('./server/socket/socket')(io);
 reqSocket.connectSocketIo();
 
