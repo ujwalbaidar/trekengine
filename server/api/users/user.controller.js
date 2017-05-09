@@ -318,7 +318,7 @@ exports.addGuideToAdmin = function(req, res){
 							};
 							sendEmail(mailOptions)
 								.then(mailInfo=>{
-									res.status(200).send({success: true, data: mailInfo });
+									res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
 								})
 								.catch(mailErr=>{
 									res.status(400).json({success:false, data: mailErr});
@@ -333,7 +333,8 @@ exports.addGuideToAdmin = function(req, res){
 						lastName: req.body.lastName,
 						email: req.body.email,
 						role: 30,
-						admins: [req.headers.email]
+						admins: [req.headers.email],
+						status: true
 					};
 					createGuide(guideInfo, req.headers.userId, true)
 						.then(guideDetails=>{
@@ -357,7 +358,7 @@ exports.addGuideToAdmin = function(req, res){
 										};
 										sendEmail(mailOptions)
 											.then(mailInfo=>{
-												res.status(200).send({success: true, data: mailInfo });
+												res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'created'} });
 											})
 											.catch(mailErr=>{
 												res.status(400).json({success:false, data: mailErr});
