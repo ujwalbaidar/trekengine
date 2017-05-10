@@ -50,8 +50,24 @@ export class GuideDetailsComponent implements OnInit  {
 		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=='opt2'){
-    			this.getGuideLists();
+				this.openAddGuideSuccessModal(result.type)
     		}
+    	});
+	}
+
+	openAddGuideSuccessModal(notificationType:string){
+		let dialogOptions = {
+			height: '200px',
+  			width: '400px',
+  			position: 'center',
+  			disableClose: true
+		};
+		dialogOptions["data"] = {};
+		dialogOptions["data"]["notificationType"] = notificationType;
+
+		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+			this.getGuideLists();
     	});
 	}
 }
@@ -64,8 +80,15 @@ export class GuideDetailsDialogComponent {
 	user: User = <User>{};
 	submittedGuideForm: boolean = false;
 	disableButton: boolean = false;
+	isNotification: boolean = false;
+	notificationType: string;
 
-	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {}
+	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {
+		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.notificationType){
+				this.isNotification = true;
+				this.notificationType = this.dialogRef._containerInstance.dialogConfig.data.notificationType;
+		}
+	}
 
 	submitGuideDetails(guideForm:any){
 		this.submittedGuideForm = true;

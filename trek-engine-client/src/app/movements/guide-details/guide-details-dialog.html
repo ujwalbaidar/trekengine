@@ -1,64 +1,86 @@
-<form class="col s12" (ngSubmit)="submitGuideDetails(guideDetail.form)" #guideDetail="ngForm" novalidate>
-	<div md-dialog-content>
+<div *ngIf="isNotification == false; else showNotificationDiv;">
+	<form class="col s12" (ngSubmit)="submitGuideDetails(guideDetail.form)" #guideDetail="ngForm" novalidate>
+		<div md-dialog-content>
 
+			<div class="row">
+				<div class="col s6">
+					<h5>
+						{{ 'Add Guide' }}
+					</h5>
+				</div>
+				<div class="col s6 right-align">
+					<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col s6">
+					<label for="firstName">
+						<strong>
+							{{'First Name'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="firstName" type="text" class="validate" name="firstName" [(ngModel)]="user.firstName" #firstName="ngModel" required>
+					<div *ngIf="firstName?.errors?.required && submittedGuideForm">
+						This Field is Required!
+					</div>
+				</div>
+				<div class="col s6">
+					<label for="lastName">
+						<strong>
+							{{'Last Name'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="lastName" type="text" class="validate" name="lastName" [(ngModel)]="user.lastName" #lastName="ngModel" required>
+					<div *ngIf="lastName?.errors?.required && submittedGuideForm">
+						This Field is Required!
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col s12">
+					<label for="email">
+						<strong>
+							{{'Email'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+					<div *ngIf="email?.errors?.required && submittedGuideForm">
+						This Field is Required!
+					</div>
+					<div *ngIf="email?.errors?.pattern && submittedGuideForm">
+						Email is Invalid!
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div md-dialog-actions>
+			<button md-button [disabled]="disableButton" class="waves-effect #009688 teal btn full-width-btn">Submit</button>
+		</div>
+	</form>
+</div>
+<ng-template #showNotificationDiv>
+	<div md-dialog-content>
 		<div class="row">
 			<div class="col s6">
-				<h5>
-					{{ 'Add Guide' }}
-				</h5>
+				
 			</div>
 			<div class="col s6 right-align">
 				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
 			</div>
 		</div>
-
-		<div class="row">
-			<div class="col s6">
-				<label for="firstName">
-					<strong>
-						{{'First Name'}}
-					</strong>
-					<span class="required-label-mark">{{' *'}}</span>
-				</label>
-				<input id="firstName" type="text" class="validate" name="firstName" [(ngModel)]="user.firstName" #firstName="ngModel" required>
-				<div *ngIf="firstName?.errors?.required && submittedGuideForm">
-					This Field is Required!
-				</div>
-			</div>
-			<div class="col s6">
-				<label for="lastName">
-					<strong>
-						{{'Last Name'}}
-					</strong>
-					<span class="required-label-mark">{{' *'}}</span>
-				</label>
-				<input id="lastName" type="text" class="validate" name="lastName" [(ngModel)]="user.lastName" #lastName="ngModel" required>
-				<div *ngIf="lastName?.errors?.required && submittedGuideForm">
-					This Field is Required!
-				</div>
-			</div>
+		<div *ngIf="notificationType == 'created'; else displayNextDiv;">
+			<strong>The guide has been successfully created and login details are sent in submitted email address.</strong>
 		</div>
-
-		<div class="row">
-			<div class="col s12">
-				<label for="email">
-					<strong>
-						{{'Email'}}
-					</strong>
-					<span class="required-label-mark">{{' *'}}</span>
-				</label>
-				<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-				<div *ngIf="email?.errors?.required && submittedGuideForm">
-					This Field is Required!
-				</div>
-				<div *ngIf="email?.errors?.pattern && submittedGuideForm">
-					Email is Invalid!
-				</div>
+		<ng-template #displayNextDiv>
+			<div>
+				<strong>Request has been sent. You can assign guide as soon as notification is accepted.</strong>
 			</div>
-		</div>
-
+		</ng-template>
 	</div>
-	<div md-dialog-actions>
-		<button md-button [disabled]="disableButton" class="waves-effect #009688 teal btn full-width-btn">Submit</button>
-	</div>
-</form>
+</ng-template>
