@@ -1,7 +1,15 @@
 <div *ngIf="actionMode==='iframeAdd'">
-	<div class="modal-content">
-		<h4>Traverller Details Form</h4>
-		<a (click)="dialogRef.close('Option 1')">X</a>
+	<div class="row modal-head">
+		<div class="col s6">
+			<h5>
+				{{ 'Traverler Details Form' }}
+			</h5>
+		</div>
+		<div class="col s6 right-align">
+			<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+		</div>
+	</div>
+	<div class="row modal-body">
 		<iframe class="e2e-iframe-trusted-src" width="550" height="455" frameborder="0" [src]="travellerDetailUrl"></iframe>
 	</div>
 </div>
@@ -22,6 +30,14 @@
 		</div>
 		<div class="col s9">
 			{{traveler.nationality}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s3">
+			Date of Birth
+		</div>
+		<div class="col s9">
+			{{traveler.dob?.formatted}}
 		</div>
 	</div>
 	<div class="row">
@@ -69,7 +85,7 @@
 			Airport Pickup Date
 		</div>
 		<div class="col s9">
-			{{traveler.airportPickup?.date}}
+			{{traveler.airportPickup?.date?.formatted}}
 		</div>
 	</div>
 	<div class="row" *ngIf="traveler.airportPickup.confirmation">
@@ -112,164 +128,259 @@
 
 <div *ngIf="actionMode==='add' || actionMode==='edit'">
 	<form class="col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
-		<h4 md-dialog-title>{{ title }}</h4>
-			<div class="row">
+		<div class="row modal-head">
+			<div class="col s6">
+				<h5>
+					{{title}}
+				</h5>
+			</div>
+			<div class="col s6 right-align">
+				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+		<div class="row modal-body">
+			<div class="detail-subheader col s12">
 				<strong>Basic Informations</strong>
 			</div>
+
 			<div class="row">
-				<div class="input-field col s6">
-					<label for="first_name" class="active">*First Name</label>
+				<div class="col s6">
+					<label for="first_name" class="active">
+						<strong>
+							{{'First Name'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
 					<input id="first_name" type="text" name="firstName" class="validate" [(ngModel)]="traveler.firstName" #firstName="ngModel" required>
-					<div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)"
-					class="alert alert-danger">
-						<div [hidden]="!firstName.errors.required">
-							This Field is Required!
-						</div>
+					<div *ngIf="firstName?.errors?.required && submittedTravelerForm">
+						This Field is Required!
 					</div>
 				</div>
-				<div class="input-field col s6">
-					<label for="middleName" class="active">Middle Name</label>
+
+				<div class="col s6">
+					<label for="middleName" class="active">
+						<strong>
+							{{'Middle Name'}}
+						</strong>
+					</label>
 					<input id="middleName" type="text" name="middleName" class="validate" [(ngModel)]="traveler.middleName">
 				</div>
+
 			</div>
+
 			<div class="row">
-				<div class="input-field col s6">
-					<label for="lastName" class="active">*Last Name</label>
+				<div class="col s6">
+					<label for="lastName" class="active">
+						<strong>
+							{{'Last Name'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
 					<input id="lastName" type="text" name="lastName" class="validate" [(ngModel)]="traveler.lastName" #lastName="ngModel" required>
-					<div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)"
-					class="alert alert-danger">
-						<div [hidden]="!lastName.errors.required">
-							This Field is Required!
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="input-field col s6">
-					<label for="nationality" class="active">*Nationality</label>
-					<input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required>
-					<div *ngIf="nationality.errors && (nationality.dirty || nationality.touched)"
-					class="alert alert-danger">
-						<div [hidden]="!nationality.errors.required">
-							This Field is Required!
-						</div>
-					</div>
-				</div>
-				<div class="input-field col s6">
-					<label for="dob" class="active">Birth Date</label>
-					<input id="dob" type="date" name="dob" class="validate" [(ngModel)]="traveler.dob">
-				</div>
-			</div>
-			<div class="row">
-				<div class="input-field col s6">
-					<label for="permanentAddress" class="active">Permanent Address</label>
-					<input id="permanentAddress" type="text" name="permanentAddress" class="validate" [(ngModel)]="traveler.permanentAddress">
-				</div>
-				<div class="input-field col s6">
-					<label for="email" class="active">*Email</label>
-					<input id="email" type="text" class="validate" name="email" [(ngModel)]="traveler.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-					<div *ngIf="email.errors && (email.dirty || email.touched)"
-					class="alert alert-danger">
-						<div [hidden]="!email.errors.required">
-							This Field is Required!
-						</div>
-						<div [hidden]="!email.errors.pattern">
-							Email is Invalid!
-						</div>
+					<div *ngIf="lastName?.errors?.required && submittedTravelerForm">
+						This Field is Required!
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="input-field col s6">
-					<label for="telephone" class="active">Telephone</label>
+				<div class="col s6">
+
+					<label for="nationality" class="active">
+						<strong>
+							{{'Nationality'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required>
+					<div *ngIf="nationality?.errors?.required && submittedTravelerForm">
+						This Field is Required!
+					</div>
+				</div>
+
+				<div class="col s6">
+					<label for="dob" class="active">
+						<strong>
+							{{'Birth Date'}}
+						</strong>
+					</label>
+					<my-date-picker id="dob" class="validate" name="dob" [(ngModel)]="traveler.dob" #dob="ngModel" [options]="myDatePickerOptions"></my-date-picker>
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col s6">
+					<label for="permanentAddress" class="active">
+						<strong>
+							{{'Permanent Address'}}
+						</strong>
+					</label>
+					<input id="permanentAddress" type="text" name="permanentAddress" class="validate" [(ngModel)]="traveler.permanentAddress">
+				</div>
+
+				<div class="col s6">
+					<label for="email" class="active">
+						<strong>
+							{{'Email'}}
+						</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input 
+						id="email" 
+						type="text" 
+						class="validate" 
+						name="email" 
+						[(ngModel)]="traveler.email" #email="ngModel" 
+						required 
+						pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+					<div *ngIf="email?.errors?.required && submittedTravelerForm">
+							This Field is Required!
+					</div>
+					<div *ngIf="email?.errors?.pattern && submittedTravelerForm">
+						Email is Invalid!
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col s6">
+					<label for="telephone" class="active">
+						<strong>
+							{{'Telephone'}}
+						</strong>
+					</label>
 					<input id="telephone" type="text" name="telephone" class="validate" [(ngModel)]="traveler.telephone">
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="detail-subheader col s12">
 				<strong>Attachments</strong>
 			</div>
-			<div>
-				<label class="active">Profile Image</label>
+
+			<div class="row">
+				<label class="active">
+					<strong>
+						{{'Profile Image'}}
+					</strong>
+				</label>
 				<div class="file-field input-field">
 					<div class="btn">
 						<span>Browse</span>
 						<input type="file" name="profileAttachment" (change)="updateImage($event, 'profile')">
 					</div>
-					<div class="file-path-wrapper">
+					<div class="file-path-wrapper" *ngIf="traveler.attachments && traveler.attachments.profile">
 						<img class="profileAttachment" [src]="traveler.attachments?.profile" height="200" alt="Image preview...">
 					</div>
 				</div>
 				<a *ngIf="traveler.attachments?.profile" (click)="removeAttachment('profile')">X</a>
 			</div>
-			<div>
-				<label class="active">Passport Image</label>
+
+			<div class="row">
+				<label class="active">
+					<strong>
+						{{'Passport Image'}}
+					</strong>
+				</label>
 				<div class="file-field input-field">
 					<div class="btn">
 						<span>Browse</span>
 						<input type="file" name="passportAttachment" (change)="updateImage($event, 'passport')">
 					</div>
-					<div class="file-path-wrapper">
+					<div class="file-path-wrapper" *ngIf="traveler.attachments && traveler.attachments.passport">
 						<img class="passportAttachment" [src]="traveler.attachments?.passport" height="200" alt="Image preview...">
 					</div>
 				</div>
 				<a *ngIf="traveler.attachments?.passport" (click)="removeAttachment('passport')">X</a>
 			</div>
-			<div>
-				<label class="active">Insurance Image</label>
+
+			<div class="row">
+				<label class="active">
+					<strong>
+						{{'Insurance Image'}}
+					</strong>
+				</label>
 				<div class="file-field input-field">
 					<div class="btn">
 						<span>Browse</span>
 						<input type="file" name="insuranceAttachment" (change)="updateImage($event, 'insurance')">
 					</div>
-					<div class="file-path-wrapper">
+					<div class="file-path-wrapper" *ngIf="traveler.attachments && traveler.attachments.insurance">
 						<img class="insuranceAttachment" [src]="traveler.attachments?.insurance" height="200" alt="Image preview...">
 					</div>
 				</div>
 				<a *ngIf="traveler.attachments?.insurance" (click)="removeAttachment('insurance')">X</a>
 			</div>
-			<hr>
-			<div class="row">
+
+			<div class="detail-subheader col s12">
 				<strong>Emergency Contacts</strong>
 			</div>
-			<hr>
+
 			<div class="row">
-				<div class="input-field col s6">
-					<label for="emergencyContactName" class="active">Name</label>
+				<div class="col s6">
+					<label for="emergencyContactName" class="active">
+						<strong>
+							{{'Name'}}
+						</strong>
+					</label>
 					<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" [(ngModel)]="traveler.emergencyContact.name" #emergencyContactName="ngModel">
 				</div>
-				<div class="input-field col s6">
-					<label for="emergencyContactNumber" class="active">Phone</label>
+				<div class="col s6">
+					<label for="emergencyContactNumber" class="active">
+						<strong>
+							{{'Phone'}}
+						</strong>
+					</label>
 					<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" [(ngModel)]="traveler.emergencyContact.number">
 				</div>
 			</div>
+
 			<div class="row">
-				<div class="input-field col s6">
-					<label for="emergencyContactRelation" class="active">Relation</label>
+				<div class="col s6">
+					<label for="emergencyContactRelation" class="active">
+						<strong>
+							{{'Relation'}}
+						</strong>
+					</label>
 					<input id="emergencyContactRelation" type="text" name="emergencyContactRelation" class="validate" [(ngModel)]="traveler.emergencyContact.relation" #emergencyContactRelation="ngModel">
 				</div>
 			</div>
-			<hr>
+			
 			<div class="row">
 				<input type="checkbox" class="filled-in" id="pickupConfirmation" (click)=submitPickupConfirmation(traveler.airportPickup.confirmation) [checked]="traveler.airportPickup.confirmation"/>
-				<label for="pickupConfirmation">Do you want Airport Pickup?</label>
+				<label for="pickupConfirmation">
+					<strong>
+						{{'Do you want Airport Pickup?'}}
+					</strong>
+				</label>
 			</div>
-			<div *ngIf="traveler.airportPickup.confirmation">
-				<div class="row">
-					<div class="input-field col s6">
-						<label for="pickupDate" class="active">*Date</label>
-						<input id="pickupDate" type="date" name="pickupDate" class="validate" [(ngModel)]="traveler.airportPickup.date" #pickupDate="ngModel" required>
-						<div *ngIf="traveler.airportPickup.confirmation && pickupDate.errors && (pickupDate.dirty || pickupDate.touched)"
-					class="alert alert-danger">
-							<div [hidden]="!pickupDate.errors.required">
-								This Field is Required!
-							</div>
-						</div>
 
+			<div *ngIf="traveler.airportPickup.confirmation">
+
+				<div class="row">
+					<div class="col s6">
+						<label for="pickupDate" class="active">
+							<strong>
+								{{'Date'}}
+							</strong>
+							<span class="required-label-mark">{{' *'}}</span>
+						</label>
+						<my-date-picker id="pickupDate" class="validate" name="pickupDate" [(ngModel)]="traveler.airportPickup.date" #pickupDate="ngModel" [options]="myDatePickerOptions" required></my-date-picker>
+						<div *ngIf="traveler.airportPickup.confirmation && pickupDate?.errors?.required && submittedTravelerForm">
+							This Field is Required!
+						</div>
 					</div>
-					<div class="input-field col s6">
-						<label for="pickupTime" class="active">Pickup Time</label>
+
+					<div class="col s6">
+						<div>
+							<label for="pickupTime" class="active">
+								<strong>
+									{{'Pickup Time'}}
+								</strong>
+							</label>
+						</div>
 						<div class="col s4">
 							<select class="browser-default" [(ngModel)]="traveler.airportPickup.hrTime" name="travelerPickupTimeHr" #travelerPickupTimeHr="ngModel">
 								<option [value]="hr" *ngFor="let hr of hrs">
@@ -288,43 +399,64 @@
 							</select>
 						</div>
 					</div>
+
 				</div>
 			</div>
-			<hr>
+
 			<div class="row">
 				<input type="checkbox" (click)=submitHotelConfirmation(traveler.hotel.confirmation) class="filled-in" id="hotelConfirmation" [checked]="traveler.hotel.confirmation"/>
-				<label for="hotelConfirmation">Have you Booked the Hotel?</label>
+				<label for="hotelConfirmation">
+					<strong>
+						{{'Have you Booked the Hotel?'}}
+					</strong>
+				</label>
 			</div>
+
 			<div *ngIf="traveler.hotel.confirmation">
 				<div class="row">
-					<div class="input-field col s6">
-						<label for="hotelName" class="active">Hotel Name</label>
+					<div class="col s6">
+						<label for="hotelName" class="active">
+							<strong>
+								{{'Hotel Name'}}
+							</strong>
+						</label>
 						<input id="hotelName" type="text" name="hotelName" class="validate" [(ngModel)]="traveler.hotel.name" #hotelName="ngModel">
 					</div>
-					<div class="input-field col s6">
-						<label for="hotelAddress" class="active">Hotel Address</label>
+					<div class="col s6">
+						<label for="hotelAddress" class="active">
+							<strong>
+								{{'Hotel Address'}}
+							</strong>
+						</label>
 						<input id="hotelAddress" type="text" name="hotelAddress" class="validate" [(ngModel)]="traveler.hotel.address" #hotelAddress="ngModel">
 					</div>
 				</div>
 				<div class="row">
-					<div class="input-field col s6">
-						<label for="hotelTelephone" class="active">Hotel Telephone</label>
+					<div class="col s6">
+						<label for="hotelTelephone" class="active">
+							<strong>
+								{{'Hotel Telephone'}}
+							</strong>
+						</label>
 						<input id="hotelTelephone" type="text" name="hotelTelephone" class="validate" [(ngModel)]="traveler.hotel.telephone" #hotelTelephone="ngModel">
 					</div>
 				</div>
 			</div>
-			<hr>
 
 			<div class="row">
-				<div class="input-field col s12">
+				<div class="col s12">
+					<label for="messageBox" class="active">
+						<strong>
+							{{'Message Box'}}
+						</strong>
+					</label>
 					<input id="messageBox" type="text" name="messageBox" class="validate" [(ngModel)]="traveler.messageBox">
-					<label for="messageBox" class="active">Message Box</label>
 				</div>
 	        </div>
+		</div>
 
 		<div md-dialog-actions>
-			<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Cancel</button>
-			<button md-button class="waves-effect #009688 teal btn">Submit</button>
+			<button md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>
 		</div>
 	</form>
 </div>
