@@ -9,7 +9,7 @@ import { MovementsService } from '../../services/index';
   styleUrls: ['./movement-details.component.css']
 })
 export class MovementDetailsComponent implements OnInit {
-	filterOpt:string = 'weekly';
+	filterOpt:string = 'upcoming';
 	myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
@@ -19,6 +19,9 @@ export class MovementDetailsComponent implements OnInit {
     treks: any;
     public arrivalDate: Object;
     public departureDate: Object;
+    public totalTreksData: number; 
+    public totalFilterMovementPages: any;
+    public currentMovementPage:number = 0;
 
   	constructor(public movementService: MovementsService) {
   		
@@ -29,6 +32,7 @@ export class MovementDetailsComponent implements OnInit {
 	}
 
 	getFilterDate(){
+		this.currentMovementPage = 0;
 		switch (this.filterOpt) {
 			case 'weekly':
 				var startDate = moment().startOf('week').toDate();
@@ -111,19 +115,36 @@ export class MovementDetailsComponent implements OnInit {
 					epoc: Math.floor(endDate.getTime()/1000)
 				}
 				break;
-			case 'custom':
-				console.log('custom')
-				console.log(this.departureDate);
-				console.log(this.arrivalDate);
+			case 'upcoming':
+				var startDate = moment().startOf('date').toDate();
+				var endDate   = moment().startOf('date').toDate();
+				this.departureDate = {
+					date: {
+						year: startDate.getFullYear(),
+						month: startDate.getMonth()+1,
+						day: startDate.getDate()
+					},
+					epoc: Math.floor(startDate.getTime()/1000)
+				};
+				this.arrivalDate = {
+					date: {
+						year: endDate.getFullYear(),
+						month: endDate.getMonth()+1,
+						day: endDate.getDate()
+					},
+					epoc: Math.floor(endDate.getTime()/1000)
+				}
 				break;
 		}
 		this.filterTreks();
 	}
 	
 	filterTreks(){
-		this.movementService.filterTrek([{departureDate:JSON.stringify(this.departureDate)}, {arrivalDate:JSON.stringify(this.arrivalDate)}])
+		this.movementService.filterTrek([{departureDate:JSON.stringify(this.departureDate)}, {arrivalDate:JSON.stringify(this.arrivalDate)}, {filterType: this.filterOpt}, {queryPage: this.currentMovementPage}])
 			.subscribe(treks=>{
-				this.treks = treks;
+				this.totalTreksData = treks['totalData'];
+				this.totalFilterMovementPages = new Array(this.totalTreksData );
+				this.treks = treks['data'];
 			}, trekError=>{
 				console.log(trekError);
 			});
@@ -134,6 +155,11 @@ export class MovementDetailsComponent implements OnInit {
 			this.filterOpt = 'custom';
 			this.getFilterDate()
 		}
+  	}
+
+  	changePagination(index){
+  		this.currentMovementPage = index;
+  		this.filterTreks();
   	}
 
 }
