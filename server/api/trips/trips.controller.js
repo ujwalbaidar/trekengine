@@ -109,10 +109,13 @@ exports.filterTrip = function(req, res){
 	if(req.headers && req.headers.userId){
 		let departureDate = JSON.parse(req.query.departureDate).epoc;
 		let arrivalDate = JSON.parse(req.query.arrivalDate).epoc;
-		getFilterResultQuery(departureDate, arrivalDate)
+		let limit = 20;
+		let skip = (req.query.queryPage * limit);
+		getFilterResultQuery(departureDate, arrivalDate, req.query.filterType)
 			.then(result=>{
-				filterByDates(req.headers.userId, result)
+				filterByDates(req.headers.userId, result, skip, limit)
 				.then(trips=>{
+					trips.totalData = Math.ceil(trips.totalData/limit);
 					res.status(200).json({success:true, data:trips});
 				})
 				.catch(err=>{
@@ -124,9 +127,9 @@ exports.filterTrip = function(req, res){
 	}
 }
 
-function filterByDates(userId, Result){
+function filterByDates(userId, Result, skip, limit){
 	return new Promise((resolve, reject)=>{
-		Trips.aggregate([
+		var aggregateQuery = Trips.aggregate([
 			{ $match: { userId: userId } },
 			{
 				$project:{
@@ -148,28 +151,68 @@ function filterByDates(userId, Result){
 			},{
 				$match: {"bookings.0":{$exists:true}}
 			},{
-				$sort:{"departureDate.epoc":-1}
+                $unwind:"$bookings"
+			},{
+                $project:{
+                    bookingId:1,
+                    departureDate:1,
+                    arrivalDate:1,
+                    "bookings.groupName":1,
+                    "bookings.tripName": 1,
+                    "bookings.status": 1
+                }
+            },{
+				$sort:{"departureDate.epoc":1}
 			}
-   		])
-   		.exec((err, response)=>{
+   		]);
+   		aggregateQuery.exec((err, response)=>{
    			if(err){
    				reject(err);
    			}else{
-   				resolve(response);
+   				if (response.length>0) {
+   					countMovementsQuery(aggregateQuery, skip, limit).then(movementsData=>{
+   						resolve({totalData:response.length, data: movementsData});
+   					}).catch(movementsDataErr=>{
+   						reject(movementsDataErr);
+   					});
+   				}else{
+   					resolve({totalData:0, data: []})
+   				}
    			}
    		})
 	});
 }
 
-function getFilterResultQuery(departureDate, arrivalDate){
+function countMovementsQuery(cursor, skip, limit){
+	return new Promise((resolve,reject)=>{
+		cursor.skip(skip).limit(limit).exec((err, response)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(response);
+			}
+		});
+	});
+}
+
+function getFilterResultQuery(departureDate, arrivalDate, filterType){
 	return new Promise(resolve=>{
-		let result = {
-      		$or:[{
-      			$and: [ { $gte: [ "$departureDate.epoc", departureDate ] }, { $lte: [ "$departureDate.epoc", arrivalDate ] } ]
-        	},{
-            	$and: [ { $gte: [ "$arrivalDate.epoc", departureDate ] }, { $lt: [ "$arrivalDate.epoc", arrivalDate ] } ]
-        	}]
-  		};
+		if(filterType == 'upcoming'){
+			var result = {
+				$or: [ 
+					{ $gte: [ "$departureDate.epoc", departureDate ] },
+					{ $gte: [ "$arrivalDate.epoc", arrivalDate ] }
+				]
+			};
+		}else{
+			var result = {
+	      		$or:[{
+	      			$and: [ { $gte: [ "$departureDate.epoc", departureDate ] }, { $lte: [ "$departureDate.epoc", arrivalDate ] } ]
+	        	},{
+	            	$and: [ { $gte: [ "$arrivalDate.epoc", departureDate ] }, { $lt: [ "$arrivalDate.epoc", arrivalDate ] } ]
+	        	}]
+	  		};
+		}
   		resolve(result);
 	});
 }
