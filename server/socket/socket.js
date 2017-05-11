@@ -40,7 +40,9 @@ module.exports = function(io){
 									resolve({remainingDays: billingResponse.remainingDays, packageType: billingResponse.priorityLevel});
 									// resolve({remainingDays: billingResponse.remainingDays, packageType: billingResponse.packageType});
 								}else{
-									resolve({remainingDays: billingResponse.remainingDays, packageType: 1});
+									if(billingResponse.remainingDays !== undefined){
+										resolve({remainingDays: billingResponse.remainingDays, packageType: 1});
+									}
 									// resolve({remainingDays: 0, packageType: 'Basic'});
 								}
 							}
