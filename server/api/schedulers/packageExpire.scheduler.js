@@ -72,10 +72,10 @@ module.exports = function(io) {
     emailOnExpired.start();
 
     /**
-    * tick socket every 5 second and send billing data
+    * tick socket every minutes and send billing data
     **/
     const billingOnSocket = new CronJob({
-        cronTime: '*/5 * * * * *',
+        cronTime: '00 * * * * *',
         onTick: function() {
             // console.log('cron run at:' + new Date() + 'for billing socket');
             io.emit('transfer-cookie', 'tick');
