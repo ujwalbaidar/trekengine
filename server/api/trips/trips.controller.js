@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 const Trips = mongoose.model('Trips');
+const User = mongoose.model('User');
+const AppEmail = require('../../library/appEmail/appEmail');
+let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('../../../server/configs/config')[env];
+const fs = require('fs');
+const ejs = require('ejs');
+
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -8,9 +15,11 @@ exports.createTrips = function(req, res) {
 		req.body.createdDate = new Date();
 		req.body.updatedDate = new Date();
 		req.body.userId = req.headers.userId;
+		req.body.userEmail = req.headers.email;
 		let trips = new Trips(req.body);
 		trips.save((err, trip)=>{
 			if(err){
+				console.log(err)
 				res.status(400).json({success:false, data:err});
 			}else{
 				res.status(200).json({success:true, data:trip});
@@ -63,20 +72,18 @@ function getTripByQuery(query){
 
 exports.updateTrips = function(req, res){
 	if(req.headers && req.headers.userId){
-		console.log(req.body);
 		let updateData = {
-			name: req.body.name,
 			departureDate: req.body.departureDate,
 			arrivalDate: req.body.arrivalDate,
-			guideId: req.body.guideId,
 			status: req.body.status,
+			userEmail: req.headers.email,
 			updateDate: new Date()
 		};
 		Trips.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, tripUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{
-				res.status(200).json({success:true, data:tripUpdate});
+				res.status(200).json({success:true, data: tripUpdate});
 			}
 		});
 	}else{
@@ -102,10 +109,13 @@ exports.filterTrip = function(req, res){
 	if(req.headers && req.headers.userId){
 		let departureDate = JSON.parse(req.query.departureDate).epoc;
 		let arrivalDate = JSON.parse(req.query.arrivalDate).epoc;
-		getFilterResultQuery(departureDate, arrivalDate)
+		let limit = 20;
+		let skip = (req.query.queryPage * limit);
+		getFilterResultQuery(departureDate, arrivalDate, req.query.filterType)
 			.then(result=>{
-				filterByDates(req.headers.userId, result)
+				filterByDates(req.headers.userId, result, skip, limit)
 				.then(trips=>{
+					trips.totalData = Math.ceil(trips.totalData/limit);
 					res.status(200).json({success:true, data:trips});
 				})
 				.catch(err=>{
@@ -117,9 +127,9 @@ exports.filterTrip = function(req, res){
 	}
 }
 
-function filterByDates(userId, Result){
+function filterByDates(userId, Result, skip, limit){
 	return new Promise((resolve, reject)=>{
-		Trips.aggregate([
+		var aggregateQuery = Trips.aggregate([
 			{ $match: { userId: userId } },
 			{
 				$project:{
@@ -141,28 +151,273 @@ function filterByDates(userId, Result){
 			},{
 				$match: {"bookings.0":{$exists:true}}
 			},{
-				$sort:{"departureDate.epoc":-1}
+                $unwind:"$bookings"
+			},{
+                $project:{
+                    bookingId:1,
+                    departureDate:1,
+                    arrivalDate:1,
+                    "bookings.groupName":1,
+                    "bookings.tripName": 1,
+                    "bookings.status": 1
+                }
+            },{
+				$sort:{"departureDate.epoc":1}
 			}
-   		])
-   		.exec((err, response)=>{
+   		]);
+   		aggregateQuery.exec((err, response)=>{
    			if(err){
    				reject(err);
    			}else{
-   				resolve(response);
+   				if (response.length>0) {
+   					countMovementsQuery(aggregateQuery, skip, limit).then(movementsData=>{
+   						resolve({totalData:response.length, data: movementsData});
+   					}).catch(movementsDataErr=>{
+   						reject(movementsDataErr);
+   					});
+   				}else{
+   					resolve({totalData:0, data: []})
+   				}
    			}
    		})
 	});
 }
 
-function getFilterResultQuery(departureDate, arrivalDate){
+function countMovementsQuery(cursor, skip, limit){
+	return new Promise((resolve,reject)=>{
+		cursor.skip(skip).limit(limit).exec((err, response)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(response);
+			}
+		});
+	});
+}
+
+function getFilterResultQuery(departureDate, arrivalDate, filterType){
 	return new Promise(resolve=>{
-		let result = {
-      		$or:[{
-      			$and: [ { $gte: [ "$departureDate.epoc", departureDate ] }, { $lte: [ "$departureDate.epoc", arrivalDate ] } ]
-        	},{
-            	$and: [ { $gte: [ "$arrivalDate.epoc", departureDate ] }, { $lt: [ "$arrivalDate.epoc", arrivalDate ] } ]
-        	}]
-  		};
+		if(filterType == 'upcoming'){
+			var result = {
+				$or: [ 
+					{ $gte: [ "$departureDate.epoc", departureDate ] },
+					{ $gte: [ "$arrivalDate.epoc", arrivalDate ] }
+				]
+			};
+		}else{
+			var result = {
+	      		$or:[{
+	      			$and: [ { $gte: [ "$departureDate.epoc", departureDate ] }, { $lte: [ "$departureDate.epoc", arrivalDate ] } ]
+	        	},{
+	            	$and: [ { $gte: [ "$arrivalDate.epoc", departureDate ] }, { $lt: [ "$arrivalDate.epoc", arrivalDate ] } ]
+	        	}]
+	  		};
+		}
   		resolve(result);
 	});
+}
+
+exports.dailyTripNotification = function(){
+	var tomorrowDate = (new Date(new Date().getTime() + 24 * 60 * 60 * 1000).setHours(0,0,0,0))/1000;
+	Trips.aggregate([
+		{
+	        $match:{
+	            $or:[
+	                {"departureDate.epoc": { $eq: tomorrowDate } },
+	                { "arrivalDate.epoc": { $eq: tomorrowDate } } 
+	            ]
+	        }
+	    },{
+	    	$lookup:{
+		      	from: "users",
+				localField: "userEmail",
+				foreignField: "email",
+				as: "users"
+		    }
+	   	},{
+	       	$lookup:{
+				from: "bookings",
+				localField: "bookingId",
+				foreignField: "bookingId",
+				as: "bookings"
+	        }
+	   	},{ 
+			"$unwind": "$users" 
+	   	},{
+	       "$unwind": "$bookings"
+	   	},{
+	       	$match:{
+	           "status": true
+	       	}
+	   	},{
+	       $match:{
+	           "users.status": true,
+	           "users.dailyTripNotification": true
+	       }
+	   	},{
+	       "$project": {
+	       		"_id": 0,
+				"userEmail": 1,
+				"users.firstName": 1,
+				"departureDate.epoc": 1,
+				"arrivalDate.epoc": 1,
+				"bookings.bookingId": 1,
+				"bookings.groupName": 1,
+				"bookings.tripName": 1,
+				"bookings.travellerCount": 1
+	       }
+	   	},{
+	        $group:{
+	            _id:"$userEmail",
+	            userName: {$addToSet:"$users.firstName"},
+	            "departures": { 
+	            	$push: {
+	            		$cond: [{ $eq: [ "$departureDate.epoc", tomorrowDate ] }, "$$ROOT", null]
+	            	} 
+	            },
+	            "arrivals": { 
+	            	$push: {
+	            		$cond: [{ $eq: [ "$arrivalDate.epoc", tomorrowDate ] }, "$$ROOT", null]
+	            	}
+	            }
+	        }
+	    }
+	]).exec((err, tripData)=>{
+		if(err){
+			res.status(400).send(err)
+		}else{
+			if(tripData.length>0){
+				for (var trips of tripData) {
+					trips.departures = trips.departures.filter(function(i){ return i != null; });
+					trips.arrivals = trips.arrivals.filter(function(i){ return i != null; });
+					let mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: trips._id, 
+					    subject: `Tomorrow's Trip Details`
+					};
+				    let templateString = fs.readFileSync('server/templates/dailyTripNotification.ejs', 'utf-8');
+					mailOptions.html = ejs.render(templateString, { trip : trips });
+					config.appEmail.mailOptions = mailOptions;
+					let appEmail = new AppEmail(config.appEmail);
+					appEmail.sendEmail()
+						.then(emailInfo=>{
+							console.log(emailInfo);
+						})
+						.catch(emailError=>{
+							console.log(emailError);
+						});
+				}
+			}
+		}
+	})
+}
+
+exports.weeklyTripNotification = function(){
+	let curr = new Date();
+	let first = curr.getDate() - curr.getDay();
+	let last = first + 6;
+
+	let firstDayOfWeek = (new Date(curr.setDate(first))).setHours(0,0,0,0)/1000;
+	let lastDayOfWeek = (new Date(curr.setDate(last))).setHours(0,0,0,0)/1000;
+	Trips.aggregate([{
+	       	$match:{
+	           "status": true
+	       	}
+	   	},{
+			$project:{
+	            "bookingId": 1,
+	            "departureDate": 1,
+	            "arrivalDate": 1,
+	            "userEmail": 1,
+	            "result": {
+	            	$or: [{
+	            		$and: [{ $gte: [ "$departureDate.epoc", firstDayOfWeek ] },{ $lte: [ "$departureDate.epoc", lastDayOfWeek ] }]
+	            	},{
+	            		$and: [{ $gte: [ "$arrivalDate.epoc", firstDayOfWeek ] },{ $lte: [ "$arrivalDate.epoc", lastDayOfWeek ] }]
+	            	}]
+	            }
+	        }
+		},{
+			$match:{
+				result: true
+			}
+		},{
+	    	$lookup:{
+		      	from: "users",
+				localField: "userEmail",
+				foreignField: "email",
+				as: "users"
+		    }
+	   	},{
+	       	$lookup:{
+				from: "bookings",
+				localField: "bookingId",
+				foreignField: "bookingId",
+				as: "bookings"
+	        }
+	   	},{ 
+			"$unwind": "$users" 
+	   	},{
+	       "$unwind": "$bookings"
+	   	},{
+	       $match:{
+	           "users.status": true,
+	           "users.weeklyTripNotification": true
+	       }
+	   	},{
+	       "$project": {
+	       		"_id": 0,
+				"userEmail": 1,
+				"users.firstName": 1,
+				"departureDate.epoc": 1,
+				"arrivalDate.epoc": 1,
+				"bookings.bookingId": 1,
+				"bookings.groupName": 1,
+				"bookings.tripName": 1,
+				"bookings.travellerCount": 1
+	       }
+	   	},{
+	        $group:{
+	            _id:"$userEmail",
+	            userName: {$addToSet:"$users.firstName"},
+	            "departures": { 
+	            	$push: {
+	            		$cond: [{ $and: [{ $gte: [ "$departureDate.epoc", firstDayOfWeek ] },{ $lte: [ "$departureDate.epoc", lastDayOfWeek ] }] }, "$$ROOT", null]
+	            	} 
+	            },
+	            "arrivals": { 
+	            	$push: {
+	            		$cond: [{ $and: [{ $gte: [ "$arrivalDate.epoc", firstDayOfWeek ] },{ $lte: [ "$arrivalDate.epoc", lastDayOfWeek ] }] }, "$$ROOT", null]
+	            	}
+	            }
+	        }
+	    }
+	]).exec((err, tripData) =>{
+		if(err){
+			console.log(err);
+		}else{
+			if(tripData.length>0){
+				for (var trips of tripData) {
+					trips.departures = trips.departures.filter(function(i){ return i != null; });
+					trips.arrivals = trips.arrivals.filter(function(i){ return i != null; });
+					let mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: trips._id, 
+					    subject: `Week's Trip Details`
+					};
+				    let templateString = fs.readFileSync('server/templates/weeklyTripNotification.ejs', 'utf-8');
+					mailOptions.html = ejs.render(templateString, { trip : trips });
+					config.appEmail.mailOptions = mailOptions;
+					let appEmail = new AppEmail(config.appEmail);
+					appEmail.sendEmail()
+						.then(emailInfo=>{
+							console.log(emailInfo);
+						})
+						.catch(emailError=>{
+							console.log(emailError);
+						});
+				}
+			}
+		}
+	})
 }

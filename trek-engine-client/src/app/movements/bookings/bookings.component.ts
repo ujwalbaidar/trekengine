@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MovementsService, AuthService } from '../../services/index';
 import { Booking } from '../../models/models';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'bookings',
@@ -15,7 +16,7 @@ export class BookingsComponent implements OnInit  {
 	bookingErr: string;
 	isAvailable: boolean = false;
 
-	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService){
+	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
 		this.authService.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
@@ -59,6 +60,7 @@ export class BookingsComponent implements OnInit  {
 		}
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
+			this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
       		this.getBookingList();
     	});
 	}
@@ -72,8 +74,17 @@ export class BookingsDialogComponent implements OnInit {
 	booking: Booking = <Booking>{};
 	title: string = 'Add Booking Details';
 	submittedBookingForm: boolean = false;
+	tripInfosCtrl: FormControl;
+	filteredTripInfos: any;
+	tripInfos: any;
+	emptyTripName:boolean = false;
 
 	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
+		this.tripInfosCtrl = new FormControl();
+		this.filteredTripInfos = this.tripInfosCtrl.valueChanges
+	        .startWith(null)
+	        .map(name => this.filterTripInfos(name));
+
 		if(this.dialogRef._containerInstance.dialogConfig.data){
 			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
 				this.booking = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.bookings);
@@ -83,12 +94,37 @@ export class BookingsDialogComponent implements OnInit {
 	}
 
 	ngOnInit(){
+		this.getTripLists();
+	}
 
+	getTripLists(){
+		this.movementServie.getUserTrekInfos()
+			.subscribe(tripInfos=>{
+				this.tripInfos = tripInfos;
+			}, error=>{
+				this.dialogRef.close(error);
+			})
+	}
+
+	filterTripInfos(val: string) {
+		if(this.tripInfosCtrl.value !== undefined && this.tripInfosCtrl.value.length > 0){
+			this.emptyTripName = false;
+		}else{
+			this.emptyTripName = true;
+		}
+		return val ? this.tripInfos.filter(s => new RegExp(`^${val}`, 'gi').test(s.name)): this.tripInfos;
+	}
+
+	selectedTrip(tripInfo: object){
+		if(this.booking['tripCost'] == null || this.booking['tripCost'] == undefined){
+			this.booking['tripCost'] = tripInfo['cost'];
+		}
 	}
 
 	submitBookingDetails(bookingForm:any) {
 		this.submittedBookingForm = true;
-		if(bookingForm.valid){
+		if(bookingForm.valid && !this.emptyTripName){
+			this.booking.tripName = this.tripInfosCtrl.value;
 			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
 				this.updateBookingDetails();
 			}else{

@@ -1,4 +1,4 @@
-<form class="col s12" (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
+<form *ngIf="!hideLoginForm; else showForgotPasswordForm;" class="col s12" (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
 	
 	<div md-dialog-content>
 			<div class="row">
@@ -18,7 +18,7 @@
 						<span class="required-label-mark">{{' *'}}</span>
 					</label>
 					<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-					<div *ngIf="email?.errors?.required && submittedLoginForm">
+					<div *ngIf="email?.errors?.required && submittedEmailForm">
 						This Field is Required!
 					</div>
 					<div *ngIf="email?.errors?.pattern && submittedLoginForm">
@@ -45,8 +45,59 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div>
+					<a (click)="forgotPassword()">Forgot Password</a>
+				</div>
+			</div>
 	</div>
 	<div md-dialog-actions class="center-align login-submit-btn">
 		<button class="waves-effect waves-light btn #7cb342 light-blue darken-1">{{'Login'}}</button>
 	</div>
 </form>
+
+<ng-template #showForgotPasswordForm>
+	<form class="col s12" (ngSubmit)="submitEmail(emailForm.form)" #emailForm="ngForm" novalidate>
+		<div md-dialog-content>
+			<div class="row">
+				<div class="col s6">
+					<h5>
+						{{'Forgot Password'}}
+					</h5>
+				</div>
+				<div class="col s6 right-align">
+					<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+				</div>
+			</div>
+
+			<div class="row">
+				<span>Enter your Email Address below and we'll send the recovery link.</span>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<label for="userEmail" [ngClass]="{'active':(userEmail!=undefined)}">
+						<strong>{{'Email'}}</strong>
+						<span class="required-label-mark">{{' *'}}</span>
+					</label>
+					<input id="userEmail" type="text" class="validate" name="userEmail" [(ngModel)]="userEmail" #forgotEmail="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+					<div *ngIf="forgotEmail?.errors?.required && submittedEmailForm">
+						This Field is Required!
+					</div>
+					<div *ngIf="forgotEmail?.errors?.pattern && submittedEmailForm">
+						Email is Invalid!
+					</div>
+					<div *ngIf="wrongEmail==true">
+						This email does not exist. Please Register selection pacakage.
+					</div>
+					<div *ngIf="notActivated==true">
+						This email is not activated yet. 
+						<!-- <a>Get Link</a> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div md-dialog-actions class="center-align login-submit-btn">
+			<button [disabled]="disableSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1">{{'Send Email'}}</button>
+		</div>
+	</form>
+</ng-template>

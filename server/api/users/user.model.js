@@ -6,7 +6,10 @@ let UserSchema = new mongoose.Schema({
 	role: Number,
 	email: {type: String, unique: true, required: true, dropDups: true},
 	password: String,
-	domain: String,
+	domain: {
+		protocol: String,
+		website: String
+	},
 	loginAccess:[{
 		method: String,
 		accessToken: String,
@@ -17,7 +20,7 @@ let UserSchema = new mongoose.Schema({
 		packageId: String,
 		expireDate: String,
 	},
-	status: { type:Boolean, default: true },
+	status: { type:Boolean, default: false },
 	mobile: String,
 	telephone: String,
 	street: String,
@@ -31,6 +34,8 @@ let UserSchema = new mongoose.Schema({
 	organizationStreet: String,
 	organizationCity: String,
 	organizationCountry: String,
+	dailyTripNotification: { type: Boolean, default: true },
+	weeklyTripNotification: { type: Boolean, default: true },
 	createdDate: {
 		type: Date, 
 		default: new Date()

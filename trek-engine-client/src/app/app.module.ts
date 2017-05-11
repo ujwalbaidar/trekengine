@@ -2,9 +2,9 @@ import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import 'hammerjs';
-import { MaterialModule, OverlayContainer } from '@angular/material';
+import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AppRoutingModule } from './app-routing.module';
@@ -15,11 +15,12 @@ import {
   PackageBillingsService, 
   FeaturesService ,
   PackagesService,
-  AuthResolverService
+  AuthResolverService,
+  NotificationsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent, RegisterSuccessDialogComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PackageBillingsComponent } from './package-billings/package-billings.component';
@@ -47,8 +48,11 @@ import { BillingHistoryComponent, BillingDialogComponent } from './billing-histo
 import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ActivateTokenComponent } from './register/activate-token/activate-token.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
-// enableProdMode();
+enableProdMode();
 
 @NgModule({
   declarations: [
@@ -72,15 +76,21 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     BillingHistoryComponent, BillingDialogComponent,
     AppUsersComponent,
     ProfileComponent,
-    EqualValidatorDirective
+    EqualValidatorDirective,
+    NotificationsComponent,
+    RegisterSuccessDialogComponent,
+    ActivateTokenComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
     MaterialModule,
+    MdSelectModule,
     BrowserAnimationsModule,
     MyDatePickerModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
   providers: [
@@ -91,7 +101,8 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     PackageBillingsService,
     FeaturesService,
     PackagesService,
-    AuthResolverService
+    AuthResolverService,
+    NotificationsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
@@ -101,7 +112,8 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     FlightDetailsDialogComponent,
     TravellerDetailsDialogComponent,
     AppFeaturesDialogComponent,
-    BillingDialogComponent
+    BillingDialogComponent,
+    RegisterSuccessDialogComponent
   ]
 })
 export class AppModule { 

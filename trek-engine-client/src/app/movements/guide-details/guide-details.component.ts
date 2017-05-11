@@ -40,7 +40,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideModal(){
 		let dialogOptions = {
-			height: '400px',
+			height: '440px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -50,27 +50,58 @@ export class GuideDetailsComponent implements OnInit  {
 		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=='opt2'){
-    			this.getGuideLists();
-    			// console.log("http://localhost:5000/login?email="+result+"&&from="+this.approver);
+				this.openAddGuideSuccessModal(result.type)
     		}
     	});
 	}
-}
 
+	openAddGuideSuccessModal(notificationType:string){
+		let dialogOptions = {
+			height: '200px',
+  			width: '400px',
+  			position: 'center',
+  			disableClose: true
+		};
+		dialogOptions["data"] = {};
+		dialogOptions["data"]["notificationType"] = notificationType;
+
+		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+			this.getGuideLists();
+    	});
+	}
+}
+ 
 @Component({
 	selector: 'guide-details-dialog',
 	templateUrl: './guide-details-dialog.html',
 })
 export class GuideDetailsDialogComponent {
 	user: User = <User>{};
-	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {}
+	submittedGuideForm: boolean = false;
+	disableButton: boolean = false;
+	isNotification: boolean = false;
+	notificationType: string;
+
+	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {
+		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.notificationType){
+				this.isNotification = true;
+				this.notificationType = this.dialogRef._containerInstance.dialogConfig.data.notificationType;
+		}
+	}
 
 	submitGuideDetails(guideForm:any){
+		this.submittedGuideForm = true;
 		if(guideForm.valid){
+			this.disableButton = true;
 			this.userService.addGuideToAdmin(this.user)
 				.subscribe(successResponse=>{
+					this.submittedGuideForm = false;
+					this.disableButton = false;
 					this.dialogRef.close(successResponse);
 				}, error=>{
+					this.submittedGuideForm = false;
+					this.disableButton = false;
 					this.dialogRef.close(error);
 				});
 		}

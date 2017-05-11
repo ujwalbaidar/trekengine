@@ -5,7 +5,7 @@ let TravelerSchema = new mongoose.Schema({
 	middleName: String,
 	lastName: String,
 	nationality: String,
-	dob: String,
+	dob: Object,
 	permanentAddress: String,
 	telephone: String,
 	email: String,
@@ -21,7 +21,7 @@ let TravelerSchema = new mongoose.Schema({
 	},
 	airportPickup: {
 		confirmation: { type:Boolean, default: false },
-		date: String,
+		date: Object,
 		hrTime: String,
 		minTime: String
 	},

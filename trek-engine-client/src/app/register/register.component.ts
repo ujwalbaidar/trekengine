@@ -10,7 +10,7 @@ import { MdDialogRef } from '@angular/material';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-	user: User = <User>{};
+	user: User = <User>{domain:{website:'', protocol:''}};
 	errMessage: string;
 	successMessage: string;
 	public urlParams:any;
@@ -26,6 +26,11 @@ export class RegisterComponent implements OnInit {
 	packageErr: any;
 	disbleSubmitBtn: boolean = false;
 	duplicateEmailErr: string;
+	protocols = [
+		{ 'id': '1', 'name': 'http', 'value': 'http://'},
+		{ 'id': '2', 'name': 'https', 'value': 'https://'}
+	];
+	selectedProtocol: string;
 
 	constructor(
 		private userService: UserService, 
@@ -39,6 +44,7 @@ export class RegisterComponent implements OnInit {
 			if(this.dialogRef._containerInstance.dialogConfig.data.featurePackage){
 				this.featurePackage = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.featurePackage);
 				this.title = 'Register for '+this.featurePackage.name+' Package';
+				this.user['domain']['protocol'] = 'http://';
 			}else{
 
 			}
@@ -99,38 +105,13 @@ export class RegisterComponent implements OnInit {
   				this.packageErr = 'Failed to retrive package billings';
   			})
   	}
+}
 
-	/*registeredUserInfo(proceedType){
-		if(proceedType == 'proceed'){
-			this.registerUserInfo.billingInfo['freeUser']=false;
-			this.packageBillingsService.updateAppPackage(this.registerUserInfo.billingInfo)
-			.subscribe(updateResponse=>{
-				this.successMessage = 'Payment is successfully setup!';
-				setTimeout(()=>{ 
-					this.userService.loginUser({email:this.user.email, password:this.user.password})
-					.subscribe(loginUser=>{
-						this.authService.setCookies('authToken',loginUser['token']);
-						this.authService.setCookies('idx',loginUser['index']);
-						this.authService.setCookies('hostOrigin', window.location.origin);
-						this._route.navigate(['/app']);
-					}, error=>{
-						this.errMessage = 'Failed to login!';
-					});
-				}, 3000);
-			},updateError=>{
-				this.errMessage = 'Failed to proceed payment'
-			});
-		}else if(proceedType == 'login'){
-			this.userService.loginUser({email:this.user.email, password:this.user.password})
-				.subscribe(loginUser=>{
-					this.authService.setCookies('authToken',loginUser['token']);
-					this.authService.setCookies('idx',loginUser['index']);
-					this.authService.setCookies('hostOrigin', window.location.origin);
-					this._route.navigate(['/app']);
-				}, error=>{
-					this.errMessage = 'Failed to login!';
-				});
+@Component({
+	selector: 'register-success-dialog',
+	templateUrl: './register-success-dialog.component.html',
+})
 
-		}
-	}*/
+export class RegisterSuccessDialogComponent {
+	constructor(public dialogRef: MdDialogRef<RegisterSuccessDialogComponent>) {}
 }

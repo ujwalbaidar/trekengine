@@ -29,9 +29,11 @@ exports.createTravellers = function(req, res) {
 					.then(saveRes=>{
 						req.body.userId = validateResponse.data;
 						req.body.attachments = {};
-						req.body.dob=getIsoDateToString(req.body.dob);
+						if(req.body.dob){
+							req.body.dob=req.body.birthDate;
+						}
 						if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-							req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
+							req.body.airportPickup.date= req.body.airportPickupDate
 						}
 
 						if(req.body.profileAttachment && req.body.profileAttachment.name){
@@ -444,17 +446,6 @@ exports.addTraveler = function(req, res){
 			.then(saveRes=>{
 				req.body.userId = req.headers.userId;
 				req.body.attachments = {};
-				if(req.body.dob){
-					req.body.dob=getIsoDateToString(req.body.dob);
-				}else{
-					req.body.dob = '';
-				}
-
-				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-					req.body.airportPickup.date=getIsoDateToString(req.body.airportPickup.date);
-				}else{
-					req.body.airportPickup = {};
-				}
 
 				if(req.body.hotel && req.body.hotel.confirmation==false){
 					req.body.hotel = {};

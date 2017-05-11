@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { Trip } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { FormControl } from '@angular/forms';
+import 'rxjs/add/operator/startWith';
 import { MovementsService, UserService } from '../../services/index';
 
 @Component({
@@ -103,20 +105,8 @@ export class TripDetailsDialogComponent implements OnInit {
 	}
 	
 	ngOnInit(){
-		this.getGuideLists();
 	}
-
-
-	getGuideLists(){
-		this.userService.getGuides()
-		.subscribe(users=>{
-				this.guideUsers = users['guides'];
-				this.approver = users['approver'];
-			}, userError=>{
-				console.log(userError);
-			});
-	}
-
+	
 	submitTrekDetails(tripForm:any) {
 		this.submittedTripForm = true;
 		if(tripForm.valid){
@@ -149,4 +139,5 @@ export class TripDetailsDialogComponent implements OnInit {
 				this.dialogRef.close(error);
 			});
 	}
+
 }

@@ -38,6 +38,24 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
+								<strong>Trip Name</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.tripName}}</span>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="col s12 m3">
+								<strong>Trip Cost</strong>
+							</div>
+							<div class="col s12 m9">
+								<span>{{booking?.tripCost | currency:'USD':true}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s6">
+							<div class="col s12 m3">
 								<strong>Total Members</strong>
 							</div>
 							<div class="col s12 m9">
@@ -46,38 +64,28 @@
 						</div>
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Trip Cost</strong>
+								<strong>Total Cost</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.tripCost}}</span>
+								<span>{{booking?.totalCost | currency:'USD':true}}</span>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Total Cost</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.totalCost}}</span>
-							</div>
-						</div>
 						<div class="col s6">
 							<div class="col s12 m3">
 								<strong>Advance Paid</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.advancePaid}}</span>
+								<span>{{booking?.advancePaid | currency:'USD':true}}</span>
 							</div>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
 								<strong>Due Amount</strong>
 							</div>
 							<div class="col s12 m9">
-								<span>{{booking?.dueAmount}}</span>
+								<span>{{booking?.dueAmount | currency:'USD':true}}</span>
 							</div>
 						</div>
 					</div>
@@ -90,26 +98,16 @@
 			<div class="card">
 				<div class="card-content">
 					<span class="card-title">
-						<strong>Trip Details</strong>
+						<strong>Trip Departure and Arrival Dates</strong>
 					</span>
-					<div class="right" *ngIf="trip && trip.name">
+					<div class="right" *ngIf="trip">
 						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openAddTripModal(trip)">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
 				</div>
 				<div class="card-action">
-					<div *ngIf="trip && trip.name">
-						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Trip Name</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{trip?.name}}</span>
-								</div>
-							</div>
-						</div>
+					<div *ngIf="trip">
 						<div class="row">
 							<div class="col s6">
 								<div class="col s12 m3">
@@ -129,7 +127,7 @@
 							</div>
 						</div>
 					</div>
-					<div [hidden]="trip && trip.name" class="row">
+					<div [hidden]="trip" class="row">
 						<div class="col s6">
 							<p>Trip Details not added yet. Please add Trip Details!</p>
 						</div>
@@ -150,64 +148,69 @@
 					</span>
 				</div>
 				<div class="card-action">
-					<div class="row">
-						<div class="col s6 m8">
-							<select class="browser-default" [(ngModel)]="selectedGuide">
-								<option [value]="i" *ngFor="let guide of guides;let i=index;">
-									<span *ngIf="guide && guide.firstName && guide.lastName && guide.email">
-										{{guide.firstName+' '+guide.lastName+' ('+ guide.email+')'}}
-									</span>
-									<span *ngIf="!guide.firstName">Select Guide</span>
-								</option>
-							</select>
-						</div>
-						<div class="col s6 m4">
-							<a class="waves-effect waves-light btn" (click)="selectGuide()">Submit</a>
-						</div>
-					</div>
-					<div *ngIf="booking&&booking.selectedGuide">
+					<div *ngIf="guides && guides.length>0;else emptyGuideList;">
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Guide Name</strong>
+							<div class="col s6 m8">
+								<select class="browser-default" [(ngModel)]="selectedGuide">
+									<option [value]="i" *ngFor="let guide of guides;let i=index;">
+										<span *ngIf="guide && guide.firstName && guide.lastName && guide.email">
+											{{guide.firstName+' '+guide.lastName+' ('+ guide.email+')'}}
+										</span>
+										<span *ngIf="!guide.firstName">Select Guide</span>
+									</option>
+								</select>
+							</div>
+							<div class="col s6 m4">
+								<a class="waves-effect waves-light btn" (click)="selectGuide()">Submit</a>
+							</div>
+						</div>
+						<div *ngIf="booking&&booking.selectedGuide">
+							<div class="row">
+								<div class="col s6">
+									<div class="col s12 m3">
+										<strong>Guide Name</strong>
+									</div>
+									<div class="col s12 m9">
+										<span>{{bookingGuide?.firstName+' '+bookingGuide?.lastName}}</span>
+									</div>
 								</div>
-								<div class="col s12 m9">
-									<span>{{bookingGuide?.firstName+' '+bookingGuide?.lastName}}</span>
+								<div class="col s6">
+									<div class="col s12 m3">
+										<strong>Email</strong>
+									</div>
+									<div class="col s12 m9">
+										<span>{{bookingGuide?.email}}</span>
+									</div>
 								</div>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Email</strong>
+							<div class="row">
+								<div class="col s6">
+									<div class="col s12 m3">
+										<strong>Contact Number</strong>
+									</div>
+									<div class="col s12 m9">
+										<span>{{bookingGuide?.phone}}</span>
+									</div>
 								</div>
-								<div class="col s12 m9">
-									<span>{{bookingGuide?.email}}</span>
+								<div class="col s6">
+									<div class="col s12 m3">
+										<strong>Address</strong>
+									</div>
+									<div class="col s12 m9">
+										<span>{{bookingGuide?.address}}</span>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Contact Number</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{bookingGuide?.phone}}</span>
-								</div>
-							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Address</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{bookingGuide?.address}}</span>
-								</div>
+						<div [hidden]="booking&&booking.selectedGuide" class="row">
+							<div class="col s12">
+								<p>Please select guide from above selector!</p>
 							</div>
 						</div>
 					</div>
-					<div [hidden]="booking&&booking.selectedGuide" class="row">
-						<div class="col s12">
-							<p>Guide Details not added yet. Please add Guide Details!</p>
-						</div>
-					</div>
+					<ng-template #emptyGuideList>
+						There are no guide records to select. Please add guide records. <a [routerLink]="['/app/movements/guide-details']">Add</a>
+					</ng-template>
 				</div>
 			</div>
 		</div>
@@ -317,7 +320,7 @@
 			<div class="card">
 				<div class="card-content">
 					<span class="card-title">
-						<strong>Traveller Lists</strong>
+						<strong>Traveler Lists</strong>
 					</span>
 					<div class="right">
 						<a class="btn-floating waves-effect waves-light green" (click)="openTravelerModal({}, 'add')">

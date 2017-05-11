@@ -79,6 +79,13 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	title: string;
 	hrs: any;
 	mins: any;
+	submittedTravelerForm:Boolean = false;
+	public myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
+    };
 
 	constructor(public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, private sanitizer: DomSanitizer, public movementService: MovementsService, public auth: AuthService){
 		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
@@ -137,11 +144,14 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	submitTravelerDetails(travelerDetail:any){
+		this.submittedTravelerForm = true;
+
 		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		if(travelerDetail.valid){
 			if(dialogConfigData.records){
 				this.movementService.updateTravelerDetails(this.traveler)
 					.subscribe(updateResponse=>{
+						this.submittedTravelerForm = false;
 						this.dialogRef.close(this.traveler);
 					}, updateError=>{
 						this.dialogRef.close(updateError);
@@ -149,6 +159,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 			}else{
 				this.movementService.submitTravelerDetails(this.traveler)
 					.subscribe(updateResponse=>{
+						this.submittedTravelerForm = false;
 						this.dialogRef.close(this.traveler);
 					}, updateError=>{
 						this.dialogRef.close(updateError);

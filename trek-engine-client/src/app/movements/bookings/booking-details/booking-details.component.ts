@@ -52,7 +52,7 @@ export class BookingDetailsComponent implements OnInit  {
 		this.movementService.getBooking([{bookingId:this.bookingId}])
 			.subscribe(booking=>{
 				if(JSON.stringify(booking)=="{}"){
-					this._route.navigate(['/movements/bookings']);
+					this._route.navigate(['/app/bookings']);
 				}else{
 					this.booking = booking;
 					this.selectedTravelerArr = booking['travellers'];
@@ -217,7 +217,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 		let dialogRef = this.dialog.open(FlightDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-    		if(result!=="Option 1"){
+    		if(result!=="opt-cancel"){
       			this.flight = result;
     		}
     	});

@@ -3,6 +3,7 @@ import { User } from '../models/models';
 import { AuthService, UserService } from '../services/index';
 import { Router } from '@angular/router';
 import { MdDialogRef } from '@angular/material';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'login',
@@ -13,7 +14,14 @@ export class LoginComponent implements OnInit {
 	user: User = <User>{};
 	errObj: any;
 	submittedLoginForm: boolean = false;
-	constructor(public dialogRef: MdDialogRef<LoginComponent>, private userService: UserService, private authService: AuthService, private _route: Router){}
+	hideLoginForm: boolean = false;
+	submittedEmailForm: boolean = false;
+	userEmail:string;
+	wrongEmail:boolean;
+	notActivated:boolean;
+	disableSubmitBtn: boolean;
+
+	constructor(public dialogRef: MdDialogRef<LoginComponent>, private userService: UserService, private authService: AuthService, private _route: Router, public snackBar: MdSnackBar){}
 	ngOnInit(){}
 	loginUser(form:any){
 		this.submittedLoginForm = true;
@@ -44,6 +52,34 @@ export class LoginComponent implements OnInit {
 							this.dialogRef.close();
 						}
 					});
+		}
+	}
+
+	forgotPassword(){
+		this.hideLoginForm = true;
+	}
+
+	submitEmail(form:any){
+		this.submittedEmailForm = true;
+		if(form.valid == true){
+			this.disableSubmitBtn = true;
+			this.userService.submitForgotPasswordEmail(this.userEmail)
+				.subscribe(userResponse=>{
+					let response = JSON.parse(JSON.stringify(userResponse));
+					if (response == 'wrong-email') {
+						this.wrongEmail = true;
+					}else if(response == 'inactive-account'){
+						this.notActivated = true;
+					}else{
+						this.dialogRef.close();
+						this.snackBar.open('Email for reset password has been sent.', '', {
+      						duration: 5000,
+    					});
+					}
+					this.disableSubmitBtn = false;
+				}, error=>{
+					this.dialogRef.close();
+				});
 		}
 	}
 }

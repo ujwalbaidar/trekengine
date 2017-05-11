@@ -6,6 +6,10 @@ export class User {
   	email: string;
   	password: string;
   	role: number;
+  	domain = {} as {
+  		protocol: string;
+  		website: string;
+  	}
 }
 
 export class Trip {
@@ -17,7 +21,7 @@ export class Trip {
 
 export class Booking {
 	groupName: string;
-	trip: string;
+	tripName: string;
 	travellerCount: number;
 	totalCost: number;
 	tripCost: number;

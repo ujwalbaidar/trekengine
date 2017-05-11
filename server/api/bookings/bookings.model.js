@@ -8,7 +8,7 @@ let BookingSchema = new mongoose.Schema({
     	unique: true
 	},
 	groupName: String,
-	tripId: String,
+	tripName: String,
 	travellerCount: { type: Number, default:0 },
 	totalCost: { type:Number, default:0 },
 	tripCost: { type:Number, default:0 },
@@ -16,7 +16,6 @@ let BookingSchema = new mongoose.Schema({
 	dueAmount: { type:Number, default:0 },
 	status: { type: Boolean, default: true },
 	travellers: [],
-	selectedGuide: String,
 	createdDate: {
 		type: Date, 
 		default: new Date()

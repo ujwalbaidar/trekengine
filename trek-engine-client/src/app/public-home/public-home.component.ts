@@ -19,7 +19,7 @@ export class PublicHomeComponent implements OnInit {
 
 	openLoginModal(){
 		let dialogOptions = {
-			height: '410px',
+			height: '460px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -32,20 +32,4 @@ export class PublicHomeComponent implements OnInit {
 			}
     	});
 	}
-
-	/*openRegisterModal(){
-		let dialogOptions = {
-			height: '550px',
-  			width: '600px',
-  			position: 'center',
-  			disableClose: true
-		};
-
-		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
-		dialogRef.afterClosed().subscribe(result => {
-			if(result && result!=='opt-cancel'){
-				this._route.navigate(['/app']);
-			}
-    	});
-	}*/
 }

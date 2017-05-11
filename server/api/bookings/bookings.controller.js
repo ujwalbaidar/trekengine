@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Bookings = mongoose.model('Bookings');
 const Travelers = mongoose.model('Travelers');
+const TripInfos = mongoose.model('TripInfos');
 
 exports.getAllBooking = function(req,res){
 	if(req.headers && req.headers.userId){
@@ -32,17 +33,31 @@ exports.getBooking = function(req, res){
 
 exports.createBooking = function(req,res){
 	if(req.headers && req.headers.userId && req.headers.remainingDays>=1){
-		req.body.userId = req.headers.userId;
-		req.body.tripId = req.body.trip;
-		req.body.totalCost = req.body.travellerCount*req.body.tripCost;
-		req.body.dueAmount = (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid;
-		let bookings = new Bookings(req.body);
-		bookings.save((err, bookings)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:bookings});
-			}
+		let tripName = req.body.tripName.replace(/\w\S*/g, txt=>{
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
+		updateTripInfos({
+			userId: req.headers.userId,
+			name: tripName
+		},{
+			cost: req.body.tripCost
+		})
+		.then(updateTrekInf=>{
+			req.body.userId = req.headers.userId;
+			req.body.totalCost = req.body.travellerCount*req.body.tripCost;
+			req.body.dueAmount = (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid;
+			req.body.tripName = tripName;
+			let bookings = new Bookings(req.body);
+			bookings.save((err, bookings)=>{
+				if(err){
+					res.status(400).json({success:false, data:err});
+				}else{
+					res.status(200).json({success:true, data: bookings});
+				}
+			});
+		})
+		.catch(updateErr=>{
+			res.status(401).json({success:false, message: 'Failed to Create Trip Informations.'});
 		});
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
@@ -51,24 +66,36 @@ exports.createBooking = function(req,res){
 
 exports.updateBooking = function(req,res){
 	if(req.headers && req.headers.userId){
+		let tripName = req.body.tripName.replace(/\w\S*/g, txt=>{
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
 		let updateData = {
 			groupName: req.body.groupName,
-			tripId: req.body.trip,
 			travellerCount: req.body.travellerCount,
 			totalCost: req.body.travellerCount*req.body.tripCost,
 			tripCost: req.body.tripCost,
 			advancePaid: req.body.advancePaid,
 			dueAmount: (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid,
+			tripName: tripName,
 			updateDate: new Date()
 		};
-		if(req.body.selectedGuide){
-			updateData.selectedGuide = req.body.selectedGuide;
-		}
 		Bookings.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, bookingUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{
-				res.status(200).json({success:true, data:bookingUpdate});
+				updateTripInfos({
+					userId: req.headers.userId,
+					name: tripName
+				},{
+					cost: req.body.tripCost,
+			 		updateDate: new Date()
+			 	})
+				.then(updateTrekInf=>{
+					res.status(200).json({success:true, data:bookingUpdate});
+				})
+				.catch(updateErr=>{
+					res.status(401).json({success:false, message: 'Failed to create Trip Informations.'});
+				});
 			}
 		});
 	}else{
@@ -145,4 +172,16 @@ exports.removeTraveler = function(req, res){
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function updateTripInfos(query, updateObj){
+	return new Promise((resolve, reject)=>{
+		TripInfos.update(query, updateObj, {upsert: true}, (err, updateResp)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(updateResp);
+			}
+		});
+	});
 }

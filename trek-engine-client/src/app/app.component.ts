@@ -129,6 +129,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		}else{
 			if(this.location.path() ==='/login' || this.location.path() ==='/register' || this.location.path() === '/home'){
 				this._route.navigate([this.location.path()]);
+			}else if(this.location.path().includes('/authorization/token/') || this.location.path().includes('/forgot-password/token')){
+				this._route.navigate([this.location.path()]);
 			}else{
 				this._route.navigate(['/home']);
 			}
