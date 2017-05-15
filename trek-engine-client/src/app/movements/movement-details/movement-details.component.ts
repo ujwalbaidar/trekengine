@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IMyOptions, IMyDateModel} from 'mydatepicker';
 import * as moment from 'moment';
 import { MovementsService } from '../../services/index';
+import { CookieService } from 'angular2-cookie/core';
 
 @Component({
   selector: 'movement-details',
@@ -22,9 +23,10 @@ export class MovementDetailsComponent implements OnInit {
     public totalTreksData: number; 
     public totalFilterMovementPages: any;
     public currentMovementPage:number = 0;
+    auths: any;
 
-  	constructor(public movementService: MovementsService) {
-  		
+  	constructor(public movementService: MovementsService, public _cookieService: CookieService) {
+  		this.auths = this._cookieService.getAll();
   	}
 
 	ngOnInit() {

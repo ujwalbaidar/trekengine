@@ -1,7 +1,7 @@
 <ul id="navDropdown" class="dropdown-content">
 		<li [routerLink]="['profile']"><a>Profile</a></li>
 		<li [routerLink]="['notifications']"><a>Notifications</a></li>
-		<li routerLink="/app/package-billings"><a>Package Billings</a></li>
+		<li routerLink="/app/package-billings" *ngIf="cookieData.idx==20"><a>Package Billings</a></li>
 		<li routerLink="/app/billing-history" *ngIf="cookieData.idx==20"><a>Billings History</a></li>
 		<li class="divider"></li>
 		<li (click)="logout()"><a>Logout</a></li>
@@ -25,16 +25,16 @@
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app/app-packages">Packages</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx==20">
 				<a routerLink="/app/bookings">Bookings</a>
 			</li>
 			<li>
 				<a routerLink="/app/movements">Movements</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx==20">
 				<a>Accounts</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx==20">
 				<a>Analytics</a>
 			</li>
 			<li (click)="dropDownNav()">
