@@ -44,6 +44,7 @@ exports.createBooking = function(req,res){
 		})
 		.then(updateTrekInf=>{
 			req.body.userId = req.headers.userId;
+			req.body.userEmail = req.headers.email;
 			req.body.totalCost = req.body.travellerCount*req.body.tripCost;
 			req.body.dueAmount = (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid;
 			req.body.tripName = tripName;
@@ -70,6 +71,7 @@ exports.updateBooking = function(req,res){
 			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 		});
 		let updateData = {
+			userEmail: req.headers.email,
 			groupName: req.body.groupName,
 			travellerCount: req.body.travellerCount,
 			totalCost: req.body.travellerCount*req.body.tripCost,
@@ -77,6 +79,7 @@ exports.updateBooking = function(req,res){
 			advancePaid: req.body.advancePaid,
 			dueAmount: (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid,
 			tripName: tripName,
+			selectedGuide: req.body.selectedGuide,
 			updateDate: new Date()
 		};
 		Bookings.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, bookingUpdate)=>{

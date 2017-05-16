@@ -23,4 +23,26 @@ module.exports = function(io) {
         timeZone: 'Asia/Kathmandu'
     });
     weeklyTripNotifyJob.start();
+
+    const guideDailyTripNotifyJob = new CronJob({
+        cronTime: '00 00 18 * * *',
+        onTick: function() {
+            console.log('cron run at:' + new Date() + 'for daily trip notification');
+            tripCtrl.guideDailyTripNotification()
+        },
+        start: false,
+        timeZone: 'Asia/Kathmandu'
+    });
+    guideDailyTripNotifyJob.start();
+
+    const guideWeeklyTripNotifyJob = new CronJob({
+        cronTime: '00 30 18 * * 0',
+        onTick: function() {
+            console.log('cron run at:' + new Date() + 'for weekly trip notification');
+            tripCtrl.guideWeeklyTripNotification();
+        },
+        start: false,
+        timeZone: 'Asia/Kathmandu'
+    });
+    guideWeeklyTripNotifyJob.start();
 }
