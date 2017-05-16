@@ -83,7 +83,7 @@ function updateGuideAcceptance(notificationInfo){
 				}else{
 					User.update(
 						{ email: guideEmail },
-						{ $addToSet: { guides: adminEmail }},
+						{ $addToSet: { admins: adminEmail }},
 						(errUpdateGuide, updateGuide)=>{
 							if(errUpdateGuide){
 								reject(errUpdateGuide);

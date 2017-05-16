@@ -1,12 +1,12 @@
-<div class="row">
-	<div class="col m1">
+<div class="row" >
+	<div class="col m1" *ngIf="sideMenuArr && sideMenuArr.length>0">
 		<ul>
 			<li *ngFor="let sideMenu of sideMenuArr">
 				<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
 			</li>
 		</ul>
 	</div>
-	<div class="col m11">
+	<div class="col m11" [ngClass]="[sideMenuArr && sideMenuArr.length>0 ? 'col m11' : 'col m12']">
 		<router-outlet></router-outlet>
 	</div>
 </div>

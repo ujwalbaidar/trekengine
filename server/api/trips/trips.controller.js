@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Trips = mongoose.model('Trips');
+const Bookings = mongoose.model('Bookings');
 const User = mongoose.model('User');
 const AppEmail = require('../../library/appEmail/appEmail');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -113,10 +114,17 @@ exports.filterTrip = function(req, res){
 		let skip = (req.query.queryPage * limit);
 		getFilterResultQuery(departureDate, arrivalDate, req.query.filterType)
 			.then(result=>{
-				filterByDates(req.headers.userId, result, skip, limit)
+				filterByDates(req.headers.email, req.headers.role, req.query.selectorQuery, result, skip, limit)
 				.then(trips=>{
-					trips.totalData = Math.ceil(trips.totalData/limit);
-					res.status(200).json({success:true, data:trips});
+					getUserArr(req.headers)
+						.then(selectorArr=>{
+							trips.totalData = Math.ceil(trips.totalData/limit);
+							trips.selectorArr = selectorArr;
+							res.status(200).json({success:true, data:trips});
+						})
+						.catch(userErr=>{
+							res.status(400).json({success:false, data:userErr});
+						});
 				})
 				.catch(err=>{
 					res.status(400).json({success:false, data:err});
@@ -127,9 +135,92 @@ exports.filterTrip = function(req, res){
 	}
 }
 
-function filterByDates(userId, Result, skip, limit){
+function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 	return new Promise((resolve, reject)=>{
-		var aggregateQuery = Trips.aggregate([
+		if(userRole == 30){
+			if(selectorQuery && selectorQuery.length>0){
+				var matchQuery = {
+			        $match:{
+			            $and:[{"selectedGuide" : userEmail},{"userEmail" : selectorQuery},{"status":true}]
+			        }
+			    };
+			}else{
+				var matchQuery = {
+			        $match:{
+			            $and:[{"selectedGuide" : userEmail},{"status":true}]
+			        }
+			    };
+			}
+		}
+
+		if(userRole == 20){
+			var matchQuery = {
+		        $match:{
+		            $and:[{"userEmail" : userEmail},{"status":true}]
+		        }
+		    };
+		}
+		var dbQuery = [
+	    	matchQuery,
+	    	{
+		        $lookup:{
+		            from: "trips",
+		            localField: "bookingId",
+		            foreignField: "bookingId",
+		            as: "trip"
+		        }
+		    },{
+		        $unwind:"$trip"
+		    },{
+		        $project:{
+		            _id:0,
+		            groupName:1,
+		            tripName:1,
+		            userEmail:1,
+		            userEmail:1,
+		            bookingId: 1,
+		            status:1,
+		            selectedGuide:1,
+		            "trip.departureDate":1,
+		            "trip.arrivalDate":1,
+		            "result": Result
+		        }
+		    },{
+		        $match: {"result": true}
+		    },{
+		        $project:{
+		            groupName:1,
+		            tripName:1,
+		            userEmail:1,
+		            userEmail:1,
+		            bookingId: 1,
+		            status:1,
+		            selectedGuide: 1,
+		            "trip.departureDate":1,
+		            "trip.arrivalDate":1
+		        }
+		    },{
+		        $sort:{"trip.departureDate.epoc":1}
+		    }
+		];
+		var aggregateQuery = Bookings.aggregate(dbQuery);
+		aggregateQuery.exec((err, response)=>{
+			if(err){
+				reject(err);
+			}else{
+				if (response.length>0) {
+					countMovementsQuery(aggregateQuery, skip, limit).then(movementsData=>{
+						resolve({totalData:response.length, data: movementsData});
+					}).catch(movementsDataErr=>{
+						reject(movementsDataErr);
+					});
+				}else{
+					resolve({totalData:0, data: []})
+				}
+			}
+		});
+	/*return new Promise((resolve, reject)=>{
+		let dbQuery = [
 			{ $match: { userId: userId } },
 			{
 				$project:{
@@ -164,7 +255,8 @@ function filterByDates(userId, Result, skip, limit){
             },{
 				$sort:{"departureDate.epoc":1}
 			}
-   		]);
+   		];
+		var aggregateQuery = Trips.aggregate(dbQuery);
    		aggregateQuery.exec((err, response)=>{
    			if(err){
    				reject(err);
@@ -179,7 +271,7 @@ function filterByDates(userId, Result, skip, limit){
    					resolve({totalData:0, data: []})
    				}
    			}
-   		})
+   		})*/
 	});
 }
 
@@ -195,21 +287,44 @@ function countMovementsQuery(cursor, skip, limit){
 	});
 }
 
+function getUserArr(headers){
+	if(headers.role === 20){
+		var project = { _id:0, guides:1 }
+	}else if(headers.role === 30){
+		var project = { _id:0, admins: 1 }
+	}else{
+		var project = { _id:0}
+	}
+	return new Promise((resolve, reject)=>{
+		User.find({email:headers.email}, project, (err, user)=>{
+			if(err){
+				reject(err);
+			}else{
+				if(headers.role === 30){
+					resolve(user[0]['admins']);
+				}else{
+					resolve(user[0]['guides']);
+				}
+			}
+		})
+	});
+}
+
 function getFilterResultQuery(departureDate, arrivalDate, filterType){
 	return new Promise(resolve=>{
 		if(filterType == 'upcoming'){
 			var result = {
 				$or: [ 
-					{ $gte: [ "$departureDate.epoc", departureDate ] },
-					{ $gte: [ "$arrivalDate.epoc", arrivalDate ] }
+					{ $gte: [ "$trip.departureDate.epoc", departureDate ] },
+					{ $gte: [ "$trip.arrivalDate.epoc", arrivalDate ] }
 				]
 			};
 		}else{
 			var result = {
 	      		$or:[{
-	      			$and: [ { $gte: [ "$departureDate.epoc", departureDate ] }, { $lte: [ "$departureDate.epoc", arrivalDate ] } ]
+	      			$and: [ { $gte: [ "$trip.departureDate.epoc", departureDate ] }, { $lte: [ "$trip.departureDate.epoc", arrivalDate ] } ]
 	        	},{
-	            	$and: [ { $gte: [ "$arrivalDate.epoc", departureDate ] }, { $lt: [ "$arrivalDate.epoc", arrivalDate ] } ]
+	            	$and: [ { $gte: [ "$trip.arrivalDate.epoc", departureDate ] }, { $lt: [ "$trip.arrivalDate.epoc", arrivalDate ] } ]
 	        	}]
 	  		};
 		}

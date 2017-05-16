@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IMyOptions, IMyDateModel} from 'mydatepicker';
 import * as moment from 'moment';
 import { MovementsService } from '../../services/index';
+import { CookieService } from 'angular2-cookie/core';
 
 @Component({
   selector: 'movement-details',
@@ -22,9 +23,12 @@ export class MovementDetailsComponent implements OnInit {
     public totalTreksData: number; 
     public totalFilterMovementPages: any;
     public currentMovementPage:number = 0;
+    auths: any;
+    public selectorArr: any;
+    public selectedArrOpt: string = '';
 
-  	constructor(public movementService: MovementsService) {
-  		
+  	constructor(public movementService: MovementsService, public _cookieService: CookieService) {
+  		this.auths = this._cookieService.getAll();
   	}
 
 	ngOnInit() {
@@ -140,11 +144,19 @@ export class MovementDetailsComponent implements OnInit {
 	}
 	
 	filterTreks(){
-		this.movementService.filterTrek([{departureDate:JSON.stringify(this.departureDate)}, {arrivalDate:JSON.stringify(this.arrivalDate)}, {filterType: this.filterOpt}, {queryPage: this.currentMovementPage}])
+		this.movementService.filterTrek([
+				{departureDate:JSON.stringify(this.departureDate)}, 
+				{arrivalDate:JSON.stringify(this.arrivalDate)}, 
+				{filterType: this.filterOpt}, 
+				{queryPage: this.currentMovementPage},
+				{selectorQuery: this.selectedArrOpt}
+			])
 			.subscribe(treks=>{
 				this.totalTreksData = treks['totalData'];
 				this.totalFilterMovementPages = new Array(this.totalTreksData );
 				this.treks = treks['data'];
+				this.selectorArr = treks['selectorArr'];
+				this.selectorArr.unshift('Select Your Option');
 			}, trekError=>{
 				console.log(trekError);
 			});
@@ -159,6 +171,15 @@ export class MovementDetailsComponent implements OnInit {
 
   	changePagination(index){
   		this.currentMovementPage = index;
+  		this.filterTreks();
+  	}
+
+  	filterBySelection(selectedVal){
+  		if(selectedVal === 'Select Your Option'){
+  			this.selectedArrOpt = '';
+  		}else{
+  			this.selectedArrOpt = selectedVal;
+  		}
   		this.filterTreks();
   	}
 

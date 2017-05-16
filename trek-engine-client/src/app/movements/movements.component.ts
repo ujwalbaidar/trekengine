@@ -7,25 +7,33 @@ import { Router } from '@angular/router';
   templateUrl: './movements.component.html',
   styleUrls: ['./movements.component.css']
 })
-export class MovementsComponent {
-	public sideMenuArr:any = [
-		{
-			menu: 'Movement Details',
-			routePath: '/app/movements'
-		},{
-			menu: 'Guide Details',
-			routePath: '/app/movements/guide-details'
-		},{
-			menu: 'Trip Details',
-			routePath: '/app/movements/trip-details'
-		},{
-			menu: 'Traveler Details',
-			routePath: '/app/movements/traveller-details'
-		},{
-			menu: 'Flight Details',
-			routePath: '/app/movements/flight-details'
-		}
-	];
+export class MovementsComponent implements OnInit {
+	public sideMenuArr:any;
 	constructor(private authService: AuthService, private _route: Router){
+	}
+
+	ngOnInit(){
+		this.authService.getCookies().then(cookiesData=>{
+			if(parseInt(cookiesData['idx']) === 20){
+				this.sideMenuArr = [
+					{
+						menu: 'Movement Details',
+						routePath: '/app/movements'
+					},{
+						menu: 'Guide Details',
+						routePath: '/app/movements/guide-details'
+					},{
+						menu: 'Trip Details',
+						routePath: '/app/movements/trip-details'
+					},{
+						menu: 'Traveler Details',
+						routePath: '/app/movements/traveller-details'
+					},{
+						menu: 'Flight Details',
+						routePath: '/app/movements/flight-details'
+					}
+				];
+			}
+		});
 	}
 }
