@@ -105,7 +105,7 @@ export class PackageBillingsComponent implements OnInit {
 
   	openRegisterModal(featurePackage:FeaturePackage=<FeaturePackage>{}){
 		let dialogOptions = {
-			height: '550px',
+			height: '700px',
   			width: '600px',
   			position: 'center',
   			disableClose: true

@@ -6,6 +6,7 @@ export class User {
   	email: string;
   	password: string;
   	role: number;
+  	organizationName: string;
   	domain = {} as {
   		protocol: string;
   		website: string;
