@@ -63,12 +63,24 @@
 			<my-date-picker name="departure" [options]="myDatePickerOptions" [(ngModel)]="departureDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
 		</div>
 	</div>
+	<div class="row" *ngIf="auths.idx && auths.idx ==='30'">
+		<select class="browser-default" [ngModel]="selectedArrOpt" (ngModelChange)="filterBySelection($event)">
+			<option [ngValue]="arrVal" *ngFor="let arrVal of selectorArr">
+				<span>
+					{{ arrVal.organizationName }}
+				</span>
+			</option>
+		</select>
+	</div>
 	<div>
 		<table class="bordered responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
 			<thead>
 				<tr>
 					<th>Group Name</th>
 					<th>Trip Name</th>
+					<th>
+						{{(auths.idx && auths.idx ==='20')?'Guide Email':'Company Name'}}
+					</th>
 					<th>Departure Date</th>
 					<th>Arrival Date</th>
 					<th>Booking Status</th>
@@ -77,19 +89,24 @@
 			<tbody>
 				<tr *ngFor="let trek of treks">
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-						<span>{{ trek.bookings.groupName }}</span>
+						<span>{{ trek.groupName }}</span>
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-						<span>{{ trek.bookings.tripName }}</span>
+						<span>{{ trek.tripName }}</span>
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-						<span>{{ trek.departureDate.formatted }}</span>
+						<span>
+							{{(auths.idx && auths.idx ==='20')?trek.selectedGuide:trek.users.organizationName}}
+						</span>
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-						<span>{{ trek.arrivalDate.formatted }}</span>
+						<span>{{ trek.trip.departureDate.formatted }}</span>
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-						<span>{{ trek.bookings.status==true?'active':'inactive' }}</span>
+						<span>{{ trek.trip.arrivalDate.formatted }}</span>
+					</td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+						<span>{{ trek.status==true?'active':'inactive' }}</span>
 					</td>
 				</tr>
 			</tbody>
