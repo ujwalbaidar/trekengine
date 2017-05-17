@@ -11,7 +11,7 @@
 					<strong>Profile Details</strong>
 				</span>
 				<div class="right">
-					<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" (click)="displayContent=false">
+					<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" (click)="switchEditMode()">
 						<i class="material-icons">edit</i>
 					</a>
 				</div>
@@ -156,7 +156,7 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Organization Name</strong>
+								<strong>Company Name</strong>
 							</div>
 							<div class="col s12 m9">
 								<span>{{profile.organizationName}}</span>
@@ -164,7 +164,7 @@
 						</div>
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Organization Contact</strong>
+								<strong>Company Contact</strong>
 							</div>
 							<div class="col s12 m9">
 								<span>{{profile.organizationContact}}</span>
@@ -174,7 +174,7 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Organization Address</strong>
+								<strong>Company Address</strong>
 							</div>
 							<div class="col s12 m9">
 								<span *ngIf="profile && profile.organizationStreet">{{profile.organizationStreet}}</span>
@@ -184,7 +184,7 @@
 						</div>
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Organization Email</strong>
+								<strong>Company Email</strong>
 							</div>
 							<div class="col s12 m9">
 								<span>{{profile.organizationEmail}}</span>
@@ -194,7 +194,7 @@
 					<div class="row">
 						<div class="col s6">
 							<div class="col s12 m3">
-								<strong>Organization Domain</strong>
+								<strong>Company Domain</strong>
 							</div>
 							<div class="col s12 m9" *ngIf="profile.domain && profile.domain.protocol && profile.domain.website">
 								<span>{{profile.domain.protocol+profile.domain.website}}</span>
@@ -307,29 +307,50 @@
 										</md-option>
 									</md-select>
 								</div>
+
 								<div class="col s4">
-									<label for="domain" [ngClass]="{'active':(userInfo.domain!=undefined)}">
-										Site Domain
-									</label>
-									<input id="domain" type="text" class="validate" name="domain" [(ngModel)]="userInfo.domain" #domain="ngModel" [value] = "userInfo.domain">
+									<div class="row">
+										<label class="active" for="domain">
+											<strong>
+												{{'Website Domain'}}
+											</strong>
+										</label>
+									</div>
+									<div class="col s1">
+										<md-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
+											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+												{{protocol.value}}
+											</md-option>
+										</md-select>
+									</div>
+									<div class="col s2">
+										
+									</div>
+									<div class="col s9">
+										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel">
+									</div>
+									<div class="row">
+										<span>e.g.:"http://www.yoursite.com"</span>
+									</div>
 								</div>
 							</div>
+
 							<div class="row">
 								<div class="col s4">
 									<label for="organizationName" [ngClass]="{'active':(userInfo.organizationName!=undefined)}">
-										Organization Name
+										Company Name
 									</label>
 									<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="userInfo.organizationName" #organizationName="ngModel" [value] = "userInfo.organizationName">
 								</div>
 								<div class="col s4">
 									<label for="organizationContact" [ngClass]="{'active':(userInfo.organizationContact!=undefined)}">
-										Organization Contact
+										Company Contact
 									</label>
 									<input id="organizationContact" type="text" class="validate" name="organizationContact" [(ngModel)]="userInfo.organizationContact" #organizationContact="ngModel" [value] = "userInfo.organizationContact">
 								</div>
 								<div class="col s4">
 									<label for="organizationEmail" [ngClass]="{'active':(userInfo.organizationEmail!=undefined)}">
-										Organization Email
+										Company Email
 									</label>
 									<input id="organizationEmail" type="text" class="validate" name="organizationEmail" [(ngModel)]="userInfo.organizationEmail" #organizationEmail="ngModel" [value] = "userInfo.organizationEmail">
 								</div>
@@ -337,19 +358,19 @@
 							<div class="row">
 								<div class="col s4">
 									<label for="organizationStreet" [ngClass]="{'active':(userInfo.organizationStreet!=undefined)}">
-										Organization Street
+										Company Street
 									</label>
 									<input id="organizationStreet" type="text" class="validate" name="organizationStreet" [(ngModel)]="userInfo.organizationStreet" #organizationStreet="ngModel" [value] = "userInfo.organizationStreet">
 								</div>
 								<div class="col s4">
 									<label for="organizationCity" [ngClass]="{'active':(userInfo.organizationCity!=undefined)}">
-										Organization City
+										Company City
 									</label>
 									<input id="organizationCity" type="text" class="validate" name="organizationCity" [(ngModel)]="userInfo.organizationCity" #organizationCity="ngModel" [value] = "userInfo.organizationCity">
 								</div>
 								<div class="col s4">
 									<label for="organizationCountry" [ngClass]="{'active':(userInfo.organizationCountry!=undefined)}">
-										Organization Country
+										Company Country
 									</label>
 									<input id="organizationCountry" type="text" class="validate" name="organizationCountry" [(ngModel)]="userInfo.organizationCountry" #organizationCountry="ngModel" [value] = "userInfo.organizationCountry">
 								</div>

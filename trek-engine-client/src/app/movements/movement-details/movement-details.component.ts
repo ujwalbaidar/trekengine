@@ -156,7 +156,7 @@ export class MovementDetailsComponent implements OnInit {
 				this.totalFilterMovementPages = new Array(this.totalTreksData );
 				this.treks = treks['data'];
 				this.selectorArr = treks['selectorArr'];
-				this.selectorArr.unshift('Select Your Option');
+				this.selectorArr.unshift('Select Company Name');
 			}, trekError=>{
 				console.log(trekError);
 			});
