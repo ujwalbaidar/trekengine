@@ -25,7 +25,7 @@ export class MovementDetailsComponent implements OnInit {
     public currentMovementPage:number = 0;
     auths: any;
     public selectorArr: any;
-    public selectedArrOpt: string = '';
+    public selectedArrOpt: any;
 
   	constructor(public movementService: MovementsService, public _cookieService: CookieService) {
   		this.auths = this._cookieService.getAll();
@@ -149,14 +149,17 @@ export class MovementDetailsComponent implements OnInit {
 				{arrivalDate:JSON.stringify(this.arrivalDate)}, 
 				{filterType: this.filterOpt}, 
 				{queryPage: this.currentMovementPage},
-				{selectorQuery: this.selectedArrOpt}
+				{selectorQuery: JSON.stringify(this.selectedArrOpt)}
 			])
 			.subscribe(treks=>{
 				this.totalTreksData = treks['totalData'];
 				this.totalFilterMovementPages = new Array(this.totalTreksData );
 				this.treks = treks['data'];
-				this.selectorArr = treks['selectorArr'];
-				this.selectorArr.unshift('Select Company Name');
+				if(this.selectedArrOpt === undefined){
+					this.selectorArr = treks['selectorArr'];
+					this.selectorArr.unshift({organizationName:'Select Company Name', email: ''});
+					this.selectedArrOpt = this.selectorArr[0];
+				}
 			}, trekError=>{
 				console.log(trekError);
 			});
@@ -175,11 +178,7 @@ export class MovementDetailsComponent implements OnInit {
   	}
 
   	filterBySelection(selectedVal){
-  		if(selectedVal === 'Select Your Option'){
-  			this.selectedArrOpt = '';
-  		}else{
-  			this.selectedArrOpt = selectedVal;
-  		}
+		this.selectedArrOpt = selectedVal;
   		this.filterTreks();
   	}
 

@@ -138,10 +138,10 @@ exports.filterTrip = function(req, res){
 function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 	return new Promise((resolve, reject)=>{
 		if(userRole == 30){
-			if(selectorQuery && selectorQuery.length>0){
+			if(selectorQuery && JSON.parse(selectorQuery).email.length>0){
 				var matchQuery = {
 			        $match:{
-			            $and:[{"selectedGuide" : userEmail},{"userEmail" : selectorQuery},{"status":true}]
+			            $and:[{"selectedGuide" : userEmail},{"userEmail" : JSON.parse(selectorQuery).email},{"status":true}]
 			        }
 			    };
 			}else{
@@ -152,7 +152,6 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 			    };
 			}
 		}
-
 		if(userRole == 20){
 			var matchQuery = {
 		        $match:{
@@ -188,6 +187,15 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 		    },{
 		        $match: {"result": true}
 		    },{
+		        "$lookup":{
+		            "from":"users",
+		            "localField":"userEmail",
+		            "foreignField":"email",
+		            "as":"users"
+		        }
+		    },{
+		        $unwind:"$users"
+		    },{
 		        $project:{
 		            groupName:1,
 		            tripName:1,
@@ -197,7 +205,8 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 		            status:1,
 		            selectedGuide: 1,
 		            "trip.departureDate":1,
-		            "trip.arrivalDate":1
+		            "trip.arrivalDate":1,
+		            "users.organizationName":1
 		        }
 		    },{
 		        $sort:{"trip.departureDate.epoc":1}
@@ -301,9 +310,21 @@ function getUserArr(headers){
 				reject(err);
 			}else{
 				if(headers.role === 30){
-					resolve(user[0]['admins']);
+					var emails = user[0]['admins'];
 				}else{
-					resolve(user[0]['guides']);
+					var emails = user[0]['guides'];
+				}
+
+				if(emails.length > 0){
+					User.find({ email: { $in: emails } }, { _id:0, email:1, organizationName:1 }, (userErr, userInfo)=>{
+						if(userErr){
+							reject(userErr);
+						}else{
+							resolve(userInfo);
+						}
+					});
+				}else{
+					resolve([]);
 				}
 			}
 		})
