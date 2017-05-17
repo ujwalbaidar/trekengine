@@ -65,8 +65,10 @@
 	</div>
 	<div class="row" *ngIf="auths.idx && auths.idx ==='30'">
 		<select class="browser-default" [ngModel]="selectedArrOpt" (ngModelChange)="filterBySelection($event)">
-			<option *ngFor="let arrVal of selectorArr">
-				{{arrVal}}
+			<option [ngValue]="arrVal" *ngFor="let arrVal of selectorArr">
+				<span>
+					{{ arrVal.organizationName }}
+				</span>
 			</option>
 		</select>
 	</div>
@@ -77,7 +79,7 @@
 					<th>Group Name</th>
 					<th>Trip Name</th>
 					<th>
-						{{(auths.idx && auths.idx ==='20')?'Owner Email':'Guide Email'}}
+						{{(auths.idx && auths.idx ==='20')?'Guide Email':'Company Name'}}
 					</th>
 					<th>Departure Date</th>
 					<th>Arrival Date</th>
@@ -94,7 +96,7 @@
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>
-							{{(auths.idx && auths.idx ==='20')?trek.selectedGuide:trek.userEmail}}
+							{{(auths.idx && auths.idx ==='20')?trek.selectedGuide:trek.users.organizationName}}
 						</span>
 					</td>
 					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
