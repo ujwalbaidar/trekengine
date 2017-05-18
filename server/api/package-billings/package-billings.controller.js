@@ -67,23 +67,7 @@ exports.submitUserPackage = function(req, res){
 			if(getErr){
 				res.status(400).json({success:false, data:getErr});
 			}else{
-				if(package.length>0){
-					let activateDate = package[0]['expiresOn'];
-					let expireDate = activateDate+(req.body.packages.days*24*3600);
-					var saveObj = {
-						userId: userId,
-						packageType: req.body.packages.name,
-						packageCost: req.body.packages.cost,
-						activatesOn: activateDate,
-						expiresOn: expireDate,
-						remainingDays: req.body.packages.days,
-						features: req.body.packages.featureIds,
-						usesDays: 0,
-						freeUser: false,
-						onHold: true,
-						status: true
-					}
-				}else{
+				if(package.length == 0){
 					let currentDateTime = new Date();
 					currentDateTime.setHours(0,0,0,0);
 					let activateDate = Math.floor(currentDateTime/1000);
@@ -98,37 +82,177 @@ exports.submitUserPackage = function(req, res){
 						remainingDays: req.body.packages.days,
 						features: req.body.packages.featureIds,
 						usesDays: 0,
-						freeUser: false,
+						freeUser: (req.body.packages.cost == 0)?true:false,
 						onHold: false,
-						status: true
+						status: true,
+						packagePayment: (req.body.packages.cost == 0)?true:false
+					};
+					
+					let mailOptions = {};
+					if(req.body.selectedBillingUserEmail){
+						var sendTo = req.body.selectedBillingUserEmail;
+					}else{
+						var sendTo = req.headers.email;
 					}
-				}
-				let mailOptions = {};
-				if(req.body.selectedBillingUserEmail){
-					var sendTo = req.body.selectedBillingUserEmail;
-				}else{
-					var sendTo = req.headers.email;
-				}
-				mailOptions = {
-					from: config.appEmail.senderAddress,
-				    to: sendTo, 
-				    subject: 'Billing Receipt',
-				    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
-				    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
-				};
-				saveUserPackage(saveObj)
-					.then(savePackageResponse=>{
-						sendEmail(mailOptions).
-						then(mailInfo=>{
-							res.status(200).json({success: true, data: 'Billing for selected package is success!'});
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: sendTo, 
+					    subject: 'Billing Receipt',
+					    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
+					    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+					};
+					saveUserPackage(saveObj)
+						.then(savePackageResponse=>{
+							sendEmail(mailOptions).
+							then(mailInfo=>{
+								res.status(200).json({success: true, data: 'Billing for selected package is success!'});
+							})
+							.catch(err=>{
+								res.status(400).json({success:false, data:err});
+							});
 						})
 						.catch(err=>{
 							res.status(400).json({success:false, data:err});
 						});
-					})
-					.catch(err=>{
-						res.status(400).json({success:false, data:err});
-					});
+				}else{
+					if(package[0].packageCost == 0){
+						PackageBillings.update({ _id: package[0]._id}, { status: false, remainingDays: 0}, (errUpdateFreeUserBilling, updateFreeUserBilling)=>{
+								if(errUpdateFreeUserBilling){
+									res.status(400).json({success:false, data:errUpdateFreeUserBilling});
+								}else{
+									let activateDate = package[0]['expiresOn'];
+									let expireDate = activateDate+(req.body.packages.days*24*3600);
+									var saveObj = {
+										userId: userId,
+										packageType: req.body.packages.name,
+										packageCost: req.body.packages.cost,
+										activatesOn: activateDate,
+										expiresOn: expireDate,
+										remainingDays: req.body.packages.days,
+										features: req.body.packages.featureIds,
+										usesDays: 0,
+										freeUser: false,
+										onHold: false,
+										status: true
+									}
+									let mailOptions = {};
+									if(req.body.selectedBillingUserEmail){
+										var sendTo = req.body.selectedBillingUserEmail;
+									}else{
+										var sendTo = req.headers.email;
+									}
+									mailOptions = {
+										from: config.appEmail.senderAddress,
+									    to: sendTo, 
+									    subject: 'Billing Receipt',
+									    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
+									    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+									};
+									saveUserPackage(saveObj)
+										.then(savePackageResponse=>{
+											sendEmail(mailOptions).
+											then(mailInfo=>{
+												res.status(200).json({success: true, data: 'Billing for selected package is success!'});
+											})
+											.catch(err=>{
+												res.status(400).json({success:false, data:err});
+											});
+										})
+										.catch(err=>{
+											res.status(400).json({success:false, data:err});
+										});
+								}
+							});
+					}else{
+						if(package.length == 1){
+							let activateDate = package[0]['expiresOn'];
+							let expireDate = activateDate+(req.body.packages.days*24*3600);
+							var saveObj = {
+								userId: userId,
+								packageType: req.body.packages.name,
+								packageCost: req.body.packages.cost,
+								activatesOn: activateDate,
+								expiresOn: expireDate,
+								remainingDays: req.body.packages.days,
+								features: req.body.packages.featureIds,
+								usesDays: 0,
+								freeUser: false,
+								onHold: true,
+								status: true
+							}
+							let mailOptions = {};
+							if(req.body.selectedBillingUserEmail){
+								var sendTo = req.body.selectedBillingUserEmail;
+							}else{
+								var sendTo = req.headers.email;
+							}
+							mailOptions = {
+								from: config.appEmail.senderAddress,
+							    to: sendTo, 
+							    subject: 'Billing Receipt',
+							    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
+							    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+							};
+							saveUserPackage(saveObj)
+								.then(savePackageResponse=>{
+									sendEmail(mailOptions).
+									then(mailInfo=>{
+										res.status(200).json({success: true, data: 'Billing for selected package is success!'});
+									})
+									.catch(err=>{
+										res.status(400).json({success:false, data:err});
+									});
+								})
+								.catch(err=>{
+									res.status(400).json({success:false, data:err});
+								});
+						}else{
+							console.log('alredy on hold upgrade??')
+						}
+					}
+					
+					/*let activateDate = package[0]['expiresOn'];
+					let expireDate = activateDate+(req.body.packages.days*24*3600);
+					var saveObj = {
+						userId: userId,
+						packageType: req.body.packages.name,
+						packageCost: req.body.packages.cost,
+						activatesOn: activateDate,
+						expiresOn: expireDate,
+						remainingDays: req.body.packages.days,
+						features: req.body.packages.featureIds,
+						usesDays: 0,
+						freeUser: false,
+						onHold: true,
+						status: true
+					}
+					let mailOptions = {};
+					if(req.body.selectedBillingUserEmail){
+						var sendTo = req.body.selectedBillingUserEmail;
+					}else{
+						var sendTo = req.headers.email;
+					}
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: sendTo, 
+					    subject: 'Billing Receipt',
+					    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
+					    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
+					};
+					saveUserPackage(saveObj)
+						.then(savePackageResponse=>{
+							sendEmail(mailOptions).
+							then(mailInfo=>{
+								res.status(200).json({success: true, data: 'Billing for selected package is success!'});
+							})
+							.catch(err=>{
+								res.status(400).json({success:false, data:err});
+							});
+						})
+						.catch(err=>{
+							res.status(400).json({success:false, data:err});
+						});*/
+				}
 			}
 		});
 	}else{

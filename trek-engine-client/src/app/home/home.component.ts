@@ -13,9 +13,9 @@ export class HomeComponent implements OnInit {
 	cookieData:any;
 
 	constructor(public _cookieService:CookieService, private authService: AuthService, private _route: Router){
-		this.cookieData = _cookieService.getAll();
 	}
 	ngOnInit(){
+		this.cookieData = this._cookieService.getAll();
 		jQuery(".dropdown-button").dropdown();
 		jQuery(".button-collapse").sideNav({
 			closeOnClick: true
