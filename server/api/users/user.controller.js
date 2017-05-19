@@ -666,7 +666,8 @@ exports.activateUser = function(req, res){
 											usesDays: 0,
 											freeUser: true,
 											onHold: false,
-											status: true
+											status: true,
+											packagePayment: true
 										};
 										
 										saveUserPackage(packageObj)

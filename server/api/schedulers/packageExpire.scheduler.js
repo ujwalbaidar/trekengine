@@ -8,8 +8,8 @@ module.exports = function(io) {
     * i.e. does not update free user
     **/
     const billingDaysJob = new CronJob({
-        // cronTime: '00 00 00 * * *',
-        cronTime: '*/10 * * * * *',
+        cronTime: '00 00 00 * * *',
+        // cronTime: '*/10 * * * * *',
         onTick: function() {
             billingCtrl.updateBillingDays()
                 .then(updateResponse => {
@@ -27,8 +27,8 @@ module.exports = function(io) {
     * if true set status false
     **/
     const billingStatusJob = new CronJob({
-        // cronTime: '10 00 00 * * *',
-        cronTime: '*/15 * * * * *',
+        cronTime: '10 00 00 * * *',
+        // cronTime: '*/15 * * * * *',
         onTick: function() {
             billingCtrl.updateBillingStatus()
                 .then(updateResponse => {
@@ -47,8 +47,8 @@ module.exports = function(io) {
     **/
 
     const billingOnHoldJob = new CronJob({
-        // cronTime: '15 00 00 * * *',
-        cronTime: '*/20 * * * * *',
+        cronTime: '15 00 00 * * *',
+        // cronTime: '*/20 * * * * *',
         onTick: function() {
             billingCtrl.updateBillingOnHold()
                 .then(updateResponse => {
@@ -65,8 +65,8 @@ module.exports = function(io) {
     * send email if remaining days <= 2 to the active billings and cost >0
     **/
     const emailOnExpired = new CronJob({
-        // cronTime: '20 00 00 * * *',
-        cronTime: '*/25 * * * * *',
+        cronTime: '20 00 00 * * *',
+        // cronTime: '*/25 * * * * *',
         onTick: function() {
             billingCtrl.emailOnExpired()
         },
@@ -88,4 +88,17 @@ module.exports = function(io) {
         timeZone: 'Asia/Kathmandu'
     });
     billingOnSocket.start();
+
+    const deactiveUnpaidAccountJob = new CronJob({
+        cronTime: '*/10 * * * * *',
+        onTick: function() {
+            billingCtrl.deactiveUnpaidAccount()
+                .then(updateResponse => {
+                    console.log('cron run at:' + new Date() + 'deacivate unpaid account');
+                })
+        },
+        start: false,
+        timeZone: 'Asia/Kathmandu'
+    });
+    deactiveUnpaidAccountJob.start();
 }
