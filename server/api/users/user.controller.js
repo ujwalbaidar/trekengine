@@ -18,6 +18,7 @@ const rl = readline.createInterface({
 const randomstring = require("randomstring");
 const fs = require('fs');
 const ejs = require('ejs');
+const htmlToText = require('html-to-text');
 /**
 * Create User on register
 * set billing Object and update
@@ -64,11 +65,15 @@ exports.createUser = function(req, res){
 
 			let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
 			mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
+			mailOptions.text = htmlToText.fromString(mailOptions.html, {
+    			wordwrap: 130
+			});
 			sendEmail(mailOptions)
 				.then(mailInfo=>{
 					res.status(200).json({success:true, data:{user:userData}});
 				})
 				.catch(mailErr=>{
+					console.log(mailErr)
 					res.status(400).json({success:false, data:mailErr});
 				});
 		})
@@ -624,6 +629,10 @@ exports.activateUser = function(req, res){
 
 					let templateString = fs.readFileSync('server/templates/userRegistrationRefreshToken.ejs', 'utf-8');
 					mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
+					mailOptions.text = htmlToText.fromString(mailOptions.html, {
+					    wordwrap: 130
+					});
+					console.log(mailOptions.text)
 					sendEmail(mailOptions)
 						.then(mailInfo=>{
 							res.status(200).json({success: false, data: 'expire-err'})
@@ -712,6 +721,9 @@ exports.forgotPasswordEmail = function(req, res){
 					    subject: 'Trek Engine: Forgotten Password Request',
 					};
 					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					mailOptions.text = htmlToText.fromString(mailOptions.html, {
+					    wordwrap: 130
+					});
 					sendEmail(mailOptions)
 						.then(mailInfo=>{
 							res.status(200).json({success:true, data:mailInfo});
@@ -756,6 +768,9 @@ exports.resetUserPassword = function(req, res){
 					    subject: 'Trek Engine: Forgotten Password Request',
 					};
 					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					mailOptions.text = htmlToText.fromString(mailOptions.html, {
+					    wordwrap: 130
+					});
 					sendEmail(mailOptions)
 						.then(mailInfo=>{
 							res.status(200).send({success:false, data: 'token-expired'});

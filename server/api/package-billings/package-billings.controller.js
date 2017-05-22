@@ -8,6 +8,7 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 const fs = require('fs');
 const ejs = require('ejs');
+const htmlToText = require('html-to-text');
 
 exports.getUserPackage = function(req, res){
 	var billingArr = [];
@@ -71,7 +72,7 @@ exports.submitUserPackage = function(req, res){
 		    },{
 		        $group:{
 		            _id: null,
-		            "unhold": {
+		            "onHold": {
 		                $push:{
 		                    $cond:[{ $eq: [ "$onHold", true ] }, "$$ROOT", null]
 		                }
@@ -87,200 +88,124 @@ exports.submitUserPackage = function(req, res){
 			if(billingErr){
 				res.status(400).json({success:false, data:billingErr});
 			}else{
-				if(packageBillings[0]['unhold'].length>0){
-					let unholdBillings = packageBillings[0]['unhold'].filter(function(i){ return i != null; })
-					if(unholdBillings.length>0){
-						res.status(200).json({success: true, data: 'Unable to add package. You already have account package on hold to be activated.'});
-					}else{
-						addUnHoldUserBilling(packageBillings[0], req.body)
+				if(packageBillings[0]['active'].length>0){
+					if(packageBillings[0]['active'].length > 0){
+						packageBillings[0]['active'] = packageBillings[0]['active'].filter(function(i){ return i != null; });
 					}
+					if(packageBillings[0]['onHold'].length > 0){
+						packageBillings[0]['onHold'] = packageBillings[0]['onHold'].filter(function(i){ return i != null; });
+					}
+					processUserBilling(packageBillings[0], req.body, userId, req.headers.email)
+						.then(userBillingResp=>{
+							res.status(200).json(userBillingResp);
+						}).catch(userBillingErr=>{
+							res.status(400).json(userBillingErr);
+						});
 				}else{
-					addUnHoldUserBilling(packageBillings[0], req.body)
+					userNewBilling(req.body, userId, req.headers.email)
+						.then(userBillingResp=>{
+							res.status(200).json(userBillingResp);
+						}).catch(userBillingErr=>{
+							res.status(400).json(userBillingErr);
+						});
 				}
 			}
 		});
-		/*PackageBillings.find({userId: userId, status:true}).sort({ activatesOn:-1}).exec((getErr, package)=>{
-			if(getErr){
-				res.status(400).json({success:false, data:getErr});
-			}else{
-				if(package.length == 0){
-					let currentDateTime = new Date();
-					currentDateTime.setHours(0,0,0,0);
-					let activateDate = Math.floor(currentDateTime/1000);
-					let expireDate = activateDate+parseInt(req.body.packages.days)*24*3600;
-
-					var saveObj = {
-						userId: userId,
-						packageType: req.body.packages.name,
-						packageCost: req.body.packages.cost,
-						activatesOn: activateDate,
-						expiresOn: expireDate,
-						remainingDays: req.body.packages.days,
-						features: req.body.packages.featureIds,
-						usesDays: 0,
-						freeUser: (req.body.packages.cost == 0)?true:false,
-						onHold: false,
-						status: true,
-						packagePayment: (req.body.packages.cost == 0)?true:false
-					};
-					
-					let mailOptions = {};
-					if(req.body.selectedBillingUserEmail){
-						var sendTo = req.body.selectedBillingUserEmail;
-					}else{
-						var sendTo = req.headers.email;
-					}
-					mailOptions = {
-						from: config.appEmail.senderAddress,
-					    to: sendTo, 
-					    subject: 'Billing Receipt',
-					    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
-					    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
-					};
-					saveUserPackage(saveObj)
-						.then(savePackageResponse=>{
-							sendEmail(mailOptions).
-							then(mailInfo=>{
-								res.status(200).json({success: true, data: 'Billing for selected package is success!'});
-							})
-							.catch(err=>{
-								res.status(400).json({success:false, data:err});
-							});
-						})
-						.catch(err=>{
-							res.status(400).json({success:false, data:err});
-						});
-				}else{
-					if(package[0].packageCost == 0){
-						PackageBillings.update({ _id: package[0]._id}, { status: false, remainingDays: 0}, (errUpdateFreeUserBilling, updateFreeUserBilling)=>{
-								if(errUpdateFreeUserBilling){
-									res.status(400).json({success:false, data:errUpdateFreeUserBilling});
-								}else{
-									let activateDate = package[0]['expiresOn'];
-									let expireDate = activateDate+(req.body.packages.days*24*3600);
-									var saveObj = {
-										userId: userId,
-										packageType: req.body.packages.name,
-										packageCost: req.body.packages.cost,
-										activatesOn: activateDate,
-										expiresOn: expireDate,
-										remainingDays: req.body.packages.days,
-										features: req.body.packages.featureIds,
-										usesDays: 0,
-										freeUser: false,
-										onHold: false,
-										status: false,
-										packagePayment: true
-									};
-									let mailOptions = {};
-									if(req.body.selectedBillingUserEmail){
-										var sendTo = req.body.selectedBillingUserEmail;
-									}else{
-										var sendTo = req.headers.email;
-									}
-									mailOptions = {
-										from: config.appEmail.senderAddress,
-									    to: sendTo, 
-									    subject: 'Billing Receipt',
-									    text: `Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!`,
-									    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
-									};
-									saveUserPackage(saveObj)
-										.then(savePackageResponse=>{
-											sendEmail(mailOptions).
-											then(mailInfo=>{
-												res.status(200).json({success: true, data: 'Billing for selected package is success!'});
-											})
-											.catch(err=>{
-												res.status(400).json({success:false, data:err});
-											});
-										})
-										.catch(err=>{
-											res.status(400).json({success:false, data:err});
-										});
-								}
-							});
-					}else{
-						if(package.length == 1){
-							let activateDate = package[0]['expiresOn'];
-							let expireDate = activateDate+(req.body.packages.days*24*3600);
-							var saveObj = {
-								userId: userId,
-								packageType: req.body.packages.name,
-								packageCost: req.body.packages.cost,
-								activatesOn: activateDate,
-								expiresOn: expireDate,
-								remainingDays: req.body.packages.days,
-								features: req.body.packages.featureIds,
-								usesDays: 0,
-								freeUser: false,
-								onHold: true,
-								status: true,
-								packagePayment: false
-
-							}
-							let mailOptions = {};
-							if(req.body.selectedBillingUserEmail){
-								var sendTo = req.body.selectedBillingUserEmail;
-							}else{
-								var sendTo = req.headers.email;
-							}
-							mailOptions = {
-								from: config.appEmail.senderAddress,
-							    to: sendTo, 
-							    subject: 'Billing Receipt',
-							    text: 'Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!',
-							    html: `<p>Payment for ${saveObj.packageType} package, worth $${saveObj.packageCost} has been successfully received!</p>` 
-							};
-							saveUserPackage(saveObj)
-								.then(savePackageResponse=>{
-									sendEmail(mailOptions).
-									then(mailInfo=>{
-										res.status(200).json({success: true, data: 'Billing for selected package is success!'});
-									})
-									.catch(err=>{
-										res.status(400).json({success:false, data:err});
-									});
-								})
-								.catch(err=>{
-									res.status(400).json({success:false, data:err});
-								});
-						}else{
-							console.log(package)
-							if(package[0]['usesDays'] >= 2){
-								res.status(200).json({success: true, data: 'Unable to select package since you have not paid bill for old package.'});
-							}else{
-								res.status(200).json({success: true, data: 'Unable to select package since you already have one unused package'});
-							}
-						}
-					}
-				}
-			}
-		});*/
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
 }
 
-function addUnHoldUserBilling(packageBilling, newUserBilling){
-	packageBilling['active'] = packageBilling['active'].filter(function(i){ return i != null; });
-	if(packageBilling['active'].length > 0){
-		if(packageBilling['active'][0]['packageCost'] == 0){
-			if(newUserBilling.packages.cost === 0){
-				// your account is alread basic
+function processUserBilling(packageBillings, newUserBilling, userId, headerEmail){
+	return new Promise((resolve, reject)=>{
+		if(packageBillings.active.length>0){
+			if(packageBillings.active[0].packageCost === 0){
+				if(newUserBilling.packages.cost === 0){
+					resolve({success: true, data: 'Failed to add account Package. Your current account is already Basic Account.'});
+				}else{
+					processOnholdBilling(packageBillings, newUserBilling, userId, headerEmail)
+						.then(onHoldBillingResp=>{
+							resolve(onHoldBillingResp);
+						})
+						.catch(onHoldBillingErr=>{
+							reject(onHoldBillingErr);
+						})
+				}
 			}else{
-				// udate basic account status false
-				// create new user billing account
+				processOnholdBilling(packageBillings, newUserBilling, userId, headerEmail)
+					.then(onHoldBillingResp=>{
+						resolve(onHoldBillingResp);
+					})
+					.catch(onHoldBillingErr=>{
+						reject(onHoldBillingErr);
+					})
 			}
 		}else{
-			
-			console.log(newUserBilling.packages.cost)
-			console.log(packageBilling['active'][0]['packageCost'])
+			userNewBilling(newUserBilling, userId, headerEmail)
+				.then(billingResponse=>{
+					resolve(billingResponse);
+				}).catch(userBillingErr=>{
+					reject(userBillingErr);
+				});
 		}
-	}else{
-		// create new active billing account
+	});
+}
 
-	}
+function userNewBilling(saveData, userId, headerEmail){
+	return new Promise((resolve, reject)=>{
+		let currentDateTime = new Date();
+		currentDateTime.setHours(0,0,0,0);
+		let activateDate = Math.floor(currentDateTime/1000);
+		let expireDate = activateDate+parseInt(saveData.packages.days)*24*3600;
+
+		var saveObj = {
+			userId: userId,
+			packageType: saveData.packages.name,
+			packageCost: saveData.packages.cost,
+			activatesOn: activateDate,
+			expiresOn: expireDate,
+			remainingDays: saveData.packages.days,
+			features: saveData.packages.featureIds,
+			usesDays: 0,
+			freeUser: false,
+			onHold: false,
+			status: true,
+			packagePayment: (saveData.packages.cost == 0)?true:false
+		};
+		saveUserPackage(saveObj)
+			.then(savePackageResponse=>{
+				if(saveData.selectedBillingUserEmail){
+					var sendTo = saveData.selectedBillingUserEmail;
+				}else{
+					var sendTo = headerEmail;
+				}
+
+				let mailOptions = {};
+				mailOptions = {
+					from: config.appEmail.senderAddress,
+				    to: sendTo, 
+				    subject: 'Billing Receipt',
+				};
+				let templateString = fs.readFileSync('server/templates/userNewPackageBilling.ejs', 'utf-8');
+				mailOptions.html = ejs.render(templateString, { packageType: saveData.packages.name });
+				mailOptions.text = htmlToText.fromString(mailOptions.html, {
+	    			wordwrap: 130
+				});
+				sendEmail(mailOptions).
+					then(mailInfo=>{
+						let resolveData = {success: true, data: 'Billing for selected package is success!'};
+						resolve(resolveData);
+					})
+					.catch(err=>{
+						let rejectData = {success:false, data:err};
+						reject(rejectData);
+					});
+			})
+			.catch(err=>{
+				let rejectData = {success:false, data:err};
+				reject({success:false, data:err});
+			});
+	});
 }
 
 function saveUserPackage(saveData){
@@ -293,6 +218,95 @@ function saveUserPackage(saveData){
 				resolve(savePackage);
 			}
 		});
+	})
+}
+
+function processOnholdBilling(packageBillings, newUserBilling, userId, headerEmail){
+	return new Promise((resolve, reject)=>{
+		if(packageBillings.onHold.length>0){
+			resolve({success: true, data: 'Failed to add package. You already have account on hold.'});
+		}else{
+			if(packageBillings.active[0].packageCost === 0){
+				// if onhold is 0 lenght and active account is basic
+				PackageBillings.update({_id: packageBillings.active[0]._id}, {status: false}, (err, updateResponse)=>{
+					if(err){
+						reject(err);
+					}else{
+						createOnholdBilling(packageBillings, newUserBilling, userId, headerEmail)
+							.then(onHoldBillingResp=>{
+								resolve({success: true, data: 'Selected package has been activated.'});
+							})
+							.catch(onHoldBillingErr=>{
+								reject(onHoldBillingErr);
+							});
+					}
+				});
+			}else{
+				createOnholdBilling(packageBillings, newUserBilling, userId, headerEmail)
+					.then(onHoldBillingResp=>{
+						resolve({success: true, data: 'Selected account has been added in hold.'});
+					})
+					.catch(onHoldBillingErr=>{
+						reject(onHoldBillingErr);
+					});
+			}
+			
+		}
+	});
+}
+
+function createOnholdBilling(packageBillings, newUserBilling, userId, headerEmail){
+	return new Promise((resolve, reject) => {
+		let activateDate = packageBillings['active'][0]['expiresOn'];
+		let expireDate = activateDate+(newUserBilling.packages.days*24*3600);
+		var saveObj = {
+			userId: userId,
+			packageType: newUserBilling.packages.name,
+			packageCost: newUserBilling.packages.cost,
+			activatesOn: activateDate,
+			expiresOn: expireDate,
+			remainingDays: newUserBilling.packages.days,
+			features: newUserBilling.packages.featureIds,
+			usesDays: 0,
+			freeUser: false,
+			status: true,
+			packagePayment: false
+		};
+		if(packageBillings.active[0].packageCost === 0){
+			saveObj['onHold'] = false;
+		}else{
+			saveObj['onHold'] = true;
+		}
+
+		if(newUserBilling.selectedBillingUserEmail){
+			var sendTo = newUserBilling.selectedBillingUserEmail;
+		}else{
+			var sendTo = headerEmail;
+		}
+		let templateString = fs.readFileSync('server/templates/userOnholdPackageBilling.ejs', 'utf-8');
+		let mailOptions = {};
+		mailOptions = {
+			from: config.appEmail.senderAddress,
+		    to: sendTo, 
+		    subject: 'On hold account package created'
+		};
+		mailOptions.html = ejs.render(templateString, { packageType: newUserBilling.packages.name });
+		mailOptions.text = htmlToText.fromString(mailOptions.html, {
+			wordwrap: 130
+		});
+		saveUserPackage(saveObj)
+			.then(savePackageResponse=>{
+				sendEmail(mailOptions).
+					then(mailInfo=>{
+						resolve(mailInfo);
+					})
+					.catch(err=>{
+						reject(err);
+					});
+			})
+			.catch(err=>{
+				reject(err);
+			});
 	})
 }
 
@@ -353,7 +367,6 @@ exports.updateBillingOnHold = function() {
 		let activateDate = currentDateTime.getTime()+24*3600*1000;
 		let activatesOn = activateDate/1000;
 		let activateDateTime = Math.floor(currentDateTime/1000);
-		console.log(activateDateTime)
 		PackageBillings.update({
 			status: true, onHold: true, usesDays: 0, activatesOn: activateDateTime
 		},{
@@ -535,6 +548,9 @@ function sendUnpaidBillEmail(userIds){
 				};
 				let templateString = fs.readFileSync('server/templates/switchedToBasicAccount.ejs', 'utf-8');
 				mailOptions.html = ejs.render(templateString, { userName: users[i]['firstName'] });
+				mailOptions.text = htmlToText.fromString(mailOptions.html, {
+	    			wordwrap: 130
+				});
 				sendEmail(mailOptions)
 					.then(mailInfo=>{
 						console.log('email sent', mailInfo);
