@@ -13,6 +13,7 @@ let PackageBillingSchema = new mongoose.Schema({
 	freeUser: { type:Boolean, default: true },
 	onHold: { type:Boolean, default: false },
 	status: { type:Boolean, default: true },
+	packagePayment: { type:Boolean, default: true },
 	createdDate: {
 		type: Date, 
 		default: new Date()
