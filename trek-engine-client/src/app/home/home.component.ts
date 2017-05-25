@@ -12,7 +12,7 @@ declare var jQuery:any;
 export class HomeComponent implements OnInit {
 	cookieData:any;
 
-	constructor(public _cookieService:CookieService, private authService: AuthService, private _route: Router){
+	constructor(public _cookieService:CookieService, public authService: AuthService, private _route: Router){
 	}
 	ngOnInit(){
 		this.cookieData = this._cookieService.getAll();

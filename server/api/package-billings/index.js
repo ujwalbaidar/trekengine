@@ -9,5 +9,6 @@ router.put('/update', packageBillingsController.updateUserPackage);
 router.get('/getAll', packageBillingsController.getUsersBillings);
 router.get('/queryUserBilling', packageBillingsController.queryUserBilling);
 router.put('/updateUserBilling', packageBillingsController.updateUserBilling);
+router.put('/updateBillPayment', packageBillingsController.updateBillPayment);
 
 module.exports = router;

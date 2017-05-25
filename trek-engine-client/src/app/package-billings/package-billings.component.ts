@@ -19,6 +19,7 @@ export class PackageBillingsComponent implements OnInit {
 	users: any;
 	selectedBillingUser: any;
 	disableBillingBtn: boolean = false;
+	selectedDuration: boolean = true;
 
 	constructor(
 		public dialog: MdDialog,
@@ -80,7 +81,13 @@ export class PackageBillingsComponent implements OnInit {
 								.subscribe(packageInfo=>{
 									this.disableBillingBtn = false;
 									this.selectedBillingUser = undefined;
-									alert(packageInfo);
+									let alertMsg = JSON.parse(JSON.stringify(packageInfo));
+									let snackBarRef = this.snackBar.open(alertMsg, '', {
+			      						duration: 3000,
+			    					});
+			    					snackBarRef.afterDismissed().subscribe(() => {
+										location.reload();
+									});
 								}, error => {
 									this.disableBillingBtn = false;
 									this.packageErr = 'Failed to Setup Package';
@@ -93,7 +100,13 @@ export class PackageBillingsComponent implements OnInit {
 						this.packageBillingsService.submitPackage(featurePackage)
 							.subscribe(packageInfo=>{
 								this.disableBillingBtn = false;
-								alert(packageInfo);
+								let alertMsg = JSON.parse(JSON.stringify(packageInfo));
+								let snackBarRef = this.snackBar.open(alertMsg, '', {
+		      						duration: 3000,
+		    					});
+		    					snackBarRef.afterDismissed().subscribe(() => {
+									location.reload();
+								});
 							}, error => {
 								this.disableBillingBtn = false;
 								this.packageErr = 'Failed to Setup Package';
@@ -113,11 +126,21 @@ export class PackageBillingsComponent implements OnInit {
 
 		dialogOptions["data"] = {};
 		if(JSON.stringify(featurePackage) !== '{}'){
+			if(this.selectedDuration == false){
+				featurePackage.cost = featurePackage.cost/12;
+				if(featurePackage.cost === 0){
+					featurePackage['days'] = 1;
+				}else{
+					featurePackage['days'] = 30;
+				}
+			}
 			dialogOptions["data"]["featurePackage"] = featurePackage;
 		}
 
 		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
+			this.selectedDuration = true;
+			this.getPackages();
 			if(result && result!=='opt-cancel'){
 				this.showRegisterSuccess();
 			}
@@ -134,6 +157,17 @@ export class PackageBillingsComponent implements OnInit {
 		};
 
 		let dialogRef = this.dialog.open(RegisterSuccessDialogComponent, dialogOptions);
+    }
+
+    upgradeCostDuration(){
+    	if(this.selectedDuration === true){
+    		this.getPackages();
+    	}else{
+	    	for(let i=0; i<this.packageDetails.length; i++){
+	    		this.packageDetails[i].packages.cost = 12 * JSON.parse(JSON.stringify(this.packageDetails[i].packages.cost));
+	    		this.packageDetails[i].packages.days = 365;
+	    	}
+    	}
     }
 
 }

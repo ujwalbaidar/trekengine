@@ -101,6 +101,7 @@ export class AppPackage {
 	days: number;
 	trialPeriod: number;
 	features: AppFeatures[];
+	priorityLevel: number;
 }
 
 export class BillingHistory {
@@ -116,6 +117,7 @@ export class BillingHistory {
     features : any;
     activatedDate: Object;
     expiryDate: Object;
+    packagePayment: boolean;
 }
 
 export class ProfilePassword {

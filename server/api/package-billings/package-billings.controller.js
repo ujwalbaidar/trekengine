@@ -562,3 +562,34 @@ function sendUnpaidBillEmail(userIds){
 		}
 	})
 }
+
+exports.updateBillPayment = function(req,res){
+	if(req.headers && req.headers.userId && req.headers.role===10){
+		if(req.body.packagePayment == true){
+			PackageBillings.update({ _id: req.body._id }, { packagePayment: true }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
+				if(updateUnpaidBillingErr){
+					res.status(400).json({success:false, data:updateUnpaidBillingErr});
+				}else{
+					console.log(req.body.userId)
+					PackageBillings.update({ userId:req.body.userId, status: true, packageCost:0}, { status: false }, (updateBasicAccountErr, updateBasicAccount)=>{
+						if(updateBasicAccountErr){
+							res.status(400).json({success:false, data:updateBasicAccountErr});
+						}else{
+							res.status(200).json({success:true, data:updateUnpaidBilling});
+						}
+					})
+
+				}
+			});
+		}else{
+			PackageBillings.update({ _id: req.body._id }, { onHold:true, packagePayment: false }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
+				if(updateUnpaidBillingErr){
+					res.status(400).json({success:false, data:updateUnpaidBillingErr});
+				}else{
+					res.status(200).json({success:true, data:updateUnpaidBilling});
+
+				}
+			});
+		}
+	}
+}

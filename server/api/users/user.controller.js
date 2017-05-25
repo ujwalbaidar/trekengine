@@ -632,7 +632,6 @@ exports.activateUser = function(req, res){
 					mailOptions.text = htmlToText.fromString(mailOptions.html, {
 					    wordwrap: 130
 					});
-					console.log(mailOptions.text)
 					sendEmail(mailOptions)
 						.then(mailInfo=>{
 							res.status(200).json({success: false, data: 'expire-err'})
