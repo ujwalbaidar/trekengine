@@ -1,6 +1,7 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+// import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { CookieService, CookieOptions } from 'angular2-cookie/core';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -94,6 +95,7 @@ enableProdMode();
     HttpModule
   ],
   providers: [
+    { provide: CookieOptions, useValue: {} },
   	CookieService,
   	AuthService, 
     UserService, 

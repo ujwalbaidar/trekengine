@@ -68,6 +68,16 @@ export class BillingHistoryComponent implements OnInit {
       		this.getUserBillingHistory();
     	});
   	}
+
+	upgradeBillPayment(index){
+		this.billings[index]['userId'] = this.userId;
+		this.billingService.updateBillPayment(this.billings[index])
+			.subscribe(billingHistory=>{
+				this.getUserBillingHistory();
+			}, error=>{
+				this.getUserBillingHistory();
+			});
+	}
 }
 
 @Component({
@@ -134,4 +144,6 @@ export class BillingDialogComponent implements OnInit {
 				this.dialogRef.close(error);
 			});
 	}
+
+
 }
