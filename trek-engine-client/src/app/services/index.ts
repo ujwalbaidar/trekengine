@@ -5,4 +5,5 @@ export { PackageBillingsService } from './package-billings.service';
 export { PackagesService } from './packages.service';
 export { FeaturesService } from './features.service';
 export { AuthResolverService } from './auth-resolver.service';
+export { RoleResolverService } from './role-resolver.service';
 export { NotificationsService } from './notifications.service';

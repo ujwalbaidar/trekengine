@@ -26,7 +26,7 @@ import {
 	MovementDetailsComponent 
 } from './movements/index';
 
-import { AuthResolverService } from './services';
+import { AuthResolverService, RoleResolverService } from './services';
 
 const appRoutes: Routes = [
 	{ 
@@ -44,36 +44,39 @@ const appRoutes: Routes = [
 	{ 
 		path: 'app', 
 		component: HomeComponent, 
+		canActivate: [AuthResolverService],
+		canActivateChild: [AuthResolverService],
 		children:[
 			{ path: '', component: DashboardComponent},
 			{ 
 				path: 'app-users', 
-				component: AppUsersComponent, 
-				resolve: {
-              		crisis: AuthResolverService
-            	}
+				component: AppUsersComponent,
+				canActivate: [RoleResolverService]
         	},
-        	{ path: 'app-users/:userId/billing-history', component: BillingHistoryComponent },
-			{ path: 'package-billings', component: PackageBillingsComponent },
-			{ path: 'billing-history', component: BillingHistoryComponent },
-			{ path: 'app-features', component: FeaturesComponent },
-			{ path: 'app-packages', component: PackagesComponent },
-			{ path: 'app-packages/details', component: PackageDetailsComponent },
-			{ path: 'app-packages/details/edit/:packageId', component: PackageDetailsComponent },
+        	{ path: 'app-users/:userId/billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
+			{ path: 'package-billings', component: PackageBillingsComponent, canActivate: [RoleResolverService] },
+			{ path: 'billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
+			{ path: 'app-features', component: FeaturesComponent, canActivate: [RoleResolverService] },
+			{ path: 'app-packages', component: PackagesComponent, canActivate: [RoleResolverService] },
+			{ path: 'app-packages/details/edit/:packageId', component: PackageDetailsComponent, canActivate: [RoleResolverService] },
 			{ 
 				path: 'movements', 
 				component: MovementsComponent, 
+				canActivate: [RoleResolverService], 
 				children:[
-					{ path: '', component: MovementDetailsComponent },
-					// { path: 'bookings', component: BookingsComponent },
-					{ path: 'trip-details', component: TripDetailsComponent },
-					{ path: 'guide-details', component: GuideDetailsComponent },
-					{ path: 'traveller-details', component: TravellerDetailsComponent },
-					{ path: 'flight-details', component: FlightDetailsComponent }
+					{ path: '', component: MovementDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'trip-details', component: TripDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'guide-details', component: GuideDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'traveller-details', component: TravellerDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] }
 				]
 			},
-			{ path: 'bookings', component: BookingsComponent },
-			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent },
+			{ 
+				path: 'bookings', 
+				component: BookingsComponent, 
+				canActivate: [RoleResolverService]
+            },
+			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent }
 		]
