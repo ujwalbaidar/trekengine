@@ -1,13 +1,44 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { 
+	Router, 
+	Resolve, 
+	RouterStateSnapshot, 
+	ActivatedRouteSnapshot,
+	CanActivate, 
+	CanActivateChild
+} from '@angular/router';
 import { AuthService } from './auth.service';
 import { CookieService } from 'angular2-cookie/core';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class AuthResolverService implements Resolve<any> {
-	constructor(private auth: AuthService, private router: Router, public _cookies: CookieService) { 
+export class AuthResolverService implements CanActivate, CanActivateChild {
+	public allowRedirect;
 
+	constructor(private auth: AuthService, private router: Router, public _cookies: CookieService) { 
 	}
-	resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+
+	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+	    let url: string = state.url;
+	    return this.checkLogin(url);
 	}
-}
+
+	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+	    let url: string = state.url;
+	    return this.checkLogin(url);
+	}
+
+	checkLogin(url: string) {
+		let cookieObj = this._cookies.getAll();
+		if(cookieObj['authToken']){
+			return this.auth.validateAuthToken(cookieObj['authToken'])
+				.then(allowRedirect=>{
+					return allowRedirect;
+				});
+		}else{
+			this._cookies.removeAll();
+			this.router.navigate(['/home']);
+			return false;
+		}
+	}
+} 

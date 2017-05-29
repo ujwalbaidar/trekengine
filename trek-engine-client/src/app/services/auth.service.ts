@@ -13,6 +13,7 @@ export class AuthService {
 	public url = 'https://www.trekengine.com';  
  	private socket;
  	public validatedUser = false;
+ 	private decodedData: object;
 
 	constructor(public _cookieService:CookieService, private _route: Router, private http: Http){
 		if(this._cookieService.get('remainingDays') && parseInt(this._cookieService.get('remainingDays'))>0){
@@ -54,6 +55,45 @@ export class AuthService {
 		this.clearCookies();
 		this._route.navigate(['/home']);
 	}
+
+	validateToken(authToken:string){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': authToken });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/trekengineApp/validateAuthToken', options)
+            .map(this.extractData)
+            .catch(err=>{
+            	return err;
+            });
+	}
+
+	validateAuthToken(token:string){
+		return new Promise((resolve)=>{
+			this.validateToken(token)
+				.subscribe(resolvedData=>{
+					if(resolvedData && JSON.stringify(resolvedData) !== "{}"){
+						this.decodedData = resolvedData;
+						resolve(true);
+					}else{
+						this._cookieService.removeAll();
+						this._route.navigate(['/home']);
+						resolve(false);
+					}
+				}, error=>{
+					this._cookieService.removeAll();
+					this._route.navigate(['/home']);
+					resolve(false);
+				});
+		});
+	}
+
+	returnDecodedData(){
+		return this.decodedData;
+	}
+
+	private extractData(res: Response) {
+    	let body = res.json();
+    	return body.data || { };
+    }
 
 	developTimePicker(){
 		for(let i=0; i<24;i++){
