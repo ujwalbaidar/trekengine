@@ -17,6 +17,7 @@ import {
   FeaturesService ,
   PackagesService,
   AuthResolverService,
+  RoleResolverService,
   NotificationsService
 } from './services/index';
 import { AppComponent } from './app.component';
@@ -104,6 +105,7 @@ enableProdMode();
     FeaturesService,
     PackagesService,
     AuthResolverService,
+    RoleResolverService,
     NotificationsService
   ],
   bootstrap: [AppComponent],
