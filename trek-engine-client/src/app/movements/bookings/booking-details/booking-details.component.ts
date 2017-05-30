@@ -173,7 +173,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '460px',
+			height: '350px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,

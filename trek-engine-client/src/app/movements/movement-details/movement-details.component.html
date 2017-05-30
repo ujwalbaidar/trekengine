@@ -117,7 +117,7 @@
 	</div>
 </div>
 
-<div class="pagination-div">
+<div class="pagination-div" *ngIf="treks && treks.length>0">
 	<ul class="pagination">
 		<li [ngClass]="currentMovementPage==0 ? 'disabled' : 'waves-effect'" (click)="changePagination(0)">
 			<a><i class="material-icons">chevron_left</i></a>

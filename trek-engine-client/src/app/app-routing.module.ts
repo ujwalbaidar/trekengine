@@ -58,6 +58,7 @@ const appRoutes: Routes = [
 			{ path: 'billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
 			{ path: 'app-features', component: FeaturesComponent, canActivate: [RoleResolverService] },
 			{ path: 'app-packages', component: PackagesComponent, canActivate: [RoleResolverService] },
+			{ path: 'app-packages/details', component: PackageDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'app-packages/details/edit/:packageId', component: PackageDetailsComponent, canActivate: [RoleResolverService] },
 			{ 
 				path: 'movements', 
