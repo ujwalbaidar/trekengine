@@ -32,7 +32,7 @@ export class RoleResolverService implements CanActivate {
 
 	getUrlByRole(role:string, url: string){
 		let urlObj = {
-			10: [ '/app', '/app/app-users', '/app/app-features', '/app/app-packages', '/app/profile', '/app/notifications', '/app/package-billings'],
+			10: [ '/app', '/app/app-users', '/app/app-features', '/app/app-packages', '/app/profile', '/app/notifications', '/app/package-billings', '/app/app-packages/details' ],
 			20: [ '/app', '/app/bookings', '/app/movements','/app/movements/guide-details', '/app/movements/trip-details', '/app/movements/traveller-details', '/app/movements/flight-details', '/app/profile', '/app/notifications', '/app/package-billings', '/app/billing-history' ],
 			30: [ '/app', '/app/movements', '/app/profile', '/app/notifications'],
 		}
@@ -54,6 +54,7 @@ export class RoleResolverService implements CanActivate {
 								}else if(resolvedData['role'] === 20 && (url.startsWith('/app/bookings/booking-details/'))){
 									resolve(true);
 								}else{
+									this.router.navigate(['/app/profile']);
 									resolve(false);
 								}
 							}
@@ -80,6 +81,7 @@ export class RoleResolverService implements CanActivate {
 					}else if(decodedRole === 20 && (url.startsWith('/app/bookings/booking-details/'))){
 						resolve(true);
 					}else{
+						this.router.navigate(['/home']);
 						resolve(false);
 					}
 				}

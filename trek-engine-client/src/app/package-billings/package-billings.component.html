@@ -11,7 +11,7 @@
 		</div>
 	</div>
 </div>
-<div class="billing-duration">
+<div class="billing-duration" *ngIf="packageDetails && packageDetails.length>0">
 Annual Billing
 <md-slide-toggle
   class="example-margin"

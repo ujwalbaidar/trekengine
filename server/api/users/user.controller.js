@@ -251,6 +251,7 @@ exports.seedUser = function(req, res){
 							email: info.email,
 							password: superAdminPassword,
 							role: 10,
+							status: true,
 							createdDate: new Date(),
 							updatedDate: new Date()
 						};
@@ -338,39 +339,43 @@ exports.addGuideToAdmin = function(req, res){
 						lastName: req.body.lastName,
 						email: req.body.email,
 						role: 30,
-						admins: [req.headers.email],
+						admins: [],
 						status: true
 					};
+
+
 					createGuide(guideInfo, req.headers.userId, true)
 						.then(guideDetails=>{
-							User.update(
-								{ email: req.headers.email },
-								{ $addToSet: { guides: req.body.email }}, 
-								(adminUserErr, adminUser)=>{
-									if(adminUserErr){
-										res.status(400).json({success:false, data: adminUserErr});
-									}else{
-										mailOptions = {
-											from: config.appEmail.senderAddress,
-										    to: guideDetails.email, 
-										    subject: 'Request to assign as Guide',
-										    text: `You have been assinged as guide by ${req.headers.email}. Please Login to ${config.webHost}, using following credentials: Email: ${guideDetails.email} Password: ${guideDetails.password} Note: Please update your profile to secure your details`,
-										    html: `<p>You have been assinged as guide by ${req.headers.email}.</p>
-										    	<p> Please Login to ${config.webHost}, using following credentials: </p>
-										    	<p>Email: ${guideDetails.email} </p>
-										    	<p>Password: ${guideDetails.password}</p>
-										    	<p>Note: Please update your profile to secure your details</p>`,
-										};
-										sendEmail(mailOptions)
-											.then(mailInfo=>{
-												res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'created'} });
-											})
-											.catch(mailErr=>{
-												res.status(400).json({success:false, data: mailErr});
-											});
-									}
+							let saveObj = {
+								sentTo: guideDetails.email,
+								sentBy: req.headers.email,
+								subject: 'add-as-guide',
+								notificationType: 'request'
+							};
+							createNotifications(saveObj)
+								.then((notificationData)=>{
+									mailOptions = {
+										from: config.appEmail.senderAddress,
+									    to: guideDetails.email, 
+									    subject: 'Request to assign as Guide',
+									    text: `You have been requested to join as guide by ${req.headers.email}. Please Login to ${config.webHost}, using following credentials: Email: ${guideDetails.email} Password: ${guideDetails.password} Note: Please update your profile to secure your details`,
+									    html: `<p>You have been requested to join as guide by ${req.headers.email}.</p>
+									    	<p> Please Login to ${config.webHost}, using following credentials: </p>
+									    	<p>Email: ${guideDetails.email} </p>
+									    	<p>Password: ${guideDetails.password}</p>
+									    	<p>Note: Please update your profile to secure your details</p>`
+									};
+									sendEmail(mailOptions)
+										.then(mailInfo=>{
+											res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
+										})
+										.catch(mailErr=>{
+											res.status(400).json({success:false, data: mailErr});
+										});
+								})
+								.catch(notificationError=>{
+									res.status(400).json({success:false, data: notificationError});
 								});
-							
 						})
 						.catch(guideErr=>{
 							res.status(400).json({success:false, data: guideErr});

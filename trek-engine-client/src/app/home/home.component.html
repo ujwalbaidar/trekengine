@@ -28,7 +28,7 @@
 			<li *ngIf="cookieData.idx==20">
 				<a routerLink="/app/bookings">Bookings</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx>=20">
 				<a routerLink="/app/movements">Movements</a>
 			</li>
 			<li *ngIf="cookieData.idx==20">
@@ -52,16 +52,16 @@
 				<a routerLink="/app/app-packages">Packages</a>
 			</li>
 			<li class="divider" *ngIf="cookieData.idx==10"></li>
-			<li>
+			<li *ngIf="cookieData.idx>=20">
 				<a routerLink="/app/movements">Movements</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx==20">
 				<a>Accounts</a>
 			</li>
-			<li>
+			<li *ngIf="cookieData.idx==20">
 				<a>Analytics</a>
 			</li>
-			<li class="divider"></li>
+			<li *ngIf="cookieData.idx==20" class="divider"></li>
 			<li> Settings </li>
 			<li>
 				<a>Profile</a>
