@@ -18,6 +18,7 @@ export class Trip {
   	departureDate: any;
   	arrivalDate: any;
   	guide: string;
+  	cost: number;
 }
 
 export class Booking {
