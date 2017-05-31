@@ -228,59 +228,6 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 				}
 			}
 		});
-	/*return new Promise((resolve, reject)=>{
-		let dbQuery = [
-			{ $match: { userId: userId } },
-			{
-				$project:{
-					name:1,
-              		bookingId:1,
-					arrivalDate:1,
-					departureDate:1,
-					result: Result
-          		}
-			},{
-				$match: {"result": true}
-			},{
-				$lookup:{
-					from: "bookings",
-					localField: "bookingId",
-					foreignField: "bookingId",
-					as: "bookings"
-				}
-			},{
-				$match: {"bookings.0":{$exists:true}}
-			},{
-                $unwind:"$bookings"
-			},{
-                $project:{
-                    bookingId:1,
-                    departureDate:1,
-                    arrivalDate:1,
-                    "bookings.groupName":1,
-                    "bookings.tripName": 1,
-                    "bookings.status": 1
-                }
-            },{
-				$sort:{"departureDate.epoc":1}
-			}
-   		];
-		var aggregateQuery = Trips.aggregate(dbQuery);
-   		aggregateQuery.exec((err, response)=>{
-   			if(err){
-   				reject(err);
-   			}else{
-   				if (response.length>0) {
-   					countMovementsQuery(aggregateQuery, skip, limit).then(movementsData=>{
-   						resolve({totalData:response.length, data: movementsData});
-   					}).catch(movementsDataErr=>{
-   						reject(movementsDataErr);
-   					});
-   				}else{
-   					resolve({totalData:0, data: []})
-   				}
-   			}
-   		})*/
 	});
 }
 

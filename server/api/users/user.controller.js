@@ -36,6 +36,7 @@ exports.createUser = function(req, res){
                    .digest('hex');
     if(req.body.domain){
     	req.body.domain = req.body.domain;
+    	req.body.siteUrl = req.body.protocol+req.body.website;
     }
 	saveUser(req.body)
 		.then(userData=>{
@@ -579,6 +580,10 @@ exports.updateUserProfile = function(req, res){
 			dailyTripNotification: req.body.dailyTripNotification,
 			weeklyTripNotification: req.body.weeklyTripNotification
 		};
+
+		if(req.body.domain && req.body.domain.protocol && req.body.domain.website){
+			req.body.domain.siteUrl = req.body.domain.protocol+req.body.domain.website;
+		}
 
 		User.update({_id:req.headers.userId}, updateObj, (err, updateData)=>{
 			if(err){

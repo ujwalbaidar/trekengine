@@ -79,7 +79,12 @@ exports.submitUserPackage = function(req, res){
 		            },
 		            "active":{
 		                $push:{
-		                    $cond:[{ $and: [ { $eq: [ "$status", true ] }, { $eq: [ "$onHold", false ] } ] }, "$$ROOT", null]
+		                    $cond:[{ 
+		                    	$and: [ 
+			                    		{ $eq: [ "$status", true ] }, 
+			                    		{ $eq: [ "$onHold", false ] } 
+		                    		] 
+		                    }, "$$ROOT", null]
 		                }
 		            }
 		        }
@@ -345,6 +350,7 @@ exports.updateBillingDays = function(){
 exports.updateBillingStatus = function() {
 	return new Promise((resolve, reject)=>{
 		PackageBillings.update({
+			status: true,
 			remainingDays: { $eq: 0 }
 		},{
 		    status: false
