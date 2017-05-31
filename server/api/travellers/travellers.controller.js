@@ -374,14 +374,14 @@ function validateIframe(headerData){
 				reject(err);
 			});
 		}else{
-			User.findOne({domain:origin},(err, user)=>{
+			User.findOne({"domain.siteUrl":origin},(err, user)=>{
 				if(err){
 					reject(err);
 				}else{
 					if(user && user._id){
 						resolve({success: true, msg: '', data: user._id});
 					}else{
-						resolve({success:false, msg: `${origin} is not registered!`});
+						resolve({success: false, msg: `${origin} is not registered!`});
 					}
 				}
 			});

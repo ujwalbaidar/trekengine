@@ -6,20 +6,16 @@
 	<table class="bordered responsive-table highlight" *ngIf="trips && trips.length>0; else emptyTrips">
 		<thead>
 			<tr>
-				<td>BookingId</td>
 				<td>Name</td>
-				<td>Departure Date</td>
-				<td>Arrival Date</td>
+				<td>Cost</td>
 				<td>Status</td>
 				<td>Actions</td>
 			</tr>
 		</thead>
 		<tbody>
 			<tr *ngFor="let trip of trips; let i = index;">
-				<td>{{ trip.bookingId }}</td>
 				<td>{{ trip.name }}</td>
-				<td>{{ trip.departureDate.jsdate | date }}</td>
-				<td>{{ trip.arrivalDate.jsdate | date }}</td>
+				<td>{{ trip.cost }}</td>
 				<td>{{ trip.status }}</td>
 				<td>
 					<a (click)="openAddTripModal(trip)">Edit</a>
@@ -31,4 +27,10 @@
 	<ng-template #emptyTrips>
 		<h5 class="center-align">Trip Record is empty! Please add trip to bookings.</h5>
 	</ng-template>
+</div>
+
+<div class="add-round-button-icon">
+	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddTripModal()">
+		<i class="material-icons">add</i>
+	</a>
 </div>

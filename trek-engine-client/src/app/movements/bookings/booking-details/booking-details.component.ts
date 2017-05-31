@@ -96,10 +96,12 @@ export class BookingDetailsComponent implements OnInit  {
 				}
 				this.guides = guide['guides'];
 				if(this.booking && this.booking.selectedGuide){
-					for(let i=0;i<this.guides.length;i++){
-						if(this.guides[i]['email'] === this.booking.selectedGuide){
-							this.bookingGuide = this.guides[i];
-							this.selectedGuide = i;
+					if(this.guides){
+						for(let i=0;i<this.guides.length;i++){
+							if(this.guides[i]['email'] === this.booking.selectedGuide){
+								this.bookingGuide = this.guides[i];
+								this.selectedGuide = i;
+							}
 						}
 					}
 				}else{

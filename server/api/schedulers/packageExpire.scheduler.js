@@ -91,7 +91,8 @@ module.exports = function(io) {
     billingOnSocket.start();
 
     const deactiveUnpaidAccountJob = new CronJob({
-        cronTime: '*/10 * * * * *',
+        cronTime: '00 00 01 * * *',
+        // cronTime: '*/10 * * * * *',
         onTick: function() {
             billingCtrl.deactiveUnpaidAccount()
                 .then(updateResponse => {

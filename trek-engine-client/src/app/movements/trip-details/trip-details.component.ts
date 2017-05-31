@@ -31,7 +31,7 @@ export class TripDetailsComponent implements OnInit {
 	}
 
 	getTrips() {
-		this.movementServie.getTripDetails()
+		this.movementServie.getUserTrekInfos()
 		.subscribe(tripsDetail=>{
 				this.trips = tripsDetail;
 			}, error=>{
@@ -40,7 +40,7 @@ export class TripDetailsComponent implements OnInit {
 	}
 
 	deleteTrip(deleteId: string, index: number) {
-		this.movementServie.deleteTrip(deleteId)
+		this.movementServie.deleteUserTrekInfos(deleteId)
 		.subscribe(deleteStatus=>{
 			this.trips.splice(index,1);
 		}, error => {
@@ -50,7 +50,7 @@ export class TripDetailsComponent implements OnInit {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '700px',
+			height: '400px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -107,19 +107,19 @@ export class TripDetailsDialogComponent implements OnInit {
 	ngOnInit(){
 	}
 	
-	submitTrekDetails(tripForm:any) {
+	submitTripInfoDetails(tripForm:any) {
 		this.submittedTripForm = true;
 		if(tripForm.valid){
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
-				this.updateTrekDetails();
+				this.updateTripInfoDetails();
 			}else{
-				this.saveTrekDetails();
+				this.saveTripInfoDetails();
 			}
 		}
 	}
 
-	saveTrekDetails(){
-		const saveRequest = this.movementServie.submitTripDetails(this.trip)
+	saveTripInfoDetails(){
+		const saveRequest = this.movementServie.createUserTripsData(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripForm = false;
 				this.dialogRef.close(tripsDetail);
@@ -129,8 +129,8 @@ export class TripDetailsDialogComponent implements OnInit {
 			});
 	}
 
-	updateTrekDetails() {
-		this.movementServie.updateTrekDetails(this.trip)
+	updateTripInfoDetails() {
+		this.movementServie.updateUserTrekInfos(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripForm = false;
 				this.dialogRef.close(this.trip);
