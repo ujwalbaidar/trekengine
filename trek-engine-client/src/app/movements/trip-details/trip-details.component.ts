@@ -81,18 +81,7 @@ export class TripDetailsComponent implements OnInit {
 })
 export class TripDetailsDialogComponent implements OnInit {
 	trip: Trip = <Trip>{};
-	public departure_date: Object;
-	public arrival_date: Object;
 	public title: string = 'Add Trip Details';
-	public myDatePickerOptions: IMyOptions = {
-        dateFormat: 'dd-mm-yyyy',
-        firstDayOfWeek: 'su',
-        sunHighlight: false,
-        editableDateField: false
-    };
-	guideUsers:any;
-	approver: string;
-    selectedValue: string;
     submittedTripForm: boolean = false;
 
 	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
@@ -136,6 +125,71 @@ export class TripDetailsDialogComponent implements OnInit {
 				this.dialogRef.close(this.trip);
 			}, error=>{
 				this.submittedTripForm = false;
+				this.dialogRef.close(error);
+			});
+	}
+
+}
+
+@Component({
+	selector: 'trip-dates-dialog',
+	templateUrl: './trip-dates-dialog.html',
+})
+export class TripDatesDialogComponent implements OnInit {
+	trip: Trip = <Trip>{};
+	public departure_date: Object;
+	public arrival_date: Object;
+	public title: string = 'Add Trip Dates';
+	public myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
+    };
+	
+    submittedTripDateForm: boolean = false;
+
+	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
+		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+		this.trip['bookingId'] = bookingId;
+		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
+			this.trip = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data["records"]);
+			this.title = 'Edit Trip Dates';
+		}
+	}
+	
+	ngOnInit(){
+	}
+	
+	submitTripDates(tripDateForm:any) {
+		this.submittedTripDateForm = true;
+		if(tripDateForm.valid){
+			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
+				this.updateTripDates();
+			}else{
+				this.saveTripDates();
+			}
+		}
+	}
+
+	saveTripDates(){
+		const saveRequest = this.movementServie.submitTripDetails(this.trip)
+			.subscribe(tripsDetail=>{
+				this.submittedTripDateForm = false;
+				this.dialogRef.close(tripsDetail);
+			}, error=>{
+				this.submittedTripDateForm = false;
+				this.dialogRef.close(error);
+			});
+	}
+
+	updateTripDates() {
+		this.movementServie.updateTrekDetails(this.trip)
+			.subscribe(tripsDetail=>{
+				this.submittedTripDateForm = false;
+				this.dialogRef.close(this.trip);
+			}, error=>{
+				this.submittedTripDateForm = false;
 				this.dialogRef.close(error);
 			});
 	}

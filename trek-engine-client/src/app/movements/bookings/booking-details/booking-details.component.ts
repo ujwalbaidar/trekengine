@@ -3,7 +3,7 @@ import { AuthService, MovementsService, UserService } from '../../../services/in
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent } from '../../index';
+import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent, TripDatesDialogComponent } from '../../index';
 declare var jQuery:any;
 import { CookieService } from 'angular2-cookie/core';
 
@@ -173,7 +173,7 @@ export class BookingDetailsComponent implements OnInit  {
 			});
 	}
 
-	openAddTripModal(editData:Trip=<Trip>{}) {
+	openTripDatesModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
 			height: '350px',
   			width: '600px',
@@ -188,7 +188,7 @@ export class BookingDetailsComponent implements OnInit  {
 			dialogOptions["data"]["records"] = editData;
 		};
 
-		let dialogRef = this.dialog.open(TripDetailsDialogComponent, dialogOptions);
+		let dialogRef = this.dialog.open(TripDatesDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=="opt-cancel"){
       			this.trip = result;
