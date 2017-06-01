@@ -1,0 +1,48 @@
+<form class="col s12" (ngSubmit)="submitTripDates(tripDateForm.form)" #tripDateForm="ngForm" novalidate>
+	<div md-dialog-content>
+		
+		<div class="row">
+			<div class="col s6">
+				<h5>
+					{{title}}
+				</h5>
+			</div>
+			<div class="col s6 right-align">
+				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12">
+				<label for="departureDate">
+					<strong>
+						{{'Departure Date'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<my-date-picker id="departureDate" class="validate" name="departureDate" [(ngModel)]="trip.departureDate" #departureDate="ngModel" required [options]="myDatePickerOptions">
+				</my-date-picker>
+				<div *ngIf="departureDate?.errors?.required && submittedTripDateForm">
+					This Field is Required!
+				</div>
+			</div>
+
+			<div class="col s12">
+				<label for="arrivalDate">
+					<strong>
+						{{'Arrival Date'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<my-date-picker id="arrivalDate" class="validate" name="arrivalDate" [(ngModel)]="trip.arrivalDate" #arrivalDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				<div *ngIf="arrivalDate?.errors?.required && submittedTripDateForm">
+					This Field is Required!
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button md-button class="waves-effect #009688 teal btn full-width-btn">Submit</button>
+	</div>
+</form>
