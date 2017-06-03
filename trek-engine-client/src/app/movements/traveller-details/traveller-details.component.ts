@@ -6,6 +6,7 @@ import { MovementsService, AuthService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'traveler-details',
@@ -80,6 +81,8 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	hrs: any;
 	mins: any;
 	submittedTravelerForm:Boolean = false;
+	submitProgress:Boolean = false;
+
 	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
@@ -87,7 +90,13 @@ export class TravellerDetailsDialogComponent implements OnInit {
         editableDateField: false
     };
 
-	constructor(public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, private sanitizer: DomSanitizer, public movementService: MovementsService, public auth: AuthService){
+	constructor(
+		public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, 
+		private sanitizer: DomSanitizer, 
+		public movementService: MovementsService, 
+		public auth: AuthService, 
+		public snackBar: MdSnackBar
+	){
 		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		this.actionMode = dialogConfigData.mode;
 		let timePicker = this.auth.developTimePicker();
@@ -139,8 +148,8 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	ngOnInit(){
-		// this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.trekengine.com/trekengineApp/travellers');
-		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/trekengineApp/travellers');
+		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.trekengine.com/trekengineApp/travellers');
+		// this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/trekengineApp/travellers');
 	}
 
 	submitTravelerDetails(travelerDetail:any){
@@ -148,20 +157,25 @@ export class TravellerDetailsDialogComponent implements OnInit {
 
 		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		if(travelerDetail.valid){
+			this.submitProgress = true;
 			if(dialogConfigData.records){
 				this.movementService.updateTravelerDetails(this.traveler)
 					.subscribe(updateResponse=>{
+						this.submitProgress = false;
 						this.submittedTravelerForm = false;
 						this.dialogRef.close(this.traveler);
 					}, updateError=>{
+						this.submitProgress = false;
 						this.dialogRef.close(updateError);
 					});
 			}else{
 				this.movementService.submitTravelerDetails(this.traveler)
 					.subscribe(updateResponse=>{
+						this.submitProgress = false;
 						this.submittedTravelerForm = false;
 						this.dialogRef.close(this.traveler);
 					}, updateError=>{
+						this.submitProgress = false;
 						this.dialogRef.close(updateError);
 					});
 			}
@@ -191,21 +205,32 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	updateImage(event:any, uploadType: string){
 		if (event.target.files && event.target.files[0]) {
 		    var reader = new FileReader();
-
-		    reader.onload = (event) => {
-		    	if(this.traveler['attachments'] == undefined){
-		    		this.traveler['attachments'] = {};
-		    	}
-		    	this.traveler['attachments'][uploadType] = event.target['result'];
-				this.traveler[uploadType+'Attachment']['imageFile'] = event.target['result'];
-		    }
 		    let fileData = event.target.files[0];
-		    this.traveler[uploadType+'Attachment'] = {
-		    	name: fileData.name,
-		    	size:fileData.size,
-		    	type: fileData.type,
-		    };
-		    reader.readAsDataURL(event.target.files[0]);
+		    if(fileData.size <= 1000000){
+		    	if(fileData.type === 'image/jpeg'){
+				    reader.onload = (event) => {
+				    	if(this.traveler['attachments'] == undefined){
+				    		this.traveler['attachments'] = {};
+				    	}
+				    	this.traveler['attachments'][uploadType] = event.target['result'];
+						this.traveler[uploadType+'Attachment']['imageFile'] = event.target['result'];
+				    }
+				    this.traveler[uploadType+'Attachment'] = {
+				    	name: fileData.name,
+				    	size:fileData.size,
+				    	type: fileData.type,
+				    };
+				    reader.readAsDataURL(event.target.files[0]);
+		    	}else{
+		    		this.snackBar.open('Only .jpg extension is allowed', '', {
+						duration: 5000,
+					});
+		    	}
+		    }else{
+		    	this.snackBar.open('Each file size must be less than 1Mb', '', {
+					duration: 5000,
+				});
+		    }
 		}
 	}
 

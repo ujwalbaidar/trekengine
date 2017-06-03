@@ -1,6 +1,7 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+// import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { CookieService, CookieOptions } from 'angular2-cookie/core';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +17,7 @@ import {
   FeaturesService ,
   PackagesService,
   AuthResolverService,
+  RoleResolverService,
   NotificationsService
 } from './services/index';
 import { AppComponent } from './app.component';
@@ -28,6 +30,7 @@ import {
   MovementsComponent, 
   TripDetailsComponent, 
   TripDetailsDialogComponent, 
+  TripDatesDialogComponent,
   GuideDetailsComponent,
   GuideDetailsDialogComponent,
   BookingsComponent,
@@ -63,7 +66,7 @@ enableProdMode();
     RegisterComponent,
     MovementsComponent,
     TripDetailsComponent,
-    TripDetailsComponent, TripDetailsDialogComponent, 
+    TripDetailsComponent, TripDetailsDialogComponent, TripDatesDialogComponent,
     GuideDetailsComponent, GuideDetailsDialogComponent,
     BookingsComponent, BookingsDialogComponent, BookingDetailsComponent,
     FlightDetailsComponent, FlightDetailsDialogComponent,
@@ -94,6 +97,7 @@ enableProdMode();
     HttpModule
   ],
   providers: [
+    { provide: CookieOptions, useValue: {} },
   	CookieService,
   	AuthService, 
     UserService, 
@@ -102,11 +106,13 @@ enableProdMode();
     FeaturesService,
     PackagesService,
     AuthResolverService,
+    RoleResolverService,
     NotificationsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
     TripDetailsDialogComponent, 
+    TripDatesDialogComponent,
     GuideDetailsDialogComponent, 
     BookingsDialogComponent, 
     FlightDetailsDialogComponent,

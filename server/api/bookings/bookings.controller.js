@@ -5,7 +5,7 @@ const TripInfos = mongoose.model('TripInfos');
 
 exports.getAllBooking = function(req,res){
 	if(req.headers && req.headers.userId){
-		Bookings.find({userId: req.headers.userId }, (err, bookings)=>{
+		Bookings.find({userId: req.headers.userId }).sort({createdDate: -1}).exec((err, bookings)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
 			}else{

@@ -8,7 +8,8 @@ let UserSchema = new mongoose.Schema({
 	password: String,
 	domain: {
 		protocol: String,
-		website: String
+		website: String,
+		siteUrl: String
 	},
 	loginAccess:[{
 		method: String,

@@ -6,6 +6,7 @@ export class User {
   	email: string;
   	password: string;
   	role: number;
+  	organizationName: string;
   	domain = {} as {
   		protocol: string;
   		website: string;
@@ -17,6 +18,7 @@ export class Trip {
   	departureDate: any;
   	arrivalDate: any;
   	guide: string;
+  	cost: number;
 }
 
 export class Booking {
@@ -100,6 +102,7 @@ export class AppPackage {
 	days: number;
 	trialPeriod: number;
 	features: AppFeatures[];
+	priorityLevel: number;
 }
 
 export class BillingHistory {
@@ -115,6 +118,7 @@ export class BillingHistory {
     features : any;
     activatedDate: Object;
     expiryDate: Object;
+    packagePayment: boolean;
 }
 
 export class ProfilePassword {

@@ -12,10 +12,10 @@ declare var jQuery:any;
 export class HomeComponent implements OnInit {
 	cookieData:any;
 
-	constructor(public _cookieService:CookieService, private authService: AuthService, private _route: Router){
-		this.cookieData = _cookieService.getAll();
+	constructor(public _cookieService:CookieService, public authService: AuthService, private _route: Router){
 	}
 	ngOnInit(){
+		this.cookieData = this._cookieService.getAll();
 		jQuery(".dropdown-button").dropdown();
 		jQuery(".button-collapse").sideNav({
 			closeOnClick: true

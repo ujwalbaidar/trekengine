@@ -231,6 +231,30 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	updateUserTrekInfos(tripInfo:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/movements/tripinfos/updateUserTripsData', tripInfo, options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	createUserTripsData(tripInfo:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/movements/tripinfos/createUserTripsData', tripInfo, options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	deleteUserTrekInfos(deleteId: string) {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), 'deleteId': deleteId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/movements/tripinfos/deleteUserTrekInfos', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

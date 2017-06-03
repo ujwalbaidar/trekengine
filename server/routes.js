@@ -26,6 +26,7 @@ module.exports = function(app){
 	app.use('/api/notifications', auth, require('./api/notifications'));
 	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
 	app.get('/trekengineApp/authorizaiton/activateUser', require('./api/users/user.controller').activateUser);
+	app.get('/trekengineApp/validateAuthToken', decodeAuthToken);
 
 	app.route('*')
         .get((req, res) => {
@@ -65,6 +66,22 @@ module.exports = function(app){
 					next();
 				}else{
 					res.status(401).send({success:false, message: 'Unauthorised User!'});
+				}
+			}
+		});
+    }
+
+    function decodeAuthToken(req, res, next){
+    	jwt.verify(req.headers.token, config.loginAuth.secretKey, { algorithms: config.loginAuth.algorithm }, function(err, decoded) {
+			if(err){
+				res.status(401).send({success:false, message: 'Login is Required!'});
+			}else{
+				let currentDate = new Date();
+				let currentTime = Math.ceil(currentDate.getTime()/1000);
+				if(decoded.exp>currentTime){
+					res.status(200).send({success:true, data: { role: decoded.role, email: decoded.email, remainingDays: decoded.remainingDays, packageType: decoded.packageType}});
+				}else{
+					res.status(401).send({success:false, message: 'Login is Required!'});
 				}
 			}
 		});

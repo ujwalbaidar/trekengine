@@ -3,8 +3,9 @@ import { AuthService, MovementsService, UserService } from '../../../services/in
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent } from '../../index';
+import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent, TripDatesDialogComponent } from '../../index';
 declare var jQuery:any;
+import { CookieService } from 'angular2-cookie/core';
 
 @Component({
   selector: 'booking-details',
@@ -25,13 +26,15 @@ export class BookingDetailsComponent implements OnInit  {
 	travelerDetails: Traveler = <Traveler>{};
 	selectedGuide: any;
 	bookingGuide: any;
-
+	auths: any;
+	
 	constructor(
 		public authService: AuthService,
 		public movementService:MovementsService, 
 		public userService: UserService, 
 		private route: ActivatedRoute, 
-		public dialog: MdDialog, private _route:Router
+		public dialog: MdDialog, private _route:Router,
+		public _cookieService: CookieService
 	){
 		jQuery('select').material_select();
 		this.route.params.subscribe(params => {
@@ -40,6 +43,7 @@ export class BookingDetailsComponent implements OnInit  {
 	}
 
 	ngOnInit(){
+		this.auths = this._cookieService.getAll();
 		this.getBookingDetails();
 		this.getTripDetails();
 		this.getFlightDetails();
@@ -86,19 +90,23 @@ export class BookingDetailsComponent implements OnInit  {
 	getGuideLists(){
 		this.userService.getGuides()
 		.subscribe(guide=>{
-			if(guide['guides'] && guide['guides'].length>0){
-				guide['guides'].unshift({});
-			}
-			this.guides = guide['guides'];
-			if(this.booking && this.booking.selectedGuide){
-				for(let i=0;i<this.guides.length;i++){
-					if(this.guides[i]['email'] === this.booking.selectedGuide){
-						this.bookingGuide = this.guides[i];
-						this.selectedGuide = i;
-					}
+			if(this.auths['idx'] === '20'){
+				if(guide['guides'] && guide['guides'].length>0){
+					guide['guides'].unshift({});
 				}
-			}else{
-				this.selectedGuide = 0;
+				this.guides = guide['guides'];
+				if(this.booking && this.booking.selectedGuide){
+					if(this.guides){
+						for(let i=0;i<this.guides.length;i++){
+							if(this.guides[i]['email'] === this.booking.selectedGuide){
+								this.bookingGuide = this.guides[i];
+								this.selectedGuide = i;
+							}
+						}
+					}
+				}else{
+					this.selectedGuide = 0;
+				}
 			}
 		}, guideErr=>{
 			console.log(guideErr);
@@ -165,9 +173,9 @@ export class BookingDetailsComponent implements OnInit  {
 			});
 	}
 
-	openAddTripModal(editData:Trip=<Trip>{}) {
+	openTripDatesModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '460px',
+			height: '350px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -180,7 +188,7 @@ export class BookingDetailsComponent implements OnInit  {
 			dialogOptions["data"]["records"] = editData;
 		};
 
-		let dialogRef = this.dialog.open(TripDetailsDialogComponent, dialogOptions);
+		let dialogRef = this.dialog.open(TripDatesDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result!=="opt-cancel"){
       			this.trip = result;

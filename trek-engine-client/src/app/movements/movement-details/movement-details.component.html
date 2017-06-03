@@ -65,8 +65,10 @@
 	</div>
 	<div class="row" *ngIf="auths.idx && auths.idx ==='30'">
 		<select class="browser-default" [ngModel]="selectedArrOpt" (ngModelChange)="filterBySelection($event)">
-			<option *ngFor="let arrVal of selectorArr">
-				{{arrVal}}
+			<option [ngValue]="arrVal" *ngFor="let arrVal of selectorArr">
+				<span>
+					{{ arrVal.organizationName }}
+				</span>
 			</option>
 		</select>
 	</div>
@@ -74,61 +76,40 @@
 		<table class="bordered responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
 			<thead>
 				<tr>
-					<th *ngIf="auths.idx && auths.idx ==='30'">Owner Email</th>
 					<th>Group Name</th>
 					<th>Trip Name</th>
-					<th *ngIf="auths.idx && auths.idx ==='20'">Guide Email</th>
+					<th>
+						{{(auths.idx && auths.idx ==='20')?'Guide Email':'Company Name'}}
+					</th>
 					<th>Departure Date</th>
 					<th>Arrival Date</th>
 					<th>Booking Status</th>
 				</tr>
 			</thead>
-			<tbody *ngIf="auths.idx && auths.idx === '30';else adminTbody;">
+			<tbody>
 				<tr *ngFor="let trek of treks">
-					<td>
-						<span>{{ trek.userEmail }}</span>
-					</td>
-					<td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.groupName }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.tripName }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+						<span>
+							{{(auths.idx && auths.idx ==='20')?trek.selectedGuide:trek.users.organizationName}}
+						</span>
+					</td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.trip.departureDate.formatted }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.trip.arrivalDate.formatted }}</span>
 					</td>
-					<td>
+					<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
 						<span>{{ trek.status==true?'active':'inactive' }}</span>
 					</td>
 				</tr>
 			</tbody>
-			<ng-template #adminTbody>
-				<tbody>
-					<tr *ngFor="let trek of treks">
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.groupName }}</span>
-						</td>
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.tripName }}</span>
-						</td>
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.selectedGuide }}</span>
-						</td>
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.trip.departureDate.formatted }}</span>
-						</td>
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.trip.arrivalDate.formatted }}</span>
-						</td>
-						<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
-							<span>{{ trek.status==true?'active':'inactive' }}</span>
-						</td>
-					</tr>
-				</tbody>
-			</ng-template>
 		</table>
 		<ng-template #emptyTrekFilter>
 			<h5 class="center-align">Booking Records not found in selected filter!</h5>
@@ -136,7 +117,7 @@
 	</div>
 </div>
 
-<div class="pagination-div">
+<div class="pagination-div" *ngIf="treks && treks.length>0">
 	<ul class="pagination">
 		<li [ngClass]="currentMovementPage==0 ? 'disabled' : 'waves-effect'" (click)="changePagination(0)">
 			<a><i class="material-icons">chevron_left</i></a>

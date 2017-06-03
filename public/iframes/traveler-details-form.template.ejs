@@ -164,7 +164,6 @@
 				<div class="detail-subheader col s12">
 					<strong>Attachments</strong>
 				</div>
-
 				<div class="row">
 					<label class="active">
 						<strong>
@@ -178,6 +177,11 @@
 						</div>
 						<div class="file-path-wrapper">
 							<img class="profileAttachment" src="" height="200" alt="Image preview...">
+						</div>
+						<div ng-if="attachmentErr && attachmentErr.profileAttachmentErr">
+							<strong>
+								<p>{{attachmentErr.profileAttachmentErr}}</p>
+							</strong>
 						</div>
 					</div>
 				</div>
@@ -196,6 +200,11 @@
 						<div class="file-path-wrapper">
 							<img class="passportAttachment" src="" height="200" alt="Image preview...">
 						</div>
+						<div ng-if="attachmentErr && attachmentErr.passportAttachmentErr">
+							<strong>
+								<p>{{attachmentErr.passportAttachmentErr}}</p>
+							</strong>
+						</div>
 					</div>
 				</div>
 
@@ -212,6 +221,11 @@
 						</div>
 						<div class="file-path-wrapper">
 							<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
+						</div>
+						<div ng-if="attachmentErr && attachmentErr.insuranceAttachmentErr">
+							<strong>
+								<p>{{attachmentErr.insuranceAttachmentErr}}</p>
+							</strong>
 						</div>
 					</div>
 				</div>
@@ -353,7 +367,7 @@
 					</div>
 		        </div>
 				<div class="row">
-					<button md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>
+					<button ng-disabled="submitProgress" md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>
 				</div>
 			</form>
 		</div>
@@ -376,31 +390,43 @@
 				};
 			}]);
 
-			app.controller('appCtrl', ['$scope', '$http', '$window', '$cookies', function($scope, $http, $window, $cookies) {
+			app.controller('appCtrl', ['$scope', '$http', '$window', '$cookies', '$timeout', function($scope, $http, $window, $cookies, $timeout) {
 				$scope.traveller = {airportPickup:{}};
 				$scope.submitted = false;
 				$scope.timePicker = developTimePicker();
-
+				$scope.submitProgress = false;
 				$scope.traveller.airportPickup.hrTime = $scope.timePicker.hrs[0];
 				$scope.traveller.airportPickup.minTime = $scope.timePicker.mins[0];
 
+
 				$scope.previewUpload = function(uploadType){
+					$scope.attachmentErr = {};
 					var preview = document.querySelector('.'+uploadType);
-					setTimeout(function(){ 
+					$timeout(function(){ 
 						var attachment = $scope.traveller[uploadType];
-						var reader  = new FileReader();
-						reader.addEventListener("load", function () {
-							preview.src = reader.result;
-							var dataObj = {
-								name: $scope.traveller[uploadType].name,
-								size: $scope.traveller[uploadType].size,
-								type: $scope.traveller[uploadType].type,
-								imageFile: reader.result
-							};
-							$scope.traveller[uploadType] = dataObj;
-						}, false);
-						if(attachment){
-							reader.readAsDataURL(attachment);
+						if(attachment.size <= 1000000){
+							if(attachment.type == 'image/jpeg'){
+								var reader  = new FileReader();
+								reader.addEventListener("load", function () {
+									preview.src = reader.result;
+									var dataObj = {
+										name: $scope.traveller[uploadType].name,
+										size: $scope.traveller[uploadType].size,
+										type: $scope.traveller[uploadType].type,
+										imageFile: reader.result
+									};
+									$scope.traveller[uploadType] = dataObj;
+								}, false);
+								if(attachment){
+									reader.readAsDataURL(attachment);
+								}
+							}else{
+								let previewClass= preview.getAttribute('class');
+								$scope.attachmentErr[previewClass+'Err'] = 'Only .jpg extension is allowed';
+							}
+						}else{
+							let previewClass= preview.getAttribute('class');
+							$scope.attachmentErr[previewClass+'Err'] = 'File size must be less than 1Mb';
 						}
 					}, 0);
 				}
@@ -450,9 +476,13 @@
 								date: date,
 							}
 						}
+
+						$scope.submitProgress = true;
+
 						$http({
 								method:'post', 
-								url: 'https://localhost:5000/trekengineApp/travellers/create', 
+								url: 'https://www.trekengine.com/trekengineApp/travellers/create', 
+								// url: 'http://localhost:5000/trekengineApp/travellers/create', 
 								data:$scope.traveller, 
 								headers:{
 									webHeader: JSON.stringify($cookies.getAll()),
@@ -461,12 +491,15 @@
 							})
 							.then(saveResponse=>{
 								if(saveResponse.data.success == true){
+									$scope.submitProgress = false;
 									window.top.location.href = document.referrer;
 								}else{
+									$scope.submitProgress = false;
 									alert(saveResponse.data.msg);
 								}
 							})
 							.catch(errorResponse=>{
+								$scope.submitProgress = false;
 								alert('Failed to save traveler details!!')
 							});
 					}

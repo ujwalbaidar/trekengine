@@ -4,6 +4,7 @@ import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { ProfilePassword } from '../models/models';
 import { AuthService } from '../services';
 import { MdSnackBar } from '@angular/material';
+import { User } from '../models/models';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +13,8 @@ import { MdSnackBar } from '@angular/material';
 })
 export class ProfileComponent implements OnInit {
 	profile: any;
-	userInfo: any;
+	userInfo: User = <User>{domain:{website:'', protocol:''}};
+	// userInfo: any;
 	userErr: any;
 	displayContent:boolean=true;
 	showPasswordForm:boolean=false;
@@ -32,7 +34,14 @@ export class ProfileComponent implements OnInit {
 	
 	public profilePassword: ProfilePassword;
 	
-	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) { }
+	protocols = [
+		{ 'id': '1', 'name': 'http', 'value': 'http://'},
+		{ 'id': '2', 'name': 'https', 'value': 'https://'}
+	];
+	selectedProtocol: string;
+
+	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
+	}
 
 	ngOnInit() {
 		this.profilePassword = {
@@ -45,7 +54,10 @@ export class ProfileComponent implements OnInit {
 	getUserInfo(){
 		this.userService.getUserInfo()
 			.subscribe(userInfo=>{
-				this.userInfo = Object.assign({},userInfo);
+				this.userInfo = JSON.parse(JSON.stringify(userInfo));
+				if(this.userInfo['domain'] == undefined){
+					this.userInfo['domain'] = JSON.parse(JSON.stringify({domain:'http://', website:''}));
+				}
 				this.profile = userInfo;
 			}, error=>{
 				this.userErr = error;
@@ -116,5 +128,9 @@ export class ProfileComponent implements OnInit {
 					});
 			}
 		}
+	}
+
+	switchEditMode(){
+		this.displayContent=false;
 	}
 }
