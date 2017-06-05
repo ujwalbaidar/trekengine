@@ -209,7 +209,7 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 		            "users.organizationName":1
 		        }
 		    },{
-		        $sort:{"trip.departureDate.epoc":1}
+		        $sort:{"trip.departureDate.epoc":1, "trip.arrivalDate.epoc":1}
 		    }
 		];
 		var aggregateQuery = Bookings.aggregate(dbQuery);
