@@ -3,6 +3,7 @@ import { AuthService } from '../services/index';
 import { Router } from '@angular/router';
 import { CookieService } from 'angular2-cookie/core';
 declare var jQuery:any;
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: '',
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
 		});
 	}
 	logout() {
-		this.authService.logout();
+		this._cookieService.removeAll();
+		window.location.href = environment.webUrl+'/home';
 	}
 
 	dropDownNav(){

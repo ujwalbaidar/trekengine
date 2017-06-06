@@ -51,7 +51,7 @@ export class RoleResolverService implements CanActivate {
 							}else{
 								if(resolvedData['role'] === 10 && (url.startsWith('/app/app-users/') || url.startsWith('/app/app-packages/details/edit/'))){
 									resolve(true);
-								}else if(resolvedData['role'] === 20 && (url.startsWith('/app/bookings/booking-details/'))){
+								}else if((resolvedData['role'] === 20 || resolvedData['role'] === 30) && (url.startsWith('/app/bookings/booking-details/'))){
 									resolve(true);
 								}else{
 									this.router.navigate(['/app/profile']);
@@ -78,7 +78,7 @@ export class RoleResolverService implements CanActivate {
 				}else{
 					if(decodedRole === 10 && (url.startsWith('/app/app-users') || url.startsWith('/app/app-packages/details/edit/'))){
 						resolve(true);
-					}else if(decodedRole === 20 && (url.startsWith('/app/bookings/booking-details/'))){
+					}else if((decodedRole === 20 || decodedRole === 30) && (url.startsWith('/app/bookings/booking-details/'))){
 						resolve(true);
 					}else{
 						this.router.navigate(['/home']);

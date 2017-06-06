@@ -60,8 +60,9 @@ export class BookingsComponent implements OnInit  {
 		}
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
-			this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
-      		this.getBookingList();
+			if(result !== 'opt-cancel'){
+				this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
+			}
     	});
 	}
 }
