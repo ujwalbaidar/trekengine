@@ -15,6 +15,8 @@ import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -37,7 +39,8 @@ const appRoutes: Routes = [
 			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
 			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },
-			{ path: 'forgot-password/token/:token/reset-password', component: ForgotPasswordComponent },
+			{ path: 'change-password/token/:token/reset', component: ChangePasswordComponent },
+			{ path: 'forgot-password', component: ForgotPasswordComponent }
 
 		] 
 	},
