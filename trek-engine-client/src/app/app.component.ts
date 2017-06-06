@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AuthService, UserService } from './services/index';
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import { CookieService } from 'angular2-cookie/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'trek-engine-app',
@@ -9,14 +11,21 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy { 
+export class AppComponent implements OnInit { 
 	public urlParams:any;
 	public sub: any;
-	constructor(private auth:AuthService, public userService:UserService, private _route:Router, private activatedRoute: ActivatedRoute, private location: Location){
-	}
+	constructor(
+		private auth:AuthService, 
+		public userService:UserService, 
+		private _route:Router, 
+		private activatedRoute: ActivatedRoute, 
+		private location: Location,
+		public _cookieService:CookieService
+	){}
 
 	ngOnInit(){
-		this.auth.getCookies()
+		this.navigateAppRoute();
+/*		this.auth.getCookies()
 			.then(cookieObj=>{
 				this.getRouteParams().then(hasParams=>{
 					if(hasParams === true){
@@ -45,14 +54,51 @@ export class AppComponent implements OnInit, OnDestroy {
 						this.navigatePage(cookieObj);
 					}
 				});
-			});
+			});*/
 	}
 
-	ngOnDestroy(){
-        this.sub.unsubscribe();
-    }
+	navigateAppRoute(){
+		let publicPath = ['/login', '/register', '/home', '/authorization/token/', '/authorization/token/'];
+		if(JSON.stringify(this._cookieService.getAll()) !== '{}'){
+			if(this._cookieService.get('authToken') && this._cookieService.get('authToken').length>0){
+				this.auth.validateToken(this._cookieService.get('authToken'))
+					.subscribe(validationResponse=>{
+						if(JSON.stringify(validationResponse) !== '{}'){
+							if(publicPath.includes(this.location.path())){
+								this._route.navigate(['/app']);
+							}else{
+								if(this.location && this.location.path() === ''){
+									this._route.navigate(['/app']);
+								}else{
+									this._route.navigate([this.location.path()]);
+								}
+							}
+						}else{
+							this._cookieService.removeAll();
+							window.location.href = environment.webUrl;
+						}
+					}, error =>{
+						this._cookieService.removeAll();
+						window.location.href = environment.webUrl;
+					});
+			}else{
+				this._cookieService.removeAll();
+				this._route.navigate(['/home']);
+			}
+		}else{
+			if(publicPath.includes(this.location.path())){
+				this._route.navigate([this.location.path()]);
+			}else{
+				this._route.navigate(['/home']);
+			}
+		}
+	}
 
-	getRouteParams(){
+/*	ngOnDestroy(){
+        this.sub.unsubscribe();
+    }*/
+
+	/*getRouteParams(){
 		return new Promise(resolve=>{
 			setTimeout(()=>{
 				this.sub = this.activatedRoute.queryParams.subscribe((params:Params)=>{
@@ -65,9 +111,9 @@ export class AppComponent implements OnInit, OnDestroy {
 				});
 			}, 1);
 		});
-	}
+	}*/
 
-	checkParamQueries(){
+	/*checkParamQueries(){
 		return new Promise(resolve=>{
 			let queries = [
 				{'email': this.urlParams.email}
@@ -84,8 +130,8 @@ export class AppComponent implements OnInit, OnDestroy {
 				});
 		})
 	}
-
-	updateUser(cookieObj:Object){
+*/
+	/*updateUser(cookieObj:Object){
 		this.userService.updateUser({role:30}, this.urlParams.email)
 			.subscribe(user=>{
 				this.auth.clearCookies();
@@ -94,9 +140,9 @@ export class AppComponent implements OnInit, OnDestroy {
 			},updateError=>{
 				console.log(updateError);
 			});
-	}
+	}*/
 
-	addSender(cookieObj:Object){
+	/*addSender(cookieObj:Object){
 		this.userService.updateVendors(this.urlParams)
 			.subscribe(user=>{
 				if(user['success'] == true){
@@ -113,9 +159,9 @@ export class AppComponent implements OnInit, OnDestroy {
 			},updateError=>{
 				console.log(updateError);
 			});
-	}
+	}*/
 
-	navigatePage(cookieObj:Object) {
+	/*navigatePage(cookieObj:Object) {
 		if(cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
 			if(this.location.path() == ''){
 				this._route.navigate(['/app']);
@@ -135,5 +181,5 @@ export class AppComponent implements OnInit, OnDestroy {
 				this._route.navigate(['/home']);
 			}
 		}
-	}
+	}*/
 }

@@ -126,7 +126,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openBookingModal(){
 		let dialogOptions = {
-			height: '420px',
+			height: '580px',
   			width: '600px',
   			position: 'center',
   			disableClose: true

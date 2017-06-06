@@ -7,6 +7,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
 import { MdSnackBar } from '@angular/material';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'traveler-details',
@@ -148,8 +149,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	}
 
 	ngOnInit(){
-		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.trekengine.com/trekengineApp/travellers');
-		// this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://localhost:5000/trekengineApp/travellers');
+		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
 	}
 
 	submitTravelerDetails(travelerDetail:any){
