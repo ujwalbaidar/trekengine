@@ -729,7 +729,7 @@ exports.forgotPasswordEmail = function(req, res){
 					    to: req.body.email, 
 					    subject: 'Trek Engine: Forgotten Password Request',
 					};
-					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/change-password/token/'+token+'/reset' });
 					mailOptions.text = htmlToText.fromString(mailOptions.html, {
 					    wordwrap: 130
 					});
