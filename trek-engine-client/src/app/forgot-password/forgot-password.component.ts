@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProfilePassword } from '../models/models';
 import { UserService } from '../services';
 import { MdSnackBar } from '@angular/material';
 
@@ -10,47 +9,39 @@ import { MdSnackBar } from '@angular/material';
 	styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-	public profilePassword: ProfilePassword;
-	submittedPasswordForm:boolean = false;
-	paramsToken: string;
-	expireToken: boolean = false;
 	disableSubmitBtn: boolean = false;
-
+	submittedEmailForm: boolean = false;
+	wrongEmail:boolean;
+	notActivated:boolean;
+	userEmail:string;
 	constructor(private route: ActivatedRoute, private _route: Router, public userService: UserService, public snackBar: MdSnackBar) { }
 
 	ngOnInit() {
-		this.profilePassword = {
-			userPassword: '',
-			confirmPassword: ''
-		};
-		this.route.params.subscribe(params => {
-			this.paramsToken = params.token;
-	    });
+
 	}
 
-	submitPasswordInfo(passwordForm:any, passwordData: object){
-		this.submittedPasswordForm = true;
-		if(passwordForm.valid){
+	submitEmail(form:any){
+		this.submittedEmailForm = true;
+		if(form.valid == true){
 			this.disableSubmitBtn = true;
-			this.userService.resetUserPassword(this.paramsToken, passwordForm.value)
-				.subscribe(updateData=>{
-					let response = JSON.parse(JSON.stringify(updateData));
-					if (response == 'token-expired') {
-						this.expireToken = true;
+			this.userService.submitForgotPasswordEmail(this.userEmail)
+				.subscribe(userResponse=>{
+					let response = JSON.parse(JSON.stringify(userResponse));
+					if (response == 'wrong-email') {
+						this.wrongEmail = true;
+					}else if(response == 'inactive-account'){
+						this.notActivated = true;
 					}else{
-						this.profilePassword = {
-							userPassword: '',
-							confirmPassword: ''
-						};
-						setTimeout(()=>{ 
-							this._route.navigate(['/app']);
-						}, 3000);
-						this.snackBar.open('Password updated successfully!', '', {
-	  						duration: 2000,
-						});
+						this.snackBar.open('Email for reset password has been sent.', '', {
+      						duration: 5000,
+    					});
+						this._route.navigate(['/login']);
 					}
+					this.disableSubmitBtn = false;
 				}, error=>{
-					console.log(error);
+					this.snackBar.open('Failed send email to reset password.', '', {
+  						duration: 5000,
+					});
 				});
 		}
 	}
