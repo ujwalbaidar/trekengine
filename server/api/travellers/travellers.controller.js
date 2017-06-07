@@ -312,21 +312,21 @@ exports.updateTraveler = function(req, res){
 					nationality: req.body.nationality,
 					permanentAddress: req.body.permanentAddress,
 					email: req.body.email,
-					dob: getIsoDateToString(req.body.dob),
+					dob: req.body.dob,
 					telephone: req.body.telephone,
 					airportPickup: req.body.airportPickup,
-					messagebox: req.body.messageBox,
+					messageBox: req.body.messageBox,
 					status: req.body.status,
 					updatedDate: new Date(),
 					hotel: req.body.hotel,
 					attachments: req.body.attachments,
-					selected: req.body.selected
+					selected: req.body.selected,
 				};
 				if(req.body.emergencyContact){
 					updateData.emergencyContact = req.body.emergencyContact;
 				}
 				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-					updateData.airportPickup.date = getIsoDateToString(req.body.airportPickup.date);
+					updateData.airportPickup.date = req.body.airportPickup.date;
 				}
 				if(attachments.length>0 && attachments[0]['passportAttachment']){
 					updateData['attachments']['passport'] = attachments[0]['passportAttachment'];
