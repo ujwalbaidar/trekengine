@@ -199,8 +199,11 @@ export class BookingDetailsComponent implements OnInit  {
 	selectGuide(){
 		if(this.selectedGuide>0){
 			this.booking['selectedGuide'] = this.guides[this.selectedGuide]['email']; 
+			this.booking['selectedGuideName'] = this.guides[this.selectedGuide]['firstName'];
+			this.booking['sendNotification'] = true;
 			this.movementService.updateBookingDetails(this.booking)
 				.subscribe(updateResponse=>{
+					this.booking['sendNotification'] = false;
 					this.bookingGuide = this.guides[this.selectedGuide];
 				}, updateError=>{
 					console.log(updateError);

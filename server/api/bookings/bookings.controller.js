@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const Bookings = mongoose.model('Bookings');
 const Travelers = mongoose.model('Travelers');
 const TripInfos = mongoose.model('TripInfos');
+let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('../../configs/config')[env];
+const AppEmail = require('../../library/appEmail/appEmail');
+const fs = require('fs');
+const ejs = require('ejs');
+const htmlToText = require('html-to-text');
 
 exports.getAllBooking = function(req,res){
 	if(req.headers && req.headers.userId){
@@ -94,7 +100,29 @@ exports.updateBooking = function(req,res){
 			 		updateDate: new Date()
 			 	})
 				.then(updateTrekInf=>{
-					res.status(200).json({success:true, data:bookingUpdate});
+					if(req.body.selectedGuide && (req.body.sendNotification == true)){
+						let mailOptions = {
+							from: config.appEmail.senderAddress,
+						    to: req.body.selectedGuide, 
+						    subject: 'Selected as guide for trip',
+						};
+						let templateString = fs.readFileSync('server/templates/selectedTripToGuide.ejs', 'utf-8');
+						mailOptions.html = ejs.render(templateString, { sender: req.body.userEmail, guideName: req.body.selectedGuideName, webHost: config.webHost+'/app/bookings/booking-details/'+req.body.bookingId });
+						mailOptions.text = htmlToText.fromString(mailOptions.html, {
+							wordwrap: 130
+						});
+						
+						sendEmail(mailOptions)
+							.then(mailInfo=>{
+								res.status(200).json({success:true, data:bookingUpdate});
+							})
+							.catch(err=>{
+								console.log(err)
+								res.status(400).json({success:false, data:err});
+							});
+					}else{
+						res.status(200).json({success:true, data:bookingUpdate});
+					}
 				})
 				.catch(updateErr=>{
 					res.status(401).json({success:false, message: 'Failed to create Trip Informations.'});
@@ -186,5 +214,19 @@ function updateTripInfos(query, updateObj){
 				resolve(updateResp);
 			}
 		});
+	});
+}
+
+function sendEmail(mailOptions){
+	return new Promise((resolve, reject)=>{
+		config.appEmail.mailOptions = mailOptions;
+		let appEmail = new AppEmail(config.appEmail);
+		appEmail.sendEmail()
+			.then(emailInfo=>{
+				resolve(emailInfo);
+			})
+			.catch(emailError=>{
+				reject(emailError);
+			});
 	});
 }

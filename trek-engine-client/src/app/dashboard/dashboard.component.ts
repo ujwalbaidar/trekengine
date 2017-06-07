@@ -12,7 +12,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this._route.navigate(['/app/bookings']);
+		this._route.navigate(['/app/movements']);
 	}
 
 }
