@@ -52,8 +52,7 @@ const appRoutes: Routes = [
 		children:[
 			{ 
 				path: '', 
-				component: BookingsComponent, 
-				canActivate: [RoleResolverService]
+				component: DashboardComponent
 			},{ 
 				path: 'app-users', 
 				component: AppUsersComponent,
