@@ -403,6 +403,7 @@ function auth(headerToken){
 
 exports.queryTravelerDetails = function(req, res){
 	if(req.headers && req.headers.userId){
+		req.query.userId = req.headers.userId;
 		queryTraveler(req.query)
 			.then(travelers=>{
 				res.status(200).json({success:true, data:travelers});
