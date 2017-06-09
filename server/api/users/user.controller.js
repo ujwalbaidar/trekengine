@@ -74,7 +74,6 @@ exports.createUser = function(req, res){
 					res.status(200).json({success:true, data:{user:userData}});
 				})
 				.catch(mailErr=>{
-					console.log(mailErr)
 					res.status(400).json({success:false, data:mailErr});
 				});
 		})
@@ -318,9 +317,9 @@ exports.addGuideToAdmin = function(req, res){
 								from: config.appEmail.senderAddress,
 							    to: userInfo[0].email, 
 							    subject: 'Request to assign as Guide',
-							    text: `You have been requested to accept role of guide for ${req.headers.email}. Please Login to ${config.webHost}, to accept the request, using your credentials: Email: ${userInfo[0].email} `,
+							    text: `You have been requested to accept role of guide for ${req.headers.email}. Please Login to ${config.webHost+'//app/notifications'}, to accept the request, using your credentials: Email: ${userInfo[0].email} `,
 							    html: `<p>You have been requested to accept role of guide for ${req.headers.email}.</p>
-							    	<p> Please Login to ${config.webHost}, to accept the request, using your credentials: </p>
+							    	<p> Please Login to ${config.webHost+'/app/notifications'}, to accept the request, using your credentials: </p>
 							    	<p>Email: ${userInfo[0].email} </p>`,
 							};
 							sendEmail(mailOptions)
@@ -361,7 +360,7 @@ exports.addGuideToAdmin = function(req, res){
 									    subject: 'Request to assign as Guide',
 									    text: `You have been requested to join as guide by ${req.headers.email}. Please Login to ${config.webHost}, using following credentials: Email: ${guideDetails.email} Password: ${guideDetails.password} Note: Please update your profile to secure your details`,
 									    html: `<p>You have been requested to join as guide by ${req.headers.email}.</p>
-									    	<p> Please Login to ${config.webHost}, using following credentials: </p>
+									    	<p> Please Login to ${config.webHost+'/login'}, using following credentials: </p>
 									    	<p>Email: ${guideDetails.email} </p>
 									    	<p>Password: ${guideDetails.password}</p>
 									    	<p>Note: Please update your profile to secure your details</p>`
@@ -458,13 +457,13 @@ function saveUserPackageBilling(user, package, freeUser){
 		};
 		saveUserPackage(saveObj)
 			.then(savePackageResponse=>{
-				sendEmail(mailOptions).
-				then(mailInfo=>{
-					resolve(savePackageResponse);
-				})
-				.catch(err=>{
-					reject(err);
-				});
+				sendEmail(mailOptions)
+					.then(mailInfo=>{
+						resolve(savePackageResponse);
+					})
+					.catch(err=>{
+						reject(err);
+					});
 			})
 			.catch(err=>{
 				reject(err);
@@ -729,7 +728,7 @@ exports.forgotPasswordEmail = function(req, res){
 					    to: req.body.email, 
 					    subject: 'Trek Engine: Forgotten Password Request',
 					};
-					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/forgot-password/token/'+token+'/reset-password' });
+					mailOptions.html = ejs.render(templateString, { userEmail:req.body.email, webHost: config.webHost+'/change-password/token/'+token+'/reset' });
 					mailOptions.text = htmlToText.fromString(mailOptions.html, {
 					    wordwrap: 130
 					});

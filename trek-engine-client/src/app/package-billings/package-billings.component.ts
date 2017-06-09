@@ -134,7 +134,12 @@ export class PackageBillingsComponent implements OnInit {
 					featurePackage['days'] = 30;
 				}
 			}
-			dialogOptions["data"]["featurePackage"] = featurePackage;
+			// dialogOptions["data"]["featurePackage"] = featurePackage;
+			let packageDetailsArr = JSON.parse(JSON.stringify(this.packageDetails));
+			packageDetailsArr.sort(function (a, b) {
+  				return b.packages.priorityLevel - a.packages.priorityLevel;
+			});
+			dialogOptions["data"]["featurePackage"] = JSON.parse(JSON.stringify(packageDetailsArr[0]['packages']));
 		}
 
 		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);

@@ -15,114 +15,178 @@
 </div>
 
 <div *ngIf="actionMode==='view'">
-	<h4>Traveler Details</h4>
-	<div class="row">
-		<div class="col s3">
-			Name
+	<div class="row modal-head">
+		<div class="col s6">
+			<h5>
+				{{'Traveler Details'}}
+			</h5>
 		</div>
-		<div class="col s9">
-			{{ traveler.firstName+' '+ traveler.lastName }}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Nationality
-		</div>
-		<div class="col s9">
-			{{traveler.nationality}}
+		<div class="col s6 right-align">
+			<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col s3">
-			Date of Birth
+	<div class="row modal-body">
+		<div class="detail-subheader col s12">
+			<strong>Basic Informations</strong>
 		</div>
-		<div class="col s9">
-			{{traveler.dob?.formatted}}
+		<div class="row">
+			<div class="col s3">
+				Name
+			</div>
+			<div class="col s9">
+				{{ traveler.firstName+' '+ traveler.lastName }}
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Email
+		<div class="row">
+			<div class="col s3">
+				Nationality
+			</div>
+			<div class="col s9">
+				{{traveler.nationality}}
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.email}}
+		<div class="row">
+			<div class="col s3">
+				Date of Birth
+			</div>
+			<div class="col s9">
+				{{traveler.dob?.formatted}}
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Telephone
+		<div class="row">
+			<div class="col s3">
+				Permanent Address
+			</div>
+			<div class="col s9">
+				{{traveler.permanentAddress}}
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.telephone}}
+		<div class="row">
+			<div class="col s3">
+				Email
+			</div>
+			<div class="col s9">
+				{{traveler.email}}
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Emergency Contact Name
+		<div class="row">
+			<div class="col s3">
+				Telephone
+			</div>
+			<div class="col s9">
+				{{traveler.telephone}}
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.emergencyContact?.name}}
+		<div class="detail-subheader col s12">
+			<strong>Attachments</strong>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Emergency Contact Number
+		<div class="row">
+			<div class="col s3">
+				Profile Image
+			</div>
+			<div class="col s9">
+				<img (click)="previewImage()" *ngIf="traveler.attachments?.profile" class="materialboxed" width="250" src="{{traveler.attachments?.profile}}">
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.emergencyContact?.number}}
+		<div class="row">
+			<div class="col s3">
+				Passport
+			</div>
+			<div class="col s9">
+				<img (click)="previewImage()" *ngIf="traveler.attachments?.passport" class="materialboxed" width="250" src="{{traveler.attachments?.passport}}">
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Emergency Contact Relation
+		<div class="row">
+			<div class="col s3">
+				Insurance
+			</div>
+			<div class="col s9">
+				<img (click)="previewImage()" *ngIf="traveler.attachments?.insurance" class="materialboxed" width="250" src="{{traveler.attachments?.insurance}}">
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.emergencyContact?.relation}}
+		<div class="detail-subheader col s12">
+			<strong>Emergency Contacts</strong>
 		</div>
-	</div>
-	<div class="row" *ngIf="traveler.airportPickup.confirmation">
-		<div class="col s3">
-			Airport Pickup Date
+		<div class="row">
+			<div class="col s3">
+				Name
+			</div>
+			<div class="col s9">
+				{{traveler.emergencyContact?.name}}
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.airportPickup?.date?.formatted}}
+		<div class="row">
+			<div class="col s3">
+				Phone
+			</div>
+			<div class="col s9">
+				{{traveler.emergencyContact?.number}}
+			</div>
 		</div>
-	</div>
-	<div class="row" *ngIf="traveler.airportPickup.confirmation">
-		<div class="col s3">
-			Airport Pickup Time
+		<div class="row">
+			<div class="col s3">
+				Relation
+			</div>
+			<div class="col s9">
+				{{traveler.emergencyContact?.relation}}
+			</div>
 		</div>
-		<div class="col s9">
-			{{traveler.airportPickup?.hrTime+':'+traveler.airportPickup?.minTime}}
+		<div class="detail-subheader col s12">
+			<strong>Airport Pickup</strong>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Profile Image
+		<div class="row" *ngIf="traveler.airportPickup.confirmation">
+			<div class="col s3">
+				Date
+			</div>
+			<div class="col s9">
+				{{traveler.airportPickup?.date?.formatted}}
+			</div>
 		</div>
-		<div class="col s9">
-			<img (click)="previewImage()" *ngIf="traveler.attachments?.profile" class="materialboxed" width="250" src="{{traveler.attachments?.profile}}">
+		<div class="row" *ngIf="traveler.airportPickup.confirmation">
+			<div class="col s3">
+				Time
+			</div>
+			<div class="col s9">
+				{{traveler.airportPickup?.hrTime+':'+traveler.airportPickup?.minTime}}
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Passport
+		<div class="detail-subheader col s12">
+			<strong>Hotel Informations</strong>
 		</div>
-		<div class="col s9">
-			<img (click)="previewImage()" *ngIf="traveler.attachments?.passport" class="materialboxed" width="250" src="{{traveler.attachments?.passport}}">
+		<div class="row">
+			<div class="col s3">
+				Name
+			</div>
+			<div class="col s9">
+				{{traveler.hotel?.name}}
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s3">
-			Insurance
+		<div class="row">
+			<div class="col s3">
+				Address
+			</div>
+			<div class="col s9">
+				{{traveler.hotel?.address}}
+			</div>
 		</div>
-		<div class="col s9">
-			<img (click)="previewImage()" *ngIf="traveler.attachments?.insurance" class="materialboxed" width="250" src="{{traveler.attachments?.insurance}}">
+		<div class="row">
+			<div class="col s3">
+				Telephone
+			</div>
+			<div class="col s9">
+				{{traveler.hotel?.telephone}}
+			</div>
 		</div>
-	</div>
-
-	<div md-dialog-actions>
-		<button md-button class="waves-effect #ffd600 yellow accent-4 btn" (click)="dialogRef.close('Option 1')">Close</button>
+		<div class="detail-subheader col s12">
+			<strong>Message</strong>
+		</div>
+		<div>
+			<div class="row">
+				<div class="col s12">
+					{{traveler.messageBox}}
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

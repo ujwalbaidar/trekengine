@@ -1,3 +1,7 @@
+<ul id="navDropdown" class="dropdown-content">
+		<li [routerLink]="['home']"><a>Price & Plan</a></li>
+		<li [routerLink]="['login']"><a>Login</a></li>
+</ul>
 <nav class="#7cb342 light-blue darken-1">
 	<div class="nav-wrapper">
 		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -12,11 +16,8 @@
 				<a routerLink="/home">{{'Price & Plan'}}</a>
 			</li>
 			<li>
-				<a (click)="openLoginModal()">{{'Login'}}</a>
+				<a routerLink="/login">{{'Login'}}</a>
 			</li>
-			<!-- <li>
-				<a (click)="openRegisterModal()">{{'Sign Up'}}</a>
-			</li> -->
 		</ul>
 
 	</div>
