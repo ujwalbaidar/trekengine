@@ -39,7 +39,8 @@ import {
   FlightDetailsComponent, 
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
-  TravellerDetailsDialogComponent
+  TravellerDetailsDialogComponent,
+  AirportPickupDetailsComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
@@ -85,7 +86,8 @@ enableProdMode();
     RegisterSuccessDialogComponent,
     ActivateTokenComponent,
     ForgotPasswordComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    AirportPickupDetailsComponent
   ],
   imports: [
     BrowserModule,
