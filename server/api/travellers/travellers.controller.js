@@ -429,6 +429,27 @@ function queryTraveler(query){
 	})
 }
 
+exports.getAirportPickupsInfo = function(req, res){
+	if(req.headers && req.headers.userId){
+		let date = new Date(1497204900000)/1000;
+		let query = {
+			"userId" : req.headers.userId, 
+			"airportPickup.confirmation": true,  
+			"airportPickup.date.epoc": { $gte: date }
+		};
+		queryTraveler(query)
+			.then(travelers=>{
+				res.status(200).json({success:true, data:travelers});
+
+			})
+			.catch(travelerErr=>{
+				res.status(400).json({success:false, data:travelerErr});
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
 function updateBooking(query, updateData){
 	return new Promise((resolve, reject)=>{
 		Bookings.update(query, updateData, (err, updateReq)=>{

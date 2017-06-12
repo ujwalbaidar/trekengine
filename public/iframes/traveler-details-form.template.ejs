@@ -276,23 +276,10 @@
 
 				<div ng-if="traveller.airportPickup.confirmation">
 					<div class="row">
-						<div class="col s6">
-							<div>
-								<label for="pickupDate" class="active">
-									<strong>
-										{{'Date'}}
-									</strong>
-									<span class="required-label-mark">{{' *'}}</span>
-								</label>
-							</div>
-							<div>
-								<md-datepicker id="pickupDate" name="pickupDate" ng-model="traveller.airportPickup.date" md-open-on-focus required></md-datepicker>
-								<p ng-if="traveller.airportPickup.confirmation && submitted && travelerDetailForm.pickupDate.$error.required">This Field is Requierd!</p>
-							</div>
-						</div>
+						
 
 						<div class="col s6">
-							<div>
+							<div class="row">
 								<label for="pickupTime" class="active">
 									<strong>
 										{{'Pickup Time'}}
@@ -309,6 +296,20 @@
 							<div class="col s4">
 								<select class="browser-default" ng-model="traveller.airportPickup.minTime" name="travelerPickupTimeMin" ng-options="min for min in timePicker.mins">
 								</select>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="row">
+								<label for="pickupDate" class="active">
+									<strong>
+										{{'Date'}}
+									</strong>
+									<span class="required-label-mark">{{' *'}}</span>
+								</label>
+							</div>
+							<div class="row">
+								<md-datepicker id="pickupDate" name="pickupDate" ng-model="traveller.airportPickup.date" md-open-on-focus required></md-datepicker>
+								<p ng-if="traveller.airportPickup.confirmation && submitted && travelerDetailForm.pickupDate.$error.required">This Field is Requierd!</p>
 							</div>
 						</div>
 					</div>
