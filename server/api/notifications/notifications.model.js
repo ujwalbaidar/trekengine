@@ -5,6 +5,7 @@ let NotificationSchema = new mongoose.Schema({
 	subject: String,
 	status: { type:Boolean, default: true },
 	viewed: { type:Boolean, default: false },
+	flagged: { type:Boolean, default: false },
 	notificationType: String,
 	createdDate: {
 		type: Date, 

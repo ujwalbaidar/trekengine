@@ -2,7 +2,7 @@ const express = require('express');
 let app = express();
 
 const server = require('http').createServer(app);  
-const io = require('socket.io')(server);
+global.io = require('socket.io')(server);
 
 const CronJob = require('cron').CronJob;
 
@@ -17,7 +17,6 @@ require('./server/api/schedulers/packageExpire.scheduler')(io);
 require('./server/api/schedulers/tripnotificaiton.scheduler')(io);
 const reqSocket = require('./server/socket/socket')(io);
 reqSocket.connectSocketIo();
-
 
 server.listen(config.port, config.host, ()=>{
 	console.log(`Server Running at: http://${config.host}:${config.port}/ on ${env} enviornment`);

@@ -33,6 +33,22 @@ export class NotificationsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getUnreadNotifications(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/notifications/getNewNotifications', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	updateNotificationData(updateObj:object){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.put('/api/notifications/updateNotificationData', updateObj, options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };
