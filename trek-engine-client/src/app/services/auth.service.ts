@@ -15,6 +15,7 @@ export class AuthService {
  	private socket;
  	public validatedUser = false;
  	private decodedData: object;
+ 	public notifications: any;
 
 	constructor(public _cookieService:CookieService, private _route: Router, private http: Http){
 		if(this._cookieService.get('remainingDays') && parseInt(this._cookieService.get('remainingDays'))>0){
@@ -45,6 +46,10 @@ export class AuthService {
 			}
 			this._cookieService.put('remainingDays', billing.remainingDays);
 			this._cookieService.put('packageType', billing.packageType);
+		});
+		let email = this._cookieService.get('email')+'_notifications';
+		this.socket.on(email, data =>{
+			this.notifications.push(data);
 		});
 	}  
 
@@ -90,6 +95,8 @@ export class AuthService {
 	returnDecodedData(){
 		return this.decodedData;
 	}
+	
+
 
 	private extractData(res: Response) {
     	let body = res.json();

@@ -1,11 +1,19 @@
 <ul id="navDropdown" class="dropdown-content">
 		<li [routerLink]="['profile']"><a>Profile</a></li>
-		<li [routerLink]="['notifications']"><a>Notifications</a></li>
 		<li routerLink="/app/package-billings" *ngIf="cookieData.idx<=20"><a>Package Billings</a></li>
 		<li routerLink="/app/billing-history" *ngIf="cookieData.idx==20"><a>Billings History</a></li>
 		<li class="divider"></li>
 		<li (click)="logout()"><a>Logout</a></li>
 </ul>
+
+<ul id="notificationDropdown" class="dropdown-content collection">
+	<li *ngFor="let notification of authService.notifications" class="collection-item" (click)="updateViewedNotification(notification)">
+		<a>
+			{{notification.subject}}
+		</a>
+	</li>
+</ul>
+
 <nav class="#7cb342 light-green darken-1">
 	<div class="nav-wrapper">
 		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -16,6 +24,14 @@
 		</ul>
 
 		<ul class="right hide-on-med-and-down">
+			<li (click)="getUnreadNotifications()">
+				<a class="dropdown-button" data-activates="notificationDropdown">
+					Notifications 
+					<span *ngIf="authService.notifications && authService.notifications.length>0" class="new badge red">
+						{{ authService.notifications.length}}
+					</span>
+				</a>
+			</li>
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app/app-users">Users</a>
 			</li>
@@ -45,6 +61,14 @@
 			</li>
 		</ul>
 		<ul class="side-nav" id="mobile-demo">
+			<li [routerLink]="['notifications']">
+				<a>
+					Notifications
+					<span *ngIf="authService.notifications && authService.notifications.length>0" class="new badge red">
+						{{ authService.notifications.length}}
+					</span>
+				</a>
+			</li>
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app/app-features">Features</a>
 			</li>
