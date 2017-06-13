@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService, AuthService } from '../services/index';
 import { Router } from '@angular/router';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 declare var jQuery:any;
 import { environment } from '../../environments/environment';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';

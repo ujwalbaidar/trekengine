@@ -8,7 +8,7 @@ import {
 	CanActivateChild
 } from '@angular/router';
 import { AuthService } from './auth.service';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

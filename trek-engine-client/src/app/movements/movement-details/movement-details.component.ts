@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {IMyOptions, IMyDateModel} from 'mydatepicker';
 import * as moment from 'moment';
 import { MovementsService } from '../../services/index';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'movement-details',
