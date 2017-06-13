@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'angular2-cookie/core';
 
 @Component({
   selector: 'dashboard',
@@ -8,11 +9,18 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-	constructor(private _route:Router) { 
+	constructor(public _cookieService:CookieService, private _route:Router) { 
 	}
 
 	ngOnInit() {
-		this._route.navigate(['/app/movements']);
+		let cookieIdx = this._cookieService.get('idx');
+		if (parseInt(cookieIdx) === 20) {
+			this._route.navigate(['/app/bookings']);
+		}else if(parseInt(cookieIdx) === 30){
+			this._route.navigate(['/app/movements']);
+		}else{
+			// this._route.navigate(['/app/movements']);
+		}
 	}
 
 }
