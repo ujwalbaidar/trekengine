@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PackageBillingsService, AuthService, UserService } from '../services';
 import { FeaturePackage } from '../models/models';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { MdDialog } from '@angular/material';
 import { RegisterComponent, RegisterSuccessDialogComponent } from '../register/register.component';
 import { Router } from '@angular/router';

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent, TripDatesDialogComponent } from '../../index';
 declare var jQuery:any;
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'booking-details',

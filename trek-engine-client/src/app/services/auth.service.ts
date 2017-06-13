@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import * as io from "socket.io-client/dist/socket.io";
@@ -44,8 +44,8 @@ export class AuthService {
 			}else{
 				this.validatedUser = false;
 			}
-			this._cookieService.put('remainingDays', billing.remainingDays);
-			this._cookieService.put('packageType', billing.packageType);
+			this._cookieService.put('remainingDays', billing.remainingDays, {path:'/'});
+			this._cookieService.put('packageType', billing.packageType, {path:'/'});
 		});
 		let email = this._cookieService.get('email')+'_notifications';
 		this.socket.on(email, data =>{

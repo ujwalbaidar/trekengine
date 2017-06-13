@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AuthService, UserService } from './services/index';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { environment } from '../environments/environment';
 
 @Component({
