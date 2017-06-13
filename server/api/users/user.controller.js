@@ -185,7 +185,8 @@ exports.loginUser = function(req, res){
 											token: token, 
 											index: user.role, 
 											remainingDays: billingResponse.remainingDays, 
-											packageType: billingResponse.priorityLevel
+											packageType: billingResponse.priorityLevel,
+											email: req.body.email
 										}});
 								}else{
 									let token = jwt.sign(
@@ -193,7 +194,7 @@ exports.loginUser = function(req, res){
 											config.loginAuth.secretKey, 
 											{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 										);
-									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role}});
+									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
 								}
 							}
 						});
@@ -203,7 +204,7 @@ exports.loginUser = function(req, res){
 								config.loginAuth.secretKey, 
 								{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 							);
-						res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role}});
+						res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
 					}
 				}else{
 					res.status(400).json({success:false, message: "Password doesn't match!", data: {errorCode:'passwordErr'}});
@@ -324,6 +325,7 @@ exports.addGuideToAdmin = function(req, res){
 							};
 							sendEmail(mailOptions)
 								.then(mailInfo=>{
+									io.emit(userInfo[0].email+'_notifications', notificationData);
 									res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
 								})
 								.catch(mailErr=>{
@@ -367,6 +369,7 @@ exports.addGuideToAdmin = function(req, res){
 									};
 									sendEmail(mailOptions)
 										.then(mailInfo=>{
+											io.emit(guideDetails.email+'_notifications', notificationData);
 											res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
 										})
 										.catch(mailErr=>{

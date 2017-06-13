@@ -223,6 +223,14 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getAirportPickupsInfo() {
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/movements/traveler/getAirportPickupsInfo', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+	
 	getUserTrekInfos(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });

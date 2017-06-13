@@ -31,6 +31,9 @@ export class MovementsComponent implements OnInit {
 					},{
 						menu: 'Flight Details',
 						routePath: '/app/movements/flight-details'
+					},{
+						menu: 'Traveler Pickup Details',
+						routePath: '/app/movements/airport-pickup-details'
 					}
 				];
 			}

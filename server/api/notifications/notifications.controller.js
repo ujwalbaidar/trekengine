@@ -21,9 +21,39 @@ exports.getAllNotifications = function(req, res){
 	}
 }
 
+exports.getNewNotifications = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.email){
+		Notifications.find({sentTo:req.headers.email, viewed: false}, (err, notifications)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success:true, data:notifications});
+			}
+		});
+	}
+}
+
+exports.updateNotificationData = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.email){
+		let updateObj = {
+			viewed: req.body.viewed,
+			status: req.body.status,
+			updateDate: new Date()
+		}
+		
+		updateNotification({_id: req.body._id}, updateObj)
+			.then(updateResp=>{
+				res.status(200).json({success:true, data:updateResp});
+			})
+			.catch(updateErr=>{
+				res.status(400).json({ success:true, data: updateErr });
+			});
+	}
+}
+
 exports.submitResponse = function(req, res){
 	if(req.headers && req.headers.userId){
-		updateNotification({_id: req.body.notification._id}, {viewed: true})
+		updateNotification({_id: req.body.notification._id}, {viewed: true, flagged: true})
 			.then(updateResp=>{
 				let saveObj = {
 						sentTo: req.body.notification.sentBy,
@@ -38,6 +68,7 @@ exports.submitResponse = function(req, res){
 								.then(notificationResponse=>{
 										submitAcceptanceEmail(req.body)
 											.then(mailResponse=>{
+												io.emit(notificationResponse.sentTo+'_notifications', notificationResponse);
 												res.status(200).json({success:true, data:notificationResponse});
 											})
 											.catch(mailErr=>{
@@ -57,6 +88,7 @@ exports.submitResponse = function(req, res){
 						.then(notificationResponse=>{
 								submitAcceptanceEmail(req.body)
 									.then(mailResponse=>{
+										io.emit(notificationResponse.sentTo+'_notifications', notificationResponse);
 										res.status(200).json({success:true, data: notificationResponse});
 									})
 									.catch(mailErr=>{

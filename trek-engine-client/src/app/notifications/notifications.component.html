@@ -24,7 +24,7 @@
 										Sent On: {{ notification.createdDate | date }}
 									</p>
 								</div>
-								<div class="cols s4" *ngIf="notification.notificationType==='request' && notification.viewed === false">
+								<div class="cols s4" *ngIf="notification.notificationType==='request' && notification.flagged === false">
 									<a (click)="submitNotification(true, notification)">Accept</a>
 									<a (click)="submitNotification(false, notification)">Decline</a>
 								</div>

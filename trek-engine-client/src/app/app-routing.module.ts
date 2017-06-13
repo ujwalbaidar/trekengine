@@ -25,7 +25,8 @@ import {
 	BookingDetailsComponent,
 	FlightDetailsComponent,
 	TravellerDetailsComponent,
-	MovementDetailsComponent 
+	MovementDetailsComponent,
+	AirportPickupDetailsComponent
 } from './movements/index';
 
 import { AuthResolverService, RoleResolverService } from './services';
@@ -74,7 +75,8 @@ const appRoutes: Routes = [
 					{ path: 'trip-details', component: TripDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'guide-details', component: GuideDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'traveller-details', component: TravellerDetailsComponent, canActivate: [RoleResolverService] },
-					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] }
+					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'airport-pickup-details', component: AirportPickupDetailsComponent, canActivate: [RoleResolverService] }
 				]
 			},
 			{ 

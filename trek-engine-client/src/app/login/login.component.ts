@@ -22,12 +22,12 @@ export class LoginComponent{
 		this.errObj = {};
 		if(form.valid == true){
 			this.userService.loginUser(this.user)
-				.subscribe(
-					loginUser=>{
+				.subscribe(loginUser=>{
 						this.submittedLoginForm = false;
 						this.authService.setCookies('authToken',loginUser['token']);
 						this.authService.setCookies('idx',loginUser['index']);
 						this.authService.setCookies('hostOrigin', window.location.origin);
+						this.authService.setCookies('email', loginUser['email']);
 						if(loginUser['packageType'] && loginUser['remainingDays']) {
 							this.authService.setCookies('packageType',loginUser['packageType']);
 							this.authService.setCookies('remainingDays',loginUser['remainingDays']);
