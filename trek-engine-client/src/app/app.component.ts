@@ -56,10 +56,17 @@ export class AppComponent implements OnInit {
 				this._route.navigate(['/home']);
 			}
 		}else{
-			if( publicPath.includes(this.location.path()) || (this.location.path().indexOf('/change-password/token/') > -1) || (this.location.path().indexOf('/authorization/token/') > -1) ){
+			if( publicPath.includes(this.location.path()) || (this.location.path().indexOf('/change-password/token/') > -1) || (this.location.path().indexOf('/authorization/token/') > -1) || (this.location.path().indexOf('/register/code/') > -1) ){
 				this._route.navigate([this.location.path()]);
 			}else{
-				this._route.navigate(['/home']);
+				if((this.location.path().indexOf('/register/validate?') > -1)){
+					let queryUrl = {};
+					if (location.search) location.search.substr(1).split("&").forEach(item => {let [k,v] = item.split("="); v = v && decodeURIComponent(v); (queryUrl[k] = queryUrl[k] || []).push(v)})
+					let navigateUrl = ['/register/validate',queryUrl['code'][0], queryUrl['loginType'][0], queryUrl['authuser'][0], queryUrl['prompt'][0], queryUrl['session_state'][0]]
+					this._route.navigate(navigateUrl);
+				}else{
+					this._route.navigate(['/home']);
+				}
 			}
 		}
 	}

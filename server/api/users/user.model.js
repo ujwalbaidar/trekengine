@@ -11,12 +11,7 @@ let UserSchema = new mongoose.Schema({
 		website: String,
 		siteUrl: String
 	},
-	loginAccess:[{
-		method: String,
-		accessToken: String,
-		refreshToken: String,
-		expireTime: Number,
-	}],
+	googleAuths: Object,
 	package: {
 		packageId: String,
 		expireDate: String,

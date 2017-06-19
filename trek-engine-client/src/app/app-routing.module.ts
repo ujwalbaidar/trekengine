@@ -16,7 +16,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
-
+import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -39,6 +39,7 @@ const appRoutes: Routes = [
 			{ path: 'login', component: LoginComponent },
 			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
+			{ path: 'register/validate/:code/:loginType/:authuser/:prompt/:session_state', component: ValidateRegisterComponent },
 			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },
 			{ path: 'change-password/token/:token/reset', component: ChangePasswordComponent },
 			{ path: 'forgot-password', component: ForgotPasswordComponent }

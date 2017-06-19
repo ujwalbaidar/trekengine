@@ -132,6 +132,22 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	getOauthUrls(){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/users/getOauthUrl', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	registerOAuthUser(userData:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+		let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/users/validateCode', userData, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

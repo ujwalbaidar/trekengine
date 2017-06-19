@@ -7,7 +7,7 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 const fs = require('fs');
 const ejs = require('ejs');
-
+let AppCalendarLib = require('../users/appCalendar');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){

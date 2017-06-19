@@ -19,6 +19,7 @@ const randomstring = require("randomstring");
 const fs = require('fs');
 const ejs = require('ejs');
 const htmlToText = require('html-to-text');
+let OAuthLib = require('../../library/oAuth/oAuth');
 /**
 * Create User on register
 * set billing Object and update
@@ -809,4 +810,181 @@ exports.resetUserPassword = function(req, res){
 	}else{
 		res.status(400).json({success: false, data: 'empty-token'});
 	}
+}
+
+exports.getOauthUrl = function(req, res){
+	let authUrl = [];
+	let oAuthTypes = ['google'];
+	for(let i=0; i<oAuthTypes.length; i++){
+		let loginType = oAuthTypes[i];
+		let oAuthOptions = {
+			loginMethod: loginType,
+			clientId: config[loginType]['client_id'],
+			clientSecret: config[loginType]['client_secret'],
+			redirectUrl: config.webHost+'/register/validate?loginType='+loginType,
+			oAuthAccess: {
+				access_type:'offline', 
+				scope: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"]
+			}
+		};
+		let oAuth = new OAuthLib(oAuthOptions);
+		oAuth.getOAuthUrl()
+			.then(oAuthUrl=>{
+				authUrl.push({loginType:loginType, url:oAuthUrl});
+				if(i==(oAuthTypes.length-1)){
+					res.status(200).json({success:true, data:authUrl});
+				}
+			});
+	}
+	
+}
+
+exports.validateCode = function(req, res){
+	if(req.body && req.body.code){
+		let oAuthOptions = {
+			loginMethod: req.body.loginType,
+			clientId: config[req.body.loginType]['client_id'],
+			clientSecret: config[req.body.loginType]['client_secret'],
+			redirectUrl: config.webHost+'/register/validate?loginType='+req.body.loginType,
+			code: req.body.code
+		};
+		let oAuth = new OAuthLib(oAuthOptions);
+		oAuth.getTokens()
+			.then(oAuthTokens => {
+				oAuth.getUserInfo(oAuthTokens)
+					.then(userInfo=>{
+						saveAuthUser({userInfo: userInfo, authTokens: oAuthTokens, loginType: req.body.loginType, organizationName: req.body.organizationName, domain: req.body.domain })
+							.then(billingInfo=>{
+								let token = jwt.sign(
+									{
+										email: userInfo.email, 
+										userId: billingInfo.userId, 
+										role: 20, 
+										remainingDays: billingInfo.remainingDays, 
+										packageType: billingInfo.priorityLevel
+									}, 
+									config.loginAuth.secretKey, 
+									{
+										expiresIn: config.loginAuth.expireTime, 
+										algorithm: config.loginAuth.algorithm 
+									}
+								);
+								res.status(200).json({
+									success:true, 
+									message: "Authorised Successfully",
+									data: {
+										token: token, 
+										index: 20, 
+										remainingDays: billingInfo.remainingDays, 
+										packageType: billingInfo.priorityLevel,
+										email: userInfo.email
+									}});
+							})
+							.catch(saveErr=>{
+								res.status(400).json({status:false, data: saveErr, message: 'Failed to validate user!'});
+							})
+					})
+					.catch(googleUserErr=>{
+						res.status(200).json({status:true, data: userInfo});
+					});
+			})
+			.catch(tokenErr => {
+				res.status(400)
+				.send({
+					success:false, 
+					message: 'Failed to retrieve token', 
+					data: tokenErr
+				});
+			})
+	}else{
+		res.status(200).send({success: false, message: 'Failed to register user'});
+	}
+}
+
+
+function saveAuthUser(saveObj){
+	return new Promise((resolve, reject)=>{
+		queryUser({email:saveObj.userInfo.email})
+			.then(user=>{
+				if(user.length>0){
+					updateObj = {
+						status: true
+					};
+					updateObj[saveObj.loginType+'Auths'] = saveObj.authTokens;
+				    updateObj[saveObj.loginType+'Auths']['email'] = saveObj.userInfo.email;
+					User.update({email: saveObj.userInfo.email}, updateObj, (err, updateResp)=>{
+						if(err){
+							reject(err);
+						}else{
+							PackageBillings.findOne({"userId" : user[0]._id, status: true, onHold: false}, (err, userBilling)=>{
+								if(err){
+									reject(err);
+								}else{
+									resolve(userBilling);
+								}
+							});
+						}
+					});
+				}else{
+					Packages.find({status:true}).sort({priorityLevel:-1}).limit(1).exec((err, packages)=>{
+						if(err){
+							reject(err);
+						}else{
+							let userPackage = packages[0];
+							let userSaveObj = {
+								email: saveObj.userInfo.email,
+								organizationName: saveObj.organizationName,
+								firstName: saveObj.userInfo.given_name,
+								lastName: saveObj.userInfo.family_name,
+								role: 20,
+								status: true
+							};
+							if(saveObj.domain){
+						    	userSaveObj.domain = saveObj.domain;
+						    	userSaveObj.siteUrl = saveObj.domain.protocol+saveObj.domain.website;
+						    }
+						    userSaveObj[saveObj.loginType+'Auths'] = saveObj.authTokens
+						    userSaveObj[saveObj.loginType+'Auths']['email'] = saveObj.userInfo.email
+							saveUser(userSaveObj)
+								.then(saveUserResp=>{
+									let currentDateTime = new Date();
+									currentDateTime.setHours(0,0,0,0);
+									let activateDate = Math.floor(currentDateTime/1000);
+									var	expireDate=0;
+									expireDate = activateDate+userPackage.trialPeriod*24*3600;
+									let packageObj = {
+										userId: saveUserResp._id,
+										packageType: userPackage.name,
+										packageCost: userPackage.cost,
+										trialPeriod: userPackage.trialPeriod,
+										priorityLevel: userPackage.priorityLevel,
+										activatesOn: activateDate,
+										expiresOn: expireDate,
+										remainingDays: userPackage.trialPeriod,
+										features: userPackage.featureIds,
+										usesDays: 0,
+										freeUser: true,
+										onHold: false,
+										status: true,
+										packagePayment: true
+									};
+									saveUserPackage(packageObj)
+										.then(billingData=>{
+											resolve(billingData);
+										})
+										.catch(billingErr=>{
+											reject(billingErr);
+										});
+								})
+								.catch(saveUserErr=>{
+									reject(saveUserErr);
+								});
+						}
+					});
+				}
+			})
+			.catch(userErr=>{
+				reject(userErr);
+			});
+	});
 }

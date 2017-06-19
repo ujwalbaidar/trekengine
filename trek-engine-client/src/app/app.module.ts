@@ -56,6 +56,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ActivateTokenComponent } from './register/activate-token/activate-token.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
 enableProdMode();
 
@@ -87,7 +88,8 @@ enableProdMode();
     ActivateTokenComponent,
     ForgotPasswordComponent,
     ChangePasswordComponent,
-    AirportPickupDetailsComponent
+    AirportPickupDetailsComponent,
+    ValidateRegisterComponent
   ],
   imports: [
     BrowserModule,
