@@ -1,4 +1,9 @@
-<div class="row">
+<ng-template #showLoading>
+	<div>
+		<span>Validating Authorization ........</span>
+	</div>
+</ng-template>
+<div class="row" *ngIf="isNew==true; else showLoading">
     <div class="col s12 m6 l4">
 		<div class="card">
 			<div class="card-content">

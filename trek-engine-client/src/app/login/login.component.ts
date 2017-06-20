@@ -14,9 +14,14 @@ export class LoginComponent{
 	errObj: any;
 	submittedLoginForm: boolean = false;
 	disableSubmitBtn: boolean;
+	authUrls = [];
 
 	constructor(private userService: UserService, private authService: AuthService, private _route: Router, public snackBar: MdSnackBar){}
-	ngOnInit(){}
+	
+	ngOnInit(){
+		this.getOauthUrl();
+	}
+
 	loginUser(form:any){
 		this.submittedLoginForm = true;
 		this.errObj = {};
@@ -49,5 +54,16 @@ export class LoginComponent{
 						}
 					});
 		}
+	}
+
+	getOauthUrl(){
+		this.userService.getOauthUrls()
+			.subscribe(authUrls=>{
+				this.authUrls = authUrls;
+			});
+	}
+
+	redirectOauthUrl(url:string){
+		window.location.href = url;
 	}
 }

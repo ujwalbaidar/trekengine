@@ -14,11 +14,16 @@ export class User {
 }
 
 export class Trip {
-	name: string;
   	departureDate: any;
   	arrivalDate: any;
-  	guide: string;
-  	cost: number;
+  	departureTime = {} as{
+  		hrTime: string;
+  		minTime: string;
+  	};
+	arrivalTime = {} as{
+		hrTime: string;
+		minTime: string;
+	};
 }
 
 export class Booking {

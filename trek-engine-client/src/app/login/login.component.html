@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s12 m4">
+    <div class="col s12 m6 l4">
     	<div class="card">
     		<div class="card-content">
 				<form (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
@@ -57,7 +57,18 @@
 						<button class="waves-effect waves-light btn #7cb342 light-blue darken-1">{{'Login'}}</button>
 					</div>
 				</form>
+				<div>
+					<div *ngFor="let authUrl of authUrls">
+						<button *ngIf="authUrl.loginType==='google'" class="loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+							Login with Google
+						</button>
+						<button *ngIf="authUrl.loginType==='facebook'" class="loginBtn loginBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+							Login with Facebook
+						</button>
+					</div>
+				</div>
 			</div>
+
 		</div>
 	</div>
 </div>

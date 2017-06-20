@@ -140,10 +140,18 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
-	registerOAuthUser(userData:Object){
+	registerOAuthUser(userData:Object, userOauths:Object){
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({ headers: headers });
-		return this.http.post('/api/users/validateCode', userData, options)
+		return this.http.post('/api/users/saveOauthUser', {userData: userData, userOauths: userOauths}, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	validateOAuthCode(codeObj:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+		let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/users/validateCode', codeObj, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
