@@ -78,6 +78,8 @@ exports.updateTrips = function(req, res){
 			arrivalDate: req.body.arrivalDate,
 			status: req.body.status,
 			userEmail: req.headers.email,
+			departureTime: req.body.departureTime,
+			arrivalTime: req.body.arrivalTime,
 			updateDate: new Date()
 		};
 		Trips.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, tripUpdate)=>{

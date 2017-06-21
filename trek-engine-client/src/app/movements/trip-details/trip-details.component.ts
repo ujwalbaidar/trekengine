@@ -192,7 +192,6 @@ export class TripDatesDialogComponent implements OnInit {
 	saveTripDates(){
 		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
-				debugger;
 				this.submittedTripDateForm = false;
 				this.dialogRef.close(tripsDetail);
 			}, error=>{

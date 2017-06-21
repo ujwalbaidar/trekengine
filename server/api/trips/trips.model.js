@@ -5,6 +5,14 @@ let TripSchema = new mongoose.Schema({
 	departureDate: Object,
 	arrivalDate: Object,
 	bookingId: String,
+	departureTime: {
+		hrTime: String,
+		minTime: String
+	},
+	arrivalTime: {
+		hrTime: String,
+		minTime: String
+	},
 	status: { type: Boolean, default: true },
 	createdDate: Date,
 	updateDate: Date
