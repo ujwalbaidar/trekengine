@@ -146,6 +146,7 @@ export class TripDatesDialogComponent implements OnInit {
         editableDateField: false
     };
     submittedTripDateForm: boolean = false;
+    disableSubmitButton: boolean = false;
 	
 	hrs: any;
 	mins: any;
@@ -181,6 +182,7 @@ export class TripDatesDialogComponent implements OnInit {
 	submitTripDates(tripDateForm:any) {
 		this.submittedTripDateForm = true;
 		if(tripDateForm.valid){
+			this.disableSubmitButton = true;
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 				this.updateTripDates();
 			}else{
@@ -193,9 +195,11 @@ export class TripDatesDialogComponent implements OnInit {
 		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(error);
 			});
 	}
@@ -204,9 +208,11 @@ export class TripDatesDialogComponent implements OnInit {
 		this.movementServie.updateTrekDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(this.trip);
 			}, error=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(error);
 			});
 	}

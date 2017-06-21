@@ -11,19 +11,106 @@ let AppCalendarLib = require('../users/appCalendar');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
-		req.body.departureDate = req.body.departureDate;
-		req.body.arrivalDate = req.body.arrivalDate;
-		req.body.createdDate = new Date();
-		req.body.updatedDate = new Date();
 		req.body.userId = req.headers.userId;
 		req.body.userEmail = req.headers.email;
 		let trips = new Trips(req.body);
-		trips.save((err, trip)=>{
-			if(err){
-				console.log(err)
-				res.status(400).json({success:false, data:err});
+		Bookings.findOne({bookingId: req.body.bookingId}, (bookingErr, booking)=>{
+			if(bookingErr){
+				res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 			}else{
-				res.status(200).json({success:true, data:trip});
+				let syncDeparture = new Promise((resolve, reject) => {
+					let startDateEpoc = req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60);
+					let startDateNew = new Date(startDateEpoc*1000);
+					let startDateYear = startDateNew.getFullYear();
+					let startDateMonth = ((startDateNew.getMonth()+1)<10)?'0'+(startDateNew.getMonth()+1):(startDateNew.getMonth()+1);
+					let startDateDate = (startDateNew.getDate()<10)?'0'+startDateNew.getDate():startDateNew.getDate();
+					let startDateTime = req.body.departureTime.hrTime+':'+req.body.departureTime.minTime+':00';
+					let startDate = startDateYear+'-'+startDateMonth+'-'+startDateDate+'T'+startDateTime;
+
+					let endDateEpoc = startDateEpoc+3600;
+					let endDateNew = new Date(endDateEpoc*1000);
+					let endDateYear = endDateNew.getFullYear();
+					let endDateMonth = ((endDateNew.getMonth()+1)<10)?'0'+(endDateNew.getMonth()+1):(endDateNew.getMonth()+1);
+					let endDateDate = (endDateNew.getDate()<10)?'0'+endDateNew.getDate():endDateNew.getDate();
+					let endDateHours = (endDateNew.getHours()<10)?'0'+endDateNew.getHours():endDateNew.getHours();
+					let endDateMinutes = (endDateNew.getMinutes()<10)?'0'+endDateNew.getMinutes():endDateNew.getMinutes();
+					let endDateTime = endDateHours+':'+endDateMinutes+':00'
+					let endDate = endDateYear+'-'+endDateMonth+'-'+endDateDate+'T'+endDateTime;
+					let calendarObj = {
+						"summary": booking.tripName+' Departure Date Time',
+						"description": booking.tripName+" for "+ booking.groupName,
+						"start": {
+				            "dateTime": startDate,
+				            "timeZone": "Asia/Kathmandu"
+				        },
+				        "end": {
+				            "dateTime": endDate,
+				            "timeZone": "Asia/Kathmandu"
+				        }
+					};
+					let appCalendarLib = new AppCalendarLib();
+					appCalendarLib.saveToCalendar(req.headers.email, calendarObj)
+						.then(googleCalendarObj=>{
+							if(JSON.stringify(googleCalendarObj) !== "{}"){
+								resolve(googleCalendarObj.id)
+							}else{
+								resolve('');
+							}
+						});
+				}); 
+
+				let syncArrival = new Promise((resolve, reject) => {
+					let startDateEpoc = req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60);
+					let startDateNew = new Date(startDateEpoc*1000);
+					let startDateYear = startDateNew.getFullYear();
+					let startDateMonth = ((startDateNew.getMonth()+1)<10)?'0'+(startDateNew.getMonth()+1):(startDateNew.getMonth()+1);
+					let startDateDate = (startDateNew.getDate()<10)?'0'+startDateNew.getDate():startDateNew.getDate();
+					let startDateTime = req.body.arrivalTime.hrTime+':'+req.body.arrivalTime.minTime+':00';
+					let startDate = startDateYear+'-'+startDateMonth+'-'+startDateDate+'T'+startDateTime;
+
+					let endDateEpoc = startDateEpoc+3600;
+					let endDateNew = new Date(endDateEpoc*1000);
+					let endDateYear = endDateNew.getFullYear();
+					let endDateMonth = ((endDateNew.getMonth()+1)<10)?'0'+(endDateNew.getMonth()+1):(endDateNew.getMonth()+1);
+					let endDateDate = (endDateNew.getDate()<10)?'0'+endDateNew.getDate():endDateNew.getDate();
+					let endDateHours = (endDateNew.getHours()<10)?'0'+endDateNew.getHours():endDateNew.getHours();
+					let endDateMinutes = (endDateNew.getMinutes()<10)?'0'+endDateNew.getMinutes():endDateNew.getMinutes();
+					let endDateTime = endDateHours+':'+endDateMinutes+':00'
+					let endDate = endDateYear+'-'+endDateMonth+'-'+endDateDate+'T'+endDateTime;
+					let calendarObj = {
+						"summary": booking.tripName+ ' Arrival Date Time',
+						"description": booking.tripName+" for "+ booking.groupName,
+						"start": {
+				            "dateTime": startDate,
+				            "timeZone": "Asia/Kathmandu"
+				        },
+				        "end": {
+				            "dateTime": endDate,
+				            "timeZone": "Asia/Kathmandu"
+				        }
+					};
+					let appCalendarLib = new AppCalendarLib();
+					appCalendarLib.saveToCalendar(req.headers.email, calendarObj)
+						.then(googleCalendarObj=>{
+							if(JSON.stringify(googleCalendarObj) !== "{}"){
+								resolve(googleCalendarObj.id)
+							}else{
+								resolve('');
+							}
+						});
+				}); 
+				Promise.all([syncDeparture, syncArrival]).then(calendarIds => { 
+					req.body.departureCalendarId = calendarIds[0];
+					req.body.arrivalCalendarId = calendarIds[1];
+					let trips = new Trips(req.body);
+					trips.save((err, trip)=>{
+						if(err){
+							res.status(400).json({success:false, data:err});
+						}else{
+							res.status(200).json({success:true, data:trip});
+						}
+					});
+				});
 			}
 		});
 	}else{

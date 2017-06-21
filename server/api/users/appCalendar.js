@@ -7,79 +7,63 @@ class AppCalendarLib {
 	
 	constructor() {}
 
-	saveToCalendar(email){
-		let bodyObj = {
-	        "summary": "Google I/O 2017",
-	        "location": "800 Howard St., San Francisco, CA 94103",
-	        "description": "A chance to hear more about Google's developer products.",
-	        "start": {
-	            "dateTime": "2017-06-19T16:00:00",
-	            "timeZone": "Asia/Kathmandu"
-	        },
-	        "end": {
-	            "dateTime": "2017-06-19T20:30:55",
-	            "timeZone": "Asia/Kathmandu"
-	        }
-	    };
-
-		User.findOne({email: email}, (err, user)=>{
-			if(err){
-				console.log("-------------------------------------------");
-				console.log(user)
-				console.log("-------------------------------------------")
-			}else{
-				if(user.googleAuths && JSON.stringify(user.googleAuths) !== "{}"){
-					let googleAuthLib = new GoogleAuthLib();
-					googleAuthLib.listCalendars(user.googleAuths.access_token)
-						.then(calendarLists=>{
-							let calendarItems = calendarLists.items;
-							let hasTrekEngine = calendarItems.find(this.findCalendar);
-							if(hasTrekEngine === undefined || JSON.stringify(hasTrekEngine) === "{}"){
-								this.createCalendar(user.googleAuths.access_token)
-									.then(calendarObj=>{
-										let calendarId = calendarObj.id;
-										this.createCalendarEvent(user.googleAuths.access_token, calendarId, bodyObj)
-											.then(calendarEventObj=>{
-												console.log("-------------------------------------------");
-												console.log(calendarEventObj);
-												console.log("-------------------------------------------");
-											})
-											.catch(calendarEventObjErr=>{
-												console.log("-------------------------------------------");
-												console.log(calendarEventObjErr);
-												console.log("-------------------------------------------");
-											})
-
-									})
-									.catch(calendarObjErr=>{
-										console.log(calendarObjErr);
-									})
-							}else{
-								let calendarId = hasTrekEngine.id;
-								this.createCalendarEvent(user.googleAuths.access_token, calendarId, bodyObj)
-									.then(calendarEventObj=>{
-										console.log("-------------------------------------------");
-										console.log(calendarEventObj);
-										console.log("-------------------------------------------");
-									})
-									.catch(calendarEventObjErr=>{
-										console.log("-------------------------------------------");
-										console.log(calendarEventObjErr);
-										console.log("-------------------------------------------");
-									})
-							}
-						})
-						.catch(calendarListsErr=>{
-							console.log("-------------------------------------------");
-							console.log(calendarListsErr)
-							console.log("-------------------------------------------");
-						})
+	saveToCalendar(userEmail, calendarBodyObj){
+		return new Promise((resolve, reject)=>{
+			User.findOne({email: userEmail}, (err, user)=>{
+				if(err){
+					reject(err);
 				}else{
-					console.log("-------------------------------------------");
-					console.log('resolve empty')
-					console.log("-------------------------------------------");
+					if(user.googleAuths && JSON.stringify(user.googleAuths) !== "{}"){
+						if(user.calendarNotification){
+							let notificationMinutes = (parseInt(user.calendarNotification.hrTime)>0)? parseInt(user.calendarNotification.hrTime)*60+parseInt(user.calendarNotification.minTime):parseInt(user.calendarNotification.minTime);
+							calendarBodyObj.reminders = {
+								useDefault : false,
+								overrides: [
+									{'method':'email', minutes: notificationMinutes},
+									{'method':'popup', minutes: notificationMinutes}
+								]
+							}
+						}
+					
+						let googleAuthLib = new GoogleAuthLib();
+						googleAuthLib.listCalendars(user.googleAuths.access_token)
+							.then(calendarLists=>{
+								let calendarItems = calendarLists.items;
+								let hasTrekEngine = calendarItems.find(this.findCalendar);
+								if(hasTrekEngine === undefined || JSON.stringify(hasTrekEngine) === "{}"){
+									this.createCalendar(user.googleAuths.access_token)
+										.then(calendarObj=>{
+											let calendarId = calendarObj.id;
+											this.createCalendarEvent(user.googleAuths.access_token, calendarId, calendarBodyObj)
+												.then(calendarEventObj=>{
+													resolve(calendarEventObj);
+												})
+												.catch(calendarEventObjErr=>{
+													reject(calendarEventObjErr);
+												});
+										})
+										.catch(calendarObjErr=>{
+											reject(calendarObjErr);
+										})
+								}else{
+									let calendarId = hasTrekEngine.id;
+									this.createCalendarEvent(user.googleAuths.access_token, calendarId, calendarBodyObj)
+										.then(calendarEventObj=>{
+											resolve(calendarEventObj);
+										})
+										.catch(calendarEventObjErr=>{
+											reject(calendarEventObjErr);
+										});
+								}
+							})
+							.catch(calendarListsErr=>{
+								reject(calendarListsErr)
+							})
+					}else{
+						resolve(false);
+					}
 				}
-			}
+			});
 		});
 	}
 
