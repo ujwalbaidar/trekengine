@@ -11,15 +11,14 @@ let UserSchema = new mongoose.Schema({
 		website: String,
 		siteUrl: String
 	},
-	loginAccess:[{
-		method: String,
-		accessToken: String,
-		refreshToken: String,
-		expireTime: Number,
-	}],
+	googleAuths: Object,
 	package: {
 		packageId: String,
 		expireDate: String,
+	},
+	calendarNotification: {
+		hrTime: { type: String, default: '01' },
+		minTime: { type: String, default: '00' }
 	},
 	status: { type:Boolean, default: false },
 	mobile: String,

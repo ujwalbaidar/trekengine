@@ -19,4 +19,8 @@ router.put('/updateProfile', userController.updateUserProfile);
 router.put('/updatePassword', userController.updateUserPassword);
 router.post('/forgotPasswordEmail', userController.forgotPasswordEmail);
 router.put('/resetUserPassword', userController.resetUserPassword);
+router.get('/getOauthUrl', userController.getOauthUrl);
+router.post('/saveOauthUser', userController.saveOauthUser);
+router.post('/validateCode', userController.validateCode);
+
 module.exports = router;
