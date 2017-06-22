@@ -21,30 +21,33 @@ exports.createTrips = function(req, res) {
 				let syncDeparture = new Promise((resolve, reject) => {
 					let startDateEpoc = req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60);
 					let startDateNew = new Date(startDateEpoc*1000);
-					let startDateYear = startDateNew.getFullYear();
-					let startDateMonth = ((startDateNew.getMonth()+1)<10)?'0'+(startDateNew.getMonth()+1):(startDateNew.getMonth()+1);
-					let startDateDate = (startDateNew.getDate()<10)?'0'+startDateNew.getDate():startDateNew.getDate();
-					let startDateTime = req.body.departureTime.hrTime+':'+req.body.departureTime.minTime+':00';
-					let startDate = startDateYear+'-'+startDateMonth+'-'+startDateDate+'T'+startDateTime;
+					let reverseStartDate = startDateNew.toLocaleDateString().split('/').reverse();
+					let startDateYear = reverseStartDate[0];
+					let startDateMonth = (reverseStartDate[2]<10)?'0'+reverseStartDate[2]:reverseStartDate[2];
+					let startDateDate = (reverseStartDate[1]<10)?'0'+reverseStartDate[1]:reverseStartDate[1];
+					let startTime = (startDateNew.toTimeString().split(" "))[0]
+					let startDate = [startDateYear, startDateMonth, startDateDate].join("-");
+					let startDateTime = [startDate, startTime].join('T');
 
 					let endDateEpoc = startDateEpoc+3600;
 					let endDateNew = new Date(endDateEpoc*1000);
-					let endDateYear = endDateNew.getFullYear();
-					let endDateMonth = ((endDateNew.getMonth()+1)<10)?'0'+(endDateNew.getMonth()+1):(endDateNew.getMonth()+1);
-					let endDateDate = (endDateNew.getDate()<10)?'0'+endDateNew.getDate():endDateNew.getDate();
-					let endDateHours = (endDateNew.getHours()<10)?'0'+endDateNew.getHours():endDateNew.getHours();
-					let endDateMinutes = (endDateNew.getMinutes()<10)?'0'+endDateNew.getMinutes():endDateNew.getMinutes();
-					let endDateTime = endDateHours+':'+endDateMinutes+':00'
-					let endDate = endDateYear+'-'+endDateMonth+'-'+endDateDate+'T'+endDateTime;
+					let reverseEndDate = endDateNew.toLocaleDateString().split('/').reverse();
+					let endDateYear = reverseEndDate[0];
+					let endDateMonth = (reverseEndDate[2]<10)?'0'+reverseEndDate[2]:reverseEndDate[2];
+					let endDateDate = (reverseEndDate[1]<10)?'0'+reverseEndDate[1]:reverseEndDate[1];
+					let endTime = (endDateNew.toTimeString().split(" "))[0]
+					let endDate = [endDateYear, endDateMonth, endDateDate].join("-");
+					let endDateTime = [endDate, endTime].join('T');
+
 					let calendarObj = {
 						"summary": booking.tripName+' Departure Date Time',
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
-				            "dateTime": startDate,
+				            "dateTime": startDateTime,
 				            "timeZone": "Asia/Kathmandu"
 				        },
 				        "end": {
-				            "dateTime": endDate,
+				            "dateTime": endDateTime,
 				            "timeZone": "Asia/Kathmandu"
 				        }
 					};
@@ -52,7 +55,7 @@ exports.createTrips = function(req, res) {
 					appCalendarLib.saveToCalendar(req.headers.email, calendarObj)
 						.then(googleCalendarObj=>{
 							if(JSON.stringify(googleCalendarObj) !== "{}"){
-								resolve(googleCalendarObj.id)
+								resolve(googleCalendarObj)
 							}else{
 								resolve('');
 							}
@@ -62,46 +65,50 @@ exports.createTrips = function(req, res) {
 				let syncArrival = new Promise((resolve, reject) => {
 					let startDateEpoc = req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60);
 					let startDateNew = new Date(startDateEpoc*1000);
-					let startDateYear = startDateNew.getFullYear();
-					let startDateMonth = ((startDateNew.getMonth()+1)<10)?'0'+(startDateNew.getMonth()+1):(startDateNew.getMonth()+1);
-					let startDateDate = (startDateNew.getDate()<10)?'0'+startDateNew.getDate():startDateNew.getDate();
-					let startDateTime = req.body.arrivalTime.hrTime+':'+req.body.arrivalTime.minTime+':00';
-					let startDate = startDateYear+'-'+startDateMonth+'-'+startDateDate+'T'+startDateTime;
+					let reverseStartDate = startDateNew.toLocaleDateString().split('/').reverse();
+					let startDateYear = reverseStartDate[0];
+					let startDateMonth = (reverseStartDate[2]<10)?'0'+reverseStartDate[2]:reverseStartDate[2];
+					let startDateDate = (reverseStartDate[1]<10)?'0'+reverseStartDate[1]:reverseStartDate[1];
+					let startTime = (startDateNew.toTimeString().split(" "))[0]
+					let startDate = [startDateYear, startDateMonth, startDateDate].join("-");
+					let startDateTime = [startDate, startTime].join('T');
 
 					let endDateEpoc = startDateEpoc+3600;
 					let endDateNew = new Date(endDateEpoc*1000);
-					let endDateYear = endDateNew.getFullYear();
-					let endDateMonth = ((endDateNew.getMonth()+1)<10)?'0'+(endDateNew.getMonth()+1):(endDateNew.getMonth()+1);
-					let endDateDate = (endDateNew.getDate()<10)?'0'+endDateNew.getDate():endDateNew.getDate();
-					let endDateHours = (endDateNew.getHours()<10)?'0'+endDateNew.getHours():endDateNew.getHours();
-					let endDateMinutes = (endDateNew.getMinutes()<10)?'0'+endDateNew.getMinutes():endDateNew.getMinutes();
-					let endDateTime = endDateHours+':'+endDateMinutes+':00'
-					let endDate = endDateYear+'-'+endDateMonth+'-'+endDateDate+'T'+endDateTime;
+					let reverseEndDate = endDateNew.toLocaleDateString().split('/').reverse();
+					let endDateYear = reverseEndDate[0];
+					let endDateMonth = (reverseEndDate[2]<10)?'0'+reverseEndDate[2]:reverseEndDate[2];
+					let endDateDate = (reverseEndDate[1]<10)?'0'+reverseEndDate[1]:reverseEndDate[1];
+					let endTime = (endDateNew.toTimeString().split(" "))[0]
+					let endDate = [endDateYear, endDateMonth, endDateDate].join("-");
+					let endDateTime = [endDate, endTime].join('T');
+
 					let calendarObj = {
 						"summary": booking.tripName+ ' Arrival Date Time',
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
-				            "dateTime": startDate,
+				            "dateTime": startDateTime,
 				            "timeZone": "Asia/Kathmandu"
 				        },
 				        "end": {
-				            "dateTime": endDate,
+				            "dateTime": endDateTime,
 				            "timeZone": "Asia/Kathmandu"
 				        }
 					};
+
 					let appCalendarLib = new AppCalendarLib();
 					appCalendarLib.saveToCalendar(req.headers.email, calendarObj)
 						.then(googleCalendarObj=>{
 							if(JSON.stringify(googleCalendarObj) !== "{}"){
-								resolve(googleCalendarObj.id)
+								resolve(googleCalendarObj)
 							}else{
 								resolve('');
 							}
 						});
 				}); 
-				Promise.all([syncDeparture, syncArrival]).then(calendarIds => { 
-					req.body.departureCalendarId = calendarIds[0];
-					req.body.arrivalCalendarId = calendarIds[1];
+				Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+					req.body.departureCalendarObj = calendarObjects[0];
+					req.body.arrivalCalendarObj = calendarObjects[1];
 					let trips = new Trips(req.body);
 					trips.save((err, trip)=>{
 						if(err){
