@@ -162,6 +162,19 @@ export class TripDatesDialogComponent implements OnInit {
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 			this.trip = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data["records"]);
 			this.title = 'Edit Trip Dates';
+			if(this.trip.departureTime == undefined){
+				this.trip['departureTime'] = {
+					hrTime:this.hrs[0],
+					minTime:this.mins[0]
+				};
+			}
+
+			if(this.trip.arrivalTime == undefined){
+				this.trip['arrivalTime'] = {
+					hrTime:this.hrs[0],
+					minTime:this.mins[0]
+				};
+			}
 		}else{
 			this.trip['departureTime'] = {
 				hrTime:this.hrs[0],
