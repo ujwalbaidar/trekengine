@@ -14,6 +14,8 @@ export class User {
 }
 
 export class Trip {
+	name: string;
+	cost: number;
   	departureDate: any;
   	arrivalDate: any;
   	departureTime = {} as{
