@@ -165,6 +165,6 @@
 		</div>
 	</div>
 	<div md-dialog-actions>
-		<button md-button class="waves-effect #009688 teal btn full-width-btn" type="button" (click)="submitFlightDetails(flightDetail.form)">Submit</button>
+		<button [disabled]="disableSubmitButton==true" md-button class="waves-effect #009688 teal btn full-width-btn" type="button" (click)="submitFlightDetails(flightDetail.form)">Submit</button>
 	</div>
 </form>

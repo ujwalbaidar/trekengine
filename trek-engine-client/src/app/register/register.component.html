@@ -1,17 +1,30 @@
-<form class="col s12" (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
-	
-	<div md-dialog-content>
-		<div class="row">
-			<div class="col s10">
-				<h5>
-					{{title}}
-				</h5>
-			</div>
-			<div class="col s2 right-align">
-				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
-			</div>
+<div md-dialog-content>
+	<div class="row">
+		<div class="col s10">
+			<h5>
+				{{title}}
+			</h5>
 		</div>
-		
+		<div class="col s2 right-align">
+			<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+		</div>
+	</div>
+</div>
+	
+<div md-dialog-content>
+	<div>
+		<div *ngFor="let authUrl of authUrls">
+			<button *ngIf="authUrl.loginType==='google'" class="loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+				Signup with Google
+			</button>
+			<button *ngIf="authUrl.loginType==='facebook'" class="loginBtn loginBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+				Login with Facebook
+			</button>
+		</div>
+
+	</div>
+	<form class="col s12" (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
+	
 		<div class="row">
 			<div class="col s12 m6">
 				<label class="active" for="first_name">
@@ -119,15 +132,15 @@
 				<span>e.g.:"http://www.yoursite.com"</span>
 			</div>
 		</div>
-	</div>
-	<div md-dialog-actions class="center-align register-submit-btn full-width-btn-div">
-		<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1" *ngIf="featurePackage.cost>0;else unlimitedPeriod">
-			{{'Start 30 Days Free Trial'}}
-		</button>
-		<ng-template #unlimitedPeriod>
-			<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1">
-				{{'Start For Unlimited Period'}}
+		<div md-dialog-actions class="center-align register-submit-btn full-width-btn-div">
+			<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1" *ngIf="featurePackage.cost>0;else unlimitedPeriod">
+				{{'Start 30 Days Free Trial'}}
 			</button>
-		</ng-template>
-	</div>
-</form>
+			<ng-template #unlimitedPeriod>
+				<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1">
+					{{'Start For Unlimited Period'}}
+				</button>
+			</ng-template>
+		</div>
+	</form>
+</div>

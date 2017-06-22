@@ -6,7 +6,7 @@ import { Trip } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
-import { MovementsService, UserService } from '../../services/index';
+import { MovementsService, UserService, AuthService } from '../../services/index';
 
 @Component({
   selector: 'trip-details',
@@ -136,7 +136,6 @@ export class TripDetailsDialogComponent implements OnInit {
 	templateUrl: './trip-dates-dialog.html',
 })
 export class TripDatesDialogComponent implements OnInit {
-	trip: Trip = <Trip>{};
 	public departure_date: Object;
 	public arrival_date: Object;
 	public title: string = 'Add Trip Dates';
@@ -146,24 +145,44 @@ export class TripDatesDialogComponent implements OnInit {
         sunHighlight: false,
         editableDateField: false
     };
-	
     submittedTripDateForm: boolean = false;
+    disableSubmitButton: boolean = false;
+	
+	hrs: any;
+	mins: any;
+	trip: Trip = <Trip>{};
 
-	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
+	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService, public authService: AuthService) {
+		let timePicker = this.authService.developTimePicker();
+		this.hrs = timePicker.hrs;
+		this.mins = timePicker.mins;
+		this.trip = <Trip>{departureTime:{hrTime:this.hrs[0],minTime:this.mins[0]}, arrivalTime:{hrTime:this.hrs[0],minTime:this.mins[0]}};
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 			this.trip = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data["records"]);
 			this.title = 'Edit Trip Dates';
+		}else{
+			this.trip['departureTime'] = {
+				hrTime:this.hrs[0],
+				minTime:this.mins[0]
+			};
+			this.trip['arrivalTime'] = {
+				hrTime:this.hrs[0],
+				minTime:this.mins[0]
+			};
 		}
+
 	}
 	
 	ngOnInit(){
+
 	}
 	
 	submitTripDates(tripDateForm:any) {
 		this.submittedTripDateForm = true;
 		if(tripDateForm.valid){
+			this.disableSubmitButton = true;
 			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 				this.updateTripDates();
 			}else{
@@ -176,9 +195,11 @@ export class TripDatesDialogComponent implements OnInit {
 		const saveRequest = this.movementServie.submitTripDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(tripsDetail);
 			}, error=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(error);
 			});
 	}
@@ -187,9 +208,11 @@ export class TripDatesDialogComponent implements OnInit {
 		this.movementServie.updateTrekDetails(this.trip)
 			.subscribe(tripsDetail=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(this.trip);
 			}, error=>{
 				this.submittedTripDateForm = false;
+				this.disableSubmitButton = false;
 				this.dialogRef.close(error);
 			});
 	}

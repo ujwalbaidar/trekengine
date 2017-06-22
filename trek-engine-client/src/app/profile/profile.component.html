@@ -233,6 +233,50 @@
 						<span>Notify Everyday Sunday about this week's trip through email</span>
 					</div>
 				</div>
+				<div class="card-action">
+					Google Caledar Settings
+				</div>
+				<div class="card-action">
+					<div class="row">
+						<div *ngFor="let authUrl of authUrls" class="col s12 m2">
+							<button class="btn waves-effect waves-light #0d47a1 blue darken-4" *ngIf="authUrl.loginType==='google'" (click)="redirectOauthUrl(authUrl.url)" [disabled]="userInfo.googleAuths">
+								Authorize Google
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s12 m1" *ngIf="userInfo.googleAuths">
+							<label for="pickupTime">
+								<strong>
+									{{'Calendar notfy before: '}}
+								</strong>
+							</label>
+						</div>
+						<div class="col s12 m6" *ngIf="userInfo.googleAuths">
+							<div class="col s1" style="padding: 10px">
+								<strong>hr:</strong>
+							</div>
+							<div class="col s4">
+								<select class="browser-default" [(ngModel)]="userInfo.calendarNotification.hrTime" name="notificationTimeHr" #notificationTimeHr="ngModel" (ngModelChange)="updateUserProfile(userInfo, $event, 'hrTime')">
+									<option [value]="hr" *ngFor="let hr of hrs">
+										<span>{{hr}}</span>
+									</option>
+								</select>
+							</div>
+							<div class="col s1" style="padding: 10px">
+								<strong>min:</strong>
+							</div>
+							<div class="col s4">
+								<select class="browser-default" [(ngModel)]="userInfo.calendarNotification.minTime" name="notificationTimeMin" #notificationTimeMin="ngModel" (ngModelChange)="updateUserProfile(userInfo, $event, 'minTime')">
+									<option [value]="min" *ngFor="let min of mins">
+										<span>{{min}}</span>
+									</option>
+								</select>
+							</div>
+							
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<ng-template #updateContent>

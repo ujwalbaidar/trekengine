@@ -39,16 +39,28 @@ export class ProfileComponent implements OnInit {
 		{ 'id': '2', 'name': 'https', 'value': 'https://'}
 	];
 	selectedProtocol: string;
+	authUrls =  [];
+	hrs: any;
+	mins: any;
 
 	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
+		let timePicker = this.authService.developTimePicker();
+		timePicker.hrs.push("24");
+		this.hrs = timePicker.hrs;
+		this.mins = timePicker.mins;
 	}
 
 	ngOnInit() {
+		if(window.name && window.name == 'GoogleAuth'){
+		 	window.opener.location.reload();
+			window.close();
+		}
 		this.profilePassword = {
 			userPassword: '',
 			confirmPassword: ''
 		};
 		this.getUserInfo();
+		this.getOauthUrl();
 	}
 
 	getUserInfo(){
@@ -62,6 +74,17 @@ export class ProfileComponent implements OnInit {
 			}, error=>{
 				this.userErr = error;
 			});
+	}
+
+	getOauthUrl(){
+		this.userService.getOauthUrls()
+			.subscribe(authUrls=>{
+				this.authUrls = authUrls;
+			});
+	}
+
+	redirectOauthUrl(url:string){
+		window.open(url, "GoogleAuth", "width=600,height=600");
 	}
 
 	submitProfileInfo(option:String, profileForm:any){
@@ -99,7 +122,10 @@ export class ProfileComponent implements OnInit {
 		this.updateUserProfile(this.profile);
 	}
 
-	updateUserProfile(userDataObj: object){
+	updateUserProfile(userDataObj: object, changeValue: string = '',  changeType: string = ''){
+		if(changeType && changeType.length>0){
+			userDataObj['calendarNotification'][changeType] = changeValue
+		}
 		this.userService.updateUserInfo(userDataObj)
 			.subscribe(updateData=>{
 				this.getUserInfo();
