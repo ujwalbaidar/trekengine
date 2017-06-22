@@ -132,5 +132,59 @@ class GoogleAuthLib {
 				});
 		});
 	}
+
+	checkNRefreshToken(googleTokens, oAuthOptions){
+		return new Promise((resolve, reject)=>{
+			let options = {
+				hostname: 'www.googleapis.com',
+				path: `/oauth2/v3/tokeninfo?access_token=${googleTokens.access_token}`,
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			};
+			let requestLib = new RequestLib(options);
+			requestLib.getRequest()
+				.then(validToken=>{
+					resolve({refreshData:false, data: {}})
+				})
+				.catch(invalidToken=>{
+					this.refreshAccessToken(googleTokens, oAuthOptions)
+						.then(refreshToken=>{
+							resolve({refreshData:true, data:refreshToken});
+						})
+						.catch(refreshTokenErr=>{
+							reject(refreshTokenErr);
+						});
+				});
+		});
+	}
+
+	refreshAccessToken(googleTokens, oAuthOptions){
+		return new Promise((resolve, reject) => {
+			let options = {
+				hostname: 'www.googleapis.com',
+				path: '/oauth2/v4/token',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			};
+			let data = {
+				"client_id": oAuthOptions.clientId,
+				"client_secret": oAuthOptions.clientSecret,
+				"refresh_token":googleTokens.refresh_token,
+				"grant_type": "refresh_token"
+			};
+
+			let requestLib = new RequestLib(options);
+			requestLib.postRequest(data)
+				.then(tokenObj=>{
+					resolve(tokenObj);
+				})
+				.catch(tokenErr=>{
+					reject(tokenErr);
+				});
+		});
+	}
 }
+
 module.exports = GoogleAuthLib;

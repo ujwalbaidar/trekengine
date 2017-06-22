@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
 let GoogleAuthLib = require('../../library/oAuth/googleAuth');
+let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('../../configs/config')[env];
 
 class AppCalendarLib {
 	
@@ -24,46 +26,86 @@ class AppCalendarLib {
 								]
 							}
 						}
-					
+						let oAuthOptions = {
+							clientId: config['google']['client_id'],
+							clientSecret: config['google']['client_secret'],
+						};
 						let googleAuthLib = new GoogleAuthLib();
-						googleAuthLib.listCalendars(user.googleAuths.access_token)
-							.then(calendarLists=>{
-								let calendarItems = calendarLists.items;
-								let hasTrekEngine = calendarItems.find(this.findCalendar);
-								if(hasTrekEngine === undefined || JSON.stringify(hasTrekEngine) === "{}"){
-									this.createCalendar(user.googleAuths.access_token)
-										.then(calendarObj=>{
-											let calendarId = calendarObj.id;
-											this.createCalendarEvent(user.googleAuths.access_token, calendarId, calendarBodyObj)
+						googleAuthLib.checkNRefreshToken(user.googleAuths, oAuthOptions)
+							.then(refhreshObj=>{
+
+								if(refhreshObj.refreshData == true){
+									User.update({ email: userEmail },{ googleAuths: refhreshObj.data}, (userUpdateErr, updateResponse)=>{
+										if(userUpdateErr){
+											reject(userUpdateErr);
+										}else{
+											this.processCalendar(refhreshObj.data.access_token, calendarBodyObj)
 												.then(calendarEventObj=>{
 													resolve(calendarEventObj);
 												})
-												.catch(calendarEventObjErr=>{
-													reject(calendarEventObjErr);
+												.catch(calendarEventObj=>{
+													reject(calendarEventObj);
 												});
-										})
-										.catch(calendarObjErr=>{
-											reject(calendarObjErr);
-										})
+										}
+									});
 								}else{
-									let calendarId = hasTrekEngine.id;
-									this.createCalendarEvent(user.googleAuths.access_token, calendarId, calendarBodyObj)
+									this.processCalendar(user.googleAuths.access_token, calendarBodyObj)
 										.then(calendarEventObj=>{
 											resolve(calendarEventObj);
 										})
-										.catch(calendarEventObjErr=>{
-											reject(calendarEventObjErr);
+										.catch(calendarEventObj=>{
+											reject(calendarEventObj);
 										});
 								}
 							})
-							.catch(calendarListsErr=>{
-								reject(calendarListsErr)
-							})
+							.catch(tokenErr=>{
+								reject(tokenErr);
+							});
+					
 					}else{
 						resolve(false);
 					}
 				}
 			});
+		});
+	}
+
+	processCalendar(accessToken, calendarBodyObj){
+		return new Promise((resolve, reject)=>{
+			let googleAuthLib = new GoogleAuthLib();
+			googleAuthLib.listCalendars(accessToken)
+				.then(calendarLists=>{
+					let calendarItems = calendarLists.items;
+					let hasTrekEngine = calendarItems.find(this.findCalendar);
+					if(hasTrekEngine === undefined || JSON.stringify(hasTrekEngine) === "{}"){
+						this.createCalendar(accessToken)
+							.then(calendarObj=>{
+								let calendarId = calendarObj.id;
+								this.createCalendarEvent(accessToken, calendarId, calendarBodyObj)
+									.then(calendarEventObj=>{
+										resolve(calendarEventObj);
+									})
+									.catch(calendarEventObjErr=>{
+										reject(calendarEventObjErr);
+									});
+							})
+							.catch(calendarObjErr=>{
+								reject(calendarObjErr);
+							})
+					}else{
+						let calendarId = hasTrekEngine.id;
+						this.createCalendarEvent(accessToken, calendarId, calendarBodyObj)
+							.then(calendarEventObj=>{
+								resolve(calendarEventObj);
+							})
+							.catch(calendarEventObjErr=>{
+								reject(calendarEventObjErr);
+							});
+					}
+				})
+				.catch(calendarListsErr=>{
+					reject(calendarListsErr)
+				});
 		});
 	}
 
