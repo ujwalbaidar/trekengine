@@ -20,11 +20,8 @@ exports.createTrips = function(req, res) {
 			}else{
 				let syncDeparture = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
-					let isoEpocStartDate = new Date(epocStartDate);
-					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+					let fullStartDateTime = new Date(epocStartDate);
 
-					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-					let fullStartDateTime = new Date(startDateTimeInSec);
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
 					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
@@ -44,19 +41,20 @@ exports.createTrips = function(req, res) {
 					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
 					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
 					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
-					
+
 					let calendarObj = {
 						"summary": booking.tripName+' Departure Date Time',
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": "Etc/UTC"
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": "Etc/UTC"
 				        }
 					};
+
 					let appCalendarLib = new AppCalendarLib();
 					appCalendarLib.saveToCalendar(req.headers.email, calendarObj, true)
 						.then(googleCalendarObj=>{
@@ -70,11 +68,8 @@ exports.createTrips = function(req, res) {
 
 				let syncArrival = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
-					let isoEpocStartDate = new Date(epocStartDate);
-					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+					let fullStartDateTime = new Date(epocStartDate);
 
-					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-					let fullStartDateTime = new Date(startDateTimeInSec);
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
 					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
@@ -96,15 +91,15 @@ exports.createTrips = function(req, res) {
 					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
 
 					let calendarObj = {
-						"summary": booking.tripName+ ' Arrival Date Time',
+						"summary": booking.tripName+' Departure Date Time',
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": "Etc/UTC"
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": "Etc/UTC"
 				        }
 					};
 
