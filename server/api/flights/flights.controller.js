@@ -13,25 +13,31 @@ exports.createFlights = function(req, res) {
 				res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 			}else{
 				let syncDeparture = new Promise((resolve, reject) => {
-					let startDateEpoc = req.body.departure.date.epoc+(parseInt(req.body.departure.hrTime)*60*60)+(parseInt(req.body.departure.minTime)*60);
-					let startDateNew = new Date(startDateEpoc*1000);
-					let reverseStartDate = startDateNew.toLocaleDateString().split('/').reverse();
-					let startDateYear = reverseStartDate[0];
-					let startDateMonth = (reverseStartDate[2]<10)?'0'+reverseStartDate[2]:reverseStartDate[2];
-					let startDateDate = (reverseStartDate[1]<10)?'0'+reverseStartDate[1]:reverseStartDate[1];
-					let startTime = (startDateNew.toTimeString().split(" "))[0]
-					let startDate = [startDateYear, startDateMonth, startDateDate].join("-");
-					let startDateTime = [startDate, startTime].join('T');
+					let epocStartDate = (req.body.departure.date.epoc+(parseInt(req.body.departure.hrTime)*60*60)+(parseInt(req.body.departure.minTime)*60))*1000;
+					let isoEpocStartDate = new Date(epocStartDate);
+					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
 
-					let endDateEpoc = startDateEpoc+3600;
-					let endDateNew = new Date(endDateEpoc*1000);
-					let reverseEndDate = endDateNew.toLocaleDateString().split('/').reverse();
-					let endDateYear = reverseEndDate[0];
-					let endDateMonth = (reverseEndDate[2]<10)?'0'+reverseEndDate[2]:reverseEndDate[2];
-					let endDateDate = (reverseEndDate[1]<10)?'0'+reverseEndDate[1]:reverseEndDate[1];
-					let endTime = (endDateNew.toTimeString().split(" "))[0]
-					let endDate = [endDateYear, endDateMonth, endDateDate].join("-");
-					let endDateTime = [endDate, endTime].join('T');
+					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+					let fullStartDateTime = new Date(startDateTimeInSec);
+					let startDateYear = fullStartDateTime.getUTCFullYear();
+					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
+					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
+					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
+					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
+					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
+					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
+					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+
+					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
+					let fullEndDateTime = new Date(endDateTimeInSec);
+					let endDateYear = fullEndDateTime.getUTCFullYear();
+					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
+					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
+					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
+					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
+					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
+					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
+					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
 
 					let calendarObj = {
 						"summary": booking.tripName+' Flight Departure Date Time',
@@ -57,25 +63,31 @@ exports.createFlights = function(req, res) {
 				}); 
 
 				let syncArrival = new Promise((resolve, reject) => {
-					let startDateEpoc = req.body.arrival.date.epoc+(parseInt(req.body.arrival.hrTime)*60*60)+(parseInt(req.body.arrival.minTime)*60);
-					let startDateNew = new Date(startDateEpoc*1000);
-					let reverseStartDate = startDateNew.toLocaleDateString().split('/').reverse();
-					let startDateYear = reverseStartDate[0];
-					let startDateMonth = (reverseStartDate[2]<10)?'0'+reverseStartDate[2]:reverseStartDate[2];
-					let startDateDate = (reverseStartDate[1]<10)?'0'+reverseStartDate[1]:reverseStartDate[1];
-					let startTime = (startDateNew.toTimeString().split(" "))[0]
-					let startDate = [startDateYear, startDateMonth, startDateDate].join("-");
-					let startDateTime = [startDate, startTime].join('T');
+					let epocStartDate = (req.body.arrival.date.epoc+(parseInt(req.body.arrival.hrTime)*60*60)+(parseInt(req.body.arrival.minTime)*60))*1000;
+					let isoEpocStartDate = new Date(epocStartDate);
+					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
 
-					let endDateEpoc = startDateEpoc+3600;
-					let endDateNew = new Date(endDateEpoc*1000);
-					let reverseEndDate = endDateNew.toLocaleDateString().split('/').reverse();
-					let endDateYear = reverseEndDate[0];
-					let endDateMonth = (reverseEndDate[2]<10)?'0'+reverseEndDate[2]:reverseEndDate[2];
-					let endDateDate = (reverseEndDate[1]<10)?'0'+reverseEndDate[1]:reverseEndDate[1];
-					let endTime = (endDateNew.toTimeString().split(" "))[0]
-					let endDate = [endDateYear, endDateMonth, endDateDate].join("-");
-					let endDateTime = [endDate, endTime].join('T');
+					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+					let fullStartDateTime = new Date(startDateTimeInSec);
+					let startDateYear = fullStartDateTime.getUTCFullYear();
+					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
+					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
+					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
+					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
+					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
+					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
+					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+
+					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
+					let fullEndDateTime = new Date(endDateTimeInSec);
+					let endDateYear = fullEndDateTime.getUTCFullYear();
+					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
+					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
+					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
+					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
+					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
+					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
+					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
 
 					let calendarObj = {
 						"summary": booking.tripName+ ' Flight Arrival Date Time',
