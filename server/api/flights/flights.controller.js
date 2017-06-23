@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Flights = mongoose.model('Flights');
 const Bookings = mongoose.model('Bookings');
 let AppCalendarLib = require('../users/appCalendar');
+const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let config = require('../../../server/configs/config')[env];
 
 exports.createFlights = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -14,11 +16,14 @@ exports.createFlights = function(req, res) {
 			}else{
 				let syncDeparture = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.departure.date.epoc+(parseInt(req.body.departure.hrTime)*60*60)+(parseInt(req.body.departure.minTime)*60))*1000;
-					let isoEpocStartDate = new Date(epocStartDate);
-					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+					var fullStartDateTime = new Date(epocStartDate);
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						fullStartDateTime = new Date(startDateTimeInSec);
+					}
 
-					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-					let fullStartDateTime = new Date(startDateTimeInSec);
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
 					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
@@ -44,11 +49,11 @@ exports.createFlights = function(req, res) {
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": config.timezone
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": config.timezone
 				        }
 					};
 					let appCalendarLib = new AppCalendarLib();
@@ -64,11 +69,14 @@ exports.createFlights = function(req, res) {
 
 				let syncArrival = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.arrival.date.epoc+(parseInt(req.body.arrival.hrTime)*60*60)+(parseInt(req.body.arrival.minTime)*60))*1000;
-					let isoEpocStartDate = new Date(epocStartDate);
-					let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+					var fullStartDateTime = new Date(epocStartDate);
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						var fullStartDateTime = new Date(startDateTimeInSec);
+					}
 
-					let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-					let fullStartDateTime = new Date(startDateTimeInSec);
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
 					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
@@ -94,11 +102,11 @@ exports.createFlights = function(req, res) {
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": config.timezone
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Asia/Kathmandu"
+				            "timeZone": config.timezone
 				        }
 					};
 					let appCalendarLib = new AppCalendarLib();

@@ -32,5 +32,6 @@
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",
 		"algorithm": "HS256"
-	}
+	},
+	"timezone": "Asia/Kathmandu"
 }
