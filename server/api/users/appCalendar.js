@@ -33,7 +33,6 @@ class AppCalendarLib {
 						let googleAuthLib = new GoogleAuthLib();
 						googleAuthLib.checkNRefreshToken(user.googleAuths, oAuthOptions)
 							.then(refhreshObj=>{
-
 								if(refhreshObj.refreshData == true){
 									User.update({ email: userEmail },{ googleAuths: refhreshObj.data}, (userUpdateErr, updateResponse)=>{
 										if(userUpdateErr){
