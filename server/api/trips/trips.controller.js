@@ -20,7 +20,14 @@ exports.createTrips = function(req, res) {
 			}else{
 				let syncDeparture = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
-					let fullStartDateTime = new Date(epocStartDate);
+
+					var fullStartDateTime = new Date(epocStartDate);
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						var fullStartDateTime = new Date(startDateTimeInSec);
+					}
 
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
@@ -47,11 +54,11 @@ exports.createTrips = function(req, res) {
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Etc/UTC"
+				            "timeZone": config.timezone
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Etc/UTC"
+				            "timeZone": config.timezone
 				        }
 					};
 
@@ -68,7 +75,14 @@ exports.createTrips = function(req, res) {
 
 				let syncArrival = new Promise((resolve, reject) => {
 					let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
-					let fullStartDateTime = new Date(epocStartDate);
+					var fullStartDateTime = new Date(epocStartDate);
+
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						var fullStartDateTime = new Date(startDateTimeInSec);
+					}
 
 					let startDateYear = fullStartDateTime.getUTCFullYear();
 					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
@@ -95,11 +109,11 @@ exports.createTrips = function(req, res) {
 						"description": booking.tripName+" for "+ booking.groupName,
 						"start": {
 				            "dateTime": startDateTime,
-				            "timeZone": "Etc/UTC"
+				            "timeZone": config.timezone
 				        },
 				        "end": {
 				            "dateTime": endDateTime,
-				            "timeZone": "Etc/UTC"
+				            "timeZone": config.timezone
 				        }
 					};
 
