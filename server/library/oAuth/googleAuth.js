@@ -150,6 +150,7 @@ class GoogleAuthLib {
 				.catch(invalidToken=>{
 					this.refreshAccessToken(googleTokens, oAuthOptions)
 						.then(refreshToken=>{
+							refreshToken.email = googleTokens.email;
 							refreshToken.refresh_token = googleTokens.refresh_token;
 							resolve({refreshData:true, data:refreshToken});
 						})
