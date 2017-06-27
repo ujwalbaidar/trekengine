@@ -200,8 +200,28 @@ class GoogleAuthLib {
 					'Authorization': `Bearer ${accessToken}`
 				}
 			};
+			request(options, (err, httpResponse, body) =>{
+				if (err) {
+					reject(err);
+				}else{
+					resolve(body);
+				}
+			});
+		});
+	}
 
-			request.put(options, (err, httpResponse, body) =>{
+	deleteCalendarEvent(accessToken, calendarId, eventId){
+		return new Promise((resolve, reject)=>{
+			let options = {
+				method: 'DELETE',
+				url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${accessToken}`
+				}
+			};
+
+			request(options, (err, httpResponse, body) =>{
 				if (err) {
 					reject(err);
 				}else{

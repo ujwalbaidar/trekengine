@@ -195,18 +195,18 @@ class AppCalendarLib {
 										if(userUpdateErr){
 											reject(userUpdateErr);
 										}else{
-											resolve({hasToken: true, tokenObj: refhreshObj});
+											resolve({hasToken: true, tokenObj: refhreshObj, user: user});
 										}
 									});
 								}else{
-									resolve({hasToken: true, tokenObj: user.googleAuths});
+									resolve({hasToken: true, tokenObj: user.googleAuths, user: user});
 								}
 							})
 							.catch(tokenErr=>{
 								reject(tokenErr);
 							});
 					}else{
-						resolve({hasToken: false, tokenObj: {}});
+						resolve({hasToken: false, tokenObj: {}, user: user});
 					}
 				}
 			});

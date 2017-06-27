@@ -6,6 +6,8 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 const User = mongoose.model('User');
 const Bookings = mongoose.model('Bookings');
+let AppCalendarLib = require('../users/appCalendar');
+let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -301,69 +303,6 @@ function removeAttachments(pathArr) {
 	});
 }
 
-exports.updateTraveler = function(req, res){
-	if(req.headers && req.headers.userId){
-		saveAttachments(req.body, 'update')
-			.then(attachments=>{
-				let updateData = {
-					firstName: req.body.firstName,
-					middleName: req.body.middleName,
-					lastName: req.body.lastName,
-					nationality: req.body.nationality,
-					permanentAddress: req.body.permanentAddress,
-					email: req.body.email,
-					dob: req.body.dob,
-					telephone: req.body.telephone,
-					airportPickup: req.body.airportPickup,
-					messageBox: req.body.messageBox,
-					status: req.body.status,
-					updatedDate: new Date(),
-					hotel: req.body.hotel,
-					attachments: req.body.attachments,
-					selected: req.body.selected,
-				};
-				if(req.body.emergencyContact){
-					updateData.emergencyContact = req.body.emergencyContact;
-				}
-				if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
-					updateData.airportPickup.date = req.body.airportPickup.date;
-				}
-				if(attachments.length>0 && attachments[0]['passportAttachment']){
-					updateData['attachments']['passport'] = attachments[0]['passportAttachment'];
-				}
-				if(attachments.length>0 && attachments[2]['insuranceAttachment']){
-
-					updateData['attachments']['insurance'] = attachments[2]['insuranceAttachment'];
-				}
-				if(attachments.length>0 && attachments[1]['profileAttachment']){
-					updateData['attachments']['profile'] = attachments[1]['profileAttachment'];
-				}
-				if(req.body.bookingId){
-					updateData.bookingId = req.body.bookingId;
-				}
-				Travelers.update({_id: req.body._id, userId: req.headers.userId}, updateData, (err, travelerUpdate)=>{
-					if(err){
-						res.status(400).json({success:false, data:err});
-					}else{
-						if(req.body.bookingId){
-							updateBooking({bookingId: req.body.bookingId},{$addToSet:{travellers:req.body._id}})
-								.then(updateBookingData=>{
-									res.status(200).json({success:true, data:travelerUpdate});
-								})
-								.catch(updateErr=>{
-									res.status(400).json({success:false, data:updateErr});
-								})
-						}else{
-							res.status(200).json({success:true, data:travelerUpdate});
-						}
-					}
-				});
-			});
-	}else{
-		res.status(401).json({success:false, message: 'Login is Required!'});
-	}
-}
-
 function validateIframe(headerData){
 	return new Promise((resolve, reject)=>{
 		let origin = headerData.weborigin;
@@ -464,59 +403,246 @@ function updateBooking(query, updateData){
 
 exports.addTraveler = function(req, res){
 	if(req.headers && req.headers.userId){
-		saveAttachments(req.body, 'save')
-			.then(saveRes=>{
-				req.body.userId = req.headers.userId;
-				req.body.attachments = {};
+		travelerPickupCalendar(req.body, req.headers.email)
+			.then(googleCalendarObj=>{
+				if(googleCalendarObj.confirmation == true){
+					req.body.googleCalendarObj = googleCalendarObj.calendarObjects;
+					processAddTraveler(req.body, req.headers)
+						.then(addResponse=>{
+							res.status(200).json(addResponse);
+						})
+						.catch(addError=>{
+							res.status(400).json(addError);
+						});
+				}else{
+					processAddTraveler(req.body, req.headers)
+						.then(addResponse=>{
+							res.status(200).json(addResponse);
+						})
+						.catch(addError=>{
+							res.status(400).json(addError);
+						});
+				}
+			});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
 
-				if(req.body.hotel && req.body.hotel.confirmation==false){
-					req.body.hotel = {};
+function travelerPickupCalendar(travelerData, userEmail){
+	return new Promise((resolve, reject)=>{
+		if(travelerData.airportPickup && travelerData.airportPickup.confirmation === true){
+			let appCalendarLib = new AppCalendarLib();
+			appCalendarLib.queryUserTokens(userEmail)
+				.then(userToken=>{
+					if(userToken.hasToken == true){
+						Bookings.findOne({bookingId: travelerData.bookingId}, (bookingErr, booking)=>{
+							if(bookingErr){
+								res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
+							}else{
+								let airportPickupObj = travelerData.airportPickup;
+								let epocStartDate = (airportPickupObj.date.epoc+(parseInt(airportPickupObj.hrTime)*60*60)+(parseInt(airportPickupObj.minTime)*60))*1000;
+
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let user = userToken.user;
+										let notificationMinutes = (parseInt(user.calendarNotification.hrTime)>0)? parseInt(user.calendarNotification.hrTime)*60+parseInt(user.calendarNotification.minTime):parseInt(user.calendarNotification.minTime);
+										let calendarObj = {
+											"summary": booking.tripName+' Airport Pickup',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "reminders": {
+												useDefault : false,
+												overrides: [
+													{'method':'email', minutes: notificationMinutes},
+													{'method':'popup', minutes: notificationMinutes}
+												]
+											}
+										};
+										let accessToken = userToken.tokenObj.access_token;
+										if(travelerData.googleCalendarObj && JSON.stringify(travelerData.googleCalendarObj) !== "{}"){
+											let calendarId = travelerData.googleCalendarObj.organizer.email;
+											let eventId = travelerData.googleCalendarObj.id;
+											let googleAuthLib = new GoogleAuthLib();
+											googleAuthLib.updateCalendarEvent(accessToken, calendarObj, calendarId, eventId)
+												.then(googleCalendarObj=>{
+													resolve({confirmation:true, calendarObjects: googleCalendarObj})
+												});
+										}else{
+											appCalendarLib.processCalendar(accessToken, calendarObj)
+												.then(googleCalendarObj=>{
+													resolve({confirmation:true, calendarObjects: googleCalendarObj})
+												});
+										}
+									});
+							}
+						});
+					}else{
+						resolve({confirmation:false, calendarObjects: {}});
+					}
+				});
+		}else{
+			resolve({confirmation:false, calendarObjects: {} });
+		}
+	});
+}
+
+function processAddTraveler(travelerData, headerData){
+	return new Promise((resolve, reject)=>{
+		saveAttachments(travelerData, 'save')
+			.then(saveRes=>{
+				travelerData.userId = headerData.userId;
+				travelerData.attachments = {};
+
+				if(travelerData.hotel && travelerData.hotel.confirmation==false){
+					travelerData.hotel = {};
 				}
 
-				if(req.body.profileAttachment && req.body.profileAttachment.name){
+				if(travelerData.profileAttachment && travelerData.profileAttachment.name){
 					let profileAttachmentPath = saveRes.filter(pathObj=>{
 						if(pathObj['profileAttachment']){
 							return pathObj['profileAttachment'];
 						}
 					});
-					req.body.attachments.profile = profileAttachmentPath[0].profileAttachment;
+					travelerData.attachments.profile = profileAttachmentPath[0].profileAttachment;
 				}
-				if(req.body.passportAttachment && req.body.passportAttachment.name){
+				if(travelerData.passportAttachment && travelerData.passportAttachment.name){
 					let passportAttachmentPath = saveRes.filter(pathObj=>{
 						if(pathObj['passportAttachment']){
 							return pathObj['passportAttachment'];
 						}
 					});
-					req.body.attachments.passport = passportAttachmentPath[0].passportAttachment;
+					travelerData.attachments.passport = passportAttachmentPath[0].passportAttachment;
 				}
-				if(req.body.insuranceAttachment && req.body.insuranceAttachment.name){
+				if(travelerData.insuranceAttachment && travelerData.insuranceAttachment.name){
 					let insuranceAttachmentPath = saveRes.filter(pathObj=>{
 						if(pathObj['insuranceAttachment']){
 							return pathObj['insuranceAttachment'];
 						}
 					});
-					req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
+					travelerData.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 				}
-				req.body.selected = true;
-				let travelers = new Travelers(req.body);
+				travelerData.selected = true;
+				let travelers = new Travelers(travelerData);
 				travelers.save((err, traveler)=>{
 					if(err){
-						res.status(400).json({success:false, data:err});
+						reject({success:false, data:err});
 					}else{
 						updateBooking({bookingId: traveler.bookingId},{$addToSet:{travellers:traveler._id.toString()}})
 							.then(updateBookingData=>{
-								res.status(200).json({success:true, data:traveler});
+								resolve({success:true, data:traveler});
 							})
 							.catch(updateErr=>{
-								res.status(400).json({success:false, data:updateErr});
+								reject({success:false, data:updateErr});
 							});
 					}
 				});
 			})
 			.catch(saveErr=>{
-				res.status(400).send({message:"Failed to save all attachments", error: JSON.stringify(saveErr)});
+				reject({message:"Failed to save all attachments", data: JSON.stringify(saveErr)});
+			});
+	});
+}
+
+exports.updateTraveler = function(req, res){
+	if(req.headers && req.headers.userId){
+		travelerPickupCalendar(req.body, req.headers.email)
+			.then(googleCalendarObj=>{
+				if(googleCalendarObj.confirmation == true){
+					req.body.googleCalendarObj = googleCalendarObj.calendarObjects;
+					processUpdataTraveler(req.body, req.headers)
+						.then(addResponse=>{
+							res.status(200).json(addResponse);
+						})
+						.catch(addError=>{
+							res.status(400).json(addError);
+						});
+				}else{
+					processUpdataTraveler(req.body, req.headers)
+						.then(addResponse=>{
+							res.status(200).json(addResponse);
+						})
+						.catch(addError=>{
+							res.status(400).json(addError);
+						});
+				}
 			});
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function processUpdataTraveler(travelerData, headerData){
+	return new Promise((resolve, reject)=>{
+		saveAttachments(travelerData, 'update')
+			.then(attachments=>{
+				let updateData = {
+					firstName: travelerData.firstName,
+					middleName: travelerData.middleName,
+					lastName: travelerData.lastName,
+					nationality: travelerData.nationality,
+					permanentAddress: travelerData.permanentAddress,
+					email: travelerData.email,
+					dob: travelerData.dob,
+					telephone: travelerData.telephone,
+					airportPickup: travelerData.airportPickup,
+					messageBox: travelerData.messageBox,
+					status: travelerData.status,
+					updatedDate: new Date(),
+					hotel: travelerData.hotel,
+					attachments: travelerData.attachments,
+					selected: travelerData.selected,
+				};
+				if(travelerData.emergencyContact){
+					updateData.emergencyContact = travelerData.emergencyContact;
+				}
+				if(travelerData.airportPickup && travelerData.airportPickup.confirmation && travelerData.airportPickup.date){
+					updateData.airportPickup.hrTime = travelerData.airportPickup.hrTime;
+					updateData.airportPickup.minTime = travelerData.airportPickup.minTime;
+					updateData.airportPickup.date = travelerData.airportPickup.date;
+				}
+				if(attachments.length>0 && attachments[0]['passportAttachment']){
+					updateData['attachments']['passport'] = attachments[0]['passportAttachment'];
+				}
+				if(attachments.length>0 && attachments[2]['insuranceAttachment']){
+
+					updateData['attachments']['insurance'] = attachments[2]['insuranceAttachment'];
+				}
+				if(attachments.length>0 && attachments[1]['profileAttachment']){
+					updateData['attachments']['profile'] = attachments[1]['profileAttachment'];
+				}
+				if(travelerData.bookingId){
+					updateData.bookingId = travelerData.bookingId;
+				}
+
+				if(travelerData.googleCalendarObj && JSON.stringify(travelerData.googleCalendarObj) !== "{}"){
+					updateData.googleCalendarObj = travelerData.googleCalendarObj;
+				}
+
+				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
+					if(err){
+						res.status(400).json({success:false, data:err});
+					}else{
+						if(travelerData.bookingId){
+							updateBooking({bookingId: travelerData.bookingId},{$addToSet:{travellers:travelerData._id}})
+								.then(updateBookingData=>{
+									resolve({success:true, data:updateData});
+								})
+								.catch(updateErr=>{
+									reject({success:false, data:updateErr});
+								});
+						}else{
+							resolve({success:true, data:updateData});
+						}
+					}
+				});
+			});
+	});
 }
