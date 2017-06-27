@@ -142,5 +142,75 @@ class AppCalendarLib {
 				});
 		});
 	}
+
+	getCalendarDates(epocStartDate){
+		return new Promise(resolve=>{
+			var fullStartDateTime = new Date(epocStartDate);
+			if(env === 'development'){
+				let isoEpocStartDate = new Date(epocStartDate);
+				let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+				let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+				var fullStartDateTime = new Date(startDateTimeInSec);
+			}
+
+			let startDateYear = fullStartDateTime.getUTCFullYear();
+			let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
+			let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
+			let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
+			let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
+			let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
+			let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
+			let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+
+			let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
+			let fullEndDateTime = new Date(endDateTimeInSec);
+			let endDateYear = fullEndDateTime.getUTCFullYear();
+			let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
+			let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
+			let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
+			let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
+			let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
+			let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
+			let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
+			resolve({startDateTime:startDateTime, endDateTime:endDateTime});
+		});
+	}
+
+	queryUserTokens(userEmail){
+		return new Promise((resolve, reject)=>{
+			User.findOne({email: userEmail}, (err, user)=>{
+				if(err){
+					reject(err);
+				}else{
+					if(user.googleAuths && JSON.stringify(user.googleAuths) !== "{}"){
+						let oAuthOptions = {
+							clientId: config['google']['client_id'],
+							clientSecret: config['google']['client_secret'],
+						};
+						let googleAuthLib = new GoogleAuthLib();
+						googleAuthLib.checkNRefreshToken(user.googleAuths, oAuthOptions)
+							.then(refhreshObj=>{
+								if(refhreshObj.refreshData == true){
+									User.update({ email: userEmail },{ googleAuths: refhreshObj.data}, (userUpdateErr, updateResponse)=>{
+										if(userUpdateErr){
+											reject(userUpdateErr);
+										}else{
+											resolve({hasToken: true, tokenObj: refhreshObj});
+										}
+									});
+								}else{
+									resolve({hasToken: true, tokenObj: user.googleAuths});
+								}
+							})
+							.catch(tokenErr=>{
+								reject(tokenErr);
+							});
+					}else{
+						resolve({hasToken: false, tokenObj: {}});
+					}
+				}
+			});
+		});
+	}
 }
 module.exports = AppCalendarLib;

@@ -1,5 +1,6 @@
 const RequestLib = require('../request/https');
 const querystring = require('querystring');
+const request = require('request');
 
 class GoogleAuthLib {
 
@@ -185,6 +186,28 @@ class GoogleAuthLib {
 				.catch(tokenErr=>{
 					reject(tokenErr);
 				});
+		});
+	}
+
+	updateCalendarEvent(accessToken, eventObj, calendarId, eventId){
+		return new Promise((resolve, reject)=>{
+			let options = {
+				method: 'PUT',
+				json: eventObj,
+				url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${accessToken}`
+				}
+			};
+
+			request.put(options, (err, httpResponse, body) =>{
+				if (err) {
+					reject(err);
+				}else{
+					resolve(body);
+				}
+			});
 		});
 	}
 }
