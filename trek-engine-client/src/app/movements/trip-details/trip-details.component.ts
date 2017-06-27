@@ -160,7 +160,7 @@ export class TripDatesDialogComponent implements OnInit {
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
-			this.trip = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data["records"]);
+			this.trip = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data["records"]));
 			this.title = 'Edit Trip Dates';
 			if(this.trip.departureTime == undefined){
 				this.trip['departureTime'] = {
