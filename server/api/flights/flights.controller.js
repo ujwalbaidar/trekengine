@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Flights = mongoose.model('Flights');
 const Bookings = mongoose.model('Bookings');
 let AppCalendarLib = require('../users/appCalendar');
+let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 
@@ -189,16 +190,132 @@ exports.updateFlights = function(req, res){
 				cost: req.body.arrival.cost
 			},
 		};
-		Flights.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, flightUpdate)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data:flightUpdate});
-			}
-		});
+		if(req.body.flightDepartureCalendarObj && req.body.flightArrivalCalendarObj){
+			updateFlightCalendar(req.body, req.headers.email)
+				.then(syncCalendar=>{
+					if(syncCalendar.auth === true){
+						updateData.flightDepartureCalendarObj = syncCalendar.calendarObjects[0];
+						updateData.flightArrivalCalendarObj = syncCalendar.calendarObjects[1];
+						updateFlight({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}else{
+						updateFlight({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}
+				})
+				.catch(calendarErr=>{
+					res.status(400).json({success:false, data:calendarErr});
+				});
+		}else{
+			updateFlight({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+				.then(updateResp=>{
+					res.status(200).json({success:true, data: updateResp});
+				})
+				.catch(updateErr=>{
+					res.status(400).json({success:false, data:err});
+				})
+		}
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function updateFlight(query, updateData){
+	return new Promise((resolve, reject)=>{
+		Flights.update(query, updateData, (err, flightUpdate)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(flightUpdate);
+			}
+		});
+	});
+}
+
+function updateFlightCalendar(flightData, userEmail){
+	return new Promise((resolve, reject)=>{
+		let appCalendarLib = new AppCalendarLib();
+		appCalendarLib.queryUserTokens(userEmail)
+			.then(userToken=>{
+				if(userToken.hasToken == true){
+					Bookings.findOne({bookingId: flightData.bookingId}, (bookingErr, booking)=>{
+						if(bookingErr){
+							res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
+						}else{
+							let syncDeparture = new Promise((resolve, reject) => {
+								let epocStartDate = (flightData.departure.date.epoc+(parseInt(flightData.departure.hrTime)*60*60)+(parseInt(flightData.departure.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Flight Departure Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = flightData.flightDepartureCalendarObj.organizer.email;
+										let eventId = flightData.flightDepartureCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												resolve(googleCalendarObj)
+											});
+									});
+							});
+
+							let syncArrival = new Promise((resolve, reject) => {
+								let epocStartDate = (flightData.arrival.date.epoc+(parseInt(flightData.arrival.hrTime)*60*60)+(parseInt(flightData.arrival.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Flight Departure Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = flightData.flightArrivalCalendarObj.organizer.email;
+										let eventId = flightData.flightArrivalCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												resolve(googleCalendarObj)
+											});
+									});
+							});
+
+							Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+								resolve({auth:true, calendarObjects: calendarObjects});
+							});
+						}
+					});
+				}else{
+					resolve({auth:false, calendarObjects: []});
+				}
+			});
+	});
 }
 
 exports.deleteFlights = function(req, res){
