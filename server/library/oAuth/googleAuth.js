@@ -1,5 +1,6 @@
 const RequestLib = require('../request/https');
 const querystring = require('querystring');
+const request = require('request');
 
 class GoogleAuthLib {
 
@@ -150,6 +151,7 @@ class GoogleAuthLib {
 				.catch(invalidToken=>{
 					this.refreshAccessToken(googleTokens, oAuthOptions)
 						.then(refreshToken=>{
+							refreshToken.email = googleTokens.email;
 							refreshToken.refresh_token = googleTokens.refresh_token;
 							resolve({refreshData:true, data:refreshToken});
 						})
@@ -184,6 +186,48 @@ class GoogleAuthLib {
 				.catch(tokenErr=>{
 					reject(tokenErr);
 				});
+		});
+	}
+
+	updateCalendarEvent(accessToken, eventObj, calendarId, eventId){
+		return new Promise((resolve, reject)=>{
+			let options = {
+				method: 'PUT',
+				json: eventObj,
+				url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${accessToken}`
+				}
+			};
+			request(options, (err, httpResponse, body) =>{
+				if (err) {
+					reject(err);
+				}else{
+					resolve(body);
+				}
+			});
+		});
+	}
+
+	deleteCalendarEvent(accessToken, calendarId, eventId){
+		return new Promise((resolve, reject)=>{
+			let options = {
+				method: 'DELETE',
+				url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${accessToken}`
+				}
+			};
+
+			request(options, (err, httpResponse, body) =>{
+				if (err) {
+					reject(err);
+				}else{
+					resolve(body);
+				}
+			});
 		});
 	}
 }

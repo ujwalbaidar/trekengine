@@ -152,7 +152,7 @@ export class BookingDetailsComponent implements OnInit  {
 					if(this.selectedTravelerArr==undefined){
 						this.selectedTravelerArr = [];
 					}
-					this.selectedTravelerArr.push(this.travelers[this.selectedTraveler]);
+					this.selectedTravelerArr.push(updateResponse);
 					this.travelers.splice(this.selectedTraveler,1);
 					this.selectedTraveler = 0;
 				}, updateErr=>{

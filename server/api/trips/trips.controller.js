@@ -8,6 +8,7 @@ let config = require('../../../server/configs/config')[env];
 const fs = require('fs');
 const ejs = require('ejs');
 let AppCalendarLib = require('../users/appCalendar');
+let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -197,16 +198,141 @@ exports.updateTrips = function(req, res){
 			arrivalTime: req.body.arrivalTime,
 			updateDate: new Date()
 		};
-		Trips.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, tripUpdate)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data: tripUpdate});
-			}
-		});
+
+		if(req.body.departureCalendarObj && req.body.arrivalCalendarObj){
+			updateTripCalendar(req.body, req.body.userEmail)
+				.then(syncCalendar=>{
+					if(syncCalendar.auth === true){
+						updateData.departureCalendarObj = syncCalendar.calendarObjects[0];
+						updateData.arrivalCalendarObj = syncCalendar.calendarObjects[1];
+						updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}else{
+						updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}
+				})
+				.catch(calendarErr=>{
+					res.status(400).json({success:false, data:calendarErr});
+				});
+		}else{
+			updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+				.then(updateResp=>{
+					res.status(200).json({success:true, data: updateResp});
+				})
+				.catch(updateErr=>{
+					res.status(400).json({success:false, data:err});
+				})
+		}
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function updateTrip(query, updateData){
+	return new Promise((resolve, reject)=>{
+		Trips.update(query, updateData, (err, tripUpdate)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(tripUpdate);
+			}
+		});
+	});
+}
+
+function updateTripCalendar(tripData, userEmail){
+	return new Promise((resolve, reject)=>{
+		let appCalendarLib = new AppCalendarLib();
+		appCalendarLib.queryUserTokens(userEmail)
+			.then(userToken=>{
+				if(userToken.hasToken == true){
+					Bookings.findOne({bookingId: tripData.bookingId}, (bookingErr, booking)=>{
+						if(bookingErr){
+							res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
+						}else{
+							let syncDeparture = new Promise((resolve, reject) => {
+								let epocStartDate = (tripData.departureDate.epoc+(parseInt(tripData.departureTime.hrTime)*60*60)+(parseInt(tripData.departureTime.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Departure Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = tripData.departureCalendarObj.organizer.email;
+										let eventId = tripData.departureCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												if(JSON.stringify(googleCalendarObj) !== "{}"){
+													resolve(googleCalendarObj)
+												}else{
+													resolve('');
+												}
+											});
+									});
+							});
+
+							let syncArrival = new Promise((resolve, reject) => {
+								let epocStartDate = (tripData.arrivalDate.epoc+(parseInt(tripData.arrivalTime.hrTime)*60*60)+(parseInt(tripData.arrivalTime.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Arrival Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = tripData.arrivalCalendarObj.organizer.email;
+										let eventId = tripData.arrivalCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												if(JSON.stringify(googleCalendarObj) !== "{}"){
+													resolve(googleCalendarObj)
+												}else{
+													resolve('');
+												}
+											});
+									});
+							});
+
+							Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+								resolve({auth:true, calendarObjects: calendarObjects});
+							});
+						}
+					});
+				}else{
+					resolve({auth:false, calendarObjects: []});
+				}
+			});
+	});
 }
 
 exports.deleteTrips = function(req, res){

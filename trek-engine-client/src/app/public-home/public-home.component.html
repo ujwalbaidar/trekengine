@@ -3,23 +3,25 @@
 		<li [routerLink]="['login']"><a>Login</a></li>
 </ul>
 <nav class="#7cb342 light-blue darken-1">
-	<div class="nav-wrapper">
-		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-		<ul>
-			<li>
-				<a class="brand-logo">Trek Engine</a>
-			</li>
-		</ul>
+	<div class="container">
+		<div class="nav-wrapper">
+			<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul>
+				<li>
+					<a class="brand-logo">Trek Engine</a>
+				</li>
+			</ul>
 
-		<ul class="right hide-on-med-and-down">
-			<li>
-				<a routerLink="/home">{{'Price & Plan'}}</a>
-			</li>
-			<li>
-				<a routerLink="/login">{{'Login'}}</a>
-			</li>
-		</ul>
+			<ul class="right hide-on-med-and-down">
+				<li>
+					<a routerLink="/home">{{'Price & Plan'}}</a>
+				</li>
+				<li>
+					<a routerLink="/login">{{'Login'}}</a>
+				</li>
+			</ul>
 
+		</div>
 	</div>
 </nav>
 <router-outlet></router-outlet>

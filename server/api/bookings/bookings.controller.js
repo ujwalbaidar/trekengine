@@ -9,6 +9,9 @@ const fs = require('fs');
 const ejs = require('ejs');
 const htmlToText = require('html-to-text');
 
+let AppCalendarLib = require('../users/appCalendar');
+let GoogleAuthLib = require('../../library/oAuth/googleAuth');
+
 exports.getAllBooking = function(req,res){
 	if(req.headers && req.headers.userId){
 		Bookings.find({userId: req.headers.userId }).sort({createdDate: -1}).exec((err, bookings)=>{
@@ -186,23 +189,75 @@ function findTravelersByIds(idArr){
 exports.removeTraveler = function(req, res){
 	if(req.headers && req.headers.userId){
 		let query = {userId: req.headers.userId, bookingId: req.body.query};
-		console.log(req.body)
-		Bookings.update(query, {$pull:{travellers:req.body.data}}, (err, updateData)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				Travelers.update({userId: req.headers.userId, _id: req.body.data},{selected:false, bookingId:""},(travelerErr,updateTraveler)=>{
-					if(travelerErr){
-						res.status(400).json({success:false, data:travelerErr});
-					}else{
-						res.status(200).json({success:true, data:{bookingUpdate:updateData, travelerUpdate: updateTraveler}});
-					}
-				});
-			}
-		});
+		removeTravelerCalendar(req.body.data, req.headers.email)
+			.then(calendarDeleteResp=>{
+				if(calendarDeleteResp.pickup === true){
+					Bookings.update(query, {$pull:{travellers:req.body.data}}, (err, updateData)=>{
+						if(err){
+							res.status(400).json({success:false, data:err});
+						}else{
+							Travelers.update({userId: req.headers.userId, _id: req.body.data},{selected:false, bookingId:"", googleCalendarObj:{}},(travelerErr,updateTraveler)=>{
+								if(travelerErr){
+									res.status(400).json({success:false, data:travelerErr});
+								}else{
+									res.status(200).json({success:true, data:{bookingUpdate:updateData, travelerUpdate: updateTraveler}});
+								}
+							});
+						}
+					});
+				}else{
+					Bookings.update(query, {$pull:{travellers:req.body.data}}, (err, updateData)=>{
+						if(err){
+							res.status(400).json({success:false, data:err});
+						}else{
+							Travelers.update({userId: req.headers.userId, _id: req.body.data},{selected:false, bookingId:""},(travelerErr,updateTraveler)=>{
+								if(travelerErr){
+									res.status(400).json({success:false, data:travelerErr});
+								}else{
+									res.status(200).json({success:true, data:{bookingUpdate:updateData, travelerUpdate: updateTraveler}});
+								}
+							});
+						}
+					});
+				}
+			});
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function removeTravelerCalendar(travelerId, userEmail){
+	return new Promise((resolve, reject)=>{
+		Travelers.findOne({_id: travelerId}, (err, traveler)=>{
+			if(err){
+				reject(err);
+			}else{
+				if(traveler.airportPickup && traveler.airportPickup.confirmation == true){
+					if(traveler.googleCalendarObj && JSON.stringify(traveler.googleCalendarObj) !== "{}"){
+						let calendarObj = traveler.googleCalendarObj;
+						let appCalendarLib = new AppCalendarLib();
+						appCalendarLib.queryUserTokens(userEmail)
+							.then(userToken=>{
+								if(userToken.hasToken == true){
+									let accessToken = userToken.tokenObj.access_token;
+									let googleAuthLib = new GoogleAuthLib();
+									googleAuthLib.deleteCalendarEvent(accessToken, calendarObj.organizer.email, calendarObj.id)
+										.then(googleCalendarObj=>{
+											resolve({pickup:true, calendarObjects: {}});
+										});
+								}else{
+									resolve({pickup:false, calendarObjects: {}});
+								}
+							});
+					}else{
+						resolve({pickup:false, calendarObj: {}});
+					}
+				}else{
+					resolve({pickup:false, calendarObj: {}});
+				}
+			}
+		})
+	})
 }
 
 function updateTripInfos(query, updateObj){

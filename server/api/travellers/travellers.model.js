@@ -42,6 +42,7 @@ let TravelerSchema = new mongoose.Schema({
 	updateDate: {
 		type: Date, 
 		default: new Date()
-	}
+	},
+	googleCalendarObj: Object
 });
 mongoose.model('Travelers', TravelerSchema);
