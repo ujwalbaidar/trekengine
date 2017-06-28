@@ -1,0 +1,250 @@
+body{
+	font-size: 18px;
+	line-height: 1.52857;
+	font-weight: 300;
+	font-family: 'Open Sans', sans-serif;
+	color: #4d4d4d;
+	background: #fff; 
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+	margin-top: 0;
+}
+
+p{margin: 0 0 1.5em;}
+
+.container{
+	width: 80%;
+	max-width: 100%;
+}
+
+/*==============================
+ Header style
+==============================*/
+.header{background: #1685cd;}
+
+.site-content{
+	padding: 70px 0;
+}
+
+.billing-duration{
+	max-width: 500px;
+	margin: 0 auto 50px;
+	text-align: center;
+}
+
+.billing-duration span{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 5px;
+}
+
+.billing-duration img{vertical-align: top;}
+
+/*=============================
+ Pricing-table style*
+=============================*/
+.pricing-table .card .card-title{
+	font-size: 35px;
+	line-height: 45px;
+}
+
+.pricing-table .card .card-content p{margin: 0 0 1.5em;}
+
+.pricing-table .card .plan-list li{
+	margin: 0 0 10px;
+}
+
+.pricing-table .card .btn-start{
+	border-radius: 5px;
+	font-weight: 400;
+}
+
+nav .button-collapse{float: right;}
+
+/*=======================================
+ Login page style
+=======================================*/
+.required-label-mark{color: #f00;}
+
+.login-page .form-holder,
+.forgot-password-page .form-holder{
+	max-width: 400px;
+	margin: 7% auto 0;
+}
+
+.login-page .form-holder .loginBtn--google:before {
+    background: rgba(0, 0, 0, 0) url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") no-repeat scroll 6px 6px;
+    /*border-right: 1px solid #bb3f30;*/
+    border-right: 1px solid #106094;
+}
+
+.login-page .form-holder .loginBtn:before {
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.login-page .form-holder .loginBtn--google {
+    /*background: #dd4b39;*/
+    background: #1685CD;
+    width: 100%;
+}
+
+.login-page .form-holder .loginBtn {
+    border: medium none;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 16px;
+    line-height: 34px;
+    margin: 0;
+    padding: 0 15px 0 46px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.login-page .form-holder .loginBtn--google:hover,
+.login-page .form-holder .loginBtn--google:focus{
+	/*background: #CF4331;*/
+	background: #1373b1;
+}
+
+.login-page .form-holder .btn-submit,
+.forgot-password-page .form-holder .btn-submit{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.login-page .form-holder form .row:last-child,
+.forgot-password-page .form-holder form .row:last-child{margin-bottom: 0;}
+
+.login-page .form-holder form .forgot-password,
+.forgot-password-page .form-holder form .back-to-login{
+	font-size: 14px;
+	font-weight: 400;
+	float: left;
+}
+
+.login-page .form-holder form .forgot-password:hover,
+.login-page .form-holder form .forgot-password:focus,
+.forgot-password-page .form-holder form .back-to-login:hover,
+.forgot-password-page .form-holder form .back-to-login:focus{
+	opacity: 0.6;
+}
+
+.login-page .form-holder form .creat-account{
+	font-size: 14px;
+	font-weight: 400;
+	float: right;
+}
+
+.login-page .form-holder form .creat-account:hover,
+.login-page .form-holder form .creat-account:focus{
+	opacity: 0.6;
+}
+
+.login-page .form-holder form input[type="email"],
+.login-page .form-holder form input[type="password"],
+.forgot-password-page .form-holder form input[type="email"]{
+	border: 1px solid #9e9e9e;
+	margin: 0;
+	padding: 0 25px 0 10px;
+	height: 2.6rem;
+	color: #000;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.login-page .form-holder form input[type="email"]:focus,
+.login-page .form-holder form input[type="password"]:focus,
+.forgot-password-page .form-holder form input[type="email"]:focus{
+	border-color: #26a69a;
+	box-shadow: none;
+}
+
+.login-page .form-holder form .col,
+.forgot-password-page .form-holder form .col{position: relative;}
+
+.login-page .form-holder form .material-icons,
+.forgot-password-page .form-holder form .material-icons{
+	position: absolute;
+	top: 10px;
+	right: 15px;
+	font-size: 20px;
+}
+
+.login-page .form-holder form input.invalid[type="password"]:not(.browser-default),
+.login-page .form-holder form input.invalid[type="password"]:focus:not(.browser-default),
+.login-page .form-holder form input.invalid[type="email"]:not(.browser-default),
+.login-page .form-holder form input.invalid[type="email"]:focus:not(.browser-default),
+.forgot-password-page .form-holder form input.invalid[type="email"]:not(.browser-default),
+.forgot-password-page .form-holder form input.invalid[type="email"]:focus:not(.browser-default){
+	border-color: #f44336;
+	box-shadow: none;
+}
+
+.login-page .form-holder form input.valid[type="password"]:not(.browser-default),
+.login-page .form-holder form input.valid[type="password"]:focus:not(.browser-default),
+.login-page .form-holder form input.valid[type="email"]:not(.browser-default),
+.login-page .form-holder form input.valid[type="email"]:focus:not(.browser-default),
+.forgot-password-page .form-holder form input.valid[type="email"]:not(.browser-default),
+.forgot-password-page .form-holder form input.valid[type="email"]:focus:not(.browser-default){
+	/*border-color: #f44336;*/
+	box-shadow: none;
+}
+
+.login-page .form-holder form label,
+.forgot-password-page .form-holder form label{color: #000;}
+
+.login-page .form-holder form .or{
+	position: relative;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.login-page .form-holder form .or:before{
+	position: absolute;
+	top: 11px;
+	left: 0;
+	width: 42%;
+	height: 1px;
+	background: #9e9e9e;
+	content: '';
+}
+
+.login-page .form-holder form .or:after{
+	position: absolute;
+	top: 11px;
+	right: 0;
+	width: 42%;
+	height: 1px;
+	background: #9e9e9e;
+	content: '';
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #000;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #000;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #000;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #000;
+}
