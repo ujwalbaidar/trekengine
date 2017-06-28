@@ -42,6 +42,7 @@ export class ProfileComponent implements OnInit {
 	authUrls =  [];
 	hrs: any;
 	mins: any;
+	submittedForm: boolean = false;
 
 	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
 		let timePicker = this.authService.developTimePicker();
@@ -70,7 +71,7 @@ export class ProfileComponent implements OnInit {
 				if(this.userInfo['domain'] == undefined){
 					this.userInfo['domain'] = JSON.parse(JSON.stringify({domain:'http://', website:''}));
 				}
-				this.profile = userInfo;
+				this.profile = JSON.parse(JSON.stringify(userInfo));
 			}, error=>{
 				this.userErr = error;
 			});
@@ -90,11 +91,14 @@ export class ProfileComponent implements OnInit {
 	submitProfileInfo(option:String, profileForm:any){
 		if(option==='opt-cancel'){
 			this.displayContent = true;
-			this.userInfo = Object.assign({}, this.profile);
+			this.getUserInfo();
+			// this.userInfo = Object.assign({}, this.profile);
 		}else{
+			this.submittedForm = true;
 			if(profileForm.valid){
 				this.userService.updateUserInfo(this.userInfo)
 					.subscribe(updateData=>{
+						this.submittedForm = false;
 						this.displayContent = true;
 						this.getUserInfo();
 					}, error=>{
