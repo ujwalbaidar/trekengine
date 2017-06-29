@@ -28,7 +28,17 @@ import {
 	MovementDetailsComponent,
 	AirportPickupDetailsComponent
 } from './movements/index';
-import { AnalyticsComponent } from './analytics/analytics.component';
+
+import { 
+	AnalyticsComponent,
+	AudienceAnalyticsComponent,
+	AgeAudienceAnalyticsComponent,
+	CountryAudienceAnalyticsComponent,
+	GenderAudienceAnalyticsComponent,
+	OverviewAudienceAnalyticsComponent,
+	OverviewTripAnalyticsComponent,
+	TripBookingTripAnalyticsComponent 
+} from './analytics/index';
 
 import { AuthResolverService, RoleResolverService } from './services';
 
