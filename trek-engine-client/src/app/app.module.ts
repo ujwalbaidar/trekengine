@@ -1,6 +1,5 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
@@ -57,7 +56,17 @@ import { ActivateTokenComponent } from './register/activate-token/activate-token
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
-import { AnalyticsComponent } from './analytics/analytics.component';
+import { 
+  AnalyticsComponent,
+  AudienceAnalyticsComponent,
+  AgeAudienceAnalyticsComponent,
+  CountryAudienceAnalyticsComponent,
+  GenderAudienceAnalyticsComponent,
+  OverviewAudienceAnalyticsComponent,
+  OverviewTripAnalyticsComponent,
+  TripBookingTripAnalyticsComponent
+} from './analytics/index';
+
 
 enableProdMode();
 
@@ -91,7 +100,16 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
-    AnalyticsComponent
+
+    AnalyticsComponent,
+    AudienceAnalyticsComponent,
+    AgeAudienceAnalyticsComponent,
+    CountryAudienceAnalyticsComponent,
+    GenderAudienceAnalyticsComponent,
+    OverviewAudienceAnalyticsComponent,
+    OverviewTripAnalyticsComponent,
+    TripBookingTripAnalyticsComponent
+    
   ],
   imports: [
     BrowserModule,
