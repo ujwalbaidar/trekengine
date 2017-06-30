@@ -14,17 +14,13 @@
 	</li>
 </ul>
 
-<nav class="#7cb342 light-green darken-1">
+<nav class="header">
 	<div class="nav-wrapper">
-		<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-		<ul>
-			<li>
-				<a class="brand-logo" routerLink="/app">Trek Engine</a>
-			</li>
-		</ul>
+		<!-- <a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a> -->
+		<a id="logo-container" class="brand-logo">Trek Engine</a>
 
-		<ul class="right hide-on-med-and-down">
-			<li (click)="getUnreadNotifications()">
+		<ul class="right hide-on-med-and-down header-navigation">
+			<!-- <li (click)="getUnreadNotifications()">
 				<a class="dropdown-button" data-activates="notificationDropdown">
 					Notifications 
 					<span *ngIf="authService.notifications && authService.notifications.length>0" class="new badge red">
@@ -40,7 +36,7 @@
 			</li>
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app/app-packages">Packages</a>
-			</li>
+			</li> -->
 			<li *ngIf="cookieData.idx==20">
 				<a routerLink="/app/bookings">Bookings</a>
 			</li>
@@ -48,15 +44,23 @@
 				<a routerLink="/app/movements">Movements</a>
 			</li>
 			<li *ngIf="cookieData.idx==20">
-				<a>Accounts</a>
+				<a routerLink="/app/analytics">Analytics</a>
 			</li>
 			<li *ngIf="cookieData.idx==20">
-				<a routerLink="/app/analytics">Analytics</a>
+				<a><i class="fa fa-user-circle"></i></a>
+			</li>
+			<li (click)="getUnreadNotifications()">
+				<a class="dropdown-button" data-activates="notificationDropdown">
+					<i class="fa fa-bell-o">
+						<span *ngIf="authService.notifications && authService.notifications.length>0" class="notification-warning">
+							{{ authService.notifications.length}}
+						</span>
+					</i> 
+				</a>
 			</li>
 			<li (click)="dropDownNav()">
 				<a class="dropdown-button" data-activates="navDropdown">
-					Settings
-					<i class="material-icons right">arrow_drop_down</i>
+					<i class="fa fa-gear"></i>
 				</a>
 			</li>
 		</ul>
@@ -104,7 +108,7 @@
 <div *ngIf="!authService.validatedUser && cookieData.idx=='20'">
 	Your account Package has been expired. Please Upgrade the <a routerLink="/app/package-billings">Billing Plan</a>.
 </div>
-<div class="row" >
+<!-- <div class="row" >
 	<div class="col m1" *ngIf="sideMenuArr && sideMenuArr.length>0">
 		<ul>
 			<li *ngFor="let sideMenu of sideMenuArr">
@@ -113,6 +117,20 @@
 		</ul>
 	</div>
 	<div class="col m11">
+		<router-outlet></router-outlet>
+	</div>
+</div> -->
+
+<div class="admin-panel">
+	<aside id="sidebar">
+		<ul class="navigation collapsible" data-collapsible="accordion">
+			<li *ngFor="let sideMenu of sideMenuArr">
+				<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
+			</li>
+			<li><button class="menu-collapse-button"  (click)="collapseSideMenu()"><i class="fa fa-align-left"></i><span>Collapse menu</span></button></li>
+		</ul>
+	</aside>
+	<div id="content">
 		<router-outlet></router-outlet>
 	</div>
 </div>

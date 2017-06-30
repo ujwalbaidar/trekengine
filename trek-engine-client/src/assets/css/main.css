@@ -1,10 +1,17 @@
+html{
+	/*min-height: 100%;*/
+	height: 100%;
+}
+
 body{
-	font-size: 18px;
-	line-height: 1.52857;
-	font-weight: 300;
-	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	line-height: 26px;
+	font-weight: 400;
+	font-family: 'Muli', sans-serif;
 	color: #4d4d4d;
-	background: #fff; 
+	background: #ECF0F5;
+	/*min-height: 100%;*/
+	height: 100%;
 }
 
 h1,
@@ -26,7 +33,24 @@ p{margin: 0 0 1.5em;}
 /*==============================
  Header style
 ==============================*/
-.header{background: #1685cd;}
+.header{
+	background: #3C8DBC;
+}
+
+#logo-container{
+    float: left;
+    font-size: 18px;
+    font-weight: 300;
+    height: 64px;
+    line-height: 54px;
+    padding: 5px 0;
+    text-align: center;
+    width: 230px;
+
+    background-color: #367fa9;
+    border-bottom: 0 solid transparent;
+    color: #fff;
+}
 
 .site-content{
 	padding: 70px 0;
@@ -67,9 +91,29 @@ p{margin: 0 0 1.5em;}
 
 nav .button-collapse{float: right;}
 
+.header-navigation li{
+	position: relative;
+}
+
+.header-navigation li .notification-warning{
+	background: #00a65a;
+    border-radius: 50%;
+    font-size: 11px;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+    right: 6px;
+    text-align: center;
+    top: 12px;
+    width: 15px;
+}
+
 /*=======================================
  Login page style
 =======================================*/
+.login-page .form-holder .card .card-content h5,
+.forgot-password-page .form-holder .card .card-content h5{font-weight: 600;}
+
 .required-label-mark{color: #f00;}
 
 .login-page .form-holder,
@@ -80,7 +124,6 @@ nav .button-collapse{float: right;}
 
 .login-page .form-holder .loginBtn--google:before {
     background: rgba(0, 0, 0, 0) url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") no-repeat scroll 6px 6px;
-    /*border-right: 1px solid #bb3f30;*/
     border-right: 1px solid #106094;
 }
 
@@ -95,7 +138,6 @@ nav .button-collapse{float: right;}
 }
 
 .login-page .form-holder .loginBtn--google {
-    /*background: #dd4b39;*/
     background: #1685CD;
     width: 100%;
 }
@@ -116,7 +158,6 @@ nav .button-collapse{float: right;}
 
 .login-page .form-holder .loginBtn--google:hover,
 .login-page .form-holder .loginBtn--google:focus{
-	/*background: #CF4331;*/
 	background: #1373b1;
 }
 
@@ -203,7 +244,6 @@ nav .button-collapse{float: right;}
 .login-page .form-holder form input.valid[type="email"]:focus:not(.browser-default),
 .forgot-password-page .form-holder form input.valid[type="email"]:not(.browser-default),
 .forgot-password-page .form-holder form input.valid[type="email"]:focus:not(.browser-default){
-	/*border-color: #f44336;*/
 	box-shadow: none;
 }
 
@@ -234,6 +274,267 @@ nav .button-collapse{float: right;}
 	height: 1px;
 	background: #9e9e9e;
 	content: '';
+}
+
+/*====================
+ Sidebar style
+===================*/
+.admin-panel{
+	position: relative;
+	min-height: 100%;
+}
+
+.admin-panel:after{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+#sidebar{
+	left: 0;
+	min-height: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	width: 230px;
+	color: #b8c7ce;
+	background: #222D32;
+}
+
+.collapse-menu #sidebar{width: 50px;}
+
+.collapse-menu #sidebar ul li span{display: none !important;}
+
+#sidebar .navigation,
+#sidebar .collapsible{
+	margin: 15px 0 0;
+	font-size: 14px;
+	border: 0;
+	box-shadow: none;
+}
+
+#sidebar .collapsible .collapsible{margin: 0;}
+
+#sidebar .navigation li a{
+	color: #b8c7ce;
+	padding: 12px 5px 12px 15px;
+	display: block;
+	-webkit-transition: linear 0.2s;
+	-moz-transition: linear 0.2s;
+	transition: linear 0.2s;
+	border-left: 3px solid transparent;
+}
+
+#sidebar .navigation li > a:hover,
+#sidebar .navigation li > a:focus,
+#sidebar .navigation .active > a,
+#sidebar .navigation li .collapsible-header.active{
+	color: #fff;
+	background: #141a1d;
+	border-left-color: #3c8dbc;
+	outline: none;
+}
+
+#sidebar .navigation li a .fa{
+	display: inline-block;
+    float: none;
+    font-size: 15px;
+    line-height: 26px;
+    margin-right: 0;
+    text-align: left;
+    width: 22px;
+}
+
+#sidebar .navigation li .collapsible-header{
+	background: transparent;
+	border-bottom: 0;
+	line-height: 26px;
+	min-height: auto;
+}
+
+#sidebar .navigation li .collapsible-body{
+	padding: 0;
+	border-bottom: 0;
+	background: #2C3B41;
+	font-size: 12px;
+}
+
+#sidebar .navigation li .collapsible-body .collapsible-body{
+	background: #415760;
+} 
+
+#sidebar .navigation li .collapsible-body ul li a{
+	padding: 5px 5px 5px 15px;
+}
+
+#sidebar .navigation li a .arrow{
+	float: right;
+	text-align: center;
+	-webkit-transition: linear 0.2s;
+	-moz-transition: linear 0.2s;
+	transition: linear 0.2s;
+}
+
+#sidebar .navigation li .collapsible-header.active .arrow{
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+#sidebar .navigation li .menu-collapse-button{
+	background: none;
+	border: 0;
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 12px 5px 12px 15px;
+}
+
+#sidebar .navigation li .menu-collapse-button:hover,
+#sidebar .navigation li .menu-collapse-button:focus{color: #fff;}
+
+#sidebar .navigation li .menu-collapse-button .fa{
+	display: inline-block;
+    float: none;
+    font-size: 15px;
+    line-height: 26px;
+    margin-right: 0;
+    text-align: left;
+    width: 22px;
+}
+
+/*==========================
+ content area style
+============================*/
+#content{
+	margin-left: 230px;
+	padding: 15px;
+}
+
+.collapse-menu #content{margin-left: 50px;}
+
+/*====================================
+ Booking-list-page  style
+====================================*/
+.booking-list-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.booking-list-page .booking-list-table{
+	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+	border-radius: 5px;
+	font-size: 14px;
+	background: #fff;
+}
+
+.booking-list-page .booking-list-table td,
+.booking-list-page .booking-list-table th{
+	padding: 12px 15px;
+}
+
+.booking-list-page .booking-list-table thead th{font-weight: 600}
+
+.booking-list-page .booking-list-table tbody tr{
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.booking-list-page .booking-list-table .delete{
+	color: #F44336;
+}
+
+.booking-list-page .booking-list-table .active{
+	color: #26a69a;
+}
+
+.booking-list-page .booking-list-table .inactive{
+	color: #F44336;	
+}
+
+.booking-list-page .add-round-button-icon{
+	bottom: 20px;
+    position: fixed;
+    right: 20px;
+}
+
+/*=========================================
+ Booking-detail-page style
+=========================================*/
+.booking-detail-page .title-holder{margin-bottom: 0;}
+
+.booking-detail-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.booking-detail-page .card{
+	background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+    font-size: 14px;
+    margin: 0;
+}
+
+.booking-detail-page .card .card-title{
+	font-size: 22px;
+    font-weight: 300;
+    line-height: 30px;
+    float: left;
+    width: 90%;
+}
+
+.booking-detail-page .card .card-content{
+	padding: 10px 15px;
+	overflow: hidden;
+}
+
+.booking-detail-page .card .card-action{
+	padding: 25px 6px 10px;
+}
+
+.booking-detail-page .card .card-action .label{
+	display: inline-block;
+	width: 130px;
+}
+
+.booking-detail-page .card .btn-floating{
+	float: right;
+}
+
+.booking-detail-page .card .card-action .traveller-list li{
+	overflow: hidden;
+	border: 1px solid #e0e0e0;
+	padding: 10px 20px;
+	margin-bottom: 15px;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .img-holder{
+	float: left;
+	width: 42px;
+	margin-right: 20px;
+	margin-top: 10px;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder{
+	overflow: hidden;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button{
+	background: none;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	border: 0;
+	border-radius: 50%;
+	vertical-align: middle;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button .material-icons{line-height: 40px;}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button:focus{
+	background: #26a69a;
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */

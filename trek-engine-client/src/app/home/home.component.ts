@@ -97,4 +97,9 @@ export class HomeComponent implements OnInit {
 				this.notificationErr = error;
 			});
 	}
+
+	collapseSideMenu(){
+		document.getElementsByName('body')
+		// .toggleClass('collapse-menu');
+	}
 }
