@@ -29,25 +29,67 @@ export class HomeComponent implements OnInit {
 		});
 
 		if(this.cookieData && this.cookieData.idx && parseInt(this.cookieData.idx) === 20){
-			this.sideMenuArr = [
+			this.sideMenuArr =[
 				{
-					menu: 'Movement Details',
+					menu: 'Movements',
 					routePath: '/app/movements'
 				},{
-					menu: 'Guide Details',
-					routePath: '/app/movements/guide-details'
+					menu: 'Bookings',
+					routePath: '',
+					submenu: [
+						{
+							menu: 'Trip Details',
+							routePath: '/app/movements/trip-details'
+						},{
+							menu: 'Guide Details',
+							routePath: '/app/movements/guide-details'
+						},{
+							menu: 'Flight Details',
+							routePath: '/app/movements/flight-details'
+						},{
+							menu: 'Traveler Details',
+							routePath: '/app/movements/traveller-details'
+						},{
+							menu: 'Traveler Pickup Details',
+							routePath: '/app/movements/airport-pickup-details'
+						}
+					]
 				},{
-					menu: 'Trip Details',
-					routePath: '/app/movements/trip-details'
-				},{
-					menu: 'Traveler Details',
-					routePath: '/app/movements/traveller-details'
-				},{
-					menu: 'Flight Details',
-					routePath: '/app/movements/flight-details'
-				},{
-					menu: 'Traveler Pickup Details',
-					routePath: '/app/movements/airport-pickup-details'
+					menu: 'Analytics',
+					routePath: '',
+					subMenu: [
+						{
+							menu: 'Audience',
+							routePath: '',
+							subMenuChild: [
+								{
+									menu: 'Overview',
+									routePath: '/app/analytics/audience/overview',
+								},{
+									menu: 'Age',
+									routePath: '/app/analytics/audience/age-analytics',
+								},{
+									menu: 'Country',
+									routePath: '/app/analytics/audience/country-analytics',
+								},{
+									menu: 'Gender',
+									routePath: '/app/analytics/audience/gender-analytics',
+								}
+							]
+						},{
+							menu: 'Trip',
+							routePath: '',
+							subMenuChild: [
+								{
+									menu: 'Overview',
+									routePath: '/app/analytics/trip/overview',
+								},{
+									menu: 'Trip Booking',
+									routePath: '/app/analytics/trip/trip-booking-analytics',
+								}
+							]
+						}
+					]
 				}
 			];
 		}
