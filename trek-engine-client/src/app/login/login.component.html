@@ -3,33 +3,34 @@
 		<div class="form-holder">
 		    	<div class="card">
 		    		<div class="card-content">
+
+						<div class="row">
+							<div class="col s12">
+								<h5 class="center-align">
+									{{'Login'}}
+								</h5>
+							</div>
+						</div>
+
+						<div class="row">
+							<div *ngFor="let authUrl of authUrls" class="col s12">
+								<button *ngIf="authUrl.loginType==='google'" class="waves-effect waves-light loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+									Login with Google
+								</button>
+								<button *ngIf="authUrl.loginType==='facebook'" class="loginBtn loginBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+									Login with Facebook
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col s12">
+								<div class="center-align or">OR</div>
+							</div>
+						</div>
+
 						<form (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
-
-							<div class="row">
-								<div class="col s12">
-									<h5 class="center-align">
-										{{'Login'}}
-									</h5>
-								</div>
-							</div>
-
-							<div class="row">
-								<div *ngFor="let authUrl of authUrls" class="col s12">
-									<button *ngIf="authUrl.loginType==='google'" class="waves-effect waves-light loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
-										Login with Google
-									</button>
-									<button *ngIf="authUrl.loginType==='facebook'" class="loginBtn loginBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
-										Login with Facebook
-									</button>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col s12">
-									<div class="center-align or">OR</div>
-								</div>
-							</div>
-
+								
 							<div class="row">
 								<div class="col s12">
 									<label for="email" [ngClass]="{'active':(user.email!=undefined)}">

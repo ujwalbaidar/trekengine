@@ -108,15 +108,14 @@
 		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<h3 class="card-title">Guide Details</h3>
-					</span>
+					<h3 class="card-title">Guide Details</h3>
+					
 				</div>
 				<div class="card-action">
 					<div *ngIf="guides && guides.length>0;else emptyGuideList;">
 						<div class="row">
 							<div class="input-field col s12 m8">
-								<select [(ngModel)]="selectedGuide">
+								<select class="browser-default" [(ngModel)]="selectedGuide">
 									<option [value]="i" *ngFor="let guide of guides;let i=index;">
 										<span *ngIf="guide && guide.firstName && guide.lastName && guide.email">
 											{{guide.firstName+' '+guide.lastName+' ('+ guide.email+')'}}
