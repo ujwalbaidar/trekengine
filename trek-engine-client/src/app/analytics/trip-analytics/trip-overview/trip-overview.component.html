@@ -1,0 +1,12 @@
+<div class="row">
+	<div class="col s12 m8">
+		<h4>Trip Overview</h4>
+	</div>
+	<div class="col s12 m2">
+		<my-date-picker name="analyticsStartDate" [options]="analyticsStartDatePickerOptions" [(ngModel)]="analyticsStartDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+	</div>
+	<div class="col s12 m2">
+		<my-date-picker name="analyticsEndDate" [options]="analyticsEndDatePickerOptions" [(ngModel)]="analyticsEndDate" (calendarToggle)="onCalendarToggle($event)" required>
+		</my-date-picker>
+	</div>
+</div>

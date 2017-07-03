@@ -56,16 +56,13 @@ import { ActivateTokenComponent } from './register/activate-token/activate-token
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
-import { 
-  AnalyticsComponent,
-  AudienceAnalyticsComponent,
-  AgeAudienceAnalyticsComponent,
-  CountryAudienceAnalyticsComponent,
-  GenderAudienceAnalyticsComponent,
-  OverviewAudienceAnalyticsComponent,
-  OverviewTripAnalyticsComponent,
-  TripBookingTripAnalyticsComponent
-} from './analytics/index';
+
+import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
+import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
+import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
+import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
+import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
+import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
 
 
 enableProdMode();
@@ -100,16 +97,12 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
-
-    AnalyticsComponent,
-    AudienceAnalyticsComponent,
-    AgeAudienceAnalyticsComponent,
-    CountryAudienceAnalyticsComponent,
-    GenderAudienceAnalyticsComponent,
-    OverviewAudienceAnalyticsComponent,
-    OverviewTripAnalyticsComponent,
-    TripBookingTripAnalyticsComponent
-    
+    AudienceOverviewComponent,
+    AudienceAgeComponent,
+    AudienceCountryComponent,
+    AudienceGenderComponent,
+    TripOverviewComponent,
+    TripBookingComponent
   ],
   imports: [
     BrowserModule,
