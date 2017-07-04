@@ -95,8 +95,8 @@ const appRoutes: Routes = [
 			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent },
-			{ path: 'analytics/trip/overview', component: TripOverviewComponent },
-			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent }
+			{ path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }

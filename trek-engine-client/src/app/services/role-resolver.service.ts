@@ -54,7 +54,9 @@ export class RoleResolverService implements CanActivate {
 				'/app/profile',
 				'/app/notifications',
 				'/app/package-billings',
-				'/app/billing-history' 
+				'/app/billing-history',
+				'/app/analytics/trip/overview',
+				'/app/analytics/trip/trip-booking'
 			],
 			30: [ 
 				'/app', 

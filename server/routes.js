@@ -27,6 +27,7 @@ module.exports = function(app){
 	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
 	app.get('/trekengineApp/authorizaiton/activateUser', require('./api/users/user.controller').activateUser);
 	app.get('/trekengineApp/validateAuthToken', decodeAuthToken);
+	app.use('/api/analytics', auth, require('./api/analytics'));
 
 	app.route('*')
         .get((req, res) => {

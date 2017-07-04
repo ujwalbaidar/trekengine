@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import * as moment from 'moment';
+import { AnalyticsService } from '../../../services/index';
 
 @Component({
 	selector: 'app-trip-overview',
@@ -28,7 +29,11 @@ export class TripOverviewComponent implements OnInit {
     analyticsStartDate: Object;
 	analyticsEndDate: Object;
 
-	constructor() { }
+	overviewError:any;
+	mostSoldInfo: any;
+	mostSoldNumbers: any;
+
+	constructor(private analyticsService:AnalyticsService) { }
 
 	ngOnInit() {
 		this.getFilterDate();
@@ -79,7 +84,17 @@ export class TripOverviewComponent implements OnInit {
 	pushInput(){
 		console.log(this.analyticsStartDate);
 		console.log(this.analyticsEndDate);
+		this.getTrekOverview();
 	}
 
+	getTrekOverview(){
+		this.analyticsService.getTrekOverview()
+			.subscribe(overviewData=>{
+				this.mostSoldInfo = overviewData[0];
+				this.mostSoldNumbers = overviewData[1];
+			}, overviewError=>{
+				this.overviewError = overviewError;
+			});
+	}
 
 }
