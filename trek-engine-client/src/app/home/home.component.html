@@ -104,4 +104,25 @@
 <div *ngIf="!authService.validatedUser && cookieData.idx=='20'">
 	Your account Package has been expired. Please Upgrade the <a routerLink="/app/package-billings">Billing Plan</a>.
 </div>
-<router-outlet></router-outlet>
+<div class="row" >
+	<div class="col m1" *ngIf="sideMenuArr && sideMenuArr.length>0">
+		<ul>
+			<li *ngFor="let sideMenu of sideMenuArr">
+				<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
+				<ul *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0">
+					<li *ngFor="let subMenu of sideMenu.subMenu">
+						<a [routerLink]="[subMenu.routePath]">{{ subMenu.menu }}</a>
+						<ul *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0">
+							<li *ngFor="let subMenuChild of subMenu.subMenuChild">
+								<a [routerLink]="[subMenuChild.routePath]">{{ subMenuChild.menu }}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="col m11">
+		<router-outlet></router-outlet>
+	</div>
+</div>
