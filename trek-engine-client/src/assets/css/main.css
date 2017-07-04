@@ -416,13 +416,25 @@ nav .button-collapse{float: right;}
 /*====================================
  Booking-list-page  style
 ====================================*/
-.booking-list-page .main-title{
+.booking-list-page .main-title,
+.movement-list-page .main-title,
+.guid-list-page .main-title,
+.trip-list-page .main-title,
+.traveller-list-page .main-title,
+.flight-list-page .main-title,
+.traveller-pickup-list-page .main-title{
 	font-weight: 300;
 	font-size: 22px;
 	line-height: 30px;
 }
 
-.booking-list-page .booking-list-table{
+.booking-list-page .booking-list-table,
+.movement-list-page .movement-list-table,
+.guid-list-page .guid-list-table,
+.trip-list-page .trip-list-table,
+.traveller-list-page .traveller-list-table,
+.flight-list-page .flight-list-table,
+.traveller-pickup-list-page .traveller-pickup-list-table{
 	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 	border-radius: 5px;
 	font-size: 14px;
@@ -430,29 +442,68 @@ nav .button-collapse{float: right;}
 }
 
 .booking-list-page .booking-list-table td,
-.booking-list-page .booking-list-table th{
+.booking-list-page .booking-list-table th,
+.movement-list-page .movement-list-table td,
+.movement-list-page .movement-list-table th,
+.guid-list-page .guid-list-table td,
+.guid-list-page .guid-list-table th,
+.trip-list-page .trip-list-table td,
+.trip-list-page .trip-list-table th,
+.traveller-list-page .traveller-list-table td,
+.traveller-list-page .traveller-list-table th,
+.flight-list-page .flight-list-table td,
+.flight-list-page .flight-list-table th,
+.traveller-pickup-list-page .traveller-pickup-list-table td,
+.traveller-pickup-list-page .traveller-pickup-list-table th{
 	padding: 12px 15px;
 }
 
-.booking-list-page .booking-list-table thead th{font-weight: 600}
+.booking-list-page .booking-list-table thead th,
+.movement-list-page .movement-list-table thead th,
+.guid-list-page .guid-list-table thead th,
+.trip-list-page .guid-list-table thead th,
+.traveller-list-page .traveller-list-table thead th,
+.flight-list-page .flight-list-table thead th,
+.traveller-pickup-list-page .traveller-pickup-list-table thead th{font-weight: 600}
 
-.booking-list-page .booking-list-table tbody tr{
+.booking-list-page .booking-list-table tbody tr,
+.movement-list-page .movement-list-table tbody tr,
+.guid-list-page .guid-list-table tbody tr,
+.trip-list-page .trip-list-table tbody tr,
+.traveller-list-page .traveller-list-table tbody tr,
+.flight-list-page .flight-list-table tbody tr,
+.traveller-pickup-list-page .traveller-pickup-list-table tbody tr{
 	border-bottom: 1px solid #f0f0f0;
 }
 
-.booking-list-page .booking-list-table .delete{
+.booking-list-page .booking-list-table .delete,
+.guid-list-page .guid-list-table .delete,
+.trip-list-page .trip-list-table .delete,
+.traveller-list-page .traveller-list-table .delete,
+.flight-list-page .flight-list-table .delete{
 	color: #F44336;
 }
 
-.booking-list-page .booking-list-table .active{
+.booking-list-page .booking-list-table .active,
+.movement-list-page .movement-list-table .active,
+.traveller-list-page .traveller-list-table .active,
+.flight-list-page .flight-list-table .active,
+.traveller-pickup-list-page .traveller-pickup-list-table .active{
 	color: #26a69a;
 }
 
-.booking-list-page .booking-list-table .inactive{
+.booking-list-page .booking-list-table .inactive,
+.movement-list-page .movement-list-table .inactive,
+.traveller-list-page .traveller-list-table .inactive,
+.flight-list-page .flight-list-table .inactive,
+.traveller-pickup-list-page .traveller-pickup-list-table .inactive{
 	color: #F44336;	
 }
 
-.booking-list-page .add-round-button-icon{
+.booking-list-page .add-round-button-icon,
+.guid-list-page .add-round-button-icon,
+.trip-list-page .add-round-button-icon,
+.traveller-list-page .add-round-button-icon{
 	bottom: 20px;
     position: fixed;
     right: 20px;
@@ -535,6 +586,82 @@ nav .button-collapse{float: right;}
 
 .booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button:focus{
 	background: #26a69a;
+}
+
+/*========================================
+ Movement listing page style
+========================================*/
+.movement-list-page .top-section{
+	padding: 20px 15px;
+	background: #fff;
+	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+	border-radius: 5px 5px 0 0;
+	font-size: 14px;
+}
+
+.movement-list-page .top-section:after{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.movement-list-page .top-section span{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.movement-list-page .top-section .filter-option{
+	/*display: inline-block;*/
+	/*vertical-align: middle;*/
+	float: right;
+	overflow: hidden;
+	margin: 0 0 10px;
+}
+
+.movement-list-page .top-section .filter-option span{
+	font-size: 11px;
+	font-weight: 700;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	float: left;
+	background: #f8f8f8;
+	min-width: 54px;
+	padding: 4px 8px;
+	margin-left: -1px;
+	cursor: pointer;
+}
+
+.movement-list-page .top-section .filter-option span:first-child{
+	margin-left: 0;
+}
+
+.movement-list-page .top-section .filter-option .current{
+	box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2) inset;
+}
+
+.movement-list-page .top-section .datepicker-holder{
+	clear: both;
+	float: right;
+}
+
+.movement-list-page .movement-list-table{
+	border-radius: 0 0 5px 5px;
+}
+
+.movement-list-page .top-section .datepicker-holder .selectiongroup .selection{
+	background: transparent;
+}
+
+/*======================
+ Notification style
+======================*/
+.notification{
+	 background: #fcd0cd;
+    border-radius: 5px;
+    margin: 0 auto 15px;
+    max-width: 650px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
