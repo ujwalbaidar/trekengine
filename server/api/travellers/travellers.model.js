@@ -6,6 +6,7 @@ let TravelerSchema = new mongoose.Schema({
 	lastName: String,
 	nationality: String,
 	dob: Object,
+	age: Number,
 	permanentAddress: String,
 	telephone: String,
 	email: String,

@@ -33,6 +33,9 @@ exports.createTravellers = function(req, res) {
 						req.body.attachments = {};
 						if(req.body.dob){
 							req.body.dob=req.body.birthDate;
+						    let ageDifMs = Date.now() - (req.body.dob.epoc*1000);
+						    let ageDate = new Date(ageDifMs);
+						    req.body.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 						}
 						if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
 							req.body.airportPickup.date= req.body.airportPickupDate
@@ -590,7 +593,7 @@ function processUpdataTraveler(travelerData, headerData){
 					nationality: travelerData.nationality,
 					permanentAddress: travelerData.permanentAddress,
 					email: travelerData.email,
-					dob: travelerData.dob,
+					
 					telephone: travelerData.telephone,
 					airportPickup: travelerData.airportPickup,
 					messageBox: travelerData.messageBox,
@@ -624,6 +627,13 @@ function processUpdataTraveler(travelerData, headerData){
 
 				if(travelerData.googleCalendarObj && JSON.stringify(travelerData.googleCalendarObj) !== "{}"){
 					updateData.googleCalendarObj = travelerData.googleCalendarObj;
+				}
+
+				if(travelerData.dob){
+					updateData.dob= travelerData.dob;
+				    let ageDifMs = Date.now() - (updateData.dob.epoc*1000);
+				    let ageDate = new Date(ageDifMs);
+				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
