@@ -35,6 +35,7 @@ import { AudienceCountryComponent } from './analytics/audience/audience-country/
 import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
 import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
 import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
+import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-booking-details/trip-booking-details.component';
 
 import { AuthResolverService, RoleResolverService } from './services';
 
@@ -96,7 +97,8 @@ const appRoutes: Routes = [
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent },
 			{ path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
-			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
+			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/trip/trip-booking/details/:tripId', component: TripBookingDetailsComponent }
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }

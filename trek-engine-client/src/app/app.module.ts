@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AppRoutingModule } from './app-routing.module';
+import { MainPipe } from './main-pipe.module';
 import { 
   AuthService, 
   UserService, 
@@ -64,7 +65,8 @@ import { AudienceCountryComponent } from './analytics/audience/audience-country/
 import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
 import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
 import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
-
+import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-booking-details/trip-booking-details.component';
+import { GoogleChartComponent } from './google-chart/google-chart.component';
 
 enableProdMode();
 
@@ -103,7 +105,9 @@ enableProdMode();
     AudienceCountryComponent,
     AudienceGenderComponent,
     TripOverviewComponent,
-    TripBookingComponent
+    TripBookingComponent,
+    TripBookingDetailsComponent,
+    GoogleChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -115,7 +119,8 @@ enableProdMode();
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    CookieModule.forRoot()
+    CookieModule.forRoot(),
+    MainPipe
   ],
   providers: [
   	AuthService, 

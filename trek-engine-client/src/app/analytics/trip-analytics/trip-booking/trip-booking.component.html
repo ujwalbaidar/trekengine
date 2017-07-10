@@ -1,3 +1,47 @@
-<p>
-  trip-booking works!
-</p>
+<div class="row">
+	<div class="col s12 m8">
+		<h4>Trip Booking Analytics</h4>
+	</div>
+	<!-- 	<div class="col s12 m2">
+	<my-date-picker name="analyticsStartDate" [options]="analyticsStartDatePickerOptions" [(ngModel)]="analyticsStartDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+	</div>
+	<div class="col s12 m2">
+		<my-date-picker name="analyticsEndDate" [options]="analyticsEndDatePickerOptions" [(ngModel)]="analyticsEndDate" (calendarToggle)="onCalendarToggle($event)" required>
+		</my-date-picker>
+	</div> -->
+</div>
+<div>
+	<div class="row">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th>Trip Name</th>
+					<th>Number of Bookings</th>
+					<th>Number of travelers</th>
+					<th>Average Price</th>
+					<th>Total Sales Amount</th>
+					<th>Average Age Group</th>
+				</tr>
+			</thead>
+			<tbody *ngIf="analyticsData && analyticsData.length>0;else EmptyAnalyticsData;">
+				<tr *ngFor="let bookingData of analyticsData; let idx=index;" (click)="redirectDetails(bookingData.tripInfos)">
+					<td>{{ idx+1 }}</td>
+					<td>{{ bookingData._id }}</td>
+					<td>{{ bookingData.total_bookings }}</td>
+					<td>{{ bookingData.totalTravelers }}</td>
+					<td>{{ bookingData.avgPrice }}</td>
+					<td>{{ bookingData.totalSalesAmt }}</td>
+					<td>{{ bookingData.travelerAvgAge }}</td>
+				</tr>
+			</tbody>
+			<ng-template #EmptyAnalyticsData>
+				<tbody>
+					<tr>
+						<td>There is no data for this view</td>
+					</tr>
+				</tbody>
+			</ng-template>
+		</table>
+	</div>
+</div>

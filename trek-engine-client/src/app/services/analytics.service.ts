@@ -21,6 +21,30 @@ export class AnalyticsService {
             .catch(this.handleError.bind(this));
 	}
 
+	getTrekBookingAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/trek/booikings', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getTrekBookingAnalyticsDetails(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+
+		return this.http.get('/api/analytics/trek/bookings-details', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };
