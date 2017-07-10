@@ -533,6 +533,12 @@ function processAddTraveler(travelerData, headerData){
 					travelerData.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 				}
 				travelerData.selected = true;
+				
+				if(travelerData.dob){
+				    let ageDifMs = Date.now() - (travelerData.dob.epoc*1000);
+				    let ageDate = new Date(ageDifMs);
+				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+				}
 				let travelers = new Travelers(travelerData);
 				travelers.save((err, traveler)=>{
 					if(err){
