@@ -44,6 +44,7 @@ let TravelerSchema = new mongoose.Schema({
 		type: Date, 
 		default: new Date()
 	},
-	googleCalendarObj: Object
+	googleCalendarObj: Object,
+	gender: String
 });
 mongoose.model('Travelers', TravelerSchema);

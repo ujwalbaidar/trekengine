@@ -599,7 +599,7 @@ function processUpdataTraveler(travelerData, headerData){
 					nationality: travelerData.nationality,
 					permanentAddress: travelerData.permanentAddress,
 					email: travelerData.email,
-					
+					gender: travelerData.gender,
 					telephone: travelerData.telephone,
 					airportPickup: travelerData.airportPickup,
 					messageBox: travelerData.messageBox,
