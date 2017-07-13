@@ -96,6 +96,11 @@ const appRoutes: Routes = [
 			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent },
+			{ path: 'analytics/audience/overview', component: AudienceOverviewComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/audience/age', component: AudienceAgeComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/audience/gender', component: AudienceGenderComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/audience/country', component: AudienceCountryComponent, canActivate: [RoleResolverService] },
+
 			{ path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
 			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] },
 			{ path: 'analytics/trip/trip-booking/details/:tripId', component: TripBookingDetailsComponent }

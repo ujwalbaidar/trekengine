@@ -358,73 +358,130 @@ function keyValueBooking(bookings){
 
 const getAudienceOverview = (req, res) =>{
 	let userId = "592d2b7c6cbc010e10d9e888";
-	db.getCollection('travelers').aggregate([
-	    {
-	        $match:{
-	            "userId": userId,
-	            "status": true
+
+	let ageGenderOverview = new Promise((resolve, reject)=>{
+		Travelers.aggregate([
+		    {
+		        $match:{
+		            "userId": userId,
+		            "status": true
+		        }
+		    },
+		    {
+		        $project: {
+		            email: 1,
+		            bookingId: 1,
+		            age: 1,
+		            "18-24": {
+		                $cond: [ { $and: [ { $gte: [ "$age", 18 ] }, { $lte: [ "$age", 24 ] } ] }, 1, 0 ]
+		            },
+		            "25-34": {
+		                $cond: [ { $and: [ { $gte: [ "$age", 25 ] }, { $lte: [ "$age", 34 ] } ] }, 1, 0 ]
+		            },
+		            "35-44": {
+		                $cond: [ { $and: [ { $gte: [ "$age", 35 ] }, { $lte: [ "$age", 44 ] } ] }, 1, 0 ]
+		            },
+		            "45-54": {
+		                $cond: [ { $and: [ { $gte: [ "$age", 45 ] }, { $lte: [ "$age", 54 ] } ] }, 1, 0 ]
+		            },
+		            "55-64": {
+		                $cond: [ { $and: [ { $gte: [ "$age", 55 ] }, { $lte: [ "$age", 64 ] } ] }, 1, 0 ]
+		            },
+		            "65+": {
+		                $cond: [ { $gte: [ "$age", 65 ] }, 1, 0 ]
+		            },
+		            "male": {
+		                $cond: [ { $eq: [ "$gender", 'male' ] }, 1, 0 ]
+		            },
+		            "female": {
+		                $cond: [ { $eq: [ "$gender", 'female' ] }, 1, 0 ]
+		            },
+		        }
+		    },
+		    {
+		        $group:{
+		            _id: null,
+		            "18-24": { $sum: "$18-24" },
+		            "25-34": { $sum: "$25-34" },
+		            "35-44": { $sum: "$35-44" },
+		            "45-54": { $sum: "$45-54" },
+		            "55-64": { $sum: "$55-64" },
+		            "65+": { $sum: "$65+" },
+		            "male": { $sum: "$male" },
+		            "female": { $sum: "$female" },
+		            "count": { $sum: 1 }
+		        }
+		    },
+		]).exec((err, ageGenderOverviewData)=>{
+	        if(err){
+	            reject(err);
+	        }else{
+	            resolve(ageGenderOverviewData[0]);
 	        }
-	    },
-	    {
-	        $project: {
-	            email: 1,
-	            bookingId: 1,
-	            age: 1,
-	            "18-24": {
-	                $cond: [ { $and: [ { $gte: [ "$age", 18 ] }, { $lte: [ "$age", 24 ] } ] }, 1, 0 ]
-	            },
-	            "25-34": {
-	                $cond: [ { $and: [ { $gte: [ "$age", 25 ] }, { $lte: [ "$age", 34 ] } ] }, 1, 0 ]
-	            },
-	            "35-44": {
-	                $cond: [ { $and: [ { $gte: [ "$age", 35 ] }, { $lte: [ "$age", 44 ] } ] }, 1, 0 ]
-	            },
-	            "45-54": {
-	                $cond: [ { $and: [ { $gte: [ "$age", 45 ] }, { $lte: [ "$age", 54 ] } ] }, 1, 0 ]
-	            },
-	            "55-64": {
-	                $cond: [ { $and: [ { $gte: [ "$age", 55 ] }, { $lte: [ "$age", 64 ] } ] }, 1, 0 ]
-	            },
-	            "65+": {
-	                $cond: [ { $gte: [ "$age", 65 ] }, 1, 0 ]
-	            },
-	            "male": {
-	                $cond: [ { $eq: [ "$gender", 'male' ] }, 1, 0 ]
-	            },
-	            "female": {
-	                $cond: [ { $eq: [ "$gender", 'female' ] }, 1, 0 ]
-	            },
+	    });
+	});
+	
+	let countryOverview = new Promise((resolve, reject) => {
+		Travelers.aggregate([
+		    {
+		        $match:{
+		            "userId": userId
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "bookings",
+		            localField: "bookingId",
+		            foreignField: "bookingId",
+		            as: "bookingInfos"
+		        }
+		    },    
+		    {
+		        $unwind: "$bookingInfos"
+		    },
+		    {
+		        $project: {
+		            "_id": 0,
+		            "bookingId": 1,
+		            "email": 1,
+		            "nationality": 1,
+		            "travelCost": "$bookingInfos.tripCost"
+		        }
+		    },
+		    {
+		        $group:{
+		            _id:"$nationality",
+		            totalSalesAmt: { $sum: "$travelCost" },
+		            travelerCounts: { $sum: 1 },
+		            travelers:{
+		                $push: "$$ROOT"
+		            }
+		        }
+		    }
+		]).exec((err, countryOverviewData)=>{
+	        if(err){
+	            reject(err);
+	        }else{
+	            resolve(countryOverviewData);
 	        }
-	    },
-	    {
-	        $group:{
-	            _id: null,
-	            "18-34": { $sum: "$18-24" },
-	            "25-34": { $sum: "$25-34" },
-	            "35-44": { $sum: "$35-44" },
-	            "45-54": { $sum: "$45-54" },
-	            "55-64": { $sum: "$55-64" },
-	            "65+": { $sum: "$65+" },
-	            "male": { $sum: "$male" },
-	            "female": { $sum: "$female" },
-	            "count": { $sum: 1 }
-	        }
-	    },
-	]).exec((err, analyticsData)=>{
-        if(err){
-            res.status(400).json({success:false, data: err, message:'Failed to Analytics Data for Audience Overview!'});
-        }else{
-            res.status(200).json({success:true, data: analyticsData, message: 'Audience Overview Analytics Data retrieved successfully!'});
-        }
-    });
+	    });
+	});
+
+	Promise.all([ageGenderOverview, countryOverview])
+        .then(overViewObjects => {
+            res.status(200).json({success:true, data: overViewObjects, message: 'Audience Overview data retrieved successfully!'});
+        }).catch(overViewErr=>{
+            res.status(400).json({success:false, data: overViewErr, message:'Failed to retrieve audience overview data!'});
+        });
 }
 
-const getAudienceByCountry = (req, res)=>{
+const getAudienceByAge = (req, res)=>{
 	let userId = "592d2b7c6cbc010e10d9e888";
 	Travelers.aggregate([
 	    {
 	        $match:{
-	            "userId": userId
+	            "userId": userId,
+	            "status": true
 	        }
 	    },
 	    {
@@ -434,43 +491,166 @@ const getAudienceByCountry = (req, res)=>{
 	            foreignField: "bookingId",
 	            as: "bookingInfos"
 	        }
-	    },    
+	    },
 	    {
 	        $unwind: "$bookingInfos"
+	    },
+	    {
+	        $project: {
+	            "email": 1,
+	            "bookingId": 1,
+	            "gender": 1,
+	            "tripName": "$bookingInfos.tripName",
+	            "tripCost": "$bookingInfos.tripCost",
+	            "age":1,
+	            "ageGroup": {
+	                $switch:
+	                {
+	                    branches:[
+	                        {
+	                            case: { $and: [ { $gte: [ "$age", 18 ] }, { $lte: [ "$age", 24 ] } ] },
+	                            then: "18-24"
+	                        },
+	                        {
+	                            case: { $and: [ { $gte: [ "$age", 25 ] }, { $lte: [ "$age", 34 ] } ] },
+	                            then: "25-34"
+	                        },
+	                        {
+	                            case: { $and: [ { $gte: [ "$age", 35 ] }, { $lte: [ "$age", 44 ] } ] },
+	                            then: "35-44"
+	                        },
+	                        {
+	                            case: { $and: [ { $gte: [ "$age", 45 ] }, { $lte: [ "$age", 54 ] } ] },
+	                            then: "45-54"
+	                        },
+	                        {
+	                            case: { $and: [ { $gte: [ "$age", 55 ] }, { $lte: [ "$age", 64 ] } ] },
+	                            then: "55-64"
+	                        },
+	                        {
+	                            case: { $gte: [ "$age", 65 ] },
+	                            then: "65+"
+	                        }
+	                    ],
+	                    default: "Under Age"
+	                }
+	            }
+	        }   
+	    },
+	    {
+	        $group:{
+	            _id: {
+	                "ageGroup":"$ageGroup",
+	                "bookingId":"$bookingId",
+	                "tripName": "$tripName"
+	            },
+	            total_cost: { $sum: "$tripCost" },
+	            count: { $sum: 1 },
+	        }
+	    },
+	    {
+	        $project:{
+	            _id: 0,
+	            ageGroup: "$_id.ageGroup",
+	            bookingId: "$_id.bookingId",
+	            tripName: "$_id.tripName",
+	            total_cost: 1,
+	            count: 1
+	        }
+	    },
+	    {
+	        $sort: { count: -1 }
+	    },
+	    {
+	        $group:{
+	            _id: "$ageGroup",
+	            totalSales: { $sum: "$total_cost" },
+	            root: { $push: "$$ROOT"}            
+	        }
+	    }
+	]).exec((err, audienceAgeData)=>{
+	        if(err){
+	            res.status(400).json({success:false, data: err, message:'Failed to retrieve audience age data!'});
+	        }else{
+	            res.status(200).json({success:true, data: audienceAgeData, message: 'Audience Age data retrieved successfully!'});
+	        }
+	    });
+	
+}
+
+const getAudienceByGender = (req, res)=>{
+	let userId = "592d2b7c6cbc010e10d9e888";
+	Travelers.aggregate([
+	    {
+	        $match: {
+	            "userId" : userId,
+	            status: true
+	        }
 	    },
 	    {
 	        $project: {
 	            "_id": 0,
 	            "bookingId": 1,
 	            "email": 1,
-	            "nationality": 1,
-	            "travelCost": "$bookingInfos.tripCost"
+	            "gender": 1
+	        }
+	            
+	    },
+	    {
+	        $lookup:{
+	            from: "bookings",
+	            localField: "bookingId",
+	            foreignField: "bookingId",
+	            as: "bookingInfos"
 	        }
 	    },
 	    {
-	        $group:{
-	            _id:"$nationality",
-	            totalSalesAmt: { $sum: "$travelCost" },
-	            travelerCounts: { $sum: 1 },
-	            travelers:{
-	                $push: "$$ROOT"
-	            }
+	        $unwind: "$bookingInfos"
+	    },
+	    {
+	        $project: {
+	            "email": 1,
+	            "bookingId": 1,
+	            "gender": 1,
+	            "tripName": "$bookingInfos.tripName",
+	            "tripCost": "$bookingInfos.tripCost",
+	            "male": {
+	                $cond: [ { $eq: [ "$gender", 'male' ] }, 1, 0 ]
+	            },
+	            "female": {
+	                $cond: [ { $eq: [ "$gender", 'female' ] }, 1, 0 ]
+	            },
+	        }
+	    },
+	    {
+	        $group: {
+	            _id: "$tripName",
+	            "male": { $sum: "$male" },
+	            "female": { $sum: "$female" },
+	            "count": { $sum: 1 },
+	            "total_sales": { $sum: "$tripCost" }
 	        }
 	    }
-	]).exec((err, analyticsData)=>{
-        if(err){
-            res.status(400).json({success:false, data: err, message:'Failed to Analytics Data for Audience Country!'});
-        }else{
-            res.status(200).json({success:true, data: analyticsData, message: 'Audience Country Analytics Data retrieved successfully!'});
-        }
-    });
+	]).exec((err, audienceGenderData)=>{
+	        if(err){
+	            res.status(400).json({success:false, data: err, message:'Failed to retrieve audience gender data!'});
+	        }else{
+	            res.status(200).json({success:true, data: audienceGenderData, message: 'Audience Gender data retrieved successfully!'});
+	        }
+	    });
 }
 
+const getAudienceByCountry = (req, res)=>{
+
+}
 
 module.exports = {
     getTrekOverview,
     getTrekBookingAnalytics,
     getBookingAnalysisDetails,
-    getAudienceByCountry
+    getAudienceOverview,
+	getAudienceByAge,
+	getAudienceByGender,
+    getAudienceByCountry,
 };
 

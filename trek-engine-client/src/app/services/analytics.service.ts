@@ -13,6 +13,38 @@ export class AnalyticsService {
 		public authService:AuthService
 	) {}
 
+	getAudienceOverview(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/overview', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceAgeAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/age', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceGenderAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/gender', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceCountryAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/country', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}	
+
 	getTrekOverview(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
