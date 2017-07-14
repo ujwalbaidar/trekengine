@@ -641,7 +641,62 @@ const getAudienceByGender = (req, res)=>{
 }
 
 const getAudienceByCountry = (req, res)=>{
+	let userId = "592d2b7c6cbc010e10d9e888";
+	getAudienceCountryData(userId)
+		.then(countryData=>{
+			res.status(200).json({success:true, data: countryData, message: 'Audience Country data retrieved successfully!'});
+		})
+		.catch(countryErr=>{
+			res.status(400).json({success:false, data: countryErr, message:'Failed to retrieve audience country data!'});
+		});
+}
 
+function getAudienceCountryData(userId){
+	return new Promise((resolve, reject)=>{
+		Travelers.aggregate([
+		    {
+		        $match:{
+		            "userId": userId
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "bookings",
+		            localField: "bookingId",
+		            foreignField: "bookingId",
+		            as: "bookingInfos"
+		        }
+		    },    
+		    {
+		        $unwind: "$bookingInfos"
+		    },
+		    {
+		        $project: {
+		            "_id": 0,
+		            "bookingId": 1,
+		            "email": 1,
+		            "nationality": 1,
+		            "travelCost": "$bookingInfos.tripCost"
+		        }
+		    },
+		    {
+		        $group:{
+		            _id:"$nationality",
+		            totalSalesAmt: { $sum: "$travelCost" },
+		            travelerCounts: { $sum: 1 },
+		            travelers:{
+		                $push: "$$ROOT"
+		            }
+		        }
+		    }
+		]).exec((err, countryOverviewData)=>{
+	        if(err){
+	            reject(err);
+	        }else{
+	            resolve(countryOverviewData);
+	        }
+	    });
+	});
 }
 
 module.exports = {

@@ -10,7 +10,7 @@
 				</tr>
 			</thead>
 			<tbody *ngIf="ageAnalyticsData && ageAnalyticsData.length>0;else EmptyAnalyticsData;">
-				<tr *ngFor="let ageAnalytics of ageAnalyticsData; let idx=index">
+				<tr *ngFor="let ageAnalytics of ageAnalyticsData; let idx=index" (click)="navigateToAgeDetails(ageAnalytics._id)">
 					<td>{{ idx+1 }}</td>
 					<td>{{ ageAnalytics._id }}</td>
 					<td>{{ ageAnalytics.root.length }}</td>

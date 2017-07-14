@@ -1,4 +1,7 @@
 import { NgModule, enableProdMode }      from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { SumTotalPipe } from "./pipes/sumTotal.pipe";
+
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
@@ -8,7 +11,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AppRoutingModule } from './app-routing.module';
-import { MainPipe } from './main-pipe.module';
 import { 
   AuthService, 
   UserService, 
@@ -67,11 +69,13 @@ import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/
 import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
 import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-booking-details/trip-booking-details.component';
 import { GoogleChartComponent } from './google-chart/google-chart.component';
+import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-details/audience-age-details.component';
 
 enableProdMode();
 
 @NgModule({
   declarations: [
+    SumTotalPipe,
     AppComponent,
     DashboardComponent,
     HomeComponent,
@@ -108,6 +112,7 @@ enableProdMode();
     TripBookingComponent,
     TripBookingDetailsComponent,
     GoogleChartComponent,
+    AudienceAgeDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,7 +125,7 @@ enableProdMode();
     ReactiveFormsModule,
     HttpModule,
     CookieModule.forRoot(),
-    MainPipe
+    CommonModule
   ],
   providers: [
   	AuthService, 
@@ -145,7 +150,8 @@ enableProdMode();
     AppFeaturesDialogComponent,
     BillingDialogComponent,
     RegisterSuccessDialogComponent
-  ]
+  ],
+  exports:[SumTotalPipe]
 })
 export class AppModule { 
   constructor(overlayContainer: OverlayContainer) {

@@ -1,3 +1,29 @@
-<p>
-  audience-country works!
-</p>
+<div class="row">
+	<div class="col s12 m12">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th>Country Name</th>
+					<th>Total Travelers</th>
+					<th>Total Sales</th>
+				</tr>
+			</thead>
+			<tbody *ngIf="analyticData && analyticData.length>0;else EmptyAnalyticsData;">
+				<tr *ngFor="let country of analyticData; let idx=index">
+					<td>{{ idx+1 }}</td>
+					<td>{{ country._id }}</td>
+					<td>{{ country.travelerCounts }}</td>
+					<td>{{ country.totalSalesAmt }}</td>
+				</tr>
+			</tbody>
+			<ng-template #EmptyAnalyticsData>
+				<tbody>
+					<tr>
+						<td>There is no data for this view</td>
+					</tr>
+				</tbody>
+			</ng-template>
+		</table>
+	</div>
+</div>

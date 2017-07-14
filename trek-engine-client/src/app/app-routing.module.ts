@@ -31,6 +31,7 @@ import {
 
 import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
 import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
+import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-details/audience-age-details.component';
 import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
 import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
 import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
@@ -63,7 +64,8 @@ const appRoutes: Routes = [
 			{ 
 				path: '', 
 				component: DashboardComponent
-			},{ 
+			},
+			{ 
 				path: 'app-users', 
 				component: AppUsersComponent,
 				canActivate: [RoleResolverService]
@@ -100,10 +102,11 @@ const appRoutes: Routes = [
 			{ path: 'analytics/audience/age', component: AudienceAgeComponent, canActivate: [RoleResolverService] },
 			{ path: 'analytics/audience/gender', component: AudienceGenderComponent, canActivate: [RoleResolverService] },
 			{ path: 'analytics/audience/country', component: AudienceCountryComponent, canActivate: [RoleResolverService] },
+			{ path: 'analytics/audience/age-details/minAge/:minAge/maxAge/:maxAge', component: AudienceAgeDetailsComponent },
 
 			{ path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
 			{ path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] },
-			{ path: 'analytics/trip/trip-booking/details/:tripId', component: TripBookingDetailsComponent }
+			{ path: 'analytics/trip/trip-booking/details/:tripId', component: TripBookingDetailsComponent },
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }

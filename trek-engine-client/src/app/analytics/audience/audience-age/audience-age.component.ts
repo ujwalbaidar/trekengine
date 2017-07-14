@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../../services/index';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-audience-age',
@@ -10,7 +11,7 @@ export class AudienceAgeComponent implements OnInit {
 	public ageAnalyticsErr: any;
 	public ageAnalyticsData: any;
 
-	constructor(public analyticsService: AnalyticsService) { }
+	constructor(public analyticsService: AnalyticsService, private _route: Router) { }
 
 	ngOnInit() {
 		this.getAudienceAgeAnalytics();
@@ -23,5 +24,20 @@ export class AudienceAgeComponent implements OnInit {
 			}, ageAnalyticsDataErr=>{
 				this.ageAnalyticsErr = ageAnalyticsDataErr;
 			});
+	}
+
+	navigateToAgeDetails(ageGroup:String){
+		if(ageGroup.includes('-') === true){
+			let splitAge = ageGroup.split("-");
+			let minAge = splitAge[0];
+			let maxAge = splitAge[1];
+			let navigateUrl = ['/app/analytics/audience/age-details', 'minAge', minAge, 'maxAge', maxAge];
+			this._route.navigate(navigateUrl);
+		}else{
+			let splitAge = ageGroup.split("+");
+			let minAge = splitAge[0];
+			let navigateUrl = ['/app/analytics/audience/age-details', 'minAge', minAge];
+			this._route.navigate(navigateUrl);
+		}
 	}
 }
