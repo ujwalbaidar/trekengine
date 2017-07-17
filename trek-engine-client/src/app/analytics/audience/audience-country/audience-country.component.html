@@ -10,7 +10,7 @@
 				</tr>
 			</thead>
 			<tbody *ngIf="analyticData && analyticData.length>0;else EmptyAnalyticsData;">
-				<tr *ngFor="let country of analyticData; let idx=index">
+				<tr *ngFor="let country of analyticData; let idx=index" (click)="navigateCountryDetails(country._id)">
 					<td>{{ idx+1 }}</td>
 					<td>{{ country._id }}</td>
 					<td>{{ country.travelerCounts }}</td>

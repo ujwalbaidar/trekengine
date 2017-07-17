@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../../services/index';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-audience-country',
@@ -10,7 +11,7 @@ export class AudienceCountryComponent implements OnInit {
 	analyticData: any;
 	analyticErr: any;
 
-	constructor(public analyticsService:AnalyticsService) { }
+	constructor(public analyticsService:AnalyticsService, private _route: Router) { }
 
 	ngOnInit() {
 		this.getAudienceCountryAnalytics();
@@ -23,5 +24,10 @@ export class AudienceCountryComponent implements OnInit {
 			}, analyticsError=>{
 				this.analyticErr = analyticsError;
 			});
+	}
+
+	navigateCountryDetails(countryName:String){
+		let navigateUrl = ['/app/analytics/audience/country-details', 'countryName', countryName];
+		this._route.navigate(navigateUrl);
 	}
 }

@@ -113,6 +113,8 @@ export class RoleResolverService implements CanActivate {
 						resolve(true);
 					}else if((decodedRole === 20 || decodedRole === 30) && (url.startsWith('/app/bookings/booking-details/'))){
 						resolve(true);
+					}else if((decodedRole === 20) && ( url.startsWith('/app/bookings/booking-details/') || url.startsWith('/app/analytics/audience/age-details/') || url.startsWith('/app/analytics/audience/country-details/countryName/') || url.startsWith('/app/analytics/trip/trip-booking/details/') )){
+						resolve(true);
 					}else{
 						this.router.navigate(['/home']);
 						resolve(false);

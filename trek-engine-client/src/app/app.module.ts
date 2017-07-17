@@ -70,6 +70,8 @@ import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/tr
 import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-booking-details/trip-booking-details.component';
 import { GoogleChartComponent } from './google-chart/google-chart.component';
 import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-details/audience-age-details.component';
+import { AudienceCountryDetailsComponent } from './analytics/audience/audience-country-details/audience-country-details.component';
+import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 
 enableProdMode();
 
@@ -113,6 +115,8 @@ enableProdMode();
     TripBookingDetailsComponent,
     GoogleChartComponent,
     AudienceAgeDetailsComponent,
+    AudienceCountryDetailsComponent,
+    MaxAgeGroupPipe,
   ],
   imports: [
     BrowserModule,
