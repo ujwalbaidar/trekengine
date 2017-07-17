@@ -22,8 +22,7 @@ export class ProfileComponent implements OnInit {
 
 	genders = [
 	    {value: 'male', viewValue: 'Male'},
-	    {value: 'female', viewValue: 'Memale'},
-	    {value: 'others', viewValue: 'Others'}
+	    {value: 'female', viewValue: 'Female'}
 	];
 	private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',

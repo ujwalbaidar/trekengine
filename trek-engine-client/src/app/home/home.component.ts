@@ -67,13 +67,13 @@ export class HomeComponent implements OnInit {
 									routePath: '/app/analytics/audience/overview',
 								},{
 									menu: 'Age',
-									routePath: '/app/analytics/audience/age-analytics',
+									routePath: '/app/analytics/audience/age',
 								},{
 									menu: 'Country',
-									routePath: '/app/analytics/audience/country-analytics',
+									routePath: '/app/analytics/audience/country',
 								},{
 									menu: 'Gender',
-									routePath: '/app/analytics/audience/gender-analytics',
+									routePath: '/app/analytics/audience/gender',
 								}
 							]
 						},{

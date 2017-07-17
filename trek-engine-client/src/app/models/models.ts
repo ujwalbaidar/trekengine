@@ -84,6 +84,7 @@ export class Traveler {
 	};
 	messageBox: string;
 	status: boolean;
+	gender: any;
 }
 
 export class FeaturePackage {
