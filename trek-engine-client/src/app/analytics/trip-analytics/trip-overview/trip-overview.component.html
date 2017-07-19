@@ -15,7 +15,7 @@
 		<div class="col s12 m3">
 			<div class="card">
 				<div class="card-content">
-					<h5>Number of Booking</h5>
+					<h5>Total Number of Booking</h5>
 					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalBookings']}}</span>
 				</div>
 			</div>
@@ -24,7 +24,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Sales Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount']}}</span>
+					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
@@ -32,7 +32,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Advance Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount']}}</span>
+					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Due Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount']}}</span>
+					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
@@ -60,7 +60,7 @@
 					<td>{{ idx+1 }}</td>
 					<td>{{ tripInfo._id }}</td>
 					<td>{{ tripInfo.total_bookings }}</td>
-					<td>{{ tripInfo.total_sales }}</td>
+					<td>{{ tripInfo.total_sales | currency:'USD':true }}</td>
 				</tr>
 			</tbody>
 			<ng-template #emptyMostSoldNumbers>
