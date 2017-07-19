@@ -441,12 +441,13 @@ const getAudienceOverview = (req, res) =>{
 		        }
 		    });
 		});
-		
+		let limitValue = 10;
 		let countryOverview = new Promise((resolve, reject) => {
 			Travelers.aggregate([
 			    {
 			        $match:{
-			            "userId": userId
+			            "userId": userId,
+			            "status": true
 			        }
 			    },
 			    {
@@ -478,7 +479,11 @@ const getAudienceOverview = (req, res) =>{
 			                $push: "$$ROOT"
 			            }
 			        }
-			    }
+			    },
+			    {
+			        $sort: { "totalSalesAmt": -1 }
+			    },
+			    { $limit: limitValue }
 			]).exec((err, countryOverviewData)=>{
 		        if(err){
 		            reject(err);
@@ -585,14 +590,14 @@ const getAudienceByAge = (req, res)=>{
 		        }
 		    },
 		    {
-		        $sort: { count: -1 }
-		    },
-		    {
 		        $group:{
 		            _id: "$ageGroup",
 		            totalSales: { $sum: "$total_cost" },
 		            root: { $push: "$$ROOT"}            
 		        }
+		    },
+		    {
+		        $sort: { _id: 1 }
 		    }
 		]).exec((err, audienceAgeData)=>{
 		        if(err){
@@ -693,7 +698,8 @@ function getAudienceCountryData(userId){
 		Travelers.aggregate([
 		    {
 		        $match:{
-		            "userId": userId
+		            "userId": userId,
+		            "status": true
 		        }
 		    },
 		    {
@@ -795,10 +801,7 @@ const getAudienceDetailsByAge = (req, res) =>{
 		    },
 		    {
 		        $group: {
-		            _id: {
-		                bookingId: "$bookingId",
-		                tripName: "$tripName"
-		            },
+		            _id: "$tripName",
 		            countTravelers: { $sum: 1 },
 		            sales: { $sum: "$tripCost" },
 		            male: { $sum: "$male"},
