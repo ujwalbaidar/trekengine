@@ -40,7 +40,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideModal(){
 		let dialogOptions = {
-			height: '440px',
+			// height: '440px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -49,7 +49,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 		let dialogRef = this.dialog.open(GuideDetailsDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
-    		if(result!=='opt2'){
+    		if(result!=='opt-cancel'){
 				this.openAddGuideSuccessModal(result.type)
     		}
     	});
@@ -57,7 +57,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideSuccessModal(notificationType:string){
 		let dialogOptions = {
-			height: '200px',
+			// height: '200px',
   			width: '400px',
   			position: 'center',
   			disableClose: true

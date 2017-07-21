@@ -50,7 +50,7 @@ export class TripDetailsComponent implements OnInit {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '400px',
+			// height: '400px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,

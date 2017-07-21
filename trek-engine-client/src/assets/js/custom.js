@@ -14,5 +14,10 @@ jQuery(document).ready(function($) {
     	$('body').toggleClass('collapse-menu');
     });
 
-    $('.booking-detail-page .col .card').matchHeight();
+    $('.booking-detail-page .col .card').matchHeight({
+        byRow: true,
+    property: 'height',
+    target: null,
+    remove: false
+    });
 });

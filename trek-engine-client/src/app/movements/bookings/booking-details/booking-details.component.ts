@@ -129,7 +129,7 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 
 	openBookingModal(){
 		let dialogOptions = {
-			height: '580px',
+			// height: '580px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -178,7 +178,7 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 
 	openTripDatesModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '350px',
+			// height: '350px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -216,7 +216,7 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 
 	openFlightModal(editData:Flight=<Flight>{}) {
 		let dialogOptions = {
-			height: '675px',
+			// height: '675px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,

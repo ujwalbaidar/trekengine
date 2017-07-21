@@ -41,7 +41,7 @@ export class TravellerDetailsComponent implements OnInit {
 	
 	openTravellerModal(data:any, actionMode:string) {
 		let dialogOptions = {
-			height: '600px',
+			// height: '600px',
   			width: '600px',
   			position: 'center',
   			disableClose: true

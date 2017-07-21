@@ -488,7 +488,8 @@ nav .button-collapse{float: right;}
 .movement-list-page .movement-list-table .active,
 .traveller-list-page .traveller-list-table .active,
 .flight-list-page .flight-list-table .active,
-.traveller-pickup-list-page .traveller-pickup-list-table .active{
+.traveller-pickup-list-page .traveller-pickup-list-table .active,
+.trip-list-page .trip-list-table .active{
 	color: #26a69a;
 }
 
@@ -496,7 +497,8 @@ nav .button-collapse{float: right;}
 .movement-list-page .movement-list-table .inactive,
 .traveller-list-page .traveller-list-table .inactive,
 .flight-list-page .flight-list-table .inactive,
-.traveller-pickup-list-page .traveller-pickup-list-table .inactive{
+.traveller-pickup-list-page .traveller-pickup-list-table .inactive,
+.trip-list-page .trip-list-table .inactive{
 	color: #F44336;	
 }
 
@@ -675,4 +677,30 @@ nav .button-collapse{float: right;}
 }
 :-moz-placeholder { /* Firefox 18- */
   color: #000;
+}
+
+/*Trip list pop up form style*/
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing{opacity: 0.6 important;}
+
+.mat-dialog-container{padding-bottom: 40px;}
+
+.error-msg{
+    font-size: 12px;
+    color: #F44336;
+}
+
+.err-div label{color: #F44336;}
+
+.err-div input:not([type]),
+.err-div input[type=text], input[type=password],
+.err-div input[type=email], input[type=url],
+.err-div input[type=time],
+.err-div input[type=date],
+.err-div input[type=datetime],
+.err-div input[type=datetime-local],
+.err-div input[type=tel],
+.err-div input[type=number],
+.err-div input[type=search],
+.err-div textarea.materialize-textarea{
+	border-bottom-color: #F44336;
 }
