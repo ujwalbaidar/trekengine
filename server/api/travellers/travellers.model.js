@@ -6,6 +6,7 @@ let TravelerSchema = new mongoose.Schema({
 	lastName: String,
 	nationality: String,
 	dob: Object,
+	age: Number,
 	permanentAddress: String,
 	telephone: String,
 	email: String,
@@ -43,6 +44,7 @@ let TravelerSchema = new mongoose.Schema({
 		type: Date, 
 		default: new Date()
 	},
-	googleCalendarObj: Object
+	googleCalendarObj: Object,
+	gender: String
 });
 mongoose.model('Travelers', TravelerSchema);

@@ -39,7 +39,8 @@ import {
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
   TravellerDetailsDialogComponent,
-  AirportPickupDetailsComponent
+  AirportPickupDetailsComponent,
+  TravelerInfoComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
@@ -100,7 +101,7 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
-
+    TravelerInfoComponent,
     AnalyticsComponent,
     AudienceAnalyticsComponent,
     AgeAudienceAnalyticsComponent,
@@ -124,7 +125,7 @@ enableProdMode();
     CookieModule.forRoot()
   ],
   providers: [
-  	AuthService, 
+    AuthService, 
     UserService, 
     MovementsService,
     PackageBillingsService,

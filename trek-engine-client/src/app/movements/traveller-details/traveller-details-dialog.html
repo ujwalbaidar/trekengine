@@ -245,6 +245,13 @@
 						This Field is Required!
 					</div>
 				</div>
+				<div class="col s6">
+					<select placeholder="Gender" class="browser-default" [(ngModel)]="traveler.gender" name="gender" #gender="ngModel" (ngModelChange)="selectTravelerGender(traveler, $event)">
+						<option [value]="gender.value" *ngFor="let gender of genders">
+							<span>{{gender.viewValue}}</span>
+						</option>
+					</select>
+				</div>
 			</div>
 
 			<div class="row">

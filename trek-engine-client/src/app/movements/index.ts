@@ -7,3 +7,4 @@ export { BookingDetailsComponent } from './bookings/booking-details/booking-deta
 export { FlightDetailsComponent, FlightDetailsDialogComponent } from './flight-details/flight-details.component';
 export { AirportPickupDetailsComponent } from './airport-pickup-details/airport-pickup-details.component';
 export { TravellerDetailsComponent, TravellerDetailsDialogComponent } from './traveller-details/traveller-details.component';
+export { TravelerInfoComponent } from './traveler-info/traveler-info.component';

@@ -45,7 +45,7 @@
 					</span>
 				</td>
 				<td>
-					<a class="edit" (click)="openTravellerModal(travalerInfo, 'edit')">
+					<a class="edit" routerLink="/app/movements/traveler-info/booking/{{travalerInfo.bookingId}}/traveler/{{travalerInfo._id}}/redirect/traveller-details">
 						<i class="material-icons">edit</i>
 					</a>
 					<a class="delete" (click)="deleteTravelerDetails(travalerInfo._id, i)">
@@ -59,7 +59,7 @@
 		<h5 class="center-align">Traveler Record is empty! Please add records!</h5>
 	</ng-template>
 	<div class="add-round-button-icon">
-		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openTravellerModal({}, 'iframeAdd')">
+		<a class="btn-floating btn-large waves-effect waves-light red" routerLink="/app/movements/traveler-info">
 			<i class="material-icons">add</i>
 		</a>
 	</div>

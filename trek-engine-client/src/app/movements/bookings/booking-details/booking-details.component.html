@@ -300,7 +300,7 @@
 												<md-icon>visibility</md-icon>
 												<span>View</span>
 											</button>
-											<button md-menu-item (click)="openTravelerModal(traveler, 'edit')">
+											<button md-menu-item routerLink="/app/movements/traveler-info/booking/{{booking.bookingId}}/traveler/{{traveler._id}}/redirect/booking-details">
 												<md-icon>create</md-icon>
 												<span>Edit</span>
 											</button>
