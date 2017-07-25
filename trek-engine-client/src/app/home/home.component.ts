@@ -34,10 +34,12 @@ export class HomeComponent implements OnInit {
 				{
 					menu: 'Movements',
 					routePath: '/app/movements',
-					iconName: 'fa fa-home'
+					iconName: 'fa fa-home',
+					status: true,
 				},{
 					menu: 'Bookings',
 					iconName: 'fa fa-book',
+					status: true,
 					subMenu: [
 						{
 							menu: 'Trip Details',
@@ -63,6 +65,7 @@ export class HomeComponent implements OnInit {
 					]
 				},{
 					menu: 'Analytics',
+					status: false,
 					subMenu: [
 						{
 							menu: 'Audience',
