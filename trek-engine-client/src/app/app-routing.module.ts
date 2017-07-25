@@ -26,7 +26,8 @@ import {
 	FlightDetailsComponent,
 	TravellerDetailsComponent,
 	MovementDetailsComponent,
-	AirportPickupDetailsComponent
+	AirportPickupDetailsComponent,
+	TravelerInfoComponent
 } from './movements/index';
 
 import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
@@ -88,7 +89,10 @@ const appRoutes: Routes = [
 					{ path: 'guide-details', component: GuideDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'traveller-details', component: TravellerDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] },
-					{ path: 'airport-pickup-details', component: AirportPickupDetailsComponent, canActivate: [RoleResolverService] }
+					{ path: 'airport-pickup-details', component: AirportPickupDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'traveler-info', component: TravelerInfoComponent, canActivate: [RoleResolverService] },
+					{ path: 'traveler-info/booking/:bookingId', component: TravelerInfoComponent },
+					{ path: 'traveler-info/booking/:bookingId/traveler/:travelerId/redirect/:redirectPath', component: TravelerInfoComponent },
 				]
 			},
 			{ 
