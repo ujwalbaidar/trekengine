@@ -44,7 +44,8 @@
 					{{ travalerInfo.status==true?'active':'inactive'}}
 				</td>
 				<td>
-					<a (click)="openTravellerModal(travalerInfo, 'edit')">Edit</a>
+					<a routerLink="/app/movements/traveler-info/booking/{{travalerInfo.bookingId}}/traveler/{{travalerInfo._id}}/redirect/traveller-details">	Edit
+					</a>
 					<a (click)="deleteTravelerDetails(travalerInfo._id, i)">Delete</a>
 				</td>
 			</tr>
@@ -55,7 +56,7 @@
 	</ng-template>
 </div>
 <div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openTravellerModal({}, 'iframeAdd')">
+	<a class="btn-floating btn-large waves-effect waves-light red"  routerLink="/app/movements/traveler-info">
 		<i class="material-icons">add</i>
 	</a>
 </div>

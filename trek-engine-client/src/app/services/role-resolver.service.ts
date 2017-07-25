@@ -49,6 +49,7 @@ export class RoleResolverService implements CanActivate {
 				'/app/movements/guide-details',
 				'/app/movements/trip-details',
 				'/app/movements/traveller-details',
+				'/app/movements/traveler-info',
 				'/app/movements/flight-details',
 				'/app/movements/airport-pickup-details',
 				'/app/profile',
