@@ -108,8 +108,8 @@
 	<div class="col m1" *ngIf="sideMenuArr && sideMenuArr.length>0">
 		<ul>
 			<li *ngFor="let sideMenu of sideMenuArr">
-				<a [routerLink]="[sideMenu.routePath]">{{ sideMenu.menu }}</a>
-				<ul *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0">
+				<a [routerLink]="[sideMenu.routePath]" *ngIf="sideMenu.status==true">{{ sideMenu.menu }}</a>
+				<ul *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0 && sideMenu.status==true">
 					<li *ngFor="let subMenu of sideMenu.subMenu">
 						<a [routerLink]="[subMenu.routePath]">{{ subMenu.menu }}</a>
 						<ul *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0">
