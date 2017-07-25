@@ -1,14 +1,17 @@
 <div class="row">
+	<div class="col s12 m8">
+		<h4>Audience Overview</h4>
+	</div>
+</div>
+<div class="row">
 	<div class="col s12 m12">
 		<div id="column_chart" [chartData]="column_ChartData" [chartOptions] = "column_ChartOptions" chartType="ColumnChart" GoogleChart></div>
 	</div>
-</div>
-<div class="row">
+
 	<div class="col s12 m12">
 		<div id="pie_chart" [chartData]="pie_ChartData" [chartOptions] = "pie_ChartOptions" chartType="PieChart" GoogleChart></div>
 	</div>
-</div>
-<div class="row">
+
 	<div class="col s12 m12">
 		<table>
 			<thead>
@@ -24,7 +27,7 @@
 					<td>{{ idx+1 }}</td>
 					<td>{{ country._id }}</td>
 					<td>{{ country.travelerCounts }}</td>
-					<td>{{ country.totalSalesAmt }}</td>
+					<td>{{ country.totalSalesAmt | currency:'USD':true }}</td>
 				</tr>
 			</tbody>
 			<ng-template #EmptyAnalyticsData>
@@ -35,5 +38,8 @@
 				</tbody>
 			</ng-template>
 		</table>
+	</div>
+	<div class="row">
+		<a routerLink="/app/analytics/audience/country">View Full Report</a>
 	</div>
 </div>

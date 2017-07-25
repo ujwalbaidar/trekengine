@@ -1,4 +1,9 @@
 <div class="row">
+	<div class="col s12 m8">
+		<h4>Audience Gender Analytics</h4>
+	</div>
+</div>
+<div class="row">
 	<div class="col s12 m12">
 		<table>
 			<thead>
@@ -16,9 +21,9 @@
 					<td>{{ idx+1 }}</td>
 					<td>{{ data._id }}</td>
 					<td>{{ data.count }}</td>
-					<td>{{ data.total_sales }}</td>
-					<td>{{ (data.male/data.count)*100 }}</td>
-					<td>{{ (data.female/data.count)*100 }}</td>
+					<td>{{ data.total_sales | currency:'USD':true }}</td>
+					<td>{{ (data.male/data.count) | percent:'1.2-2' }}</td>
+					<td>{{ (data.female/data.count) | percent:'1.2-2' }}</td>
 				</tr>
 			</tbody>
 			<ng-template #EmptyAnalyticsData>

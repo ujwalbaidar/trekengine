@@ -2,13 +2,6 @@
 	<div class="col s12 m8">
 		<h4>Trip Booking Analytics</h4>
 	</div>
-	<!-- 	<div class="col s12 m2">
-	<my-date-picker name="analyticsStartDate" [options]="analyticsStartDatePickerOptions" [(ngModel)]="analyticsStartDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
-	</div>
-	<div class="col s12 m2">
-		<my-date-picker name="analyticsEndDate" [options]="analyticsEndDatePickerOptions" [(ngModel)]="analyticsEndDate" (calendarToggle)="onCalendarToggle($event)" required>
-		</my-date-picker>
-	</div> -->
 </div>
 <div>
 	<div class="row">
@@ -30,9 +23,9 @@
 					<td>{{ bookingData._id }}</td>
 					<td>{{ bookingData.total_bookings }}</td>
 					<td>{{ bookingData.totalTravelers }}</td>
-					<td>{{ bookingData.avgPrice }}</td>
-					<td>{{ bookingData.totalSalesAmt }}</td>
-					<td>{{ bookingData.travelerAvgAge }}</td>
+					<td>{{ bookingData.avgPrice | currency:'USD':true }}</td>
+					<td>{{ bookingData.totalSalesAmt | currency:'USD':true }}</td>
+					<td>{{ bookingData.travelerAvgAge | number }}</td>
 				</tr>
 			</tbody>
 			<ng-template #EmptyAnalyticsData>
