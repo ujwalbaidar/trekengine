@@ -55,7 +55,13 @@ export class RoleResolverService implements CanActivate {
 				'/app/profile',
 				'/app/notifications',
 				'/app/package-billings',
-				'/app/billing-history'
+				'/app/billing-history',
+				'/app/analytics/audience/overview',
+				'/app/analytics/audience/age',
+				'/app/analytics/audience/gender',
+				'/app/analytics/audience/country',
+				'/app/analytics/trip/overview',
+				'/app/analytics/trip/trip-booking'
 			],
 			30: [ 
 				'/app', 
@@ -107,6 +113,8 @@ export class RoleResolverService implements CanActivate {
 					if(decodedRole === 10 && (url.startsWith('/app/app-users') || url.startsWith('/app/app-packages/details/edit/'))){
 						resolve(true);
 					}else if((decodedRole === 20 || decodedRole === 30) && (url.startsWith('/app/bookings/booking-details/'))){
+						resolve(true);
+					}else if((decodedRole === 20) && ( url.startsWith('/app/bookings/booking-details/') || url.startsWith('/app/analytics/audience/age-details/') || url.startsWith('/app/analytics/audience/country-details/countryName/') || url.startsWith('/app/analytics/trip/trip-booking/details/') )){
 						resolve(true);
 					}else{
 						this.router.navigate(['/home']);
