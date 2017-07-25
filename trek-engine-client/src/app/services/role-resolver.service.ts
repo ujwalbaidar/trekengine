@@ -87,6 +87,8 @@ export class RoleResolverService implements CanActivate {
 									resolve(true);
 								}else if((resolvedData['role'] === 20 || resolvedData['role'] === 30) && (url.startsWith('/app/bookings/booking-details/'))){
 									resolve(true);
+								}else if((resolvedData['role']  === 20) && ( url.startsWith('/app/bookings/booking-details/') || url.startsWith('/app/analytics/audience/age-details/') || url.startsWith('/app/analytics/audience/country-details/countryName/') || url.startsWith('/app/analytics/trip/trip-booking/details/')|| url.startsWith('/app/movements/traveler-info/booking/') )){
+									resolve(true);
 								}else{
 									this.router.navigate(['/app/profile']);
 									resolve(false);
@@ -114,7 +116,7 @@ export class RoleResolverService implements CanActivate {
 						resolve(true);
 					}else if((decodedRole === 20 || decodedRole === 30) && (url.startsWith('/app/bookings/booking-details/'))){
 						resolve(true);
-					}else if((decodedRole === 20) && ( url.startsWith('/app/bookings/booking-details/') || url.startsWith('/app/analytics/audience/age-details/') || url.startsWith('/app/analytics/audience/country-details/countryName/') || url.startsWith('/app/analytics/trip/trip-booking/details/') )){
+					}else if((decodedRole === 20) && ( url.startsWith('/app/bookings/booking-details/') || url.startsWith('/app/analytics/audience/age-details/') || url.startsWith('/app/analytics/audience/country-details/countryName/') || url.startsWith('/app/analytics/trip/trip-booking/details/')|| url.startsWith('/app/movements/traveler-info/booking/') )){
 						resolve(true);
 					}else{
 						this.router.navigate(['/home']);
