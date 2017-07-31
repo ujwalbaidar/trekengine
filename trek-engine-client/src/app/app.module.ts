@@ -40,7 +40,8 @@ import {
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
   TravellerDetailsDialogComponent,
-  AirportPickupDetailsComponent
+  AirportPickupDetailsComponent,
+  TravelerInfoComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
@@ -103,7 +104,8 @@ enableProdMode();
     AudienceCountryComponent,
     AudienceGenderComponent,
     TripOverviewComponent,
-    TripBookingComponent
+    TripBookingComponent,
+    TravelerInfoComponent
   ],
   imports: [
     BrowserModule,

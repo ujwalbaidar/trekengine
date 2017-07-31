@@ -32,10 +32,12 @@ export class HomeComponent implements OnInit {
 			this.sideMenuArr =[
 				{
 					menu: 'Movements',
-					routePath: '/app/movements'
+					routePath: '/app/movements',
+					status: true,
 				},{
 					menu: 'Bookings',
 					routePath: '',
+					status: true,
 					submenu: [
 						{
 							menu: 'Trip Details',
@@ -57,6 +59,7 @@ export class HomeComponent implements OnInit {
 				},{
 					menu: 'Analytics',
 					routePath: '',
+					status: false,
 					subMenu: [
 						{
 							menu: 'Audience',
