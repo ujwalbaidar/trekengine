@@ -58,7 +58,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
 						<label for="first_name" class="active">
 							<strong>
 								{{'First Name'}}
@@ -71,7 +71,7 @@
 						</p>
 					</div>
 
-					<div class="col s6">
+					<div class="col s4">
 						<label for="middleName" class="active">
 							<strong>
 								{{'Middle Name'}}
@@ -80,10 +80,7 @@
 						<input id="middle_name" type="text" name="middleName" class="validate" ng-model="traveller.middleName">
 					</div>
 
-				</div>
-
-				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
 						<label for="lastName" class="active">
 							<strong>
 								{{'Last Name'}}
@@ -98,10 +95,23 @@
 				</div>
 
 				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
+						<label for="gender" class="active">
+							<strong>
+								{{'Gender'}}
+							</strong>
+							<span class="required-label-mark">{{' *'}}</span>
+						</label>
+					    <select style="display: block;" ng-model="traveller.gender" ng-options="gender.viewValue for gender in genders" required></select>
+					    <p ng-if="submitted && travelerDetailForm.gender.$error.required">
+							This Field is Requierd!
+						</p>
+					</div>
+
+					<div class="col s4">
 						<label for="nationality" class="active">
 							<strong>
-								{{'Nationality'}}
+								{{'Country'}}
 							</strong>
 							<span class="required-label-mark">{{' *'}}</span>
 						</label>
@@ -111,23 +121,27 @@
 						</p>
 					</div>
 
-					<div class="col s6">
+					<div class="col s4">
 						<div class="row">
 							<label for="dob" class="active">
 								<strong>
-									{{'Birth Date'}}
+									{{'BirthDate'}}
 								</strong>
+								<span class="required-label-mark">{{' *'}}</span>
 							</label>
 						</div>
 						<div class="row">
-							<md-datepicker id="dob" name="dob" ng-model="traveller.dob" md-open-on-focus></md-datepicker>
+							<md-datepicker id="dob" name="dob" ng-model="traveller.dob" md-open-on-focus required></md-datepicker>
 						</div>
+						<p ng-if="submitted && travelerDetailForm.dob.$error.required">
+							This Field is Requierd!
+						</p>
 					</div>
 
 				</div>
 
 				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
 						<label for="permanentAddress" class="active">
 							<strong>
 								{{'Permanent Address'}}
@@ -136,7 +150,7 @@
 						<input id="permanentAddress" type="text" name="permanentAddress" class="validate" ng-model="traveller.permanentAddress">
 					</div>
 
-					<div class="col s6">
+					<div class="col s4">
 						<label for="email" class="active">
 							<strong>
 								{{'Email'}}
@@ -148,10 +162,7 @@
 						<p ng-if="submitted && travelerDetailForm.email.$error.pattern">Email Does not Match!</p>
 					</div>
 
-				</div>
-
-				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
 						<label for="telephone" class="active">
 							<strong>
 								{{'Telephone'}}
@@ -165,67 +176,69 @@
 					<strong>Attachments</strong>
 				</div>
 				<div class="row">
-					<label class="active">
-						<strong>
-							{{'Profile Image'}}
-						</strong>
-					</label>
-					<div class="file-field input-field">
-						<div class="btn">
-							<span>Browse</span>
-							<input type="file" name="profileAttachment" file-model="traveller.profileAttachment" onchange="angular.element(this).scope().previewUpload('profileAttachment')">
-						</div>
-						<div class="file-path-wrapper">
-							<img class="profileAttachment" src="" height="200" alt="Image preview...">
-						</div>
-						<div ng-if="attachmentErr && attachmentErr.profileAttachmentErr">
+					<div class="col s4">
+						<label class="active">
 							<strong>
-								<p>{{attachmentErr.profileAttachmentErr}}</p>
+								{{'Profile Image'}}
 							</strong>
+						</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="profileAttachment" file-model="traveller.profileAttachment" onchange="angular.element(this).scope().previewUpload('profileAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="profileAttachment" src="" height="200" alt="Image preview...">
+							</div>
+							<div ng-if="attachmentErr && attachmentErr.profileAttachmentErr">
+								<strong>
+									<p>{{attachmentErr.profileAttachmentErr}}</p>
+								</strong>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="row">
-					<label class="active">
-						<strong>
-							{{'Passport Image'}}
-						</strong>
-					</label>
-					<div class="file-field input-field">
-						<div class="btn">
-							<span>Browse</span>
-							<input type="file" name="passportAttachment" file-model="traveller.passportAttachment" onchange="angular.element(this).scope().previewUpload('passportAttachment')">
-						</div>
-						<div class="file-path-wrapper">
-							<img class="passportAttachment" src="" height="200" alt="Image preview...">
-						</div>
-						<div ng-if="attachmentErr && attachmentErr.passportAttachmentErr">
+					<div class="col s4">
+						<label class="active">
 							<strong>
-								<p>{{attachmentErr.passportAttachmentErr}}</p>
+								{{'Passport Image'}}
 							</strong>
+						</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="passportAttachment" file-model="traveller.passportAttachment" onchange="angular.element(this).scope().previewUpload('passportAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="passportAttachment" src="" height="200" alt="Image preview...">
+							</div>
+							<div ng-if="attachmentErr && attachmentErr.passportAttachmentErr">
+								<strong>
+									<p>{{attachmentErr.passportAttachmentErr}}</p>
+								</strong>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="row">
-					<label class="active">
-						<strong>
-							{{'Insurance Image'}}
-						</strong>
-					</label>
-					<div class="file-field input-field">
-						<div class="btn">
-							<span>Browse</span>
-							<input type="file" name="insuranceAttachment" file-model="traveller.insuranceAttachment" onchange="angular.element(this).scope().previewUpload('insuranceAttachment')">
-						</div>
-						<div class="file-path-wrapper">
-							<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
-						</div>
-						<div ng-if="attachmentErr && attachmentErr.insuranceAttachmentErr">
+					<div class="col s4">
+						<label class="active">
 							<strong>
-								<p>{{attachmentErr.insuranceAttachmentErr}}</p>
+								{{'Insurance Image'}}
 							</strong>
+						</label>
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>Browse</span>
+								<input type="file" name="insuranceAttachment" file-model="traveller.insuranceAttachment" onchange="angular.element(this).scope().previewUpload('insuranceAttachment')">
+							</div>
+							<div class="file-path-wrapper">
+								<img class="insuranceAttachment" src="" height="200" alt="Image preview...">
+							</div>
+							<div ng-if="attachmentErr && attachmentErr.insuranceAttachmentErr">
+								<strong>
+									<p>{{attachmentErr.insuranceAttachmentErr}}</p>
+								</strong>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -235,7 +248,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col s6">
+					<div class="col s4">
 						<label for="emergencyContactName" class="active">
 							<strong>
 								{{'Name'}}
@@ -244,7 +257,7 @@
 						<input id="emergencyContactName" type="text" name="emergencyContactName" class="validate" ng-model="traveller.emergencyContact.name">
 					</div>
 
-					<div class="col s6">
+					<div class="col s4">
 						<label for="emergencyContactNumber" class="active">
 							<strong>
 								{{'Phone'}}
@@ -252,10 +265,8 @@
 						</label>
 						<input id="emergencyContactNumber" type="text" name="emergencyContactNumber" class="validate" ng-model="traveller.emergencyContact.number">
 					</div>
-				</div>
-
-				<div class="row">
-					<div class="col s6">
+					
+					<div class="col s4">
 						<label for="emergencyContactRelation" class="active">
 							<strong>
 								{{'Relation'}}
@@ -276,9 +287,7 @@
 
 				<div ng-if="traveller.airportPickup.confirmation">
 					<div class="row">
-						
-
-						<div class="col s6">
+						<div class="col s4">
 							<div class="row">
 								<label for="pickupTime" class="active">
 									<strong>
@@ -298,7 +307,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="col s6">
+						<div class="col s4">
 							<div class="row">
 								<label for="pickupDate" class="active">
 									<strong>
@@ -326,7 +335,7 @@
 
 				<div ng-if="traveller.hotel.confirmation">
 					<div class="row">
-						<div class="col s6">
+						<div class="col s4">
 							<label for="hotelName" class="active">
 								<strong>
 									{{'Hotel Name'}}
@@ -335,7 +344,7 @@
 							<input id="hotelName" type="text" name="hotelName" class="validate" ng-model="traveller.hotel.name">
 						</div>
 
-						<div class="col s6">
+						<div class="col s4">
 							<label for="hotelAddress" class="active">
 								<strong>
 									{{'Hotel Address'}}
@@ -343,10 +352,8 @@
 							</label>
 							<input id="hotelAddress" type="text" name="hotelAddress" class="validate" ng-model="traveller.hotel.address">
 						</div>
-					</div>
-
-					<div class="row">
-						<div class="col s6">
+						
+						<div class="col s4">
 							<label for="hotelTelephone" class="active">
 								<strong>
 									{{'Hotel Telephone'}}
@@ -368,7 +375,7 @@
 					</div>
 		        </div>
 				<div class="row">
-					<button ng-disabled="submitProgress" md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>
+					<button ng-disabled="submitProgress" md-button class="waves-effect #009688 teal btn" type="submit">Submit</button>
 				</div>
 			</form>
 		</div>
@@ -399,7 +406,11 @@
 				$scope.traveller.airportPickup.hrTime = $scope.timePicker.hrs[0];
 				$scope.traveller.airportPickup.minTime = $scope.timePicker.mins[0];
 
-
+				$scope.genders = [
+				    {value: 'male', viewValue: 'Male'},
+				    {value: 'female', viewValue: 'Female'}
+				];
+				$scope.traveller.gender = $scope.genders[0];
 				$scope.previewUpload = function(uploadType){
 					$scope.attachmentErr = {};
 					var preview = document.querySelector('.'+uploadType);
@@ -479,7 +490,7 @@
 						}
 
 						$scope.submitProgress = true;
-
+						$scope.traveller.gender = $scope.traveller.gender.value;
 						$http({
 								method:'post', 
 								url: 'https://www.trekengine.com/trekengineApp/travellers/create', 

@@ -18,7 +18,7 @@ import {
   PackagesService,
   AuthResolverService,
   RoleResolverService,
-  NotificationsService
+  NotificationsService,
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -40,7 +40,8 @@ import {
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
   TravellerDetailsDialogComponent,
-  AirportPickupDetailsComponent
+  AirportPickupDetailsComponent,
+  TravelerInfoComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
@@ -89,7 +90,8 @@ enableProdMode();
     ForgotPasswordComponent,
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
-    ValidateRegisterComponent
+    ValidateRegisterComponent,
+    TravelerInfoComponent
   ],
   imports: [
     BrowserModule,

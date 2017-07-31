@@ -91,6 +91,11 @@ export class TravellerDetailsDialogComponent implements OnInit {
         editableDateField: false
     };
 
+	public genders = [
+	    {value: 'male', viewValue: 'Male'},
+	    {value: 'female', viewValue: 'Female'}
+	];
+
 	constructor(
 		public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, 
 		private sanitizer: DomSanitizer, 
@@ -137,6 +142,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 		}else{
 			this.title = 'Add Traveler Details';
 			this.traveler['bookingId'] =  this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+			this.traveler['gender'] = 'male';
 			if(this.traveler['airportPickup'] == undefined){
 				this.traveler['airportPickup'] = {
 					confirmation: false,
@@ -152,9 +158,12 @@ export class TravellerDetailsDialogComponent implements OnInit {
 		this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
 	}
 
+	selectTravelerGender(traveler, event){
+		this.traveler['gender'] = event;
+	}
+
 	submitTravelerDetails(travelerDetail:any){
 		this.submittedTravelerForm = true;
-
 		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
 		if(travelerDetail.valid){
 			this.submitProgress = true;

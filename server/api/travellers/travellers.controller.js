@@ -33,6 +33,9 @@ exports.createTravellers = function(req, res) {
 						req.body.attachments = {};
 						if(req.body.dob){
 							req.body.dob=req.body.birthDate;
+						    let ageDifMs = Date.now() - (req.body.dob.epoc*1000);
+						    let ageDate = new Date(ageDifMs);
+						    req.body.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 						}
 						if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
 							req.body.airportPickup.date= req.body.airportPickupDate
@@ -530,6 +533,12 @@ function processAddTraveler(travelerData, headerData){
 					travelerData.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 				}
 				travelerData.selected = true;
+				
+				if(travelerData.dob){
+				    let ageDifMs = Date.now() - (travelerData.dob.epoc*1000);
+				    let ageDate = new Date(ageDifMs);
+				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+				}
 				let travelers = new Travelers(travelerData);
 				travelers.save((err, traveler)=>{
 					if(err){
@@ -590,7 +599,7 @@ function processUpdataTraveler(travelerData, headerData){
 					nationality: travelerData.nationality,
 					permanentAddress: travelerData.permanentAddress,
 					email: travelerData.email,
-					dob: travelerData.dob,
+					gender: travelerData.gender,
 					telephone: travelerData.telephone,
 					airportPickup: travelerData.airportPickup,
 					messageBox: travelerData.messageBox,
@@ -624,6 +633,13 @@ function processUpdataTraveler(travelerData, headerData){
 
 				if(travelerData.googleCalendarObj && JSON.stringify(travelerData.googleCalendarObj) !== "{}"){
 					updateData.googleCalendarObj = travelerData.googleCalendarObj;
+				}
+
+				if(travelerData.dob){
+					updateData.dob= travelerData.dob;
+				    let ageDifMs = Date.now() - (updateData.dob.epoc*1000);
+				    let ageDate = new Date(ageDifMs);
+				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
