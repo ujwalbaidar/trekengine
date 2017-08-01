@@ -48,7 +48,7 @@ export class BookingsComponent implements OnInit  {
 
 	openAddBookingModal(editData:Booking=<Booking>{}){
 		let dialogOptions = {
-			height: '580px',
+			// height: '580px',
   			width: '600px',
   			position: 'center',
   			disableClose: true

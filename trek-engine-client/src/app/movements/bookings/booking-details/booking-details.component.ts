@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AuthService, MovementsService, UserService } from '../../../services/index';
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { CookieService } from 'ngx-cookie';
   templateUrl: './booking-details.component.html',
   styleUrls: ['./booking-details.component.css']
 })
-export class BookingDetailsComponent implements OnInit  {
+export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 	bookingId: string;
 	booking: any;
 	trip: any;
@@ -36,7 +36,6 @@ export class BookingDetailsComponent implements OnInit  {
 		public dialog: MdDialog, private _route:Router,
 		public _cookieService: CookieService
 	){
-		jQuery('select').material_select();
 		this.route.params.subscribe(params => {
 			this.bookingId = params['bookingId'];
 	    });
@@ -51,6 +50,10 @@ export class BookingDetailsComponent implements OnInit  {
 		this.getGuideLists();
 	}
 
+	ngAfterViewInit() {
+		jQuery('select').material_select();
+		// jQuery('.booking-detail-page .col .card').matchHeight();
+	}
 
 	getBookingDetails(){
 		this.movementService.getBooking([{bookingId:this.bookingId}])
@@ -126,7 +129,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openBookingModal(){
 		let dialogOptions = {
-			height: '580px',
+			// height: '580px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -175,7 +178,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openTripDatesModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			height: '350px',
+			// height: '350px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -213,7 +216,7 @@ export class BookingDetailsComponent implements OnInit  {
 
 	openFlightModal(editData:Flight=<Flight>{}) {
 		let dialogOptions = {
-			height: '675px',
+			// height: '675px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,
@@ -258,4 +261,5 @@ export class BookingDetailsComponent implements OnInit  {
     		}
     	});
 	}
+
 }

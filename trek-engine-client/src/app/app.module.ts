@@ -99,6 +99,7 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
+    TravelerInfoComponent,
     AudienceOverviewComponent,
     AudienceAgeComponent,
     AudienceCountryComponent,
@@ -120,7 +121,7 @@ enableProdMode();
     CookieModule.forRoot()
   ],
   providers: [
-  	AuthService, 
+    AuthService, 
     UserService, 
     MovementsService,
     PackageBillingsService,
