@@ -1,6 +1,5 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
@@ -18,7 +17,7 @@ import {
   PackagesService,
   AuthResolverService,
   RoleResolverService,
-  NotificationsService,
+  NotificationsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -58,6 +57,17 @@ import { ActivateTokenComponent } from './register/activate-token/activate-token
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
+import { 
+  AnalyticsComponent,
+  AudienceAnalyticsComponent,
+  AgeAudienceAnalyticsComponent,
+  CountryAudienceAnalyticsComponent,
+  GenderAudienceAnalyticsComponent,
+  OverviewAudienceAnalyticsComponent,
+  OverviewTripAnalyticsComponent,
+  TripBookingTripAnalyticsComponent
+} from './analytics/index';
+
 
 enableProdMode();
 
@@ -91,7 +101,16 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
-    TravelerInfoComponent
+    TravelerInfoComponent,
+    AnalyticsComponent,
+    AudienceAnalyticsComponent,
+    AgeAudienceAnalyticsComponent,
+    CountryAudienceAnalyticsComponent,
+    GenderAudienceAnalyticsComponent,
+    OverviewAudienceAnalyticsComponent,
+    OverviewTripAnalyticsComponent,
+    TripBookingTripAnalyticsComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -106,7 +125,7 @@ enableProdMode();
     CookieModule.forRoot()
   ],
   providers: [
-  	AuthService, 
+    AuthService, 
     UserService, 
     MovementsService,
     PackageBillingsService,

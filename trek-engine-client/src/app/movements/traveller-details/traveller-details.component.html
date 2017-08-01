@@ -1,9 +1,6 @@
-<div>
+<div class="traveller-list-page">
 	<h3>Traveler Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="travelers && travelers.length>0; else emptyTravelers">
+	<table class="traveller-list-table responsive-table highlight" *ngIf="travelers && travelers.length>0; else emptyTravelers">
 		<thead>
 			<tr>
 				<td>BookingId</td>
@@ -38,15 +35,22 @@
 					{{ travalerInfo.telephone }}
 				</td>
 				<td (click)="openTravellerModal(travalerInfo, 'view')">
-					{{ travalerInfo.airportPickup.confirmation }}
+					<span [ngClass]="(travalerInfo.airportPickup.confirmation==true)?'active':'inactive'">
+						<i [ngClass]="(travalerInfo.airportPickup.confirmation==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					{{ travalerInfo.status==true?'active':'inactive'}}
+					<span [ngClass]="(travalerInfo.status==true)?'active':'inactive'">
+						<i [ngClass]="(travalerInfo.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					<a routerLink="/app/movements/traveler-info/booking/{{travalerInfo.bookingId}}/traveler/{{travalerInfo._id}}/redirect/traveller-details">	Edit
+					<a class="edit" routerLink="/app/movements/traveler-info/booking/{{travalerInfo.bookingId}}/traveler/{{travalerInfo._id}}/redirect/traveller-details">
+						<i class="material-icons">edit</i>
 					</a>
-					<a (click)="deleteTravelerDetails(travalerInfo._id, i)">Delete</a>
+					<a class="delete" (click)="deleteTravelerDetails(travalerInfo._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
@@ -54,9 +58,9 @@
 	<ng-template #emptyTravelers>
 		<h5 class="center-align">Traveler Record is empty! Please add records!</h5>
 	</ng-template>
-</div>
-<div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light red"  routerLink="/app/movements/traveler-info">
-		<i class="material-icons">add</i>
-	</a>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" routerLink="/app/movements/traveler-info">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
 </div>
