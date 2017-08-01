@@ -1,9 +1,6 @@
-<div>
-	<h3>Flight Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="flights && flights.length>0; else emptyFlights">
+<div class="flight-list-page">
+	<h3 class="main-title">Flight Lists</h3>
+	<table class="flight-list-table responsive-table highlight" *ngIf="flights && flights.length>0; else emptyFlights">
 		<thead>
 			<tr>
 				<td>Departure Flight Name</td>
@@ -28,10 +25,18 @@
 				<td>{{ flt.arrival.date.formatted }}</td>
 				<td>{{ flt.arrival.hrTime+':'+flt.departure.minTime }}</td>
 				<td>{{ flt.arrival.cost }}</td>
-				<td>{{ flt.status==true?'active':'inactive'}}</td>
 				<td>
-					<a (click)="openFlightModal(flt)">Edit</a>
-					<a (click)="deleteFlight(flt._id, i)">Delete</a>
+					<span [ngClass]="(flt.status==true)?'active':'inactive'">
+						<i [ngClass]="(flt.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
+				</td>
+				<td>
+					<a class="edit" (click)="openFlightModal(flt)">
+						<i class="material-icons">edit</i>
+					</a>
+					<a class="delete" (click)="deleteFlight(flt._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>

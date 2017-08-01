@@ -1,46 +1,50 @@
-<div>
-	<h3>Booking Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="bookings && bookings.length>0; else emptyBookings">
-		<thead>
-			<tr>
-				<td>Booking Id</td>
-				<td>Group Name</td>
-				<td>Total Memebers</td>
-				<td>Trip Name</td>
-				<td>Trip Cost</td>
-				<td>Total Cost</td>
-				<td>Advance Paid</td>
-				<td>Due Amount</td>
-				<td>Status</td>
-				<td>Actions</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let booking of bookings; let i = index;">
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.bookingId }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.groupName }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.travellerCount }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripName }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost | currency:'USD':true }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD':true }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD':true }}</td>
-				<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD':true }}</td>
-				<td>{{ booking.status==true?'active':'inactive'}}</td>
-				<td>
-					<a (click)="deleteBooking(booking._id, i)">Delete</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<ng-template #emptyBookings>
-		<h5 class="center-align">Booking Record is empty! Please <a (click)="openAddBookingModal()">Add Records</a>.</h5>
-	</ng-template>
-</div>
-<div class="add-round-button-icon" *ngIf="authService.validatedUser">
-	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddBookingModal()">
-		<i class="material-icons">add</i>
-	</a>
+<div class="booking-list-page">
+	<h3 class="main-title">Booking Lists</h3>
+		<table class="booking-list-table responsive-table highlight" *ngIf="bookings && bookings.length>0; else emptyBookings">
+			<thead>
+				<tr>
+					<td>Booking Id</td>
+					<td>Group Name</td>
+					<td>Total Memebers</td>
+					<td>Trip Name</td>
+					<td>Trip Cost</td>
+					<td>Total Cost</td>
+					<td>Advance Paid</td>
+					<td>Due Amount</td>
+					<td>Status</td>
+					<td>Actions</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let booking of bookings; let i = index;">
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.bookingId }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.groupName }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.travellerCount }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripName }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost | currency:'USD':true }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD':true }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD':true }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD':true }}</td>
+					<td>
+						<span [ngClass]="(booking.status==true)?'active':'inactive'">
+							<i [ngClass]="(booking.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+						</span>
+					</td>
+
+					<td>
+						<a class="delete" (click)="deleteBooking(booking._id, i)">
+							<i class="material-icons">delete</i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-template #emptyBookings>
+			<h5 class="center-align">Booking Record is empty! Please <a (click)="openAddBookingModal()">Add Records</a>.</h5>
+		</ng-template>
+	<div class="add-round-button-icon" *ngIf="authService.validatedUser">
+		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddBookingModal()">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
 </div>
