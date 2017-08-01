@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
 									routePath: '/app/analytics/trip/overview',
 								},{
 									menu: 'Trip Booking',
-									routePath: '/app/analytics/trip/trip-booking-analytics',
+									routePath: '/app/analytics/trip/trip-booking',
 								}
 							]
 						}
