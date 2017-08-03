@@ -35,6 +35,11 @@ export class MovementDetailsComponent implements OnInit {
 		this.getFilterDate();
 	}
 
+	changeFilterOpt(value){
+		this.filterOpt = value;
+		this.getFilterDate();
+	}
+
 	getFilterDate(){
 		this.currentMovementPage = 0;
 		switch (this.filterOpt) {

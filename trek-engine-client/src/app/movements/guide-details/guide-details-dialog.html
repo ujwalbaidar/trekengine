@@ -14,7 +14,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col s6">
+				<div class="col s6" [ngClass]="[(firstName?.errors?.required && submittedGuideForm)?'err-div':'']">
 					<label for="firstName">
 						<strong>
 							{{'First Name'}}
@@ -22,11 +22,11 @@
 						<span class="required-label-mark">{{' *'}}</span>
 					</label>
 					<input id="firstName" type="text" class="validate" name="firstName" [(ngModel)]="user.firstName" #firstName="ngModel" required>
-					<div *ngIf="firstName?.errors?.required && submittedGuideForm">
+					<div class="error-msg" *ngIf="firstName?.errors?.required && submittedGuideForm">
 						This Field is Required!
 					</div>
 				</div>
-				<div class="col s6">
+				<div class="col s6" [ngClass]="[(lastName?.errors?.required && submittedGuideForm)?'err-div':'']">
 					<label for="lastName">
 						<strong>
 							{{'Last Name'}}
@@ -34,14 +34,14 @@
 						<span class="required-label-mark">{{' *'}}</span>
 					</label>
 					<input id="lastName" type="text" class="validate" name="lastName" [(ngModel)]="user.lastName" #lastName="ngModel" required>
-					<div *ngIf="lastName?.errors?.required && submittedGuideForm">
+					<div class="error-msg" *ngIf="lastName?.errors?.required && submittedGuideForm">
 						This Field is Required!
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col s12">
+				<div class="col s12" [ngClass]="[((email?.errors?.required || email?.errors?.pattern) && submittedGuideForm)?'err-div':'']">
 					<label for="email">
 						<strong>
 							{{'Email'}}
@@ -49,10 +49,10 @@
 						<span class="required-label-mark">{{' *'}}</span>
 					</label>
 					<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-					<div *ngIf="email?.errors?.required && submittedGuideForm">
+					<div class="error-msg" *ngIf="email?.errors?.required && submittedGuideForm">
 						This Field is Required!
 					</div>
-					<div *ngIf="email?.errors?.pattern && submittedGuideForm">
+					<div class="error-msg" *ngIf="email?.errors?.pattern && submittedGuideForm">
 						Email is Invalid!
 					</div>
 				</div>
@@ -60,7 +60,7 @@
 
 		</div>
 		<div md-dialog-actions>
-			<button md-button [disabled]="disableButton" class="waves-effect #009688 teal btn full-width-btn">Submit</button>
+			<button [disabled]="disableButton" class="waves-effect waves-light btn">Submit</button>
 		</div>
 	</form>
 </div>

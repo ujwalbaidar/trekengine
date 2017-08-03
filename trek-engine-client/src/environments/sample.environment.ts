@@ -5,5 +5,6 @@
 
 export const environment = {
 	production: false,
-  	webUrl: 'http://localhost:5000'
+  	webUrl: 'http://localhost:5000',
+  	frameSource: 'local-app'
 };

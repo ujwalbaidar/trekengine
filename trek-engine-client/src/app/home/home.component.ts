@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
 	notifications: any;
 	notificationErr: any;
 	sideMenuArr:any;
+	active: string;
 
 	constructor(public _cookieService:CookieService, public authService: AuthService, private _route: Router, public notificationsService: NotificationsService, private location: Location){
 		this.getUnreadNotifications();
@@ -27,40 +28,47 @@ export class HomeComponent implements OnInit {
 		jQuery(".button-collapse").sideNav({
 			closeOnClick: true
 		});
-
+		jQuery(".collapsible").collapsible();
 		if(this.cookieData && this.cookieData.idx && parseInt(this.cookieData.idx) === 20){
 			this.sideMenuArr =[
 				{
 					menu: 'Movements',
-					routePath: '/app/movements'
+					routePath: '/app/movements',
+					iconName: 'fa fa-home',
+					status: true,
 				},{
 					menu: 'Bookings',
-					routePath: '',
-					submenu: [
+					iconName: 'fa fa-book',
+					status: true,
+					subMenu: [
 						{
 							menu: 'Trip Details',
-							routePath: '/app/movements/trip-details'
+							routePath: '/app/movements/trip-details',
+							iconName: 'fa fa-calendar-o'
 						},{
 							menu: 'Guide Details',
-							routePath: '/app/movements/guide-details'
+							routePath: '/app/movements/guide-details',
+							iconName: 'fa fa-book'
 						},{
 							menu: 'Flight Details',
-							routePath: '/app/movements/flight-details'
+							routePath: '/app/movements/flight-details',
+							iconName: 'fa fa-plane'
 						},{
 							menu: 'Traveler Details',
-							routePath: '/app/movements/traveller-details'
+							routePath: '/app/movements/traveller-details',
+							iconName: 'fa fa-car'
 						},{
 							menu: 'Traveler Pickup Details',
-							routePath: '/app/movements/airport-pickup-details'
+							routePath: '/app/movements/airport-pickup-details',
+							iconName: 'fa fa-car'
 						}
 					]
 				},{
 					menu: 'Analytics',
-					routePath: '',
+					status: false,
 					subMenu: [
 						{
 							menu: 'Audience',
-							routePath: '',
 							subMenuChild: [
 								{
 									menu: 'Overview',
@@ -78,7 +86,6 @@ export class HomeComponent implements OnInit {
 							]
 						},{
 							menu: 'Trip',
-							routePath: '',
 							subMenuChild: [
 								{
 									menu: 'Overview',
@@ -138,5 +145,22 @@ export class HomeComponent implements OnInit {
 			}, error => {
 				this.notificationErr = error;
 			});
+	}
+
+	collapseSideMenu(){
+		let bodyClassList = document.getElementsByTagName('body')[0].classList;
+		if(bodyClassList.contains('collapse-menu')){
+			bodyClassList.remove('collapse-menu');
+		}else{
+			bodyClassList.add('collapse-menu');
+		}
+	}
+
+	redirectSidemenu(path, level){
+		if(path !== undefined){
+			this._route.navigate([path]);
+		}else{
+			jQuery('.collapsible').collapsible();
+		}
 	}
 }
