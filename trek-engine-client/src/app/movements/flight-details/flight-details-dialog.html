@@ -18,7 +18,7 @@
 
 		<div class="row">
 
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(departureFlightName?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="departureFlightName" [ngClass]="{'active':(flight.departure.name!=undefined)}">
 					<strong>
 						{{'Flight Name'}}
@@ -26,12 +26,12 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="departureFlightName" type="text" class="validate" name="departureFlightName" [(ngModel)]="flight.departure.name" #departureFlightName="ngModel"  required>
-				<div *ngIf="departureFlightName?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="departureFlightName?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
 
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(departureFlightCost?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="departureFlightCost" [ngClass]="{'active':(flight.departure.cost!=undefined)}">
 					<strong>
 						{{'Flight Cost'}}
@@ -39,7 +39,7 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="departureFlightCost" type="number" class="validate" name="departureFlightCost" [(ngModel)]="flight.departure.cost" #departureFlightCost="ngModel" required>
-				<div *ngIf="departureFlightCost?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="departureFlightCost?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
@@ -48,7 +48,7 @@
 
 		<div class="row">
 			
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(departureFlightDate?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="departureFlightDate" [ngClass]="{'active':(flight.departure.date!=undefined)}">
 					<strong>
 						{{'Departure Date'}}
@@ -56,7 +56,7 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<my-date-picker id="departureFlightDate" class="validate" name="departureFlightDate" [(ngModel)]="flight.departure.date" #departureFlightDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
-				<div *ngIf="departureFlightDate?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="departureFlightDate?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
@@ -92,7 +92,7 @@
 
 		<div class="row">
 
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(arrivalFlightName?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="arrivalFlightName" [ngClass]="{'active':(flight.arrival.name!=undefined)}">
 					<strong>
 						{{'Flight Name'}}
@@ -100,12 +100,12 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="arrivalFlightName" type="text" class="validate" name="arrivalFlightName" [(ngModel)]="flight.arrival.name" #arrivalFlightName="ngModel" required>
-				<div *ngIf="arrivalFlightName?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="arrivalFlightName?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
 
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(arrivalFlightCost?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="arrivalFlightCost" [ngClass]="{'active':(flight.arrival.cost!=undefined)}">
 					<strong>
 						{{'Flight Cost'}}
@@ -113,7 +113,7 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="arrivalFlightCost" type="number" class="validate" name="arrivalFlightCost" [(ngModel)]="flight.arrival.cost" #arrivalFlightCost="ngModel" required>
-				<div *ngIf="arrivalFlightCost?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="arrivalFlightCost?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
@@ -122,7 +122,7 @@
 
 		<div class="row">
 
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(arrivalFlightDate?.errors?.required && submittedFlightForm)?'err-div':'']">
 				<label for="arrivalFlightDate" [ngClass]="{'active':(flight.arrival.date!=undefined)}">
 					<strong>
 						{{'Arrival Date'}}
@@ -131,7 +131,7 @@
 				</label>
 				<my-date-picker id="arrivalFlightDate" class="validate" name="arrivalFlightDate" [(ngModel)]="flight.arrival.date" #arrivalFlightDate="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
 				
-				<div *ngIf="arrivalFlightDate?.errors?.required && submittedFlightForm">
+				<div class="error-msg" *ngIf="arrivalFlightDate?.errors?.required && submittedFlightForm">
 					This Field is Required!
 				</div>
 			</div>
@@ -165,6 +165,6 @@
 		</div>
 	</div>
 	<div md-dialog-actions>
-		<button [disabled]="disableSubmitButton==true" md-button class="waves-effect #009688 teal btn full-width-btn" type="button" (click)="submitFlightDetails(flightDetail.form)">Submit</button>
+		<button [disabled]="disableSubmitButton==true" class="waves-effect waves-light btn" type="button" (click)="submitFlightDetails(flightDetail.form)">Submit</button>
 	</div>
 </form>

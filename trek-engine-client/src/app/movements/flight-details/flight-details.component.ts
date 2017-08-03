@@ -44,7 +44,7 @@ export class FlightDetailsComponent implements OnInit  {
 
 	openFlightModal(editData:Flight=<Flight>{}) {
 		let dialogOptions = {
-			height: '675px',
+			// height: '675px',
   			width: '600px',
   			position: 'center',
   			disableClose: true,

@@ -1,9 +1,6 @@
-<div>
-	<h3>Trip Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="trips && trips.length>0; else emptyTrips">
+<div class="trip-list-page">	
+	<h3 class="main-title">Trip Lists</h3>
+	<table class="trip-list-table responsive-table highlight" *ngIf="trips && trips.length>0; else emptyTrips">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -16,10 +13,18 @@
 			<tr *ngFor="let trip of trips; let i = index;">
 				<td>{{ trip.name }}</td>
 				<td>{{ trip.cost }}</td>
-				<td>{{ trip.status }}</td>
 				<td>
-					<a (click)="openAddTripModal(trip)">Edit</a>
-					<a (click)="deleteTrip(trip._id, i)">Delete</a>
+					<span [ngClass]="(trip.status==true)?'active':'inactive'">
+						<i [ngClass]="(trip.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
+				</td>
+				<td>
+					<a class="edit" (click)="openAddTripModal(trip)">
+						<i class="material-icons">edit</i>
+					</a>
+					<a class="delete" (click)="deleteTrip(trip._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
@@ -27,10 +32,10 @@
 	<ng-template #emptyTrips>
 		<h5 class="center-align">Trip Record is empty! Please add trip to bookings.</h5>
 	</ng-template>
-</div>
 
-<div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddTripModal()">
-		<i class="material-icons">add</i>
-	</a>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddTripModal()">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
 </div>

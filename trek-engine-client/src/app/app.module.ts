@@ -1,6 +1,5 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
@@ -19,6 +18,7 @@ import {
   AuthResolverService,
   RoleResolverService,
   NotificationsService,
+  AnalyticsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -59,6 +59,14 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
+import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
+import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
+import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
+import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
+import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
+import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
+
+
 enableProdMode();
 
 @NgModule({
@@ -91,6 +99,13 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
+    TravelerInfoComponent,
+    AudienceOverviewComponent,
+    AudienceAgeComponent,
+    AudienceCountryComponent,
+    AudienceGenderComponent,
+    TripOverviewComponent,
+    TripBookingComponent,
     TravelerInfoComponent
   ],
   imports: [
@@ -106,7 +121,7 @@ enableProdMode();
     CookieModule.forRoot()
   ],
   providers: [
-  	AuthService, 
+    AuthService, 
     UserService, 
     MovementsService,
     PackageBillingsService,
@@ -114,7 +129,8 @@ enableProdMode();
     PackagesService,
     AuthResolverService,
     RoleResolverService,
-    NotificationsService
+    NotificationsService,
+    AnalyticsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
