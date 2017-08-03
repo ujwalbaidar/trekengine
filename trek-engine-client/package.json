@@ -1,5 +1,6 @@
 {
   "name": "trek-engine-client",
+  "description": "Trek Engine App",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {

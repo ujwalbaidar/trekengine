@@ -1,99 +1,66 @@
-<div>
-	<h3>Booking Details</h3>
-</div>
-<div class="divider"></div>
-<div>
+<div class="booking-detail-page">
+	<div class="row title-holder">
+		<div class="col s12">
+			<h3 class="main-title">Booking Details</h3>
+		</div>
+	</div>
 	<div class="row">
-		<div class="col s12 m8">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<strong>Booking Details</strong>
-					</span>
-					<div class="right" *ngIf="auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openBookingModal()">
+					<h3 class="card-title">Booking Details</h3>
+					<div *ngIf="auths.idx && auths.idx ==='20'">
+						<a class="btn-floating waves-effect waves-light" *ngIf="authService.validatedUser" (click)="openBookingModal()">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
 				</div>
 				<div class="card-action">
 					<div class="row">
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Group Name</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.groupName}}</span>
-							</div>
+						<div class="col s12">
+							<strong class="label">Group Name</strong>
+							<span class="data">{{booking?.groupName}}</span>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Trip Name</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.tripName}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Trip Name</strong>
+							<span class="data">{{booking?.tripName}}</span>
 						</div>
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Total Members</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.travellerCount}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Total Members</strong>
+							<span>{{booking?.travellerCount}}</span>
 						</div>
 					</div>
 					<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Trip Cost</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.tripCost | currency:'USD':true}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Trip Cost</strong>
+							<span class="data">{{booking?.tripCost | currency:'USD':true}}</span>
 						</div>
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Total Cost</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.totalCost | currency:'USD':true}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Total Cost</strong>
+							<span class="data">{{booking?.totalCost | currency:'USD':true}}</span>
 						</div>
 					</div>
 					<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Advance Paid</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.advancePaid | currency:'USD':true}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Advance Paid</strong>
+							<span class="data">{{booking?.advancePaid | currency:'USD':true}}</span>
 						</div>
-						<div class="col s6">
-							<div class="col s12 m3">
-								<strong>Due Amount</strong>
-							</div>
-							<div class="col s12 m9">
-								<span>{{booking?.dueAmount | currency:'USD':true}}</span>
-							</div>
+						<div class="col s12 m6">
+							<strong class="label">Due Amount</strong>
+							<span class="data">{{booking?.dueAmount | currency:'USD':true}}</span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m8">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<strong>Trip Departure and Arrival Dates</strong>
-					</span>
-					<div class="right" *ngIf="trip && auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openTripDatesModal(trip)">
+					<h3 class="card-title">Trip Departure and Arrival Dates</h3>
+					<div *ngIf="trip && auths.idx && auths.idx ==='20'">
+						<a class="btn-floating waves-effect waves-light" *ngIf="authService.validatedUser" (click)="openTripDatesModal(trip)">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
@@ -101,43 +68,27 @@
 				<div class="card-action">
 					<div *ngIf="trip">
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m4">
-									<strong>Departure Date</strong>
-								</div>
-								<div class="col s12 m8">
-									<span>{{trip?.departureDate?.formatted}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Date</strong>
+								<span class="data">{{trip?.departureDate?.formatted}}</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Departure Time</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{trip?.departureTime?.hrTime}}</span>
-									<span>:</span>
-									<span>{{trip?.departureTime?.minTime}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Time</strong>
+									<span class="data">
+										{{trip?.departureTime?.hrTime+':'+trip?.departureTime?.minTime}}
+									</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m4">
-									<strong>Arrival Date</strong>
-								</div>
-								<div class="col s12 m8">
-									<span>{{trip?.arrivalDate?.formatted}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Date</strong>
+								<span class="data">{{trip?.arrivalDate?.formatted}}</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Arrival Time</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{trip?.arrivalTime?.hrTime}}</span>
-									<span>:</span>
-									<span>{{trip?.arrivalTime?.minTime}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Time</strong>
+									<span class="data">
+										{{trip?.arrivalTime?.hrTime+':'+trip?.arrivalTime?.minTime}}
+									</span>
 							</div>
 						</div>
 					</div>
@@ -146,7 +97,7 @@
 							<p>Trip Details not added yet. Please add Trip Details!</p>
 						</div>
 						<div class="col s6 m6 right-align" *ngIf="auths.idx && auths.idx ==='20'">
-							<a class="btn-floating btn-large waves-effect waves-light green" (click)="openTripDatesModal()"><i class="material-icons">add</i></a>
+							<a class="btn-floating waves-effect waves-light" (click)="openTripDatesModal()"><i class="material-icons">add</i></a>
 						</div>
 					</div>
 				</div>
@@ -154,17 +105,16 @@
 		</div>
 	</div>
 	<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
-		<div class="col s12 m8">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<strong>Guide Details</strong>
-					</span>
+					<h3 class="card-title">Guide Details</h3>
+					
 				</div>
 				<div class="card-action">
 					<div *ngIf="guides && guides.length>0;else emptyGuideList;">
 						<div class="row">
-							<div class="col s6 m8">
+							<div class="input-field col s12 m8">
 								<select class="browser-default" [(ngModel)]="selectedGuide">
 									<option [value]="i" *ngFor="let guide of guides;let i=index;">
 										<span *ngIf="guide && guide.firstName && guide.lastName && guide.email">
@@ -174,45 +124,39 @@
 									</option>
 								</select>
 							</div>
-							<div class="col s6 m4">
+						</div>
+						<div class="row">
+							<div class="col s12">
 								<a class="waves-effect waves-light btn" (click)="selectGuide()">Submit</a>
 							</div>
 						</div>
 						<div *ngIf="booking&&booking.selectedGuide">
 							<div class="row">
-								<div class="col s6">
-									<div class="col s12 m3">
-										<strong>Guide Name</strong>
-									</div>
-									<div class="col s12 m9">
-										<span>{{bookingGuide?.firstName+' '+bookingGuide?.lastName}}</span>
-									</div>
+								<div class="col s12 m6">
+									<strong class="label">Guid Name</strong>
+									<span class="data">
+										{{bookingGuide?.firstName+' '+bookingGuide?.lastName}}
+									</span>
 								</div>
-								<div class="col s6">
-									<div class="col s12 m3">
-										<strong>Email</strong>
-									</div>
-									<div class="col s12 m9">
-										<span>{{bookingGuide?.email}}</span>
-									</div>
+								<div class="col s12 m6">
+									<strong class="label">Email</strong>
+									<span class="data">
+										{{bookingGuide?.email}}
+									</span>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col s6">
-									<div class="col s12 m3">
-										<strong>Contact Number</strong>
-									</div>
-									<div class="col s12 m9">
-										<span>{{bookingGuide?.phone}}</span>
-									</div>
+								<div class="col s12 m6">
+									<strong class="label">Contact Number</strong>
+									<span class="data">
+										{{bookingGuide?.phone}}
+									</span>
 								</div>
-								<div class="col s6">
-									<div class="col s12 m3">
-										<strong>Address</strong>
-									</div>
-									<div class="col s12 m9">
-										<span>{{bookingGuide?.address}}</span>
-									</div>
+								<div class="col s12 m6">
+									<strong class="label">Address</strong>
+									<span class="data">
+										{{bookingGuide?.address}}
+									</span>
 								</div>
 							</div>
 						</div>
@@ -228,16 +172,12 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m8">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<strong>Flight Details</strong>
-					</span>
-					<div class="right" *ngIf="flight && flight.bookingId && auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light #80d8ff light-blue accent-1" *ngIf="authService.validatedUser" (click)="openFlightModal(flight)">
+					<h3 class="card-title">Flight Details</h3>
+					<div *ngIf="flight && flight.bookingId && auths.idx && auths.idx ==='20'">
+						<a class="btn-floating waves-effect waves-light" *ngIf="authService.validatedUser" (click)="openFlightModal(flight)">
 							<i class="material-icons">edit</i>
 						</a>
 					</div>
@@ -245,75 +185,59 @@
 				<div class="card-action">
 					<div *ngIf="flight && flight.bookingId">
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Departure Flight</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.departure?.name}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Flight</strong>
+								<span class="data">
+									{{flight?.departure?.name}}
+								</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Departure Cost</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.departure?.cost}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Cost</strong>
+								<span class="data">
+									{{flight?.departure?.cost}}
+								</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Departure Date</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.departure?.date?.formatted}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Date</strong>
+								<span class="data">
+									{{flight?.departure?.date?.formatted}}
+								</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Departure Time</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.departure?.hrTime+':'+flight?.departure?.minTime}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Departure Time</strong>
+								<span class="data">
+									{{flight?.departure?.hrTime+':'+flight?.departure?.minTime}}
+								</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Arrival Flight</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.arrival?.name}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Flight</strong>
+								<span class="data">
+									{{flight?.arrival?.name}}
+								</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Arrival Cost</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.arrival?.cost}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Cost</strong>
+								<span class="data">
+									{{flight?.arrival?.cost}}
+								</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Arrival Date</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.arrival?.date?.formatted}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Date</strong>
+								<span class="data">
+									{{flight?.arrival?.date?.formatted}}
+								</span>
 							</div>
-							<div class="col s6">
-								<div class="col s12 m3">
-									<strong>Arrival Time</strong>
-								</div>
-								<div class="col s12 m9">
-									<span>{{flight?.arrival?.hrTime+':'+flight?.arrival?.minTime}}</span>
-								</div>
+							<div class="col s12 m6">
+								<strong class="label">Arrival Time</strong>
+								<span class="data">
+									{{flight?.arrival?.hrTime+':'+flight?.arrival?.minTime}}
+								</span>
 							</div>
 						</div>
 					</div>
@@ -322,7 +246,7 @@
 							<p>Flight Details not added yet. Please add Flight Details!</p>
 						</div>
 						<div class="col s6 m6 right-align" *ngIf="auths.idx && auths.idx ==='20'">
-							<a class="btn-floating btn-large waves-effect waves-light green" (click)="openFlightModal()"><i class="material-icons">add</i></a>
+							<a class="btn-floating waves-effect waves-light" (click)="openFlightModal()"><i class="material-icons">add</i></a>
 						</div>
 					</div>
 				</div>
@@ -330,21 +254,19 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col s12 m8">
+		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title">
-						<strong>Traveler Lists</strong>
-					</span>
+					<h3 class="card-title">Traveler List</h3>
 					<div class="right" *ngIf="auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light green" (click)="openTravelerModal({}, 'add')">
+						<a class="btn-floating waves-effect waves-light" (click)="openTravelerModal({}, 'add')">
 							<i class="material-icons">add</i>
 						</a>
 					</div>
 				</div>
 				<div class="card-action">
 					<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
-						<div class="col s6 m8">
+						<div class="input-field col s12 m8">
 							<select class="browser-default" [(ngModel)]="selectedTraveler">
 								<option [value]="i" *ngFor="let traveler of travelers;let i=index;">
 									<span *ngIf="traveler && traveler.firstName && traveler.lastName && traveler.email">
@@ -354,37 +276,43 @@
 								</option>
 							</select>
 						</div>
-						<div class="col s6 m4">
+					</div>
+					<div class="row">
+						<div class="col s12">
 							<a class="waves-effect waves-light btn" (click)="selectTraveler()">Add</a>
 						</div>
 					</div>
 					
 					<div class="row">
-						<div class="col s6">
-							<ul class="collection" *ngIf="selectedTravelerArr && selectedTravelerArr.length>0">
-								<li class="collection-item avatar" *ngFor="let traveler of selectedTravelerArr; let indx=index;">
-									<img src="{{traveler.attachments?.profile}}" class="circle">
-									<span class="title">{{traveler.firstName+' '+traveler.lastName}}</span>
-									<button md-icon-button [mdMenuTriggerFor]="menu" *ngIf="auths.idx && auths.idx ==='20'">
-										<md-icon>more_vert</md-icon>
-									</button>
-									<md-menu #menu="mdMenu" position-x='100'>
-										<button md-menu-item (click)="openTravelerModal(traveler, 'view')">
-											<md-icon>visibility</md-icon>
-											<span>View</span>
+						<div class="col s12">
+							<ul class="traveller-list" *ngIf="selectedTravelerArr && selectedTravelerArr.length>0">
+								<li *ngFor="let traveler of selectedTravelerArr; let indx=index;">
+									<div class="img-holder">
+										<img src="{{traveler.attachments?.profile}}" class="responsive-img circle" alt="">
+									</div>
+									<div class="text-holder">
+										<span class="name">{{traveler.firstName+' '+traveler.lastName}}</span>
+										<button md-icon-button [mdMenuTriggerFor]="menu" *ngIf="auths.idx && auths.idx ==='20'">
+											<md-icon>more_vert</md-icon>
 										</button>
-										<button md-menu-item routerLink="/app/movements/traveler-info/booking/{{booking.bookingId}}/traveler/{{traveler._id}}/redirect/booking-details">
-											<md-icon>create</md-icon>
-											<span>Edit</span>
-										</button>
-										<button md-menu-item (click)="removeTraveler(traveler._id, indx)">
-											<md-icon>remove</md-icon>
-											<span>Remove</span>
-										</button>
-									</md-menu>
-									<p>{{traveler.nationality}} <br>
-										{{traveler.email}}
-									</p>
+										<md-menu #menu="mdMenu" position-x='100'>
+											<button md-menu-item (click)="openTravelerModal(traveler, 'view')">
+												<md-icon>visibility</md-icon>
+												<span>View</span>
+											</button>
+											<button md-menu-item routerLink="/app/movements/traveler-info/booking/{{booking.bookingId}}/traveler/{{traveler._id}}/redirect/booking-details">
+												<md-icon>create</md-icon>
+												<span>Edit</span>
+											</button>
+											<button md-menu-item (click)="removeTraveler(traveler._id, indx)">
+												<md-icon>remove</md-icon>
+												<span>Remove</span>
+											</button>
+										</md-menu>
+										<p>{{traveler.nationality}} <br>
+											{{traveler.email}}
+										</p>
+									</div>
 								</li>
 							</ul>
 						</div>

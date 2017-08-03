@@ -1,9 +1,6 @@
-<div>
+<div class="guid-list-page">
 	<h3>Guide Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="guideUsers && guideUsers.length>0; else emptyGuides">
+	<table class="guid-list-table responsive-table highlight" *ngIf="guideUsers && guideUsers.length>0; else emptyGuides">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -16,17 +13,19 @@
 				<td>{{ guideUser.firstName+' '+ guideUser.lastName}}</td>
 				<td>{{ guideUser.email }}</td>
 				<td>
-					<a (click)="removeGuide(guideUser.email, i)">Remove</a>
+					<a class="delete" (click)="removeGuide(guideUser.email, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-</div>
-<div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
-		<i class="material-icons">add</i>
-	</a>
-	<ng-template #emptyGuides>
-		<h5 class="center-align">Guide Record is empty! Please add guide records.</h5>
-	</ng-template>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
+			<i class="material-icons">add</i>
+		</a>
+		<ng-template #emptyGuides>
+			<h5 class="center-align">Guide Record is empty! Please add guide records.</h5>
+		</ng-template>
+	</div>
 </div>

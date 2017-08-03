@@ -1,0 +1,706 @@
+html{
+	/*min-height: 100%;*/
+	height: 100%;
+}
+
+body{
+	font-size: 16px;
+	line-height: 26px;
+	font-weight: 400;
+	font-family: 'Muli', sans-serif;
+	color: #4d4d4d;
+	background: #ECF0F5;
+	/*min-height: 100%;*/
+	height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+	margin-top: 0;
+}
+
+p{margin: 0 0 1.5em;}
+
+.container{
+	width: 80%;
+	max-width: 100%;
+}
+
+/*==============================
+ Header style
+==============================*/
+.header{
+	background: #3C8DBC;
+}
+
+#logo-container{
+    float: left;
+    font-size: 18px;
+    font-weight: 300;
+    height: 64px;
+    line-height: 54px;
+    padding: 5px 0;
+    text-align: center;
+    width: 230px;
+
+    background-color: #367fa9;
+    border-bottom: 0 solid transparent;
+    color: #fff;
+}
+
+.site-content{
+	padding: 70px 0;
+}
+
+.billing-duration{
+	max-width: 500px;
+	margin: 0 auto 50px;
+	text-align: center;
+}
+
+.billing-duration span{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 5px;
+}
+
+.billing-duration img{vertical-align: top;}
+
+/*=============================
+ Pricing-table style*
+=============================*/
+.pricing-table .card .card-title{
+	font-size: 35px;
+	line-height: 45px;
+}
+
+.pricing-table .card .card-content p{margin: 0 0 1.5em;}
+
+.pricing-table .card .plan-list li{
+	margin: 0 0 10px;
+}
+
+.pricing-table .card .btn-start{
+	border-radius: 5px;
+	font-weight: 400;
+}
+
+nav .button-collapse{float: right;}
+
+.header-navigation li{
+	position: relative;
+}
+
+.header-navigation li .notification-warning{
+	background: #00a65a;
+    border-radius: 50%;
+    font-size: 11px;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+    right: 6px;
+    text-align: center;
+    top: 12px;
+    width: 15px;
+}
+
+/*=======================================
+ Login page style
+=======================================*/
+.login-page .form-holder .card .card-content h5,
+.forgot-password-page .form-holder .card .card-content h5{font-weight: 600;}
+
+.required-label-mark{color: #f00;}
+
+.login-page .form-holder,
+.forgot-password-page .form-holder{
+	max-width: 400px;
+	margin: 7% auto 0;
+}
+
+.login-page .form-holder .loginBtn--google:before {
+    background: rgba(0, 0, 0, 0) url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") no-repeat scroll 6px 6px;
+    border-right: 1px solid #106094;
+}
+
+.login-page .form-holder .loginBtn:before {
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.login-page .form-holder .loginBtn--google {
+    background: #1685CD;
+    width: 100%;
+}
+
+.login-page .form-holder .loginBtn {
+    border: medium none;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 16px;
+    line-height: 34px;
+    margin: 0;
+    padding: 0 15px 0 46px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.login-page .form-holder .loginBtn--google:hover,
+.login-page .form-holder .loginBtn--google:focus{
+	background: #1373b1;
+}
+
+.login-page .form-holder .btn-submit,
+.forgot-password-page .form-holder .btn-submit{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.login-page .form-holder form .row:last-child,
+.forgot-password-page .form-holder form .row:last-child{margin-bottom: 0;}
+
+.login-page .form-holder form .forgot-password,
+.forgot-password-page .form-holder form .back-to-login{
+	font-size: 14px;
+	font-weight: 400;
+	float: left;
+}
+
+.login-page .form-holder form .forgot-password:hover,
+.login-page .form-holder form .forgot-password:focus,
+.forgot-password-page .form-holder form .back-to-login:hover,
+.forgot-password-page .form-holder form .back-to-login:focus{
+	opacity: 0.6;
+}
+
+.login-page .form-holder form .creat-account{
+	font-size: 14px;
+	font-weight: 400;
+	float: right;
+}
+
+.login-page .form-holder form .creat-account:hover,
+.login-page .form-holder form .creat-account:focus{
+	opacity: 0.6;
+}
+
+.login-page .form-holder form input[type="email"],
+.login-page .form-holder form input[type="password"],
+.forgot-password-page .form-holder form input[type="email"]{
+	border: 1px solid #9e9e9e;
+	margin: 0;
+	padding: 0 25px 0 10px;
+	height: 2.6rem;
+	color: #000;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.login-page .form-holder form input[type="email"]:focus,
+.login-page .form-holder form input[type="password"]:focus,
+.forgot-password-page .form-holder form input[type="email"]:focus{
+	border-color: #26a69a;
+	box-shadow: none;
+}
+
+.login-page .form-holder form .col,
+.forgot-password-page .form-holder form .col{position: relative;}
+
+.login-page .form-holder form .material-icons,
+.forgot-password-page .form-holder form .material-icons{
+	position: absolute;
+	top: 10px;
+	right: 15px;
+	font-size: 20px;
+}
+
+.login-page .form-holder form input.invalid[type="password"]:not(.browser-default),
+.login-page .form-holder form input.invalid[type="password"]:focus:not(.browser-default),
+.login-page .form-holder form input.invalid[type="email"]:not(.browser-default),
+.login-page .form-holder form input.invalid[type="email"]:focus:not(.browser-default),
+.forgot-password-page .form-holder form input.invalid[type="email"]:not(.browser-default),
+.forgot-password-page .form-holder form input.invalid[type="email"]:focus:not(.browser-default){
+	border-color: #f44336;
+	box-shadow: none;
+}
+
+.login-page .form-holder form input.valid[type="password"]:not(.browser-default),
+.login-page .form-holder form input.valid[type="password"]:focus:not(.browser-default),
+.login-page .form-holder form input.valid[type="email"]:not(.browser-default),
+.login-page .form-holder form input.valid[type="email"]:focus:not(.browser-default),
+.forgot-password-page .form-holder form input.valid[type="email"]:not(.browser-default),
+.forgot-password-page .form-holder form input.valid[type="email"]:focus:not(.browser-default){
+	box-shadow: none;
+}
+
+.login-page .form-holder form label,
+.forgot-password-page .form-holder form label{color: #000;}
+
+.login-page .form-holder form .or{
+	position: relative;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.login-page .form-holder form .or:before{
+	position: absolute;
+	top: 11px;
+	left: 0;
+	width: 42%;
+	height: 1px;
+	background: #9e9e9e;
+	content: '';
+}
+
+.login-page .form-holder form .or:after{
+	position: absolute;
+	top: 11px;
+	right: 0;
+	width: 42%;
+	height: 1px;
+	background: #9e9e9e;
+	content: '';
+}
+
+/*====================
+ Sidebar style
+===================*/
+.admin-panel{
+	position: relative;
+	min-height: 100%;
+}
+
+.admin-panel:after{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+#sidebar{
+	left: 0;
+	min-height: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	width: 230px;
+	color: #b8c7ce;
+	background: #222D32;
+}
+
+.collapse-menu #sidebar{width: 50px;}
+
+.collapse-menu #sidebar ul li span{display: none !important;}
+
+#sidebar .navigation,
+#sidebar .collapsible{
+	margin: 15px 0 0;
+	font-size: 14px;
+	border: 0;
+	box-shadow: none;
+}
+
+#sidebar .collapsible .collapsible{margin: 0;}
+
+#sidebar .navigation li a{
+	color: #b8c7ce;
+	padding: 12px 5px 12px 15px;
+	display: block;
+	-webkit-transition: linear 0.2s;
+	-moz-transition: linear 0.2s;
+	transition: linear 0.2s;
+	border-left: 3px solid transparent;
+}
+
+#sidebar .navigation li > a:hover,
+#sidebar .navigation li > a:focus,
+#sidebar .navigation .active > a,
+#sidebar .navigation li .collapsible-header.active{
+	color: #fff;
+	background: #141a1d;
+	border-left-color: #3c8dbc;
+	outline: none;
+}
+
+#sidebar .navigation li a .fa{
+	display: inline-block;
+    float: none;
+    font-size: 15px;
+    line-height: 26px;
+    margin-right: 0;
+    text-align: left;
+    width: 22px;
+}
+
+#sidebar .navigation li .collapsible-header{
+	background: transparent;
+	border-bottom: 0;
+	line-height: 26px;
+	min-height: auto;
+}
+
+#sidebar .navigation li .collapsible-body{
+	padding: 0;
+	border-bottom: 0;
+	background: #2C3B41;
+	font-size: 12px;
+}
+
+#sidebar .navigation li .collapsible-body .collapsible-body{
+	background: #415760;
+} 
+
+#sidebar .navigation li .collapsible-body ul li a{
+	padding: 5px 5px 5px 15px;
+}
+
+#sidebar .navigation li a .arrow{
+	float: right;
+	text-align: center;
+	-webkit-transition: linear 0.2s;
+	-moz-transition: linear 0.2s;
+	transition: linear 0.2s;
+}
+
+#sidebar .navigation li .collapsible-header.active .arrow{
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+#sidebar .navigation li .menu-collapse-button{
+	background: none;
+	border: 0;
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 12px 5px 12px 15px;
+}
+
+#sidebar .navigation li .menu-collapse-button:hover,
+#sidebar .navigation li .menu-collapse-button:focus{color: #fff;}
+
+#sidebar .navigation li .menu-collapse-button .fa{
+	display: inline-block;
+    float: none;
+    font-size: 15px;
+    line-height: 26px;
+    margin-right: 0;
+    text-align: left;
+    width: 22px;
+}
+
+/*==========================
+ content area style
+============================*/
+#content{
+	margin-left: 230px;
+	padding: 15px;
+}
+
+.collapse-menu #content{margin-left: 50px;}
+
+/*====================================
+ Booking-list-page  style
+====================================*/
+.booking-list-page .main-title,
+.movement-list-page .main-title,
+.guid-list-page .main-title,
+.trip-list-page .main-title,
+.traveller-list-page .main-title,
+.flight-list-page .main-title,
+.traveller-pickup-list-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.booking-list-page .booking-list-table,
+.movement-list-page .movement-list-table,
+.guid-list-page .guid-list-table,
+.trip-list-page .trip-list-table,
+.traveller-list-page .traveller-list-table,
+.flight-list-page .flight-list-table,
+.traveller-pickup-list-page .traveller-pickup-list-table{
+	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+	border-radius: 5px;
+	font-size: 14px;
+	background: #fff;
+}
+
+.booking-list-page .booking-list-table td,
+.booking-list-page .booking-list-table th,
+.movement-list-page .movement-list-table td,
+.movement-list-page .movement-list-table th,
+.guid-list-page .guid-list-table td,
+.guid-list-page .guid-list-table th,
+.trip-list-page .trip-list-table td,
+.trip-list-page .trip-list-table th,
+.traveller-list-page .traveller-list-table td,
+.traveller-list-page .traveller-list-table th,
+.flight-list-page .flight-list-table td,
+.flight-list-page .flight-list-table th,
+.traveller-pickup-list-page .traveller-pickup-list-table td,
+.traveller-pickup-list-page .traveller-pickup-list-table th{
+	padding: 12px 15px;
+}
+
+.booking-list-page .booking-list-table thead th,
+.movement-list-page .movement-list-table thead th,
+.guid-list-page .guid-list-table thead th,
+.trip-list-page .guid-list-table thead th,
+.traveller-list-page .traveller-list-table thead th,
+.flight-list-page .flight-list-table thead th,
+.traveller-pickup-list-page .traveller-pickup-list-table thead th{font-weight: 600}
+
+.booking-list-page .booking-list-table tbody tr,
+.movement-list-page .movement-list-table tbody tr,
+.guid-list-page .guid-list-table tbody tr,
+.trip-list-page .trip-list-table tbody tr,
+.traveller-list-page .traveller-list-table tbody tr,
+.flight-list-page .flight-list-table tbody tr,
+.traveller-pickup-list-page .traveller-pickup-list-table tbody tr{
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.booking-list-page .booking-list-table .delete,
+.guid-list-page .guid-list-table .delete,
+.trip-list-page .trip-list-table .delete,
+.traveller-list-page .traveller-list-table .delete,
+.flight-list-page .flight-list-table .delete{
+	color: #F44336;
+}
+
+.booking-list-page .booking-list-table .active,
+.movement-list-page .movement-list-table .active,
+.traveller-list-page .traveller-list-table .active,
+.flight-list-page .flight-list-table .active,
+.traveller-pickup-list-page .traveller-pickup-list-table .active,
+.trip-list-page .trip-list-table .active{
+	color: #26a69a;
+}
+
+.booking-list-page .booking-list-table .inactive,
+.movement-list-page .movement-list-table .inactive,
+.traveller-list-page .traveller-list-table .inactive,
+.flight-list-page .flight-list-table .inactive,
+.traveller-pickup-list-page .traveller-pickup-list-table .inactive,
+.trip-list-page .trip-list-table .inactive{
+	color: #F44336;	
+}
+
+.booking-list-page .add-round-button-icon,
+.guid-list-page .add-round-button-icon,
+.trip-list-page .add-round-button-icon,
+.traveller-list-page .add-round-button-icon{
+	bottom: 20px;
+    position: fixed;
+    right: 20px;
+}
+
+/*=========================================
+ Booking-detail-page style
+=========================================*/
+.booking-detail-page .title-holder{margin-bottom: 0;}
+
+.booking-detail-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.booking-detail-page .card{
+	background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+    font-size: 14px;
+    margin: 0;
+}
+
+.booking-detail-page .card .card-title{
+	font-size: 22px;
+    font-weight: 300;
+    line-height: 30px;
+    float: left;
+    width: 90%;
+}
+
+.booking-detail-page .card .card-content{
+	padding: 10px 15px;
+	overflow: hidden;
+}
+
+.booking-detail-page .card .card-action{
+	padding: 25px 6px 10px;
+}
+
+.booking-detail-page .card .card-action .label{
+	display: inline-block;
+	width: 130px;
+}
+
+.booking-detail-page .card .btn-floating{
+	float: right;
+}
+
+.booking-detail-page .card .card-action .traveller-list li{
+	overflow: hidden;
+	border: 1px solid #e0e0e0;
+	padding: 10px 20px;
+	margin-bottom: 15px;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .img-holder{
+	float: left;
+	width: 42px;
+	margin-right: 20px;
+	margin-top: 10px;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder{
+	overflow: hidden;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button{
+	background: none;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	border: 0;
+	border-radius: 50%;
+	vertical-align: middle;
+}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button .material-icons{line-height: 40px;}
+
+.booking-detail-page .card .card-action .traveller-list li .text-holder .mat-icon-button:focus{
+	background: #26a69a;
+}
+
+/*========================================
+ Movement listing page style
+========================================*/
+.movement-list-page .top-section{
+	padding: 20px 15px;
+	background: #fff;
+	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+	border-radius: 5px 5px 0 0;
+	font-size: 14px;
+}
+
+.movement-list-page .top-section:after{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.movement-list-page .top-section span{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.movement-list-page .top-section .filter-option{
+	/*display: inline-block;*/
+	/*vertical-align: middle;*/
+	float: right;
+	overflow: hidden;
+	margin: 0 0 10px;
+}
+
+.movement-list-page .top-section .filter-option span{
+	font-size: 11px;
+	font-weight: 700;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	float: left;
+	background: #f8f8f8;
+	min-width: 54px;
+	padding: 4px 8px;
+	margin-left: -1px;
+	cursor: pointer;
+}
+
+.movement-list-page .top-section .filter-option span:first-child{
+	margin-left: 0;
+}
+
+.movement-list-page .top-section .filter-option .current{
+	box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2) inset;
+}
+
+.movement-list-page .top-section .datepicker-holder{
+	clear: both;
+	float: right;
+}
+
+.movement-list-page .movement-list-table{
+	border-radius: 0 0 5px 5px;
+}
+
+.movement-list-page .top-section .datepicker-holder .selectiongroup .selection{
+	background: transparent;
+}
+
+/*======================
+ Notification style
+======================*/
+.notification{
+	 background: #fcd0cd;
+    border-radius: 5px;
+    margin: 0 auto 15px;
+    max-width: 650px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #000;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #000;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #000;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #000;
+}
+
+/*Trip list pop up form style*/
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing{opacity: 0.6 important;}
+
+.mat-dialog-container{padding-bottom: 40px;}
+
+.error-msg{
+    font-size: 12px;
+    color: #F44336;
+}
+
+.err-div label{color: #F44336;}
+
+.err-div input:not([type]),
+.err-div input[type=text], input[type=password],
+.err-div input[type=email], input[type=url],
+.err-div input[type=time],
+.err-div input[type=date],
+.err-div input[type=datetime],
+.err-div input[type=datetime-local],
+.err-div input[type=tel],
+.err-div input[type=number],
+.err-div input[type=search],
+.err-div textarea.materialize-textarea{
+	border-bottom-color: #F44336;
+}

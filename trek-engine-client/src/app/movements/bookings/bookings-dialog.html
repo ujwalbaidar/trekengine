@@ -1,4 +1,4 @@
-<form class="col s12" (ngSubmit)="submitBookingDetails(bookingDetail.form)" #bookingDetail="ngForm" novalidate>
+<form class="add-booking-detail-form col s12" (ngSubmit)="submitBookingDetails(bookingDetail.form)" #bookingDetail="ngForm" novalidate>
 	<div md-dialog-content>
 
 		<div class="row">
@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(groupName?.errors?.required && submittedBookingForm)?'err-div':'']">
 				<label for="group-name" [ngClass]="{'active':(booking.groupName!=undefined)}">
 					<strong>
 						{{'Group Name'}}
@@ -21,11 +21,11 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="group-name" type="text" class="validate" name="groupName" [(ngModel)]="booking.groupName" #groupName="ngModel" [value] = "booking.groupName" required>
-				<div *ngIf="groupName?.errors?.required && submittedBookingForm">
+				<div class="error-msg" *ngIf="groupName?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(travellerCount?.errors?.required && submittedBookingForm)?'err-div':'']">
 				<label for="Total Members" [ngClass]="{'active':(booking.travellerCount!=undefined)}">
 					<strong>
 						{{'Total Members'}}
@@ -33,14 +33,14 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="total-members" type="number" class="validate" name="travellerCount" [(ngModel)]="booking.travellerCount" #travellerCount="ngModel" required>
-				<div *ngIf="travellerCount?.errors?.required && submittedBookingForm">
+				<div class="error-msg" *ngIf="travellerCount?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col s12">
+			<div class="col s12" [ngClass]="[(emptyTripName === true && submittedBookingForm)?'err-div':'']">
 				<label for="tripName">
 					<strong>
 						{{'Trip Nepal'}}
@@ -55,14 +55,14 @@
 						{{ tripInfo.name }}
 					</md-option>
 				</md-autocomplete>
-				<div *ngIf="emptyTripName === true && submittedBookingForm">
+				<div class="error-msg" *ngIf="emptyTripName === true && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(tripCost?.errors?.required && submittedBookingForm)?'err-div':'']">
 				<div>
 					<label for="trip-cost" [ngClass]="{'active':(booking.tripCost!=undefined)}">
 						<strong>
@@ -79,11 +79,11 @@
 						<input id="trip-cost" type="number" class="validate" name="tripCost" [(ngModel)]="booking.tripCost" #tripCost="ngModel" required>
 					</div>
 				</div>
-				<div *ngIf="tripCost?.errors?.required && submittedBookingForm">
+				<div class="error-msg" *ngIf="tripCost?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
-			<div class="col s6">
+			<div class="col s6" [ngClass]="[(advancePaid?.errors?.required && submittedBookingForm)?'err-div':'']">
 				<div>
 					<label for="advance-paid" [ngClass]="{'active':(booking.advancePaid!=undefined)}">
 						<strong>
@@ -100,7 +100,7 @@
 						<input id="advance-paid" type="number" class="validate" name="advancePaid" [(ngModel)]="booking.advancePaid" #advancePaid="ngModel" required>
 					</div>
 				</div>
-				<div *ngIf="advancePaid?.errors?.required && submittedBookingForm">
+				<div class="error-msg" *ngIf="advancePaid?.errors?.required && submittedBookingForm">
 					This Field is Required!
 				</div>
 			</div>
@@ -108,6 +108,6 @@
 		
 	</div>
 	<div md-dialog-actions>
-		<button md-button class="waves-effect #009688 teal btn full-width-btn" type="submit">Submit</button>
+		<button class="waves-effect waves-light btn" type="submit">Submit</button>
 	</div>
 </form>
