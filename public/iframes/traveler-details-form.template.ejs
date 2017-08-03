@@ -411,6 +411,7 @@
 				    {value: 'female', viewValue: 'Female'}
 				];
 				$scope.traveller.gender = $scope.genders[0];
+
 				$scope.previewUpload = function(uploadType){
 					$scope.attachmentErr = {};
 					var preview = document.querySelector('.'+uploadType);
@@ -491,10 +492,10 @@
 
 						$scope.submitProgress = true;
 						$scope.traveller.gender = $scope.traveller.gender.value;
+						var iframeSource = $window.frameElement.getAttribute('src');
 						$http({
 								method:'post', 
-								url: 'https://www.trekengine.com/trekengineApp/travellers/create', 
-								// url: 'http://localhost:5000/trekengineApp/travellers/create', 
+								url: iframeSource+'/create', 
 								data:$scope.traveller, 
 								headers:{
 									webHeader: JSON.stringify($cookies.getAll()),

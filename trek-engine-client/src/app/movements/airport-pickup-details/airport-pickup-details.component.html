@@ -1,47 +1,48 @@
-<div>
+<div class="traveller-pickup-list-page">
 	<h3>Traveler Aiport Pickup Info</h3>
+	<div  *ngIf="pickupDetails && pickupDetails.length>0; else emptypickupDetails">
+		<table class="traveller-pickup-list-table responsive-table highlight">
+			<thead>
+				<tr>
+					<td>BookingId</td>
+					<td>Name</td>
+					<td>Email</td>
+					<td>Telephone</td>
+					<td>Pickup Date</td>
+					<td>Pickup Time</td>
+					<td>Status</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let pickupDetail of pickupDetails">
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail.bookingId }}
+					</td>
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail.firstName+' '+ pickupDetail.lastName }}
+					</td>
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail.email }}
+					</td>
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail.telephone }}
+					</td>
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail?.airportPickup?.date?.formatted }}
+					</td>
+					<td (click)="openTravellerModal(pickupDetail)">
+						{{ pickupDetail?.airportPickup?.hrTime + ":" + pickupDetail?.airportPickup?.minTime}}
+					</td>
+					<td>
+						<span [ngClass]="(pickupDetail.status==true)?'active':'inactive'">
+							<i [ngClass]="(pickupDetail.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<ng-template #emptypickupDetails>
+		<h5 class="center-align">There are no any upcoming traveler's pickup details!</h5>
+	</ng-template>
 </div>
-<div class="divider"></div>
-<div  *ngIf="pickupDetails && pickupDetails.length>0; else emptypickupDetails">
-	<table class="bordered responsive-table highlight">
-		<thead>
-			<tr>
-				<td>BookingId</td>
-				<td>Name</td>
-				<td>Email</td>
-				<td>Telephone</td>
-				<td>Pickup Date</td>
-				<td>Pickup Time</td>
-				<td>Status</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let pickupDetail of pickupDetails">
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail.bookingId }}
-				</td>
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail.firstName+' '+ pickupDetail.lastName }}
-				</td>
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail.email }}
-				</td>
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail.telephone }}
-				</td>
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail?.airportPickup?.date?.formatted }}
-				</td>
-				<td (click)="openTravellerModal(pickupDetail)">
-					{{ pickupDetail?.airportPickup?.hrTime + ":" + pickupDetail?.airportPickup?.minTime}}
-				</td>
-				<td>
-					{{ pickupDetail.status==true?'active':'inactive'}}
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-<ng-template #emptypickupDetails>
-	<h5 class="center-align">There are no any upcoming traveler's pickup details!</h5>
-</ng-template>

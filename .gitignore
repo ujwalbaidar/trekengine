@@ -1,4 +1,8 @@
 node_modules/
 attachments/
-client/node_modules/
-client/dist/
+trek-engine-client/node_modules/
+trek-engine-client/dist/
+server/configs/env/development.json
+server/configs/env/production.json
+trek-engine-client/src/environments/environment.prod.ts
+trek-engine-client/src/environments/environment.ts
