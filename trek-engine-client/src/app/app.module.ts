@@ -107,7 +107,7 @@ enableProdMode();
     ChangePasswordComponent,
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
-  TravelerInfoComponent
+    TravelerInfoComponent,
     AudienceOverviewComponent,
     AudienceAgeComponent,
     AudienceCountryComponent,
