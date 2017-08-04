@@ -117,7 +117,7 @@ export class BillingHistory {
     packageType : string;
     packageCost : number;
     activatesOn : any;
-    expiresOn : number;
+    expiresOn : any;
     remainingDays : number;
     usesDays : number;
     status : boolean;

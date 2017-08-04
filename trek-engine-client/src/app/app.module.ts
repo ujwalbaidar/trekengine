@@ -67,6 +67,7 @@ import {
   OverviewTripAnalyticsComponent,
   TripBookingTripAnalyticsComponent
 } from './analytics/index';
+import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
 
 
 enableProdMode();
@@ -109,7 +110,8 @@ enableProdMode();
     GenderAudienceAnalyticsComponent,
     OverviewAudienceAnalyticsComponent,
     OverviewTripAnalyticsComponent,
-    TripBookingTripAnalyticsComponent
+    TripBookingTripAnalyticsComponent,
+    DeleteConfimationDialogComponent
     
   ],
   imports: [
@@ -145,7 +147,8 @@ enableProdMode();
     TravellerDetailsDialogComponent,
     AppFeaturesDialogComponent,
     BillingDialogComponent,
-    RegisterSuccessDialogComponent
+    RegisterSuccessDialogComponent,
+    DeleteConfimationDialogComponent
   ]
 })
 export class AppModule { 

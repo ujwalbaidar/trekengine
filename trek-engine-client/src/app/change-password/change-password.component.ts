@@ -53,7 +53,7 @@ export class ChangePasswordComponent implements OnInit {
 						};
 						setTimeout(()=>{ 
 							location.reload();
-							// this._route.navigate([this.location.path()]);
+							this._route.navigate(['/login']);
 						}, 3000);
 
 						this.snackBar.open('Password updated successfully!', '', {

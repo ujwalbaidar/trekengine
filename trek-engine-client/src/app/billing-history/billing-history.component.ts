@@ -4,6 +4,7 @@ import { PackageBillingsService, AuthService, PackagesService } from '../service
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { BillingHistory } from '../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-billing-history',
@@ -15,7 +16,7 @@ export class BillingHistoryComponent implements OnInit {
 	billings: any;
 	billingError: any;
 	private cookieIndex: number;
-	constructor(private billingService: PackageBillingsService, private auth: AuthService, private route: ActivatedRoute, public dialog: MdDialog) {
+	constructor(private billingService: PackageBillingsService, private auth: AuthService, private route: ActivatedRoute, public dialog: MdDialog, public snackBar: MdSnackBar) {
 
 	}
 	
@@ -53,7 +54,6 @@ export class BillingHistoryComponent implements OnInit {
 
   	openBillingModal(editData:BillingHistory=<BillingHistory>{}){
   		let dialogOptions = {
-			height: '500px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -65,17 +65,59 @@ export class BillingHistoryComponent implements OnInit {
 		}
 		let dialogRef = this.dialog.open(BillingDialogComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
-      		this.getUserBillingHistory();
+			if(result.success == false){
+				this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
+			}else{
+      			this.getUserBillingHistory();
+			}
     	});
   	}
 
 	upgradeBillPayment(index){
-		this.billings[index]['userId'] = this.userId;
-		this.billingService.updateBillPayment(this.billings[index])
+		let billingObj = JSON.parse(JSON.stringify(this.billings[index]));
+		billingObj['userId'] = this.userId;
+		if(billingObj['packagePayment'] == true){
+			billingObj['packagePayment'] = false;
+		}else{
+			billingObj['packagePayment'] = true;
+		}
+		this.billingService.updateBillPayment(billingObj)
 			.subscribe(billingHistory=>{
 				this.getUserBillingHistory();
 			}, error=>{
+				this.snackBar.open('Failed to Toggle Field.', '', {
+					duration: 3000,
+				});
+				setTimeout(()=>{ 
+					location.reload();
+				}, 3000);
+			});
+	}
+
+
+	toggleBillingFlag(index, field){
+		let billingObj = JSON.parse(JSON.stringify(this.billings[index]));
+		billingObj['userId'] = this.userId;
+		if(billingObj[field] == true){
+			billingObj[field] = false;
+		}else{
+			billingObj[field] = true;
+		}
+		this.billingService.updateBillingDetails(billingObj)
+			.subscribe(billingHistory=>{
 				this.getUserBillingHistory();
+			}, error=>{
+				this.snackBar.open('Failed to Toggle Field.', '', {
+					duration: 3000,
+				});
+				setTimeout(()=>{ 
+					location.reload();
+				}, 3000);
 			});
 	}
 }
@@ -88,6 +130,8 @@ export class BillingDialogComponent implements OnInit {
 	billingHistory: BillingHistory = <BillingHistory>{};
 	title: string = 'Add User Billings';
 	packages: any;
+	submittedBillingForm: boolean = false;
+	submittedBillingFormOnProgress: boolean = false;
 
 	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
@@ -100,23 +144,23 @@ export class BillingDialogComponent implements OnInit {
 		if(this.dialogRef._containerInstance.dialogConfig.data){
 			if(this.dialogRef._containerInstance.dialogConfig.data.billingHistory){
 				this.billingHistory = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.billingHistory);
-				let activatedDate = new Date(this.billingHistory['activatesOn']*1000);
-				this.billingHistory['activatedDate'] = {
+				let activatesOn = new Date(this.billingHistory['activatesOn']*1000);
+				this.billingHistory['activatesOn'] = {
 					date: {
-						year: activatedDate.getFullYear(),
-						month: activatedDate.getMonth()+1,
-						day: activatedDate.getDate()
+						year: activatesOn.getFullYear(),
+						month: activatesOn.getMonth()+1,
+						day: activatesOn.getDate()
 					}
 				};
-				let expiryDate = new Date(this.billingHistory['expiresOn']*1000);
-				this.billingHistory['expiryDate'] = {
+				let expiresOn = new Date(this.billingHistory['expiresOn']*1000);
+				this.billingHistory['expiresOn'] = {
 					date: {
-						year: activatedDate.getFullYear(),
-						month: activatedDate.getMonth(),
-						day: activatedDate.getDate()
+						year: expiresOn.getFullYear(),
+						month: expiresOn.getMonth()+1,
+						day: expiresOn.getDate()
 					}
 				};
-				this.title = 'Edit Booking Details';
+				this.title = 'Edit Billing Details';
 			}
 		}
 	}
@@ -129,6 +173,7 @@ export class BillingDialogComponent implements OnInit {
 	}
 
 	submitBillingDetails(bookingForm:any) {
+		this.submittedBillingForm = true;
 		if(bookingForm.valid){
 			if(this.dialogRef._containerInstance.dialogConfig.data.billingHistory){
 				this.updateBookingDetails();
@@ -137,13 +182,15 @@ export class BillingDialogComponent implements OnInit {
 	}
 
 	updateBookingDetails() {
+		this.submittedBillingFormOnProgress = true;
 		this.billingService.updateBillingDetails(this.billingHistory)
 			.subscribe(billingHistory=>{
+				billingHistory.success = true;
 				this.dialogRef.close(billingHistory);
 			}, error=>{
+				error.success = false;
 				this.dialogRef.close(error);
 			});
 	}
-
 
 }
