@@ -47,6 +47,7 @@ exports.updateFeature = function(req, res){
 	if(req.headers && req.headers.userId && req.headers.role==10){
 		let updateData = {
 			name: req.body.name,
+			status: req.body.status,
 			description: req.body.description,
 			updateDate: new Date()
 		};

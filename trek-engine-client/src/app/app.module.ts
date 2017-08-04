@@ -155,7 +155,8 @@ enableProdMode();
     TravellerDetailsDialogComponent,
     AppFeaturesDialogComponent,
     BillingDialogComponent,
-    RegisterSuccessDialogComponent
+    RegisterSuccessDialogComponent,
+    DeleteConfimationDialogComponent
   ],
   exports:[SumTotalPipe]
 })

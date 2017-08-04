@@ -18,6 +18,8 @@ export class PackageDetailsComponent implements OnInit {
 	selectedFeatureArrIds: any;
 	selectedFeatureArr: any;
 	packageId:string;
+	submittedPackageForm: boolean = false;
+	submitOnProgress: boolean = false;
 
 	constructor(
 		private _route:Router, 
@@ -87,7 +89,9 @@ export class PackageDetailsComponent implements OnInit {
 	}
 
 	submitAppPackages(packageForm:any){
+		this.submittedPackageForm = true;
 		if(packageForm.valid){
+			this.submitOnProgress = true;
 			if(this.packageId){
 				this.updatePackageDetails();
 			}else{
@@ -106,7 +110,7 @@ export class PackageDetailsComponent implements OnInit {
 	}
 
 	savePackageDetails(){
-		if(this.selectedFeatureArrIds.length>0){
+		if(this.selectedFeatureArrIds !== undefined && this.selectedFeatureArrIds.length>0){
 			this.appPackage['featureIds'] = this.selectedFeatureArrIds;
 		}
 		this.packageService.submitAppPackage(this.appPackage)

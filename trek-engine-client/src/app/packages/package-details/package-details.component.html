@@ -1,80 +1,89 @@
-<form class="col s12" #packageDetail="ngForm" novalidate>
-	<h4 md-dialog-title>{{ title }}</h4>
-	<div md-dialog-content>
+<form class="feature-detail-form col s12" (ngSubmit)="submitAppPackages(packageDetail.form)" #packageDetail="ngForm" novalidate>
+	<div>
 		<div class="row">
-			<div class="input-field col s6">
+			<div class="col s12">
+				<h5>
+					{{title}}
+				</h5>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12" [ngClass]="[(name?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-name" [ngClass]="{'active':(appPackage.name!=undefined)}">
-					*Package Name
+					<strong>
+						{{'Package Name'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="package-name" type="text" class="validate" name="name" [(ngModel)]="appPackage.name" #name="ngModel" [value] = "appPackage.name" required>
-				<div *ngIf="name.errors && (name.dirty || name.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!name.errors.required">
-						This Field is Required!
-					</div>
+				<div class="error-msg" *ngIf="name?.errors?.required && submittedPackageForm">
+					This Field is Required!
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="input-field col s6">
+			<div class="col s12">
 				<label for="package-description" [ngClass]="{'active':(appPackage.description!=undefined)}">Package Description</label>
 				<input id="package-description" type="text" class="validate" name="description" [(ngModel)]="appPackage.description" #description="ngModel" [value] = "appPackage.description">
 			</div>
 		</div>
 		<div class="row">
-			<div class="input-field col s3">
+			<div class="col s6" [ngClass]="[(cost?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-cost" [ngClass]="{'active':(appPackage.cost!=undefined)}">
-					*Package Cost
+					<strong>
+						{{'Package Cost'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="package-cost" type="number" class="validate" name="cost" [(ngModel)]="appPackage.cost" #cost="ngModel" [value] = "appPackage.cost" required>
-				<div *ngIf="cost.errors && (cost.dirty || cost.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!cost.errors.required">
-						This Field is Required!
-					</div>
+				<div class="error-msg" *ngIf="cost?.errors?.required && submittedPackageForm">
+					This Field is Required!
 				</div>
 			</div>
-			<div class="input-field col s3">
+
+			<div class="col s6" [ngClass]="[(days?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-days" [ngClass]="{'active':(appPackage.days!=undefined)}">
-					*Valid Period
+					<strong>
+						{{'Valid Period'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="package-days" type="number" class="validate" name="days" [(ngModel)]="appPackage.days" #days="ngModel" [value] = "appPackage.days" required>
-				<div *ngIf="days.errors && (days.dirty || days.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!days.errors.required">
-						This Field is Required!
-					</div>
+				<div class="error-msg" *ngIf="days?.errors?.required && submittedPackageForm">
+					This Field is Required!
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="input-field col s3">
+			<div class="col s6" [ngClass]="[(trialPeriod?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-trial-period" [ngClass]="{'active':(appPackage.trialPeriod!=undefined)}">
-					*Trial Period
+					<strong>
+						{{'Trial Period'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="package-trial-period" type="number" class="validate" name="trialPeriod" [(ngModel)]="appPackage.trialPeriod" #trialPeriod="ngModel" [value] = "appPackage.trialPeriod" required>
-				<div *ngIf="trialPeriod.errors && (trialPeriod.dirty || trialPeriod.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!trialPeriod.errors.required">
-						This Field is Required!
-					</div>
+				<div class="error-msg" *ngIf="trialPeriod?.errors?.required && submittedPackageForm">
+					This Field is Required!
 				</div>
 			</div>
-			<div class="input-field col s3">
+
+			<div class="col s6" [ngClass]="[(priorityLevel?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-priorityLevel" [ngClass]="{'active':(appPackage.priorityLevel!=undefined)}">
-					*Priority Level
+					<strong>
+						{{'Priority Level'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 				<input id="package-priorityLevel" type="number" class="validate" name="priorityLevel" [(ngModel)]="appPackage.priorityLevel" #priorityLevel="ngModel" [value] = "appPackage.priorityLevel" required>
-				<div *ngIf="priorityLevel.errors && (priorityLevel.dirty || priorityLevel.touched)"
-					class="alert alert-danger">
-					<div [hidden]="!priorityLevel.errors.required">
-						This Field is Required!
-					</div>
+				<div class="error-msg" *ngIf="priorityLevel?.errors?.required && submittedPackageForm">
+					This Field is Required!
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col s6 m8">
+			<div class="col s12">
 				<select class="browser-default" [(ngModel)]="selectedFeature" name="selectPackageFeature" (change)="addFeature()">
 					<option [value]="appFeature._id" *ngFor="let appFeature of appFeatures;let i=index;">
 						<span *ngIf="appFeature && appFeature.name;else emptySelector">
@@ -105,7 +114,7 @@
 			</div>
 		</div>
 	</div>
-	<div md-dialog-actions>
-		<a md-button class="waves-effect #009688 teal btn" (click)="submitAppPackages(packageDetail.form)">Submit</a>
+	<div>
+		<button class="waves-effect waves-light btn" type="submit" [disabled]="submitOnProgress">Submit</button>
 	</div>
 </form>
