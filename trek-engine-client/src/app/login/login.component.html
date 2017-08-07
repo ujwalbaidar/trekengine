@@ -37,13 +37,13 @@
 										<i class="material-icons">account_circle</i>
 									</label>
 									<input type="email" placeholder="Email" id="email" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-									<div *ngIf="email?.errors?.required && submittedLoginForm">
+									<div class="error-msg" *ngIf="email?.errors?.required && submittedLoginForm">
 										This Field is Required!
 									</div>
-									<div *ngIf="email?.errors?.pattern && submittedLoginForm">
+									<div class="error-msg" *ngIf="email?.errors?.pattern && submittedLoginForm">
 										Email is Invalid!
 									</div>
-									<div *ngIf="errObj?.errType=='email'">
+									<div class="error-msg" *ngIf="errObj?.errType=='email'">
 										{{errObj?.message}}
 									</div>
 								</div>
@@ -54,11 +54,11 @@
 									<label for="password" [ngClass]="{'active':(user.password!=undefined)}">
 										<i class="material-icons">lock</i>
 									</label>
-									<input placeholder="password" id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
-									<div *ngIf="password?.errors?.required && submittedLoginForm">
+									<input placeholder="Password" id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
+									<div class="error-msg" *ngIf="password?.errors?.required && submittedLoginForm">
 										This Field is Required!
 									</div>
-									<div *ngIf="errObj?.errType=='password'">
+									<div class="error-msg" *ngIf="errObj?.errType=='password'">
 										{{errObj?.message}}
 									</div>
 								</div>

@@ -1,9 +1,6 @@
-<div>
-	<h3>Feature Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="features && features.length>0; else emptyfeatures">
+<div class="feature-list-page">
+	<h3 class="main-title">Feature Lists</h3>
+	<table class="feature-list-table responsive-table highlight" *ngIf="features && features.length>0; else emptyfeatures">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -21,11 +18,17 @@
 					{{feature.description}}
 				</td>
 				<td>
-					{{ feature.status==true?'active':'inactive'}}
+					<span [ngClass]="(feature.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
+						<i [ngClass]="(feature.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					<a (click)="openFeatureModal(feature, 'edit')">Edit</a>
-					<a (click)="deleteFeatures(feature._id, i)">Delete</a>
+					<a class="edit" (click)="openFeatureModal(feature, 'edit')">
+						<i class="material-icons">edit</i>
+					</a>
+					<a class="delete" (click)="deleteFeatures(feature._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
@@ -33,10 +36,9 @@
 	<ng-template #emptyfeatures>
 		<h5 class="center-align">Feature Record is empty! Please add features!</h5>
 	</ng-template>
-</div>
-
-<div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light green" (click)="openFeatureModal()">
-		<i class="material-icons">add</i>
-	</a>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openFeatureModal()">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
 </div>
