@@ -32,16 +32,13 @@ let UserSchema = new mongoose.Schema({
 	street: String,
 	city: String,
 	country: {
-		type:String,
-		required: true
+		type:String
 	},
 	birthday: {
-		type:Object,
-		required: true
+		type:Object
 	},
 	gender: {
-		type:String,
-		required: true
+		type:String
 	},
 	organizationName: {
 		type:String,
