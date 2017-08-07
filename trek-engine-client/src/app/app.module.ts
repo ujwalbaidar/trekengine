@@ -62,6 +62,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
+import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
 import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
 import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
 import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
@@ -108,6 +109,7 @@ enableProdMode();
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
     TravelerInfoComponent,
+    DeleteConfimationDialogComponent,
     AudienceOverviewComponent,
     AudienceAgeComponent,
     AudienceCountryComponent,
