@@ -17,7 +17,8 @@ import {
   PackagesService,
   AuthResolverService,
   RoleResolverService,
-  NotificationsService
+  NotificationsService,
+  AnalyticsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -57,16 +58,7 @@ import { ActivateTokenComponent } from './register/activate-token/activate-token
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
-import { 
-  AnalyticsComponent,
-  AudienceAnalyticsComponent,
-  AgeAudienceAnalyticsComponent,
-  CountryAudienceAnalyticsComponent,
-  GenderAudienceAnalyticsComponent,
-  OverviewAudienceAnalyticsComponent,
-  OverviewTripAnalyticsComponent,
-  TripBookingTripAnalyticsComponent
-} from './analytics/index';
+
 import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
 
 
@@ -103,14 +95,6 @@ enableProdMode();
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
     TravelerInfoComponent,
-    AnalyticsComponent,
-    AudienceAnalyticsComponent,
-    AgeAudienceAnalyticsComponent,
-    CountryAudienceAnalyticsComponent,
-    GenderAudienceAnalyticsComponent,
-    OverviewAudienceAnalyticsComponent,
-    OverviewTripAnalyticsComponent,
-    TripBookingTripAnalyticsComponent,
     DeleteConfimationDialogComponent
     
   ],
@@ -135,7 +119,8 @@ enableProdMode();
     PackagesService,
     AuthResolverService,
     RoleResolverService,
-    NotificationsService
+    NotificationsService,
+    AnalyticsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

@@ -30,17 +30,6 @@ import {
 	TravelerInfoComponent
 } from './movements/index';
 
-import { 
-	AnalyticsComponent,
-	AudienceAnalyticsComponent,
-	AgeAudienceAnalyticsComponent,
-	CountryAudienceAnalyticsComponent,
-	GenderAudienceAnalyticsComponent,
-	OverviewAudienceAnalyticsComponent,
-	OverviewTripAnalyticsComponent,
-	TripBookingTripAnalyticsComponent 
-} from './analytics/index';
-
 import { AuthResolverService, RoleResolverService } from './services';
 
 const appRoutes: Routes = [
@@ -103,7 +92,8 @@ const appRoutes: Routes = [
 			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent },
-			{ path: 'analytics', component: AnalyticsComponent }
+			// { path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
+			// { path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }
