@@ -155,7 +155,6 @@ export class PackageBillingsComponent implements OnInit {
 	showRegisterSuccess(){
 	
 		let dialogOptions = {
-			height: '210px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
