@@ -1,9 +1,6 @@
-<div>
-	<h3>Package Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="packages && packages.length>0; else emptyPackages">
+<div class="package-list-page">
+	<h3 class="main-title">Package Lists</h3>
+	<table class="package-list-table responsive-table highlight" *ngIf="packages && packages.length>0; else emptyPackages">
 		<thead>
 			<tr>
 				<td>Name</td>
@@ -37,11 +34,17 @@
 					{{package.priorityLevel}}
 				</td>
 				<td>
-					{{ package.status==true?'active':'inactive'}}
+					<span [ngClass]="(package.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
+						<i [ngClass]="(package.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					<a [routerLink]="['details', 'edit', package._id]">Edit</a>
-					<a (click)="deletePackages(package._id, i)">Delete</a>
+					<a class="edit" [routerLink]="['details', 'edit', package._id]">
+						<i class="material-icons">edit</i>
+					</a>
+					<a class="delete" (click)="deletePackages(package._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
@@ -49,10 +52,9 @@
 	<ng-template #emptyPackages>
 		<h5 class="center-align">Package Record is empty! Please add Packages!</h5>
 	</ng-template>
-</div>
-
-<div class="add-round-button-icon">
-	<a class="btn-floating btn-large waves-effect waves-light green" [routerLink]="['details']">
-		<i class="material-icons">add</i>
-	</a>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" [routerLink]="['details']">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
 </div>

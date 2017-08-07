@@ -68,7 +68,8 @@ exports.updatePackage = function(req, res){
 			trialPeriod: req.body.trialPeriod,
 			priorityLevel: req.body.priorityLevel,
 			featureIds: req.body.featureIds,
-			updateDate: new Date()
+			updateDate: new Date(),
+			status: req.body.status
 		};
 		Packages.update({_id: req.body._id, userId: req.headers.userId}, updateData, (err, package)=>{
 			if(err){

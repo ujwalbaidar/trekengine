@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
 							iconName: 'fa fa-car'
 						}
 					]
-				},{
+				}/*,{
 					menu: 'Analytics',
 					status: false,
 					subMenu: [
@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
 							]
 						}
 					]
-				}
+				}*/
 			];
 		}
 	}
