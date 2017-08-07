@@ -1,9 +1,6 @@
-<div>
-	<h3>Billing History</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="billings && billings.length>0; else emptybillings">
+<div class="billing-history-list-page">
+	<h3 class="main-title">Billing History</h3>
+	<table class="billing-history-list-table responsive-table highlight" *ngIf="billings && billings.length>0; else emptybillings">
 		<thead>
 			<tr>
 				<td>Package Type</td>
@@ -40,28 +37,29 @@
 					{{billing.usesDays}}
 				</td>
 				<td>
-					{{billing.onHold}}
+					<span [ngClass]="(billing.onHold==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'onHold')">
+						<i [ngClass]="(billing.onHold==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					{{billing.freeUser}}
+					<span [ngClass]="(billing.freeUser==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'freeUser')">
+						<i [ngClass]="(billing.freeUser==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td *ngIf="cookieIndex===10 && userId !== undefined">
-					<section>
-						<md-slide-toggle
-							*ngIf="billing.packageCost>0 && billing.freeUser === false"
-							class="example-margin"
-							[color]="primary"
-							[checked]="billing.packagePayment"
-							[(ngModel)]="billing.packagePayment"
-							(change)=upgradeBillPayment(i)>
-						</md-slide-toggle>
-					</section>
+					<span [ngClass]="(billing.packagePayment==true)?'active':'inactive'" (click)="upgradeBillPayment(i)">
+						<i [ngClass]="(billing.packagePayment==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td>
-					{{ billing.status==true?'active':'inactive'}}
+					<span [ngClass]="(billing.status==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'status')">
+						<i [ngClass]="(billing.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
 				</td>
 				<td *ngIf="cookieIndex===10 && userId !== undefined">
-					<a (click)="openBillingModal(billing)">Edit</a>
+					<a class="edit" (click)="openBillingModal(billing)">
+						<i class="material-icons">edit</i>
+					</a>
 				</td>
 			</tr>
 		</tbody>

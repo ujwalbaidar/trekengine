@@ -582,14 +582,22 @@ exports.updateUserProfile = function(req, res){
 			organizationCountry: req.body.organizationCountry,
 			dailyTripNotification: req.body.dailyTripNotification,
 			weeklyTripNotification: req.body.weeklyTripNotification,
-			calendarNotification: req.body.calendarNotification
+			calendarNotification: req.body.calendarNotification,
+			status: req.body.status
 		};
+
 
 		if(req.body.domain && req.body.domain.protocol && req.body.domain.website){
 			req.body.domain.siteUrl = req.body.domain.protocol+req.body.domain.website;
 		}
+		
+		if(req.headers.role === 10){
+			var userId = req.body._id;
+		}else{
+			var userId = req.headers.userId;
+		}
 
-		User.update({_id:req.headers.userId}, updateObj, (err, updateData)=>{
+		User.update({_id:userId}, updateObj, (err, updateData)=>{
 			if(err){
 				res.status(400).json({success: false, data: err, message:"Failed to update user info!"});
 			}else{
