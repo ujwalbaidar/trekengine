@@ -82,8 +82,6 @@ export class TripOverviewComponent implements OnInit {
 	}
 
 	pushInput(){
-		console.log(this.analyticsStartDate);
-		console.log(this.analyticsEndDate);
 		this.getTrekOverview();
 	}
 
