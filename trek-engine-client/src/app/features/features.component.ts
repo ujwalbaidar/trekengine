@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { AppFeatures } from '../models/models';
 import { FeaturesService } from '../services';
+import { DeleteConfimationDialogComponent } from '../delete-confimation-dialog/delete-confimation-dialog.component';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-features',
@@ -11,7 +13,7 @@ import { FeaturesService } from '../services';
 export class FeaturesComponent implements OnInit {
 	features:any;
 	featureErr:any;
-	constructor(public dialog: MdDialog, public featuresService:FeaturesService) { 
+	constructor(public dialog: MdDialog, public featuresService:FeaturesService, public snackBar: MdSnackBar) { 
 		
 	}
 
@@ -29,17 +31,35 @@ export class FeaturesComponent implements OnInit {
 	}
 
 	deleteFeatures(featureId, index){
-		this.featuresService.deleteAppFeture(featureId)
-			.subscribe(deleteRes=>{
-					this.features.splice(index, 1);
-				}, deleteError=>{
-					this.featureErr = deleteError;
-				});
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+    		let selectedOption = parseInt(result);
+    		if(selectedOption == 1){
+    			this.featuresService.deleteAppFeture(featureId)
+				.subscribe(deleteRes=>{
+						this.features.splice(index, 1);
+					}, deleteError=>{
+						this.snackBar.open('Error has been occured for the action.', '', {
+							duration: 3000,
+						});
+						setTimeout(()=>{ 
+							location.reload();
+						}, 3000);
+					});
+    		}
+    	});
 	}
 	
 	openFeatureModal(editData:AppFeatures=<AppFeatures>{}){
 		let dialogOptions = {
-			height: '350px',
   			width: '600px',
   			position: 'center',
   			disableClose: true
@@ -52,9 +72,39 @@ export class FeaturesComponent implements OnInit {
 		let dialogRef = this.dialog.open(AppFeaturesDialogComponent, dialogOptions);
     	dialogRef.afterClosed().subscribe(result => {
     		if(result !== "Option 1"){
-    			this.getFeatures();
+    			if(result.success == false){
+    				this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
+    			}else{
+    				this.getFeatures();
+    			}
     		}
     	});
+	}
+
+	toggleStatus(index){
+		let featureObj = JSON.parse(JSON.stringify(this.features[index]));
+		if(featureObj['status'] == true){
+			featureObj['status'] = false;
+		}else{
+			featureObj['status'] = true;
+		}
+
+		this.featuresService.updateAppFeature(featureObj)
+			.subscribe(feature=>{
+				this.getFeatures();
+			}, error=>{
+				this.snackBar.open('Failed to Change Status.', '', {
+					duration: 3000,
+				});
+				setTimeout(()=>{ 
+					location.reload();
+				}, 3000);
+			});
 	}
 
 }
@@ -66,6 +116,9 @@ export class FeaturesComponent implements OnInit {
 export class AppFeaturesDialogComponent implements OnInit {
 	appFeatures: AppFeatures = <AppFeatures>{};
 	title: string = 'Add Feature Details';
+	submittedFeatureForm: boolean = false;
+	featureFormOnProcess: boolean = false;
+
 	constructor(public dialogRef: MdDialogRef<AppFeaturesDialogComponent>, public featuresService: FeaturesService){
 		if(this.dialogRef._containerInstance.dialogConfig.data){
 			if(this.dialogRef._containerInstance.dialogConfig.data.features){
@@ -80,7 +133,9 @@ export class AppFeaturesDialogComponent implements OnInit {
 	}
 
 	submitAppFeatures(featureForm:any){
+		this.submittedFeatureForm = true;
 		if(featureForm.valid){
+			this.featureFormOnProcess = true;
 			if(this.dialogRef._containerInstance.dialogConfig.data.features){
 				this.updateFeatureDetails();
 			}else{
@@ -92,8 +147,10 @@ export class AppFeaturesDialogComponent implements OnInit {
 	updateFeatureDetails(){
 		this.featuresService.updateAppFeature(this.appFeatures)
 			.subscribe(feature=>{
+				feature.success = true;
 				this.dialogRef.close(feature);
 			}, error=>{
+				error.success = false;
 				this.dialogRef.close(error);
 			});
 	}
@@ -101,8 +158,10 @@ export class AppFeaturesDialogComponent implements OnInit {
 	saveFeatureDetails(){
 		this.featuresService.submitAppFeature(this.appFeatures)
 			.subscribe(feature=>{
+				feature.success = true;
 				this.dialogRef.close(feature);
 			}, error=>{
+				error.success = false;
 				this.dialogRef.close(error);
 			});
 	}

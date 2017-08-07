@@ -1,9 +1,6 @@
-<div>
-	<h3>User Lists</h3>
-</div>
-<div class="divider"></div>
-<div>
-	<table class="bordered responsive-table highlight" *ngIf="adminUsers && adminUsers.length>0">
+<div class="user-list-page">
+	<h3 class="main-title">User Lists</h3>
+	<table class="user-list-table responsive-table highlight" *ngIf="adminUsers && adminUsers.length>0">
 		<thead>
 			<tr>
 				<td>First Name</td>
@@ -18,8 +15,12 @@
 				<td>{{ user.firstName }}</td>
 				<td>{{ user.lastName }}</td>
 				<td>{{ user.email }}</td>
-				<td>{{ user.role }}</td>
-				<td>{{ user.status==true?'active':'inactive'}}</td>
+				<td>{{ (user.role==20)?'Admin':'' }}</td>
+				<td>
+					<span [ngClass]="(user.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
+						<i [ngClass]="(user.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
+				</td>
 				<td>
 					<a [routerLink]="[user._id, 'billing-history']">Billing History</a>
 				</td>

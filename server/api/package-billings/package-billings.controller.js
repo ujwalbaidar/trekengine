@@ -461,10 +461,15 @@ exports.queryUserBilling = function(req, res){
 exports.updateUserBilling = function(req, res){
 	if(req.headers && req.headers.userId && req.headers.role===10){
 		let requestBody = req.body;
-		let activateDate = req.body.activatedDate.date;
-		let activatesOn = new Date(activateDate.year, activateDate.month-1, activateDate.day).getTime();
-		let expiryDate = req.body.expiryDate.date;
-		let expiresOn = new Date(expiryDate.year, expiryDate.month-1, expiryDate.day).getTime();
+		if(req.body.activatesOn.date == undefined || req.body.expiresOn.date == undefined){
+			var activatesOn = requestBody.activatesOn;
+			var expiresOn = requestBody.expiresOn;
+		}else{
+			var activateDate = req.body.activatesOn.date;
+			var activatesOn = new Date(activateDate.year, activateDate.month-1, activateDate.day).getTime();
+			var expiryDate = req.body.expiresOn.date;
+			var expiresOn = new Date(expiryDate.year, expiryDate.month-1, expiryDate.day).getTime();
+		}
 		let updateObj = {
 			"packageType" : requestBody.packageType,
 		    "packageCost" : requestBody.packageCost,
@@ -476,6 +481,7 @@ exports.updateUserBilling = function(req, res){
 		    "status" : requestBody.status,
 		    "onHold" : requestBody.onHold,
 		    "freeUser" : requestBody.freeUser,
+		    "packagePayment" : requestBody.packagePayment
 		};
 		PackageBillings.update({_id:req.body._id, userId: req.body.userId}, updateObj, (err, updateRes)=>{
 			if(err){
@@ -572,11 +578,10 @@ function sendUnpaidBillEmail(userIds){
 exports.updateBillPayment = function(req,res){
 	if(req.headers && req.headers.userId && req.headers.role===10){
 		if(req.body.packagePayment == true){
-			PackageBillings.update({ _id: req.body._id }, { packagePayment: true }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
+			PackageBillings.update({ _id: req.body._id }, { packagePayment: req.body.packagePayment }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
 				if(updateUnpaidBillingErr){
 					res.status(400).json({success:false, data:updateUnpaidBillingErr});
 				}else{
-					console.log(req.body.userId)
 					PackageBillings.update({ userId:req.body.userId, status: true, packageCost:0}, { status: false }, (updateBasicAccountErr, updateBasicAccount)=>{
 						if(updateBasicAccountErr){
 							res.status(400).json({success:false, data:updateBasicAccountErr});
@@ -588,7 +593,7 @@ exports.updateBillPayment = function(req,res){
 				}
 			});
 		}else{
-			PackageBillings.update({ _id: req.body._id }, { onHold:true, packagePayment: false }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
+			PackageBillings.update({ _id: req.body._id }, { onHold:true, packagePayment: req.body.packagePayment }, (updateUnpaidBillingErr, updateUnpaidBilling) => {
 				if(updateUnpaidBillingErr){
 					res.status(400).json({success:false, data:updateUnpaidBillingErr});
 				}else{
