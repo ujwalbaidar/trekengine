@@ -1,0 +1,116 @@
+<form class="add-booking-detail-form col s12" (ngSubmit)="submitBillingDetails(billingDetail.form)" #billingDetail="ngForm" novalidate>
+	<div md-dialog-content>
+		<div class="row">
+			<div class="col s6">
+					<h5>
+						{{title}}
+					</h5>
+			</div>
+			<div class="col s6 right-align">
+				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s6" [ngClass]="[(packageCost?.errors?.required && submittedBillingForm)?'err-div':'']">
+				<label for="packageCost" [ngClass]="{'active':(billingHistory.packageCost!=undefined)}">
+					<strong>
+						{{'Package Cost'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<input id="packageCost" type="number" class="validate" name="packageCost" [(ngModel)]="billingHistory.packageCost" #packageCost="ngModel" required>
+				<div class="error-msg" *ngIf="packageCost?.errors?.required && submittedBillingForm">
+					This Field is Required!
+				</div>
+			</div>
+
+			<div class="col s6">
+				<label for="packageType" [ngClass]="{'active':(billingHistory.packageType!=undefined)}">
+					<strong>
+						{{'Package Name'}}
+					</strong>
+				</label>
+				<md-select name="packageType" [(ngModel)]="billingHistory.packageType">
+		   			<md-option *ngFor="let package of packages" [value]="package.name">{{ package.name }}</md-option>
+				</md-select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s6" [ngClass]="[(remainingDays?.errors?.required && submittedBillingForm)?'err-div':'']">
+				<label for="remainingDays" [ngClass]="{'active':(billingHistory.remainingDays!=undefined)}">
+					<strong>
+						{{'Remaining Days'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<input id="remainingDays" type="number" class="validate" name="remainingDays" [(ngModel)]="billingHistory.remainingDays" #remainingDays="ngModel" required>
+				<div class="error-msg" *ngIf="remainingDays?.errors?.required && submittedBillingForm">
+					This Field is Required!
+				</div>
+			</div>
+
+			<div class="col s6" [ngClass]="[(usesDays?.errors?.required && submittedBillingForm)?'err-div':'']">
+				<label for="usesDays" [ngClass]="{'active':(billingHistory.usesDays!=undefined)}">
+					<strong>
+						{{'Uses Day'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<input id="usesDays" type="number" class="validate" name="usesDays" [(ngModel)]="billingHistory.usesDays" #usesDays="ngModel" required>
+				<div class="error-msg" *ngIf="usesDays?.errors?.required && submittedBillingForm">
+					This Field is Required!
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s6" [ngClass]="[(activatesOn?.errors?.required && submittedBillingForm)?'err-div':'']">
+				<label for="activatesOn" [ngClass]="{'active':(billingHistory.activatesOn!=undefined)}">
+					<strong>
+						Activate Date
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<my-date-picker id="activatesOn" class="validate" name="activatesOn" [(ngModel)]="billingHistory.activatesOn" #activatesOn="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				<div class="error-msg" *ngIf="activatesOn?.errors?.required && submittedBillingForm">
+					This Field is Required!
+				</div>
+			</div>
+
+			<div class="col s6" [ngClass]="[(expiresOn?.errors?.required && submittedBillingForm)?'err-div':'']">
+				<label for="expiresOn" [ngClass]="{'active':(billingHistory.expiresOn!=undefined)}">
+					<strong>
+						{{'Expiry Date'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<my-date-picker id="expiresOn" class="validate" name="expiresOn" [(ngModel)]="billingHistory.expiresOn" #expiresOn="ngModel" required [options]="myDatePickerOptions"></my-date-picker>
+				
+				<div class="error-msg" *ngIf="expiresOn?.errors?.required && submittedBillingForm">
+					This Field is Required!
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12 m3">
+				<md-checkbox id="status" name="status" class="example-margin" [(ngModel)]="billingHistory.status">Status</md-checkbox>
+			</div>
+			<div class="col s12 m3">
+				<md-checkbox id="freeUser" name="freeUser" class="example-margin" [(ngModel)]="billingHistory.freeUser">Free User</md-checkbox>
+			</div>
+			<div class="col s12 m3">
+				<md-checkbox id="onHold" name="onHold" class="example-margin" [(ngModel)]="billingHistory.onHold">On Hold</md-checkbox>
+			</div>
+			<div class="col s12 m3">
+				<md-checkbox id="packagePayment" name="packagePayment" class="example-margin" [(ngModel)]="billingHistory.packagePayment">Paid Bill</md-checkbox>
+			</div>
+		</div>
+
+	</div>
+	<div md-dialog-actions>
+		<button [disabled]="submittedBillingFormOnProgress"  class="waves-effect waves-light btn" type="submit">Submit</button>
+	</div>
+</form>
