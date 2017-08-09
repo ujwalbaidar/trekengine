@@ -1,0 +1,62 @@
+<div class="row">
+	<div class="col s12 m8">
+		<h4>Trip Booking Detail Analytics</h4>
+	</div>
+</div>
+<div *ngIf="resultData">
+	<div>
+		Trip Name: {{resultData.tripName}}
+	</div>
+	<div>
+		Number of Bookings: {{resultData.totalBookings}}
+	</div>
+	<div>
+		Number of travellers: {{resultData.totalTraveler}}
+	</div>
+	<div>
+		Average Price: {{resultData.avgPrice | currency:'USD':true }}
+	</div>
+	<div>
+		Total Sales Amount: {{resultData.totalSales | currency:'USD':true }}
+	</div>
+	<div>
+		Average Age Group: {{resultData.avgAge | number }}
+	</div>
+</div>
+<div class="row">
+	<div class="col s12 m12">
+		<div id="pie_chart" [chartData]="pie_ChartData" [chartOptions] = "pie_ChartOptions" chartType="PieChart" GoogleChart></div>
+	</div>
+	
+	<div class="col s12 m12">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th>Country Name</th>
+					<th>Total Travelers</th>
+					<th>Total Sales</th>
+				</tr>
+			</thead>
+			<tbody *ngIf="tableData && tableData.length>0;else EmptyAnalyticsData;">
+				<tr *ngFor="let tableInfo of tableData; let idx=index">
+					<td>{{ idx+1 }}</td>
+					<td>{{ tableInfo.country }}</td>
+					<td>{{ tableInfo.totalTraveler }}</td>
+					<td>{{ tableInfo.totalCost | currency:'USD':true }}</td>
+				</tr>
+			</tbody>
+			<ng-template #EmptyAnalyticsData>
+				<tbody>
+					<tr>
+						<td>There is no data for this view</td>
+					</tr>
+				</tbody>
+			</ng-template>
+		</table>
+	</div>
+	
+	<div class="col s12 m12">
+		<div id="column_chart" [chartData]="column_ChartData" [chartOptions] = "column_ChartOptions" chartType="ColumnChart" GoogleChart></div>
+	</div>
+</div>
