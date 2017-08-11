@@ -10,6 +10,10 @@ let PackagesSchema = new mongoose.Schema({
 		type: Number,
 		required: true
 	},
+	annualCost: {
+		type: Number,
+		required: true
+	},
 	days: {
 		type: Number,
 		required: true

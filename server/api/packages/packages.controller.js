@@ -64,6 +64,7 @@ exports.updatePackage = function(req, res){
 			name: req.body.name,
 			description: req.body.description,
 			cost: req.body.cost,
+			annualCost: req.body.annualCost,
 			days: req.body.days,
 			trialPeriod: req.body.trialPeriod,
 			priorityLevel: req.body.priorityLevel,

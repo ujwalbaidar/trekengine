@@ -27,60 +27,101 @@ let OAuthLib = require('../../library/oAuth/oAuth');
 **/
 
 exports.createUser = function(req, res){
-	req.body.firstName = req.body.fname;
-	req.body.lastName = req.body.lname;
-	req.body.role = req.body.role?req.body.role:20;
-	req.body.createdDate = new Date();
-	req.body.updatedDate = new Date();
-	req.body.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
-                   .update(req.body.password)
-                   .digest('hex');
-    if(req.body.domain){
-    	req.body.domain = req.body.domain;
-    	req.body.siteUrl = req.body.protocol+req.body.website;
-    }
-	saveUser(req.body)
-		.then(userData=>{
-			let mailOptions = {};
-			mailOptions = {
-				from: config.appEmail.senderAddress,
-			    to: userData.email, 
-			    subject: 'Trek Engine: Registration Success',
-			};
-
-			let jwtSignData = {
-				email: req.body.email,
-				packageType: req.body.selectedPackage.name,
-				packageCost: req.body.selectedPackage.cost,
-				trialPeriod: req.body.selectedPackage.trialPeriod,
-				priorityLevel: req.body.selectedPackage.priorityLevel,
-				features: JSON.stringify(req.body.selectedPackage.featureIds)
-			};
-
-
-			let jwtSignOptions = {
-				expiresIn: config.activateAccount.expireTime, 
-				algorithm: config.activateAccount.algorithm 
-			};
-
-			let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
-
-			let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
-			mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
-			mailOptions.text = htmlToText.fromString(mailOptions.html, {
-    			wordwrap: 130
-			});
-			sendEmail(mailOptions)
-				.then(mailInfo=>{
-					res.status(200).json({success:true, data:{user:userData}});
+	queryUser({email: req.body.email})
+	.then(userInfo=>{
+		if(userInfo.length>0){
+			let userData = userInfo[0];
+			if(userData.processCompletion !== undefined && userData.processCompletion==false){
+				res.status(200).json({data: {success: false, errorCode: 2, userData: userData, msg: 'Organization Info Incomplete!'}});
+			}else{
+				if(userData.status && userData.status==false){
+					res.status(200).json({data: {success: false, errorCode: 4, userData: userData, msg: 'Account is Inactive!'}});
+				}else{
+					var errorCode = 5;
+					res.status(200).json({data: {success: false, errorCode: 5, userData: userData, msg: 'All setup!'}});
+				}
+			}
+		}else{
+			req.body.firstName = req.body.fname;
+			req.body.lastName = req.body.lname;
+			req.body.role = req.body.role?req.body.role:20;
+			req.body.createdDate = new Date();
+			req.body.updatedDate = new Date();
+			req.body.password = crypto.createHmac(config.loginPassword.algorithm, config.loginPassword.secretKey)
+								.update(req.body.password)
+								.digest('hex');
+			saveUser(req.body)
+				.then(userData=>{
+					res.status(200).json({success:true, data: {userData:userData}});
 				})
-				.catch(mailErr=>{
-					res.status(400).json({success:false, data:mailErr});
+				.catch(userErr=>{
+					res.status(400).json({success:false, data:userErr});
 				});
-		})
-		.catch(userErr=>{
-			res.status(400).json({success:false, data:userErr});
-		});
+		}
+	})
+	.catch(userInfoErr=>{
+		res.status(400).json({success:false, data: userInfoErr});
+	});
+}
+
+exports.completeRegistrationProcess = function(req, res){
+	let updateObj = {
+		organizationName: req.body.organizationName,
+		processCompletion: true,
+		updatedDate: new Date()
+	}
+	if(req.body.domain){
+    	updateObj.domain = req.body.domain;
+    	updateObj.siteUrl = req.body.protocol+req.body.website;
+    }
+
+    Packages.find({"status" : true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
+    	if(packageErr){
+    		res.status(400).json({success:false, data: packageErr});
+    	}else{
+    		User.update({email:req.body.email}, updateObj, (userUpdateErr, updateUser)=>{
+    			if(userUpdateErr){
+					res.status(400).json({success:false, data: userUpdateErr});
+    			}else{
+    				let mailOptions = {};
+					mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: req.body.email, 
+					    subject: 'Trek Engine: Registration Success',
+					};
+
+					let jwtSignData = {
+						email: req.body.email,
+						packageType: packages[0].name,
+						packageCost: packages[0].cost,
+						trialPeriod: packages[0].trialPeriod,
+						priorityLevel: packages[0].priorityLevel,
+						features: JSON.stringify(packages[0].featureIds)
+					};
+
+					let jwtSignOptions = {
+						expiresIn: config.activateAccount.expireTime, 
+						algorithm: config.activateAccount.algorithm 
+					};
+
+					let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+
+					let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
+					mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
+					mailOptions.text = htmlToText.fromString(mailOptions.html, {
+		    			wordwrap: 130
+					});
+					sendEmail(mailOptions)
+						.then(mailInfo=>{
+							res.status(200).json({data:{success: true, user:mailInfo}});
+						})
+						.catch(mailErr=>{
+							res.status(400).json({success:false, data:mailErr});
+						});
+    			}
+    		});
+    	}
+    });
 }
 
 function saveUser(userObj){

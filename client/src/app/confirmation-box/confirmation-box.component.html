@@ -1,0 +1,13 @@
+<h3>{{confirmationData.title}}</h3>
+<div md-dialog-content>
+	<div *ngIf="confirmationData.errorMessage">
+		{{confirmationData.errorMessage}}
+	</div>
+	<div *ngIf="confirmationData.confirmationMessage">
+		{{confirmationData.confirmationMessage}}
+	</div>
+</div>
+<div md-dialog-actions>
+	<button md-button (click)="selectedOption('1')">Yes</button>
+	<button md-button (click)="selectedOption('0')">No</button>
+</div>

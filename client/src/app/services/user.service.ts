@@ -18,6 +18,12 @@ export class UserService {
             .catch(this.handleError);
 	}
 
+	completeRegistrationProcess(users: Object){
+		return this.http.put('/api/users/completeRegistrationProcess', users)
+            .map(this.extractData)
+            .catch(this.handleError);
+	}
+
 	loginUser(users: Object){
 		return this.http.post('/api/users/login', users)
             .map(this.extractData)
