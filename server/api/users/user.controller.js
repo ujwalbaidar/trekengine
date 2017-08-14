@@ -218,7 +218,7 @@ exports.deleteUser = function(req, res){
 }
 
 exports.loginUser = function(req, res){
-	User.findOne({email:req.body.email, status: true}, (err, user)=>{
+	User.findOne({email:req.body.email}, (err, user)=>{
 		if(err){
 			res.status(400).json({success:false, data:err});
 		}else{
@@ -228,45 +228,53 @@ exports.loginUser = function(req, res){
 						.digest('hex');
 				if(user.password == loginPassword){
 					if (user.role==20) {
-						PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
-							if (billingErr) {
-								res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+						if(user.processCompletion == true){
+							if(user.status == true){
+								PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
+									if (billingErr) {
+										res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+									}else{
+										if(billingResponse){
+											let token = jwt.sign(
+													{
+														email:user.email, 
+														userId: user._id, 
+														role: user.role, 
+														remainingDays: billingResponse.remainingDays, 
+														packageType: billingResponse.priorityLevel
+													}, 
+													config.loginAuth.secretKey, 
+													{
+														expiresIn: config.loginAuth.expireTime, 
+														algorithm: config.loginAuth.algorithm 
+													}
+												);
+											res.status(200).json({
+												success:true, 
+												message: "Authorised Successfully",
+												data: {
+													token: token, 
+													index: user.role, 
+													remainingDays: billingResponse.remainingDays, 
+													packageType: billingResponse.priorityLevel,
+													email: req.body.email
+												}});
+										}else{
+											let token = jwt.sign(
+													{email:user.email, userId: user._id, role: user.role}, 
+													config.loginAuth.secretKey, 
+													{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+												);
+											res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
+										}
+									}
+								});
 							}else{
-								if(billingResponse){
-									let token = jwt.sign(
-											{
-												email:user.email, 
-												userId: user._id, 
-												role: user.role, 
-												remainingDays: billingResponse.remainingDays, 
-												packageType: billingResponse.priorityLevel
-											}, 
-											config.loginAuth.secretKey, 
-											{
-												expiresIn: config.loginAuth.expireTime, 
-												algorithm: config.loginAuth.algorithm 
-											}
-										);
-									res.status(200).json({
-										success:true, 
-										message: "Authorised Successfully",
-										data: {
-											token: token, 
-											index: user.role, 
-											remainingDays: billingResponse.remainingDays, 
-											packageType: billingResponse.priorityLevel,
-											email: req.body.email
-										}});
-								}else{
-									let token = jwt.sign(
-											{email:user.email, userId: user._id, role: user.role}, 
-											config.loginAuth.secretKey, 
-											{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
-										);
-									res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
-								}
+								res.status(200).json({data: {success: false, errorCode: 6, userData: {email:req.body.email}, msg: 'Account is Inactive!'}});
 							}
-						});
+						}else{
+							res.status(200).json({data: {success: false, errorCode: 4, userData: {email: req.body.email}, message: 'Organization Info Incomplete!'}});
+						}
 					}else{
 						let token = jwt.sign(
 								{email:user.email, userId: user._id, role: user.role}, 
@@ -276,10 +284,10 @@ exports.loginUser = function(req, res){
 						res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
 					}
 				}else{
-					res.status(400).json({success:false, message: "Password doesn't match!", data: {errorCode:'passwordErr'}});
+					res.status(200).json({data: {success: false, errorCode: 3, userData: {}, message: 'Password not matched!'}});
 				}
 			}else{
-				res.status(400).json({success:false, message:"Email doesn't exist!", data:{errorCode:'emailErr'}});
+				res.status(200).json({data: {success: false, errorCode: 2, userData: {}, message: "Email doesn't exist!"}});
 			}
 		}
 	});
