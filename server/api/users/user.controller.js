@@ -934,69 +934,70 @@ exports.validateCode = function(req, res){
 					.then(userInfo=>{
 						queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
 							.then(users=>{
-								// console.log(users[0]['processCompletion'])
-								// console.log(users[0]['status'])
-								// console.log(users[0]['processCompletion']==true && users[0]['status']==true)
-								if(users.length>0 && users[0]['processCompletion']==true && users[0]['status']==true){
-									let user = users[0];
-									if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
-										var updateUserQuery = {
-											email: userInfo.email
-										};
-										var userUpdateObj = {
-											"googleAuths.access_token":oAuthTokens.access_token, 
-											"googleAuths.refresh_token":oAuthTokens.refresh_token,
-											"googleAuths.token_type": oAuthTokens.token_type,
-											"googleAuths.expires_in": oAuthTokens.expires_in,
-											"googleAuths.id_token": oAuthTokens.id_token,
-											"googleAuths.email": userInfo.email
-										};
-									}else{
-										var updateUserQuery = { 
-											"googleAuths.email": userInfo.email 
-										};
-										var userUpdateObj = {
-											"googleAuths.access_token":oAuthTokens.access_token, 
-											"googleAuths.refresh_token":oAuthTokens.refresh_token
-										};
-									}
-
-									User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
-										if(updateErr){
-											res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
+								if(users.length>0){
+									if(users[0]['processCompletion']==true && users[0]['status']==true){
+										let user = users[0];
+										if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
+											var updateUserQuery = {
+												email: userInfo.email
+											};
+											var userUpdateObj = {
+												"googleAuths.access_token":oAuthTokens.access_token, 
+												"googleAuths.refresh_token":oAuthTokens.refresh_token,
+												"googleAuths.token_type": oAuthTokens.token_type,
+												"googleAuths.expires_in": oAuthTokens.expires_in,
+												"googleAuths.id_token": oAuthTokens.id_token,
+												"googleAuths.email": userInfo.email
+											};
 										}else{
-											PackageBillings.findOne({userId: user._id, status: true, onHold: false},(userBillingErr, billingInfo)=>{
-												if(userBillingErr){
-													res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
-												}else{
-													let token = jwt.sign({
-															email: user.email, 
-															userId: user._id, 
-															role: user.role, 
-															remainingDays: billingInfo.remainingDays, 
-															packageType: billingInfo.priorityLevel
-														}, 
-														config.loginAuth.secretKey, 
-														{
-															expiresIn: config.loginAuth.expireTime, 
-															algorithm: config.loginAuth.algorithm 
-														});
-													res.status(200).json({
-														success: true, 
-														data: {
-															token: token,
-															index: user.role,
-															remainingDays: billingInfo.remainingDays, 
-															packageType: billingInfo.priorityLevel,
-															email: user.email,
-															isNew: false
-														}, 
-														message: "Failed to update user tokens!"
-													});
-												}
-											});
+											var updateUserQuery = { 
+												"googleAuths.email": userInfo.email 
+											};
+											var userUpdateObj = {
+												"googleAuths.access_token":oAuthTokens.access_token, 
+												"googleAuths.refresh_token":oAuthTokens.refresh_token
+											};
 										}
-									});
+
+										User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
+											if(updateErr){
+												res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
+											}else{
+												PackageBillings.findOne({userId: user._id, status: true, onHold: false},(userBillingErr, billingInfo)=>{
+													if(userBillingErr){
+														res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
+													}else{
+														let token = jwt.sign({
+																email: user.email, 
+																userId: user._id, 
+																role: user.role, 
+																remainingDays: billingInfo.remainingDays, 
+																packageType: billingInfo.priorityLevel
+															}, 
+															config.loginAuth.secretKey, 
+															{
+																expiresIn: config.loginAuth.expireTime, 
+																algorithm: config.loginAuth.algorithm 
+															});
+														res.status(200).json({
+															success: true, 
+															data: {
+																token: token,
+																index: user.role,
+																remainingDays: billingInfo.remainingDays, 
+																packageType: billingInfo.priorityLevel,
+																email: user.email,
+																isNew: false
+															}, 
+															message: "Failed to update user tokens!"
+														});
+													}
+												});
+											}
+										});
+									}else{
+										res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+									}
 								}else{
 									let userObj = {
 										firstName: userInfo.given_name,
