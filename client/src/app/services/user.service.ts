@@ -18,6 +18,12 @@ export class UserService {
             .catch(this.handleError);
 	}
 
+	sendActivationLink(users: Object){
+		return this.http.post('/api/users/sendActivationLink', users)
+            .map(this.extractData)
+            .catch(this.handleError);
+	}
+
 	completeRegistrationProcess(users: Object){
 		return this.http.put('/api/users/completeRegistrationProcess', users)
             .map(this.extractData)
@@ -146,10 +152,10 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
-	registerOAuthUser(userData:Object, userOauths:Object){
+	registerOAuthUser(userData:Object, userAuths:Object){
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({ headers: headers });
-		return this.http.post('/api/users/saveOauthUser', {userData: userData, userOauths: userOauths}, options)
+		return this.http.post('/api/users/saveOauthUser', {userData: userData, userAuths: userAuths}, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}

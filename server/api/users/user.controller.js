@@ -22,8 +22,8 @@ const htmlToText = require('html-to-text');
 let OAuthLib = require('../../library/oAuth/oAuth');
 /**
 * Create User on register
-* set billing Object and update
-* mail user about registration and selected package trial periods
+* Process Completion false
+* Status False
 **/
 
 exports.createUser = function(req, res){
@@ -34,7 +34,7 @@ exports.createUser = function(req, res){
 			if(userData.processCompletion !== undefined && userData.processCompletion==false){
 				res.status(200).json({data: {success: false, errorCode: 2, userData: userData, msg: 'Organization Info Incomplete!'}});
 			}else{
-				if(userData.status && userData.status==false){
+				if(userData.status !== undefined && userData.status==false){
 					res.status(200).json({data: {success: false, errorCode: 4, userData: userData, msg: 'Account is Inactive!'}});
 				}else{
 					var errorCode = 5;
@@ -75,53 +75,80 @@ exports.completeRegistrationProcess = function(req, res){
     	updateObj.siteUrl = req.body.protocol+req.body.website;
     }
 
-    Packages.find({"status" : true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
-    	if(packageErr){
-    		res.status(400).json({success:false, data: packageErr});
-    	}else{
-    		User.update({email:req.body.email}, updateObj, (userUpdateErr, updateUser)=>{
-    			if(userUpdateErr){
-					res.status(400).json({success:false, data: userUpdateErr});
-    			}else{
-    				let mailOptions = {};
-					mailOptions = {
-						from: config.appEmail.senderAddress,
-					    to: req.body.email, 
-					    subject: 'Trek Engine: Registration Success',
-					};
+    User.update({email:req.body.email}, updateObj, (userUpdateErr, updateUser)=>{
+		if(userUpdateErr){
+			res.status(400).json({success:false, data: userUpdateErr});
+		}else{
+			generateActivationLink(req.body.email)
+				.then(emailInfo=>{
+					res.status(200).json({data:{success: true, user:emailInfo}});
+				})
+				.catch(linkErr=>{
+					res.status(400).json({success:false, data:linkErr});
+				});
+		}
+	});
+}
 
-					let jwtSignData = {
-						email: req.body.email,
-						packageType: packages[0].name,
-						packageCost: packages[0].cost,
-						trialPeriod: packages[0].trialPeriod,
-						priorityLevel: packages[0].priorityLevel,
-						features: JSON.stringify(packages[0].featureIds)
-					};
+exports.sendActivationLink = function(req, res){
+	generateActivationLink(req.body.email)
+		.then(emailInfo=>{
+				res.status(200).json({data:{success: true, user:emailInfo}});
+			})
+			.catch(linkErr=>{
+				res.status(400).json({success:false, data:linkErr});
+			});
+}
 
-					let jwtSignOptions = {
-						expiresIn: config.activateAccount.expireTime, 
-						algorithm: config.activateAccount.algorithm 
-					};
+function generateActivationLink(userEmail){
+	return new Promise((resolve, reject)=>{
+		Packages.find({"status" : true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
+	    	if(packageErr){
+	    		reject(packageErr);
+	    	}else{
+	    		queryUser({email: userEmail})
+	    			.then(userInfo=>{
+						let mailOptions = {};
+						mailOptions = {
+							from: config.appEmail.senderAddress,
+						    to: userEmail, 
+						    subject: 'Trek Engine: Registration Success',
+						};
 
-					let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+						let jwtSignData = {
+							email: userEmail,
+							packageType: packages[0].name,
+							packageCost: packages[0].cost,
+							trialPeriod: packages[0].trialPeriod,
+							priorityLevel: packages[0].priorityLevel,
+							features: JSON.stringify(packages[0].featureIds)
+						};
 
-					let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
-					mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
-					mailOptions.text = htmlToText.fromString(mailOptions.html, {
-		    			wordwrap: 130
-					});
-					sendEmail(mailOptions)
-						.then(mailInfo=>{
-							res.status(200).json({data:{success: true, user:mailInfo}});
-						})
-						.catch(mailErr=>{
-							res.status(400).json({success:false, data:mailErr});
+						let jwtSignOptions = {
+							expiresIn: config.activateAccount.expireTime, 
+							algorithm: config.activateAccount.algorithm 
+						};
+
+						let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+						let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
+						mailOptions.html = ejs.render(templateString, { userName:userInfo[0].firstName, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
+						mailOptions.text = htmlToText.fromString(mailOptions.html, {
+			    			wordwrap: 130
 						});
-    			}
-    		});
-    	}
-    });
+						sendEmail(mailOptions)
+							.then(mailInfo=>{
+								resolve(mailInfo);
+							})
+							.catch(mailErr=>{
+								reject(mailErr);
+							});
+	    			})
+	    			.catch(userInfoErr=>{
+	    				reject(userInfoErr);
+	    			});
+	    	}
+	    });
+	});
 }
 
 function saveUser(userObj){
@@ -893,7 +920,6 @@ exports.getOauthUrl = function(req, res){
 
 exports.validateCode = function(req, res){
 	if(req.body && req.body.code){
-
 		let oAuthOptions = {
 			loginMethod: req.body.loginType,
 			clientId: config[req.body.loginType]['client_id'],
@@ -908,7 +934,10 @@ exports.validateCode = function(req, res){
 					.then(userInfo=>{
 						queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
 							.then(users=>{
-								if(users.length>0){
+								// console.log(users[0]['processCompletion'])
+								// console.log(users[0]['status'])
+								// console.log(users[0]['processCompletion']==true && users[0]['status']==true)
+								if(users.length>0 && users[0]['processCompletion']==true && users[0]['status']==true){
 									let user = users[0];
 									if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
 										var updateUserQuery = {
@@ -969,7 +998,22 @@ exports.validateCode = function(req, res){
 										}
 									});
 								}else{
-									res.status(200).json({success: true, data:{userInfo:userInfo, authTokens: oAuthTokens, isNew: true, loginType: req.body.loginType}});
+									let userObj = {
+										firstName: userInfo.given_name,
+										lastName: userInfo.family_name,
+										email: userInfo.email,
+										role: 20,
+										googleAuths: oAuthTokens
+									};
+
+									saveUser(userObj)
+										.then(saveUserResp=>{
+											res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});
+										})
+										.catch(saveUserErr=>{
+											res.status(200).json({data:{success: true, userEmail: userInfo.email}});
+										});
+
 								}
 							}).catch(userErr=>{
 								res.status(400).json({success: false, error: userErr, message: "Failed to query user!"});
@@ -993,107 +1037,92 @@ exports.validateCode = function(req, res){
 }
 
 exports.saveOauthUser = function(req, res){
-	let saveAuthUserObj = {
-		userInfo: req.body.userOauths.userInfo, 
-		authTokens: req.body.userOauths.authTokens, 
-		loginType: req.body.userOauths.loginType, 
-		organizationName: req.body.userData.organizationName, 
-	};
-
-	if(req.body.userData && req.body.userData.domain.website.length>0){
-		saveAuthUserObj.domain = req.body.userData.domain;
-	}
-	saveAuthUser(saveAuthUserObj)
-		.then(billingInfo=>{
-			let jwtTokenObj = {
-				email: req.body.userOauths.userInfo.email, 
-				userId: billingInfo.userId, 
-				role: 20, 
-				remainingDays: billingInfo.remainingDays, 
-				packageType: billingInfo.priorityLevel
-			};
-			let token = jwt.sign(
-				jwtTokenObj, 
-				config.loginAuth.secretKey, 
-				{
-					expiresIn: config.loginAuth.expireTime, 
-					algorithm: config.loginAuth.algorithm 
-				}
-			);
-			res.status(200).json({
-				success:true, 
-				message: "Authorised Successfully",
-				data: {
-					token: token, 
-					index: 20, 
-					remainingDays: billingInfo.remainingDays, 
-					packageType: billingInfo.priorityLevel,
-					email: req.body.userOauths.userInfo.email
-				}});
-			})
-		.catch(saveErr=>{
-			res.status(400).json({status:false, data: saveErr, message: 'Failed to validate user!'});
-		});
-}
-
-function saveAuthUser(saveObj){
-	return new Promise((resolve, reject)=>{
-		Packages.find({status:true}).sort({priorityLevel:-1}).limit(1).exec((err, packages)=>{
-			if(err){
-				reject(err);
-			}else{
-				let userPackage = packages[0];
-				let userSaveObj = {
-					email: saveObj.userInfo.email,
-					organizationName: saveObj.organizationName,
-					firstName: saveObj.userInfo.given_name,
-					lastName: saveObj.userInfo.family_name,
-					role: 20,
-					status: true
+	User.find({email: req.body.userAuths.userEmail}, (userInfoErr, userInfo)=>{
+		if(userInfoErr){
+			res.status(400).json({status: false, data: userInfoErr, message: 'Failed to find user.'});
+		}else{
+			if(userInfo.length>0){
+				let userObj = userInfo[0];
+				let userUpdateObj = {
+					organizationName: req.body.userData.organizationName,
+					status: true,
+					processCompletion: true
 				};
 
-				if(saveObj.domain !== undefined){
-			    	userSaveObj.domain = saveObj.domain;
-			    	userSaveObj.siteUrl = saveObj.domain.protocol+saveObj.domain.website;
-			    }
+				if(req.body.userData.domain && req.body.userData.domain.website.length>0){
+					userUpdateObj.domain = req.body.userData.domain;
+					userUpdateObj.domain.siteUrl = req.body.userData.domain.protocol+req.body.userData.domain.website;
+				}
 
-			    userSaveObj[saveObj.loginType+'Auths'] = saveObj.authTokens
-			    userSaveObj[saveObj.loginType+'Auths']['email'] = saveObj.userInfo.email
-				saveUser(userSaveObj)
-					.then(saveUserResp=>{
-						let currentDateTime = new Date();
-						currentDateTime.setHours(0,0,0,0);
-						let activateDate = Math.floor(currentDateTime/1000);
-						var	expireDate=0;
-						expireDate = activateDate+userPackage.trialPeriod*24*3600;
-						let packageObj = {
-							userId: saveUserResp._id,
-							packageType: userPackage.name,
-							packageCost: userPackage.cost,
-							trialPeriod: userPackage.trialPeriod,
-							priorityLevel: userPackage.priorityLevel,
-							activatesOn: activateDate,
-							expiresOn: expireDate,
-							remainingDays: userPackage.trialPeriod,
-							features: userPackage.featureIds,
-							usesDays: 0,
-							freeUser: true,
-							onHold: false,
-							status: true,
-							packagePayment: true
-						};
-						saveUserPackage(packageObj)
-							.then(billingData=>{
-								resolve(billingData);
-							})
-							.catch(billingErr=>{
-								reject(billingErr);
-							});
-					})
-					.catch(saveUserErr=>{
-						reject(saveUserErr);
-					});
+				User.update({email: userObj.email}, userUpdateObj, (userUpdateErr, userUpdateResp)=>{
+					if(userUpdateErr){
+						res.status(400).json({status: false, data: userUpdateErr, message: 'Failed to update user informations.'});
+					}else{
+						Packages.find({status:true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
+							if(packageErr){
+								res.status(400).json({status: false, data: packageErr, message: 'Failed to find packages'});
+							}else{
+								let userPackage = packages[0];
+								let currentDateTime = new Date();
+								currentDateTime.setHours(0,0,0,0);
+								let activateDate = Math.floor(currentDateTime/1000);
+								var	expireDate=0;
+								expireDate = activateDate+userPackage.trialPeriod*24*3600;
+								let packageObj = {
+									userId: userObj._id,
+									packageType: userPackage.name,
+									packageCost: userPackage.cost,
+									trialPeriod: userPackage.trialPeriod,
+									priorityLevel: userPackage.priorityLevel,
+									activatesOn: activateDate,
+									expiresOn: expireDate,
+									remainingDays: userPackage.trialPeriod,
+									features: userPackage.featureIds,
+									usesDays: 0,
+									freeUser: true,
+									onHold: false,
+									status: true,
+									packagePayment: true
+								};
+
+								saveUserPackage(packageObj)
+									.then(billingInfo=>{
+										let jwtTokenObj = {
+											email: userObj.email, 
+											userId: userObj._id, 
+											role: 20, 
+											remainingDays: billingInfo.remainingDays, 
+											packageType: billingInfo.priorityLevel
+										};
+										let token = jwt.sign(
+											jwtTokenObj, 
+											config.loginAuth.secretKey, 
+											{
+												expiresIn: config.loginAuth.expireTime, 
+												algorithm: config.loginAuth.algorithm 
+											}
+										);
+										res.status(200).json({
+											success:true, 
+											message: "Authorised Successfully",
+											data: {
+												token: token, 
+												index: 20, 
+												remainingDays: billingInfo.remainingDays, 
+												packageType: billingInfo.priorityLevel,
+												email: userObj.email
+											}});
+									})
+									.catch(billingErr=>{
+										res.status(400).json({status:false, data: billingErr, message: 'Failed to save user package'});
+									});
+							}
+						});
+					}
+				});
+			}else{
+				res.status(400).json({status: false, data: userInfoErr, message: 'Failed to find user email'});
 			}
-		});
+		}
 	});
 }

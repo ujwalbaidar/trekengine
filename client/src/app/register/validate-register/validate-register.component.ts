@@ -4,6 +4,9 @@ import { User } from '../../models/models';
 import { UserService, AuthService, PackageBillingsService } from '../../services/index';
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
+import { MdSnackBar } from '@angular/material';
+import { MdDialog } from '@angular/material';
+import { ConfirmationBoxComponent } from '../../confirmation-box/confirmation-box.component';
 
 @Component({
   selector: 'app-validate-register',
@@ -21,8 +24,17 @@ export class ValidateRegisterComponent implements OnInit {
 	userAuths: any;
 	validateErr: any;
 	isNew: boolean;
+	activePage: Number = 1;
 
-	constructor(public _cookieService:CookieService, private _route: Router, private activatedRoute: ActivatedRoute, public userService: UserService, public authService: AuthService) { 
+	constructor(
+		public _cookieService:CookieService, 
+		private _route: Router, 
+		private activatedRoute: ActivatedRoute, 
+		public userService: UserService, 
+		public authService: AuthService,
+		public snackBar: MdSnackBar,
+		public dialog: MdDialog
+	) { 
 		this.user['domain']['protocol'] = 'http://';
 	}
 
@@ -38,15 +50,38 @@ export class ValidateRegisterComponent implements OnInit {
 			this.disbleSubmitBtn = true;
 			this.userService.registerOAuthUser(this.user, this.userAuths)
 				.subscribe(registerResponse=>{
-					this.setCookies(registerResponse)
-						.then(success=>{
-							if(success){
-								this._route.navigate(['/app']);
-							}
-						});
+					let dialogOptions = {
+			  			width: '600px',
+			  			position: 'center',
+			  			disableClose: true
+					};
+
+					dialogOptions["data"] = {
+						title: 'Registration Completion',
+						errorMessage: 'Registration has been completed successfully.',
+						confirmationMessage: 'Do you want to login now?'
+					};
+					let dialogRef = this.dialog.open(ConfirmationBoxComponent, dialogOptions);
+					dialogRef.afterClosed().subscribe(result => {
+			    		let selectedOption = parseInt(result);
+			    		if(selectedOption == 1){
+			    			this.setCookies(registerResponse)
+								.then(success=>{
+									if(success){
+										this._route.navigate(['/app']);
+									}
+								});
+			    		}else{
+			    			this._route.navigate(['/home']);
+			    		}
+			    	});
 				}, registerErr=>{
-					this.subittedRegisterForm = false;
-					this.disbleSubmitBtn = false;
+					this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
 				});
 		}
 	}
@@ -77,7 +112,12 @@ export class ValidateRegisterComponent implements OnInit {
 					}
 				}
 			}, authError=>{
-				this.validateErr = authError;
+				this.snackBar.open('Error has been occured for the action.', '', {
+					duration: 3000,
+				});
+				setTimeout(()=>{ 
+					location.reload();
+				}, 3000);
 			});
 	}
 

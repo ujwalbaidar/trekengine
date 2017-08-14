@@ -47,15 +47,7 @@ export class RegisterComponent implements OnInit {
 		public dialog: MdDialog,
 		public snackBar: MdSnackBar
 	){
-		// if(this.dialogRef._containerInstance.dialogConfig.data){
-		// 	if(this.dialogRef._containerInstance.dialogConfig.data.featurePackage){
-		// 		this.featurePackage = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.featurePackage);
-		// 		this.title = 'Register for '+this.featurePackage.name+' Package';
-		// 		this.user['domain']['protocol'] = 'http://';
-		// 	}else{
 
-		// 	}
-		// }
 	}
 	
 	ngOnInit(){
@@ -106,8 +98,7 @@ export class RegisterComponent implements OnInit {
 					    	dialogRef.afterClosed().subscribe(result => {
 					    		let selectedOption = parseInt(result);
 					    		if(selectedOption == 1){
-									console.log('send activation link');
-									console.log(this.user)
+					    			this.sendNewActivationLink(this.user);
 					    		}
 					    	});
 						}else{
@@ -165,6 +156,20 @@ export class RegisterComponent implements OnInit {
 						}, 3000);
 				});
 		}
+	}
+
+	sendNewActivationLink(userData){
+		this.userService.sendActivationLink(userData)
+			.subscribe(successResp=>{
+				this.activePage = 4;
+			}, error=>{
+				this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
+			});
 	}
 
 	addSender(){

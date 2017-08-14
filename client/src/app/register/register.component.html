@@ -14,6 +14,23 @@
 								</div>
 							</div>
 
+							<div class="row">
+								<div *ngFor="let authUrl of authUrls">
+									<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+										Signup with Google
+									</button>
+									<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+										Login with Facebook
+									</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									<div class="center-align or">OR</div>
+								</div>
+							</div>
+						
 							<form (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
 								<div class="row">	
 									<div class="col s6" [ngClass]="[(fname?.errors && subittedRegisterForm)?'err-div':'']">
@@ -192,7 +209,7 @@
 							</form>
 						</div>
 
-						<div *ngSwitchCase="3">
+						<div *ngSwitchCase="4">
 							<div class="row">
 								<div class="col s12">
 									<h5 class="center-align">
@@ -211,6 +228,22 @@
 							<div class="row">
 								<div class="col s12">
 									We have sent you an email to activate your account.
+								</div>
+							</div>
+						</div>
+
+						<div *ngSwitchCase="3">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Activation Link Sent'}}
+									</h5>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account. Please check your email provided.
 								</div>
 							</div>
 						</div>

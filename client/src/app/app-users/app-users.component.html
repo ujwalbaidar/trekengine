@@ -7,6 +7,7 @@
 				<td>Last Name</td>
 				<td>Email</td>
 				<td>Role</td>
+				<td>Process Completion</td>
 				<td>Status</td>
 			</tr>
 		</thead>
@@ -16,6 +17,9 @@
 				<td>{{ user.lastName }}</td>
 				<td>{{ user.email }}</td>
 				<td>{{ (user.role==20)?'Admin':'' }}</td>
+				<td>
+					<i [ngClass]="(user.processCompletion==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+				</td>
 				<td>
 					<span [ngClass]="(user.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
 						<i [ngClass]="(user.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
