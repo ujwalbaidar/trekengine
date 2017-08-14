@@ -4,6 +4,10 @@ const User = mongoose.model('User');
 
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
+const AppEmail = require('../../library/appEmail/appEmail');
+const fs = require('fs');
+const ejs = require('ejs');
+const htmlToText = require('html-to-text');
 
 exports.getAllNotifications = function(req, res){
 	if(req.headers && req.headers.userId && req.headers.email){
@@ -17,9 +21,39 @@ exports.getAllNotifications = function(req, res){
 	}
 }
 
+exports.getNewNotifications = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.email){
+		Notifications.find({sentTo:req.headers.email, viewed: false}, (err, notifications)=>{
+			if(err){
+				res.status(400).json({success:false, data:err});
+			}else{
+				res.status(200).json({success:true, data:notifications});
+			}
+		});
+	}
+}
+
+exports.updateNotificationData = function(req, res){
+	if(req.headers && req.headers.userId && req.headers.email){
+		let updateObj = {
+			viewed: req.body.viewed,
+			status: req.body.status,
+			updateDate: new Date()
+		}
+		
+		updateNotification({_id: req.body._id}, updateObj)
+			.then(updateResp=>{
+				res.status(200).json({success:true, data:updateResp});
+			})
+			.catch(updateErr=>{
+				res.status(400).json({ success:true, data: updateErr });
+			});
+	}
+}
+
 exports.submitResponse = function(req, res){
 	if(req.headers && req.headers.userId){
-		updateNotification({_id: req.body.notification._id}, {viewed: true})
+		updateNotification({_id: req.body.notification._id}, {viewed: true, flagged: true})
 			.then(updateResp=>{
 				let saveObj = {
 						sentTo: req.body.notification.sentBy,
@@ -32,7 +66,14 @@ exports.submitResponse = function(req, res){
 							saveObj.subject = 'guide-request-accepted';
 							createNotifications(saveObj)
 								.then(notificationResponse=>{
-									res.status(200).json({success:true, data:notificationResponse});
+										submitAcceptanceEmail(req.body)
+											.then(mailResponse=>{
+												io.emit(notificationResponse.sentTo+'_notifications', notificationResponse);
+												res.status(200).json({success:true, data:notificationResponse});
+											})
+											.catch(mailErr=>{
+												res.status(400).json({ success:true, data: mailErr });
+											});
 								})
 								.catch(notificationErr=>{
 									res.status(400).json({success:false, data: notificationErr, message: 'Failed to create notification'});
@@ -45,7 +86,14 @@ exports.submitResponse = function(req, res){
 					saveObj.subject = 'guide-request-rejected';
 					createNotifications(saveObj)
 						.then(notificationResponse=>{
-							res.status(200).json({success:true, data:notificationResponse});
+								submitAcceptanceEmail(req.body)
+									.then(mailResponse=>{
+										io.emit(notificationResponse.sentTo+'_notifications', notificationResponse);
+										res.status(200).json({success:true, data: notificationResponse});
+									})
+									.catch(mailErr=>{
+										res.status(400).json({ success:true, data: mailErr });
+									});
 						})
 						.catch(notificationErr=>{
 							res.status(400).json({success:false, data: notificationErr, message: 'Failed to create notification'});
@@ -106,5 +154,42 @@ function createNotifications(notificationData){
 				resolve(notificationInfo);
 			}
 		});
+	});
+}
+
+function submitAcceptanceEmail(reqObject){
+	return new Promise((resolve, reject)=>{
+		let mailOptions = {
+			from: config.appEmail.senderAddress,
+		    to: reqObject.notification.sentBy, 
+		    subject: 'Response to join as guide',
+		};
+		let templateString = fs.readFileSync('server/templates/responseToJoinAsGuide.ejs', 'utf-8');
+		mailOptions.html = ejs.render(templateString, { acceptance: (reqObject.acceptance==true?'accepted':'declined'), guideEmail: reqObject.notification.sentTo });
+		mailOptions.text = htmlToText.fromString(mailOptions.html, {
+			wordwrap: 130
+		});
+		
+		sendEmail(mailOptions)
+			.then(mailInfo=>{
+				resolve(mailInfo);
+			})
+			.catch(err=>{
+				reject(err);
+			});
+	});
+}
+
+function sendEmail(mailOptions){
+	return new Promise((resolve, reject)=>{
+		config.appEmail.mailOptions = mailOptions;
+		let appEmail = new AppEmail(config.appEmail);
+		appEmail.sendEmail()
+			.then(emailInfo=>{
+				resolve(emailInfo);
+			})
+			.catch(emailError=>{
+				reject(emailError);
+			});
 	});
 }

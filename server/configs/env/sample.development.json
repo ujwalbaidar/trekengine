@@ -1,0 +1,37 @@
+{
+	"db": "",
+	"host": "localhost",
+	"port": 5000,
+	"webHost": "http://localhost:5000",
+	"dbURI": "mongodb://localhost/trek-engine",
+	"google":{
+		"client_id":"966049024953-do2q6dnibh4r63b6s5oneled2a0oni0o.apps.googleusercontent.com",
+		"client_secret":"4ncXXbxTX0lNofvJXZus0PRY",
+		"project_id":"authentic-lotus-170904",
+		"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+		"token_uri":"https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+		"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
+	},
+	"loginAuth":{
+		"secretKey":"c0d3w1ng!!",
+		"expireTime": "1d",
+		"algorithm": "HS256"
+	},
+	"loginPassword": {
+		"secretKey":"c0d3w1ng",
+		"algorithm":"sha512"
+	},
+	"appEmail":{
+		"service": "gmail",
+		"address":"trekengine.solution@gmail.com",
+		"password":"treakengine123456789",
+		"senderAddress": "codewings<donotreply@codewings.com>"
+	},
+	"activateAccount":{
+		"secretKey":"c0d3w1ngR3g15ter!!",
+		"expireTime": "1d",
+		"algorithm": "HS256"
+	},
+	"timezone": "Asia/Kathmandu"
+}

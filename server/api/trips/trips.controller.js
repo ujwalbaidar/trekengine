@@ -7,23 +7,139 @@ let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
 const fs = require('fs');
 const ejs = require('ejs');
-
+let AppCalendarLib = require('../users/appCalendar');
+let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
-		req.body.departureDate = req.body.departureDate;
-		req.body.arrivalDate = req.body.arrivalDate;
-		req.body.createdDate = new Date();
-		req.body.updatedDate = new Date();
 		req.body.userId = req.headers.userId;
 		req.body.userEmail = req.headers.email;
 		let trips = new Trips(req.body);
-		trips.save((err, trip)=>{
-			if(err){
-				console.log(err)
-				res.status(400).json({success:false, data:err});
+		Bookings.findOne({bookingId: req.body.bookingId}, (bookingErr, booking)=>{
+			if(bookingErr){
+				res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 			}else{
-				res.status(200).json({success:true, data:trip});
+				let syncDeparture = new Promise((resolve, reject) => {
+					let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
+
+					var fullStartDateTime = new Date(epocStartDate);
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						var fullStartDateTime = new Date(startDateTimeInSec);
+					}
+
+					let startDateYear = fullStartDateTime.getUTCFullYear();
+					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
+					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
+					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
+					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
+					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
+					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
+					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+
+					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
+					let fullEndDateTime = new Date(endDateTimeInSec);
+					let endDateYear = fullEndDateTime.getUTCFullYear();
+					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
+					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
+					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
+					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
+					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
+					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
+					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
+
+					let calendarObj = {
+						"summary": booking.tripName+' Departure Date Time',
+						"description": booking.tripName+" for "+ booking.groupName,
+						"start": {
+				            "dateTime": startDateTime,
+				            "timeZone": config.timezone
+				        },
+				        "end": {
+				            "dateTime": endDateTime,
+				            "timeZone": config.timezone
+				        }
+					};
+
+					let appCalendarLib = new AppCalendarLib();
+					appCalendarLib.saveToCalendar(req.headers.email, calendarObj, true)
+						.then(googleCalendarObj=>{
+							if(JSON.stringify(googleCalendarObj) !== "{}"){
+								resolve(googleCalendarObj)
+							}else{
+								resolve('');
+							}
+						});
+				}); 
+
+				let syncArrival = new Promise((resolve, reject) => {
+					let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
+					var fullStartDateTime = new Date(epocStartDate);
+
+					if(env === 'development'){
+						let isoEpocStartDate = new Date(epocStartDate);
+						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
+						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
+						var fullStartDateTime = new Date(startDateTimeInSec);
+					}
+
+					let startDateYear = fullStartDateTime.getUTCFullYear();
+					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
+					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
+					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
+					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
+					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
+					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
+					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+
+					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
+					let fullEndDateTime = new Date(endDateTimeInSec);
+					let endDateYear = fullEndDateTime.getUTCFullYear();
+					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
+					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
+					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
+					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
+					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
+					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
+					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
+
+					let calendarObj = {
+						"summary": booking.tripName+' Departure Date Time',
+						"description": booking.tripName+" for "+ booking.groupName,
+						"start": {
+				            "dateTime": startDateTime,
+				            "timeZone": config.timezone
+				        },
+				        "end": {
+				            "dateTime": endDateTime,
+				            "timeZone": config.timezone
+				        }
+					};
+
+					let appCalendarLib = new AppCalendarLib();
+					appCalendarLib.saveToCalendar(req.headers.email, calendarObj, false)
+						.then(googleCalendarObj=>{
+							if(JSON.stringify(googleCalendarObj) !== "{}"){
+								resolve(googleCalendarObj)
+							}else{
+								resolve('');
+							}
+						});
+				}); 
+				Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+					req.body.departureCalendarObj = calendarObjects[0];
+					req.body.arrivalCalendarObj = calendarObjects[1];
+					let trips = new Trips(req.body);
+					trips.save((err, trip)=>{
+						if(err){
+							res.status(400).json({success:false, data:err});
+						}else{
+							res.status(200).json({success:true, data:trip});
+						}
+					});
+				});
 			}
 		});
 	}else{
@@ -78,18 +194,145 @@ exports.updateTrips = function(req, res){
 			arrivalDate: req.body.arrivalDate,
 			status: req.body.status,
 			userEmail: req.headers.email,
+			departureTime: req.body.departureTime,
+			arrivalTime: req.body.arrivalTime,
 			updateDate: new Date()
 		};
-		Trips.update({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData, {upsert: true}, (err, tripUpdate)=>{
-			if(err){
-				res.status(400).json({success:false, data:err});
-			}else{
-				res.status(200).json({success:true, data: tripUpdate});
-			}
-		});
+
+		if(req.body.departureCalendarObj && req.body.arrivalCalendarObj){
+			updateTripCalendar(req.body, req.body.userEmail)
+				.then(syncCalendar=>{
+					if(syncCalendar.auth === true){
+						updateData.departureCalendarObj = syncCalendar.calendarObjects[0];
+						updateData.arrivalCalendarObj = syncCalendar.calendarObjects[1];
+						updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}else{
+						updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+							.then(updateResp=>{
+								res.status(200).json({success:true, data: updateResp});
+							})
+							.catch(updateErr=>{
+								res.status(400).json({success:false, data:err});
+							});
+					}
+				})
+				.catch(calendarErr=>{
+					res.status(400).json({success:false, data:calendarErr});
+				});
+		}else{
+			updateTrip({_id: req.body._id, userId: req.headers.userId, bookingId: req.body.bookingId}, updateData)
+				.then(updateResp=>{
+					res.status(200).json({success:true, data: updateResp});
+				})
+				.catch(updateErr=>{
+					res.status(400).json({success:false, data:err});
+				})
+		}
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}
+}
+
+function updateTrip(query, updateData){
+	return new Promise((resolve, reject)=>{
+		Trips.update(query, updateData, (err, tripUpdate)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(tripUpdate);
+			}
+		});
+	});
+}
+
+function updateTripCalendar(tripData, userEmail){
+	return new Promise((resolve, reject)=>{
+		let appCalendarLib = new AppCalendarLib();
+		appCalendarLib.queryUserTokens(userEmail)
+			.then(userToken=>{
+				if(userToken.hasToken == true){
+					Bookings.findOne({bookingId: tripData.bookingId}, (bookingErr, booking)=>{
+						if(bookingErr){
+							res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
+						}else{
+							let syncDeparture = new Promise((resolve, reject) => {
+								let epocStartDate = (tripData.departureDate.epoc+(parseInt(tripData.departureTime.hrTime)*60*60)+(parseInt(tripData.departureTime.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Departure Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = tripData.departureCalendarObj.organizer.email;
+										let eventId = tripData.departureCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												if(JSON.stringify(googleCalendarObj) !== "{}"){
+													resolve(googleCalendarObj)
+												}else{
+													resolve('');
+												}
+											});
+									});
+							});
+
+							let syncArrival = new Promise((resolve, reject) => {
+								let epocStartDate = (tripData.arrivalDate.epoc+(parseInt(tripData.arrivalTime.hrTime)*60*60)+(parseInt(tripData.arrivalTime.minTime)*60))*1000;
+								appCalendarLib.getCalendarDates(epocStartDate)
+									.then(calendarDates=>{
+										let calendarObj = {
+											"summary": booking.tripName+' Arrival Date Time',
+											"description": booking.tripName+" for "+ booking.groupName,
+											"start": {
+									            "dateTime": calendarDates.startDateTime,
+									            "timeZone": config.timezone
+									        },
+									        "end": {
+									            "dateTime": calendarDates.endDateTime,
+									            "timeZone": config.timezone
+									        }
+										};
+										let access_token = userToken.tokenObj.access_token;
+										let calendarId = tripData.arrivalCalendarObj.organizer.email;
+										let eventId = tripData.arrivalCalendarObj.id;
+										let googleAuthLib = new GoogleAuthLib();
+										googleAuthLib.updateCalendarEvent(access_token, calendarObj, calendarId, eventId)
+											.then(googleCalendarObj=>{
+												if(JSON.stringify(googleCalendarObj) !== "{}"){
+													resolve(googleCalendarObj)
+												}else{
+													resolve('');
+												}
+											});
+									});
+							});
+
+							Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+								resolve({auth:true, calendarObjects: calendarObjects});
+							});
+						}
+					});
+				}else{
+					resolve({auth:false, calendarObjects: []});
+				}
+			});
+	});
 }
 
 exports.deleteTrips = function(req, res){
@@ -209,7 +452,7 @@ function filterByDates(userEmail, userRole, selectorQuery, Result, skip, limit){
 		            "users.organizationName":1
 		        }
 		    },{
-		        $sort:{"trip.departureDate.epoc":1}
+		        $sort:{"trip.departureDate.epoc":1, "trip.arrivalDate.epoc":1}
 		    }
 		];
 		var aggregateQuery = Bookings.aggregate(dbQuery);

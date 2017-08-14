@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PackageBillingsService, AuthService, UserService } from '../services';
 import { FeaturePackage } from '../models/models';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { MdDialog } from '@angular/material';
 import { RegisterComponent, RegisterSuccessDialogComponent } from '../register/register.component';
 import { Router } from '@angular/router';
@@ -118,8 +118,7 @@ export class PackageBillingsComponent implements OnInit {
 
   	openRegisterModal(featurePackage:FeaturePackage=<FeaturePackage>{}){
 		let dialogOptions = {
-			height: '700px',
-  			width: '600px',
+  			width: '620px',
   			position: 'center',
   			disableClose: true
 		};
@@ -134,7 +133,12 @@ export class PackageBillingsComponent implements OnInit {
 					featurePackage['days'] = 30;
 				}
 			}
-			dialogOptions["data"]["featurePackage"] = featurePackage;
+			// dialogOptions["data"]["featurePackage"] = featurePackage;
+			let packageDetailsArr = JSON.parse(JSON.stringify(this.packageDetails));
+			packageDetailsArr.sort(function (a, b) {
+  				return b.packages.priorityLevel - a.packages.priorityLevel;
+			});
+			dialogOptions["data"]["featurePackage"] = JSON.parse(JSON.stringify(packageDetailsArr[0]['packages']));
 		}
 
 		let dialogRef = this.dialog.open(RegisterComponent, dialogOptions);
@@ -150,7 +154,6 @@ export class PackageBillingsComponent implements OnInit {
 	showRegisterSuccess(){
 	
 		let dialogOptions = {
-			height: '210px',
   			width: '600px',
   			position: 'center',
   			disableClose: true

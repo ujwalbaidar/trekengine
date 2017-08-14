@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 let UserSchema = new mongoose.Schema({
-	firstName: String,
+	firstName: {
+		type:String,
+		required: true
+	},
 	middleName: String,
-	lastName: String,
+	lastName: {
+		type:String,
+		required: true
+	},
 	role: Number,
 	email: {type: String, unique: true, required: true, dropDups: true},
 	password: String,
@@ -11,25 +17,32 @@ let UserSchema = new mongoose.Schema({
 		website: String,
 		siteUrl: String
 	},
-	loginAccess:[{
-		method: String,
-		accessToken: String,
-		refreshToken: String,
-		expireTime: Number,
-	}],
+	googleAuths: Object,
 	package: {
 		packageId: String,
 		expireDate: String,
+	},
+	calendarNotification: {
+		hrTime: { type: String, default: '01' },
+		minTime: { type: String, default: '00' }
 	},
 	status: { type:Boolean, default: false },
 	mobile: String,
 	telephone: String,
 	street: String,
 	city: String,
-	country: String,
-	birthday: Object,
-	gender: String,
-	organizationName: String,
+	country: {
+		type:String
+	},
+	birthday: {
+		type:Object
+	},
+	gender: {
+		type:String
+	},
+	organizationName: {
+		type:String
+	},
 	organizationContact: String,
 	organizationEmail: String,
 	organizationStreet: String,
@@ -37,6 +50,7 @@ let UserSchema = new mongoose.Schema({
 	organizationCountry: String,
 	dailyTripNotification: { type: Boolean, default: true },
 	weeklyTripNotification: { type: Boolean, default: true },
+	processCompletion: { type: Boolean, default: false },
 	createdDate: {
 		type: Date, 
 		default: new Date()

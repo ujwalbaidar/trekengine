@@ -15,6 +15,8 @@ import { AppUsersComponent } from './app-users/app-users.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 import { 
 	MovementsComponent, 
 	TripDetailsComponent, 
@@ -23,7 +25,9 @@ import {
 	BookingDetailsComponent,
 	FlightDetailsComponent,
 	TravellerDetailsComponent,
-	MovementDetailsComponent 
+	MovementDetailsComponent,
+	AirportPickupDetailsComponent,
+	TravelerInfoComponent
 } from './movements/index';
 
 import { AuthResolverService, RoleResolverService } from './services';
@@ -36,8 +40,10 @@ const appRoutes: Routes = [
 			{ path: 'login', component: LoginComponent },
 			{ path: 'home', component: PackageBillingsComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
+			{ path: 'register/validate/:code/:loginType/:authuser/:prompt/:session_state', component: ValidateRegisterComponent },
 			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },
-			{ path: 'forgot-password/token/:token/reset-password', component: ForgotPasswordComponent },
+			{ path: 'change-password/token/:token/reset', component: ChangePasswordComponent },
+			{ path: 'forgot-password', component: ForgotPasswordComponent }
 
 		] 
 	},
@@ -47,8 +53,10 @@ const appRoutes: Routes = [
 		canActivate: [AuthResolverService],
 		canActivateChild: [AuthResolverService],
 		children:[
-			{ path: '', component: DashboardComponent},
 			{ 
+				path: '', 
+				component: DashboardComponent
+			},{ 
 				path: 'app-users', 
 				component: AppUsersComponent,
 				canActivate: [RoleResolverService]
@@ -69,7 +77,11 @@ const appRoutes: Routes = [
 					{ path: 'trip-details', component: TripDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'guide-details', component: GuideDetailsComponent, canActivate: [RoleResolverService] },
 					{ path: 'traveller-details', component: TravellerDetailsComponent, canActivate: [RoleResolverService] },
-					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] }
+					{ path: 'flight-details', component: FlightDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'airport-pickup-details', component: AirportPickupDetailsComponent, canActivate: [RoleResolverService] },
+					{ path: 'traveler-info', component: TravelerInfoComponent, canActivate: [RoleResolverService] },
+					{ path: 'traveler-info/booking/:bookingId', component: TravelerInfoComponent },
+					{ path: 'traveler-info/booking/:bookingId/traveler/:travelerId/redirect/:redirectPath', component: TravelerInfoComponent },
 				]
 			},
 			{ 
@@ -79,7 +91,9 @@ const appRoutes: Routes = [
             },
 			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
-			{ path: 'profile', component: ProfileComponent }
+			{ path: 'profile', component: ProfileComponent },
+			// { path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
+			// { path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }

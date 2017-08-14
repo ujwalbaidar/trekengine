@@ -1,0 +1,257 @@
+<div class="user-register-page">
+	<div class="container">
+		<div class="form-holder">
+	    	<div class="card">
+	    		<div class="card-content">
+	    			<div [ngSwitch]="activePage">
+	    				<div *ngSwitchDefault>
+						
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Start Your Free Trial'}}
+									</h5>
+								</div>
+							</div>
+
+							<div class="row">
+								<div *ngFor="let authUrl of authUrls">
+									<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+										Signup with Google
+									</button>
+									<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+										Login with Facebook
+									</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									<div class="center-align or">OR</div>
+								</div>
+							</div>
+						
+							<form (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
+								<div class="row">	
+									<div class="col s6" [ngClass]="[(fname?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="first_name">
+											<strong>
+												{{'First Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="first_name" type="text" class="validate" name="fname" [(ngModel)]="user.fname" #fname="ngModel" required maxlength="32">
+										<div class="error-msg" *ngIf="fname?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="fname?.errors?.maxlength && subittedRegisterForm">
+											Name cannot be more than 32 characters long.
+										</div>
+									</div>
+
+									<div class="col s6" [ngClass]="[(lname?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="last_name">
+											<strong>
+												{{'Last Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="last_name" type="text" class="validate" name="lname" [(ngModel)]="user.lname" #lname="ngModel" required maxlength="32">
+										<div class="error-msg" *ngIf="lname?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="lname?.errors?.maxlength && subittedRegisterForm">
+											Name cannot be more than 32 characters long.
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12" [ngClass]="[(email?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="email">
+											<strong>
+												{{'Email'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="email" type="text" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+										<div class="error-msg" *ngIf="email?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="email?.errors?.pattern && subittedRegisterForm">
+											Email is Invalid!
+										</div>
+										<div class="error-msg" *ngIf="duplicateEmailErr && subittedRegisterForm">
+											{{duplicateEmailErr}}
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12" [ngClass]="[(password?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="password">
+											<strong>
+												{{'Password'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input 
+											id="password" 
+											type="password" 
+											class="validate" 
+											name="password" 
+											[(ngModel)]="user.password" 
+											#password="ngModel" 
+											validateEqual="confirmPassword" 
+											reverse="true"
+											required 
+											minlength="8">
+										<div class="error-msg" *ngIf="password?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="password?.errors?.minlength && subittedRegisterForm">
+											Password Must be more than 8 characters long!
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12" [ngClass]="[(confirmPassword?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="confirmPassword">
+											<strong>
+												{{'Confirm Password'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input 
+											id="confirmPassword" 
+											type="password" 
+											class="validate" 
+											name="confirmPassword" 
+											[(ngModel)]="user.confirmPassword" 
+											#confirmPassword="ngModel" 
+											validateEqual="password" 
+											reverse="false"
+											required 
+											minlength="8">
+										<div class="error-msg" *ngIf="confirmPassword?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="confirmPassword?.errors?.minlength && subittedRegisterForm">
+											Password Must be more than 8 characters long!
+										</div>
+										<div class="error-msg" *ngIf="(confirmPassword?.errors?.validateEqual==false) && (confirmPassword.prestine || subittedRegisterForm)">
+											Password Missmatch!
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<button [disabled]="disbleSubmitBtn"  class="waves-effect waves-light btn" type="submit">
+											{{'Next'}}
+										</button>
+									</div>
+								</div>
+
+							</form>
+						</div>
+
+						<div *ngSwitchCase="2">
+							<form (ngSubmit)="submitOrgInfo(organizationInfo.form)" #organizationInfo="ngForm" novalidate>
+								<div class="row">
+									<div class="col s12" [ngClass]="[(organizationName?.errors && subittedOrgForm)?'err-div':'']">
+										<label class="active" for="organizationName">
+											<strong>
+												{{'Company Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="user.organizationName" #organizationName="ngModel" required>
+										<div class="error-msg" *ngIf="organizationName?.errors?.required && subittedOrgForm">
+											This Field is Required!
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="row">
+										<label class="active" for="domain">
+											<strong>
+												{{'Website Domain'}}
+											</strong>
+										</label>
+									</div>
+									<div class="col s3">
+										<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
+											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+												{{protocol.value}}
+											</md-option>
+										</md-select>
+
+									</div>
+									<div class="col s9">
+										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
+									</div>
+									<div class="row">
+										<span>e.g.:"http://www.yoursite.com"</span>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn" type="submit">
+											{{'Start 30 Days Free Trial'}}
+										</button>
+									</div>
+								</div>
+
+							</form>
+						</div>
+
+						<div *ngSwitchCase="4">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Registration Success'}}
+									</h5>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12">
+									<strong>
+										Welcome to Trek Engine. 
+									</strong>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account.
+								</div>
+							</div>
+						</div>
+
+						<div *ngSwitchCase="3">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Activation Link Sent'}}
+									</h5>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account. Please check your email provided.
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>

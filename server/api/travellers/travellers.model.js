@@ -1,14 +1,30 @@
 const mongoose = require('mongoose');
 let TravelerSchema = new mongoose.Schema({
 	userId: String,
-	firstName: String,
+	firstName: {
+		type:String,
+		required: true
+	},
 	middleName: String,
-	lastName: String,
-	nationality: String,
-	dob: Object,
+	lastName: {
+		type:String,
+		required: true
+	},
+	nationality: {
+		type:String,
+		required: true
+	},
+	dob: {
+		type:Object,
+		required: true
+	},
+	age: Number,
 	permanentAddress: String,
 	telephone: String,
-	email: String,
+	email: {
+		type:String,
+		required: true
+	},
 	attachments: {
 		passport: String,
 		insurance: String,
@@ -42,6 +58,11 @@ let TravelerSchema = new mongoose.Schema({
 	updateDate: {
 		type: Date, 
 		default: new Date()
+	},
+	googleCalendarObj: Object,
+	gender: {
+		type:String,
+		required: true
 	}
 });
 mongoose.model('Travelers', TravelerSchema);

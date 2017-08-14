@@ -1,12 +1,31 @@
 const mongoose = require('mongoose');
 let PackagesSchema = new mongoose.Schema({
 	userId: String,
-	name: String,
+	name: {
+		type: String,
+		required: true
+	},
 	description: String,
-	cost: Number,
-	days: Number,
-	trialPeriod: Number,
-	priorityLevel: Number,
+	cost: {
+		type: Number,
+		required: true
+	},
+	annualCost: {
+		type: Number,
+		required: true
+	},
+	days: {
+		type: Number,
+		required: true
+	},
+	trialPeriod: {
+		type: Number,
+		required: true
+	},
+	priorityLevel: {
+		type: Number,
+		required: true
+	},
 	featureIds: Array,
 	status: { type:Boolean, default: true },
 	createdDate: {

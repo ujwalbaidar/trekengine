@@ -1,7 +1,6 @@
 import { NgModule, enableProdMode }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { CookieService } from 'angular2-cookie/services/cookies.service';
-import { CookieService, CookieOptions } from 'angular2-cookie/core';
+import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
 import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +17,8 @@ import {
   PackagesService,
   AuthResolverService,
   RoleResolverService,
-  NotificationsService
+  NotificationsService,
+  AnalyticsService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -39,7 +39,9 @@ import {
   FlightDetailsComponent, 
   FlightDetailsDialogComponent,
   TravellerDetailsComponent,
-  TravellerDetailsDialogComponent
+  TravellerDetailsDialogComponent,
+  AirportPickupDetailsComponent,
+  TravelerInfoComponent
 } from './movements/index';
 import { MovementDetailsComponent } from './movements/movement-details/movement-details.component';
 import { FeaturesComponent } from './features/features.component';
@@ -54,6 +56,11 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ActivateTokenComponent } from './register/activate-token/activate-token.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
+
+import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
+
 
 enableProdMode();
 
@@ -83,7 +90,13 @@ enableProdMode();
     NotificationsComponent,
     RegisterSuccessDialogComponent,
     ActivateTokenComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    ChangePasswordComponent,
+    AirportPickupDetailsComponent,
+    ValidateRegisterComponent,
+    TravelerInfoComponent,
+    DeleteConfimationDialogComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -94,12 +107,11 @@ enableProdMode();
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    CookieModule.forRoot()
   ],
   providers: [
-    { provide: CookieOptions, useValue: {} },
-  	CookieService,
-  	AuthService, 
+    AuthService, 
     UserService, 
     MovementsService,
     PackageBillingsService,
@@ -107,7 +119,8 @@ enableProdMode();
     PackagesService,
     AuthResolverService,
     RoleResolverService,
-    NotificationsService
+    NotificationsService,
+    AnalyticsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
@@ -119,7 +132,8 @@ enableProdMode();
     TravellerDetailsDialogComponent,
     AppFeaturesDialogComponent,
     BillingDialogComponent,
-    RegisterSuccessDialogComponent
+    RegisterSuccessDialogComponent,
+    DeleteConfimationDialogComponent
   ]
 })
 export class AppModule { 

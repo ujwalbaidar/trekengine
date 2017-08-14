@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie';
 import { Http, Response, URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './index';
@@ -128,6 +128,30 @@ export class UserService {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'resetToken': resetToken});
     	let options = new RequestOptions({ headers: headers });
 		return this.http.put('/api/users/resetUserPassword', userPasswordObj, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	getOauthUrls(){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/users/getOauthUrl', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	registerOAuthUser(userData:Object, userOauths:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+		let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/users/saveOauthUser', {userData: userData, userOauths: userOauths}, options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	validateOAuthCode(codeObj:Object){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+		let options = new RequestOptions({ headers: headers });
+		return this.http.post('/api/users/validateCode', codeObj, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}

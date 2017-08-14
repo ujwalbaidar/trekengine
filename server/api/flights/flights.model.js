@@ -17,6 +17,8 @@ let FlightSchema = new mongoose.Schema({
 		hrTime: String,
 		minTime: String
 	},
+	flightDepartureCalendarObj: Object,
+	flightArrivalCalendarObj: Object,
 	status: { type: Boolean, default: true },
 	createdDate: {
 		type: Date, 

@@ -31,6 +31,7 @@ export class RegisterComponent implements OnInit {
 		{ 'id': '2', 'name': 'https', 'value': 'https://'}
 	];
 	selectedProtocol: string;
+	authUrls = [];
 
 	constructor(
 		private userService: UserService, 
@@ -52,6 +53,7 @@ export class RegisterComponent implements OnInit {
 	}
 	
 	ngOnInit(){
+		this.getOAuthUrl();
 	}
 	
 	registerUser(form:any) {
@@ -105,6 +107,17 @@ export class RegisterComponent implements OnInit {
   				this.packageErr = 'Failed to retrive package billings';
   			})
   	}
+
+	getOAuthUrl(){
+		this.userService.getOauthUrls()
+			.subscribe(authUrls=>{
+				this.authUrls = authUrls;
+			});
+	}
+
+	redirectOauthUrl(url:string){
+		window.location.href = url;
+	}
 }
 
 @Component({

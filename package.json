@@ -1,7 +1,7 @@
 {
   "name": "trek-engine",
   "version": "1.0.0",
-  "description": "saas product for trekkings",
+  "description": "Trek Engine App",
   "main": "app.js",
   "scripts": {
     "seed-data": "node -e \"require('./seeds/seed').seed()\"",
@@ -32,8 +32,9 @@
     "nodemailer": "3.1.8",
     "opn": "^4.0.2",
     "randomstring": "1.1.5",
-    "request": "2.79.0",
+    "request": "2.81.0",
     "shortid": "2.2.6",
     "socket.io": "1.7.3"
-  }
+  },
+  "devDependencies": {}
 }
