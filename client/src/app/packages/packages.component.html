@@ -1,0 +1,64 @@
+<div class="package-list-page">
+	<h3 class="main-title">Package Lists</h3>
+	<table class="package-list-table responsive-table highlight" *ngIf="packages && packages.length>0; else emptyPackages">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Description</td>
+				<td>Annual Cost</td>
+				<td>Monthly Cost</td>
+				<td>Valid Days</td>
+				<td>Trial Period</td>
+				<td>Priority Level</td>
+				<td>Status</td>
+				<td>Actions</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let package of packages; let i = index;">
+				<td>
+					{{package.name}}
+				</td>
+				<td>
+					{{package.description}}
+				</td>
+				<td>
+					{{package.annualCost}}
+				</td>
+				<td>
+					{{package.cost}}
+				</td>
+				<td>
+					{{(package.days==0)?'Unlimited':package.days}}
+				</td>
+				<td>
+					{{(package.trialPeriod===0)?'Unlimited':package.trialPeriod}}
+				</td>
+				<td>
+					{{package.priorityLevel}}
+				</td>
+				<td>
+					<span [ngClass]="(package.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
+						<i [ngClass]="(package.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
+				</td>
+				<td>
+					<a class="edit" [routerLink]="['details', 'edit', package._id]">
+						<i class="material-icons">edit</i>
+					</a>
+					<a class="delete" (click)="deletePackages(package._id, i)">
+						<i class="material-icons">delete</i>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<ng-template #emptyPackages>
+		<h5 class="center-align">Package Record is empty! Please add Packages!</h5>
+	</ng-template>
+	<div class="add-round-button-icon">
+		<a class="btn-floating btn-large waves-effect waves-light red" [routerLink]="['details']">
+			<i class="material-icons">add</i>
+		</a>
+	</div>
+</div>

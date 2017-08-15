@@ -1,0 +1,28 @@
+<ul id="navDropdown" class="dropdown-content">
+		<li [routerLink]="['home']"><a>Price & Plan</a></li>
+		<li [routerLink]="['login']"><a>Login</a></li>
+</ul>
+<nav class="header">
+	<div class="nav-wrapper container">
+		<a id="logo-container" class="brand-logo">Trek Engine</a>
+		<!-- <a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a> -->
+		<!-- <ul>
+			<li>
+				<a class="brand-logo">Trek Engine</a>
+			</li>
+		</ul> -->
+
+		<ul class="right hide-on-med-and-down">
+			<li>
+				<a routerLink="/home">{{'Price & Plan'}}</a>
+			</li>
+			<li>
+				<a routerLink="/login">{{'Login'}}</a>
+			</li>
+		</ul>
+
+	</div>
+</nav>
+<div class="site-content">
+	<router-outlet></router-outlet>
+</div>
