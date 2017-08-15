@@ -106,6 +106,7 @@ export class AppPackage {
 	name: string;
 	description: string;
 	cost: number;
+	annualCost: number;
 	validDays: number;
 	days: number;
 	trialPeriod: number;
