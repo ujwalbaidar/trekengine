@@ -49,6 +49,7 @@ const appRoutes: Routes = [
 		children:[
 			{ path: 'login', component: LoginComponent },
 			{ path: 'home', component: PackageBillingsComponent },
+			{ path: 'register', component: RegisterComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
 			{ path: 'register/validate/:code/:loginType/:authuser/:prompt/:session_state', component: ValidateRegisterComponent },
 			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },

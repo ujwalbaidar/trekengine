@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../models/models';
 import { UserService, AuthService, PackageBillingsService } from '../services/index';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { MdDialogRef } from '@angular/material';
+import { MdSnackBar } from '@angular/material';
+import { MdDialog } from '@angular/material';
+import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
 
 @Component({
   selector: 'register',
@@ -19,7 +21,9 @@ export class RegisterComponent implements OnInit {
 	registerUserInfo: any;
 	showLoading: boolean;
 
-	subittedRegisterForm: Boolean;
+	subittedRegisterForm: Boolean = false;
+	subittedOrgForm: Boolean = false;
+
 	featurePackage: any;
 	title: string;
 	packageDetails: any;
@@ -32,6 +36,7 @@ export class RegisterComponent implements OnInit {
 	];
 	selectedProtocol: string;
 	authUrls = [];
+	activePage: Number = 1;
 
 	constructor(
 		private userService: UserService, 
@@ -39,17 +44,10 @@ export class RegisterComponent implements OnInit {
 		private packageBillingsService: PackageBillingsService,
 		private _route: Router, 
 		private activatedRoute: ActivatedRoute,
-		public dialogRef: MdDialogRef<RegisterComponent>, 
+		public dialog: MdDialog,
+		public snackBar: MdSnackBar
 	){
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			if(this.dialogRef._containerInstance.dialogConfig.data.featurePackage){
-				this.featurePackage = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.featurePackage);
-				this.title = 'Register for '+this.featurePackage.name+' Package';
-				this.user['domain']['protocol'] = 'http://';
-			}else{
 
-			}
-		}
 	}
 	
 	ngOnInit(){
@@ -60,26 +58,119 @@ export class RegisterComponent implements OnInit {
 		this.subittedRegisterForm = true;
 		if(form.valid == true){
 			this.disbleSubmitBtn = true;
-			this.user['selectedPackage'] = this.featurePackage;
 			this.userService.registerUser(this.user)
 				.subscribe(registerUser=>{
+					if(registerUser.success == false){
+						if(registerUser.errorCode == 2){
+							let dialogOptions = {
+					  			width: '600px',
+					  			position: 'center',
+					  			disableClose: true
+							};
+
+							dialogOptions["data"] = {
+								title: 'Company Information is Incomplete',
+								errorMessage: 'Email is already been registered but Company Information is empty.',
+								confirmationMessage: 'Submit Company Information?'
+							};
+							
+							let dialogRef = this.dialog.open(ConfirmationBoxComponent, dialogOptions);
+					    	dialogRef.afterClosed().subscribe(result => {
+					    		let selectedOption = parseInt(result);
+					    		if(selectedOption == 1){
+									this.activePage = 2;
+					    		}
+					    	});
+						}else if(registerUser.errorCode == 4){
+							let dialogOptions = {
+					  			width: '600px',
+					  			position: 'center',
+					  			disableClose: true
+							};
+
+							dialogOptions["data"] = {
+								title: 'Account is not Activated',
+								errorMessage: 'Account already been created by this email but not activated.',
+								confirmationMessage: 'Send New Activation Link?'
+							};
+							
+							let dialogRef = this.dialog.open(ConfirmationBoxComponent, dialogOptions);
+					    	dialogRef.afterClosed().subscribe(result => {
+					    		let selectedOption = parseInt(result);
+					    		if(selectedOption == 1){
+					    			this.sendNewActivationLink(this.user);
+					    		}
+					    	});
+						}else{
+							let dialogOptions = {
+					  			width: '600px',
+					  			position: 'center',
+					  			disableClose: true
+							};
+
+							dialogOptions["data"] = {
+								title: 'Account is Active',
+								errorMessage: 'Account with this email is already been active.',
+								confirmationMessage: 'Navigate to Login page?'
+							};
+							
+							let dialogRef = this.dialog.open(ConfirmationBoxComponent, dialogOptions);
+					    	dialogRef.afterClosed().subscribe(result => {
+					    		let selectedOption = parseInt(result);
+					    		if(selectedOption == 1){
+									this._route.navigate(['/login']);
+					    		}
+					    	});
+						}
+					}else{
+						this.activePage = 2;
+					}
 					this.subittedRegisterForm = false;
 					this.disbleSubmitBtn = false;
-					this.dialogRef.close(this.user);
 				}, error=>{
-					this.disbleSubmitBtn = false;
-					if(error.errBody.data && error.errBody.data.code === 11000){
-						this.duplicateEmailErr = "Email Already Exists!";
-					}else{
-						this.errMessage = "Failed to Register User!";
-					}
-					setTimeout(()=>{ 
-						this.errMessage = "";
-					}, 3000);
+					this.snackBar.open('Error has been occured for the action.', '', {
+							duration: 3000,
+						});
+						setTimeout(()=>{ 
+							location.reload();
+						}, 3000);
 				});
 		}
 	}
 
+	submitOrgInfo(form:any){
+		this.subittedOrgForm = true;
+		if(form.valid == true){
+			this.disbleSubmitBtn = true;
+			this.userService.completeRegistrationProcess(this.user)
+				.subscribe(successResp=>{
+					if(successResp.success == true){
+						this.activePage = 3;
+					}
+				}, error=>{
+					this.snackBar.open('Error has been occured for the action.', '', {
+							duration: 3000,
+						});
+						setTimeout(()=>{ 
+							location.reload();
+						}, 3000);
+				});
+		}
+	}
+
+	sendNewActivationLink(userData){
+		this.userService.sendActivationLink(userData)
+			.subscribe(successResp=>{
+				this.activePage = 4;
+			}, error=>{
+				this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
+			});
+	}
 
 	addSender(){
 		this.userService.updateVendors(this.urlParams)
@@ -126,5 +217,5 @@ export class RegisterComponent implements OnInit {
 })
 
 export class RegisterSuccessDialogComponent {
-	constructor(public dialogRef: MdDialogRef<RegisterSuccessDialogComponent>) {}
+	constructor() {}
 }
