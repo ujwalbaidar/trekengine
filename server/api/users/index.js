@@ -24,5 +24,6 @@ router.post('/saveOauthUser', userController.saveOauthUser);
 router.post('/validateCode', userController.validateCode);
 router.put('/completeRegistrationProcess', userController.completeRegistrationProcess);
 router.post('/sendActivationLink', userController.sendActivationLink);
+router.get('/getCountryList', userController.getCountryList);
 
 module.exports = router;

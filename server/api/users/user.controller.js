@@ -20,6 +20,8 @@ const fs = require('fs');
 const ejs = require('ejs');
 const htmlToText = require('html-to-text');
 let OAuthLib = require('../../library/oAuth/oAuth');
+const request = require('request');
+
 /**
 * Create User on register
 * Process Completion false
@@ -258,7 +260,8 @@ exports.loginUser = function(req, res){
 													index: user.role, 
 													remainingDays: billingResponse.remainingDays, 
 													packageType: billingResponse.priorityLevel,
-													email: req.body.email
+													email: req.body.email,
+													userName: user.firstName
 												}});
 										}else{
 											let token = jwt.sign(
@@ -282,7 +285,7 @@ exports.loginUser = function(req, res){
 								config.loginAuth.secretKey, 
 								{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 							);
-						res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
+						res.status(200).json({success:true, message: "Authorised Successfully", data: {success: true, token: token, index: user.role, email: user.email}});
 					}
 				}else{
 					res.status(200).json({data: {success: false, errorCode: 3, userData: {}, message: 'Password not matched!'}});
@@ -332,7 +335,8 @@ exports.seedUser = function(req, res){
 							role: 10,
 							status: true,
 							createdDate: new Date(),
-							updatedDate: new Date()
+							updatedDate: new Date(),
+							processCompletion: true
 						};
 						let user = new User(option);
 						user.save((err, user)=>{
@@ -1133,6 +1137,16 @@ exports.saveOauthUser = function(req, res){
 			}else{
 				res.status(400).json({status: false, data: userInfoErr, message: 'Failed to find user email'});
 			}
+		}
+	});
+}
+
+exports.getCountryList = function(req, res){
+	request('https://restcountries.eu/rest/v2/all', function (error, response, body) {
+		if(error){
+			res.status(400).json({success: false, data: error, message: 'Failed to retrieve country list'});
+		}else{
+			res.status(200).json({data:{success: true, countries: body, message: 'All countries retrieved successfully!'}});
 		}
 	});
 }

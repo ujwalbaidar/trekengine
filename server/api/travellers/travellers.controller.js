@@ -9,6 +9,7 @@ const Bookings = mongoose.model('Bookings');
 let AppCalendarLib = require('../users/appCalendar');
 let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
+
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
 		Travelers.find({userId: req.headers.userId }, (err, travelers)=>{
@@ -662,3 +663,4 @@ function processUpdataTraveler(travelerData, headerData){
 			});
 	});
 }
+

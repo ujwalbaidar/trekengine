@@ -104,24 +104,25 @@ export class AuthService {
     }
 
 	developTimePicker(){
-		for(let i=0; i<24;i++){
-			if(this.hrs == undefined){
-				this.hrs = [];
-			}
-			if(i<10){
-				this.hrs.push('0'+i);
-			}else{
-				this.hrs.push(JSON.stringify(i));
+		if(this.hrs === undefined){
+			this.hrs = [];
+			for(let i=0; i<24;i++){
+				if(i<10){
+					this.hrs.push('0'+i);
+				}else{
+					this.hrs.push(JSON.stringify(i));
+				}
 			}
 		}
-		for(let i=0; i<=55;i+=5){
-			if(this.mins == undefined){
-				this.mins = [];
-			}
-			if(i<10){
-				this.mins.push('0'+i);
-			}else{
-				this.mins.push(JSON.stringify(i));
+
+		if(this.mins === undefined){
+					this.mins = [];
+			for(let i=0; i<=55;i+=5){
+				if(i<10){
+					this.mins.push('0'+i);
+				}else{
+					this.mins.push(JSON.stringify(i));
+				}
 			}
 		}
 		let time = {hrs:this.hrs,mins:this.mins};

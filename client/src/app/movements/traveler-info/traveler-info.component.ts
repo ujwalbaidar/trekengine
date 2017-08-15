@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
-import { MovementsService, AuthService } from '../../services/index';
+import { MovementsService, AuthService, UserService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
@@ -38,6 +38,7 @@ export class TravelerInfoComponent implements OnInit {
     
     public submittedTravelerForm: Boolean = false;
     public submitProgress: Boolean = false;
+    public countries: any;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -45,6 +46,7 @@ export class TravelerInfoComponent implements OnInit {
 		private sanitizer: DomSanitizer,
 		public movementService: MovementsService, 
 		public auth: AuthService, 
+		public userService: UserService,
 		public snackBar: MdSnackBar,
 		private location: Location
 	) { 
@@ -64,6 +66,7 @@ export class TravelerInfoComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.getCountryLists();
 		if(this.bookingId == undefined){
 			this.getIframe = true;
 			this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
@@ -74,6 +77,20 @@ export class TravelerInfoComponent implements OnInit {
 				this.getTravelerInfo();
 			}
 		}
+	}
+
+	getCountryLists(){
+		this.userService.getCountryLists()
+			.subscribe(data=>{
+				this.countries = data.countries;
+			}, error=>{
+				let snackBarRef = this.snackBar.open('Failed to retrieve country list', '', {
+					duration: 5000,
+				});
+				snackBarRef.afterDismissed().subscribe(() => {
+					this._route.navigate(['/app/bookings']);
+				});
+			})
 	}
 
 	getTravelerInfo(){

@@ -138,7 +138,7 @@ export class TripDetailsDialogComponent implements OnInit {
 export class TripDatesDialogComponent implements OnInit {
 	public departure_date: Object;
 	public arrival_date: Object;
-	public title: string = 'Add Trip Dates';
+	public title: string = 'Add Trip Departure Date and Arrival Date';
 	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         firstDayOfWeek: 'su',
@@ -152,16 +152,23 @@ export class TripDatesDialogComponent implements OnInit {
 	mins: any;
 	trip: Trip = <Trip>{};
 
-	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService, public authService: AuthService) {
+	constructor(
+		public dialogRef: MdDialogRef<TripDetailsDialogComponent>, 
+		public movementServie: MovementsService, 
+		public userService:UserService, 
+		public authService: AuthService,
+		private _route: Router
+	) {
 		let timePicker = this.authService.developTimePicker();
 		this.hrs = timePicker.hrs;
 		this.mins = timePicker.mins;
+		
 		this.trip = <Trip>{departureTime:{hrTime:this.hrs[0],minTime:this.mins[0]}, arrivalTime:{hrTime:this.hrs[0],minTime:this.mins[0]}};
 		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
 		this.trip['bookingId'] = bookingId;
 		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
 			this.trip = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data["records"]));
-			this.title = 'Edit Trip Dates';
+			this.title = 'Edit Trip Departure Date and Arrival Date';
 			if(this.trip.departureTime == undefined){
 				this.trip['departureTime'] = {
 					hrTime:this.hrs[0],
@@ -230,4 +237,8 @@ export class TripDatesDialogComponent implements OnInit {
 			});
 	}
 
+	navigateToProfile(){
+		this.dialogRef.close('opt-cancel');
+		this._route.navigate(['/app/profile']);
+	}
 }
