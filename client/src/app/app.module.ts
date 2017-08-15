@@ -60,6 +60,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
 import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
+import { ConfirmationBoxComponent } from './confirmation-box/confirmation-box.component';
 
 
 enableProdMode();
@@ -95,7 +96,8 @@ enableProdMode();
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
     TravelerInfoComponent,
-    DeleteConfimationDialogComponent
+    DeleteConfimationDialogComponent,
+    ConfirmationBoxComponent
     
   ],
   imports: [
@@ -133,7 +135,8 @@ enableProdMode();
     AppFeaturesDialogComponent,
     BillingDialogComponent,
     RegisterSuccessDialogComponent,
-    DeleteConfimationDialogComponent
+    DeleteConfimationDialogComponent,
+    ConfirmationBoxComponent
   ]
 })
 export class AppModule { 

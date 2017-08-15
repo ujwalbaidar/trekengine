@@ -1,58 +1,110 @@
-<ng-template #showLoading>
-	<div>
-		<span>Validating Authorization ........</span>
-	</div>
-</ng-template>
-<div class="row" *ngIf="isNew==true; else showLoading">
-    <div class="col s12 m6 l4">
-		<div class="card">
-			<div class="card-content">
-				<form (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
-					<div class="row">
-						<div class="col s12 m12">
-							<label class="active" for="organizationName">
-								<strong>
-									{{'Company Name'}}
-								</strong>
-								<span class="required-label-mark">{{' *'}}</span>
-							</label>
-							<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="user.organizationName" #organizationName="ngModel" required>
-							<div *ngIf="organizationName?.errors?.required && subittedRegisterForm">
-								This Field is Required!
+<div class="user-register-page">
+	<div class="container">
+		<div class="form-holder" *ngIf="isNew==true; else showLoading">
+	    	<div class="card">
+	    		<div class="card-content">
+	    			<div [ngSwitch]="activePage">
+						<div *ngSwitchDefault>
+							<form (ngSubmit)="registerUser(registerForm.form)" #registerForm="ngForm" novalidate>
+								<div class="row">
+									<div class="col s12" [ngClass]="[(organizationName?.errors && subittedRegisterForm)?'err-div':'']">
+										<label class="active" for="organizationName">
+											<strong>
+												{{'Company Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="user.organizationName" #organizationName="ngModel" required>
+										<div class="error-msg" *ngIf="organizationName?.errors?.required && subittedRegisterForm">
+											This Field is Required!
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="row">
+										<label class="active" for="domain">
+											<strong>
+												{{'Website Domain'}}
+											</strong>
+										</label>
+									</div>
+									<div class="col s3">
+										<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
+											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+												{{protocol.value}}
+											</md-option>
+										</md-select>
+
+									</div>
+									<div class="col s9">
+										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
+									</div>
+									<div class="row">
+										<span>e.g.:"http://www.yoursite.com"</span>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn" type="submit">
+											{{'Start 30 Days Free Trial'}}
+										</button>
+									</div>
+								</div>
+
+							</form>
+						</div>
+
+						<!-- <div *ngSwitchCase="4">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Registration Success'}}
+									</h5>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12">
+									<strong>
+										Welcome to Trek Engine. 
+									</strong>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account.
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="row">
-						<div class="row">
-							<label class="active" for="domain">
-								<strong>
-									{{'Website Domain'}}
-								</strong>
-							</label>
-						</div>
-						<div class="col s3">
-							<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
-								<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
-									{{protocol.value}}
-								</md-option>
-							</md-select>
+						<div *ngSwitchCase="3">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Activation Link Sent'}}
+									</h5>
+								</div>
+							</div>
 
-						</div>
-						<div class="col s9">
-							<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
-						</div>
-						<div class="row">
-							<span>e.g.:"http://www.yoursite.com"</span>
-						</div>
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account. Please check your email provided.
+								</div>
+							</div>
+						</div> -->
+
 					</div>
-					<div md-dialog-actions class="center-align register-submit-btn full-width-btn-div">
-						<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn #7cb342 light-blue darken-1">
-							{{'Submit'}}
-						</button>
-					</div>
-				</form>
+				</div>
+
 			</div>
 		</div>
-    </div>
+
+		<ng-template #showLoading>
+			<div>
+				<span>Validating Authorization ........</span>
+			</div>
+		</ng-template>
+	</div>
 </div>
