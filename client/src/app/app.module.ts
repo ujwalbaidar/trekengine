@@ -63,6 +63,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
 import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
+import { ConfirmationBoxComponent } from './confirmation-box/confirmation-box.component';
 import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
 import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
 import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
@@ -110,6 +111,7 @@ enableProdMode();
     ValidateRegisterComponent,
     TravelerInfoComponent,
     DeleteConfimationDialogComponent,
+    ConfirmationBoxComponent,
     AudienceOverviewComponent,
     AudienceAgeComponent,
     AudienceCountryComponent,
@@ -158,7 +160,8 @@ enableProdMode();
     AppFeaturesDialogComponent,
     BillingDialogComponent,
     RegisterSuccessDialogComponent,
-    DeleteConfimationDialogComponent
+    DeleteConfimationDialogComponent,
+    ConfirmationBoxComponent
   ],
   exports:[SumTotalPipe]
 })

@@ -29,10 +29,23 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col s6" [ngClass]="[(annualCost?.errors?.required && submittedPackageForm)?'err-div':'']">
+				<label for="annual-cost" [ngClass]="{'active':(appPackage.annualCost!=undefined)}">
+					<strong>
+						{{'Annual Package Cost'}}
+					</strong>
+					<span class="required-label-mark">{{' *'}}</span>
+				</label>
+				<input id="annual-cost" type="number" class="validate" name="annualCost" [(ngModel)]="appPackage.annualCost" #annualCost="ngModel" [value] = "appPackage.annualCost" required>
+				<div class="error-msg" *ngIf="annualCost?.errors?.required && submittedPackageForm">
+					This Field is Required!
+				</div>
+			</div>
+
 			<div class="col s6" [ngClass]="[(cost?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-cost" [ngClass]="{'active':(appPackage.cost!=undefined)}">
 					<strong>
-						{{'Package Cost'}}
+						{{'Monthly Package Cost'}}
 					</strong>
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
@@ -41,8 +54,10 @@
 					This Field is Required!
 				</div>
 			</div>
+		</div>
 
-			<div class="col s6" [ngClass]="[(days?.errors?.required && submittedPackageForm)?'err-div':'']">
+		<div class="row">
+			<div class="col s4" [ngClass]="[(days?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-days" [ngClass]="{'active':(appPackage.days!=undefined)}">
 					<strong>
 						{{'Valid Period'}}
@@ -54,9 +69,7 @@
 					This Field is Required!
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col s6" [ngClass]="[(trialPeriod?.errors?.required && submittedPackageForm)?'err-div':'']">
+			<div class="col s4" [ngClass]="[(trialPeriod?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-trial-period" [ngClass]="{'active':(appPackage.trialPeriod!=undefined)}">
 					<strong>
 						{{'Trial Period'}}
@@ -69,7 +82,7 @@
 				</div>
 			</div>
 
-			<div class="col s6" [ngClass]="[(priorityLevel?.errors?.required && submittedPackageForm)?'err-div':'']">
+			<div class="col s4" [ngClass]="[(priorityLevel?.errors?.required && submittedPackageForm)?'err-div':'']">
 				<label for="package-priorityLevel" [ngClass]="{'active':(appPackage.priorityLevel!=undefined)}">
 					<strong>
 						{{'Priority Level'}}

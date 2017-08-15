@@ -161,16 +161,4 @@ export class PackageBillingsComponent implements OnInit {
 
 		let dialogRef = this.dialog.open(RegisterSuccessDialogComponent, dialogOptions);
     }
-
-    upgradeCostDuration(){
-    	if(this.selectedDuration === true){
-    		this.getPackages();
-    	}else{
-	    	for(let i=0; i<this.packageDetails.length; i++){
-	    		this.packageDetails[i].packages.cost = 12 * JSON.parse(JSON.stringify(this.packageDetails[i].packages.cost));
-	    		this.packageDetails[i].packages.days = 365;
-	    	}
-    	}
-    }
-
 }

@@ -41,8 +41,7 @@ let UserSchema = new mongoose.Schema({
 		type:String
 	},
 	organizationName: {
-		type:String,
-		required: true
+		type:String
 	},
 	organizationContact: String,
 	organizationEmail: String,
@@ -51,6 +50,7 @@ let UserSchema = new mongoose.Schema({
 	organizationCountry: String,
 	dailyTripNotification: { type: Boolean, default: true },
 	weeklyTripNotification: { type: Boolean, default: true },
+	processCompletion: { type: Boolean, default: false },
 	createdDate: {
 		type: Date, 
 		default: new Date()
