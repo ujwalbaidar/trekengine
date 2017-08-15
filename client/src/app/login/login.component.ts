@@ -16,7 +16,7 @@ export class LoginComponent{
 	errObj: any;
 	submittedLoginForm: boolean = false;
 	subittedOrgForm: boolean = false;
-	disbleOrgSubmitBtn: boolean;
+	disbleOrgSubmitBtn: boolean = false;
 	authUrls = [];
 	activePage: Number = 1;
 	protocols = [
@@ -158,5 +158,13 @@ export class LoginComponent{
 						location.reload();
 					}, 3000);
 			});
+	}
+
+	setLoginPage(page:Number){
+		this.user = <User>{domain:{website:'', protocol:''}};
+		this.submittedLoginForm = false;
+		this.subittedOrgForm = false;
+		this.disbleOrgSubmitBtn = false;
+		this.activePage = page;
 	}
 }

@@ -253,6 +253,7 @@ exports.loginUser = function(req, res){
 												success:true, 
 												message: "Authorised Successfully",
 												data: {
+													success: true,
 													token: token, 
 													index: user.role, 
 													remainingDays: billingResponse.remainingDays, 
