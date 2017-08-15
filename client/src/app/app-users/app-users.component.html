@@ -1,0 +1,34 @@
+<div class="user-list-page">
+	<h3 class="main-title">User Lists</h3>
+	<table class="user-list-table responsive-table highlight" *ngIf="adminUsers && adminUsers.length>0">
+		<thead>
+			<tr>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td>Email</td>
+				<td>Role</td>
+				<td>Process Completion</td>
+				<td>Status</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let user of adminUsers; let i = index;">
+				<td>{{ user.firstName }}</td>
+				<td>{{ user.lastName }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ (user.role==20)?'Admin':'' }}</td>
+				<td>
+					<i [ngClass]="(user.processCompletion==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+				</td>
+				<td>
+					<span [ngClass]="(user.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
+						<i [ngClass]="(user.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+					</span>
+				</td>
+				<td>
+					<a [routerLink]="[user._id, 'billing-history']">Billing History</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
