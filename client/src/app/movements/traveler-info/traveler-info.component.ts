@@ -67,12 +67,15 @@ export class TravelerInfoComponent implements OnInit {
 
 	ngOnInit() {
 		this.getCountryLists();
+		jQuery('#messageBox').val('New Text');
+		jQuery('#messageBox').trigger('autoresize');
 		if(this.bookingId == undefined){
 			this.getIframe = true;
 			this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
 		}else{
 			if(this.travelerId == undefined){
 				this.traveler['gender'] = 'male';
+				this.traveler['imageAttachments'] = {};
 			}else{
 				this.getTravelerInfo();
 			}
@@ -82,7 +85,9 @@ export class TravelerInfoComponent implements OnInit {
 	getCountryLists(){
 		this.userService.getCountryLists()
 			.subscribe(data=>{
-				this.countries = data.countries;
+				if(data.countries){
+					this.countries = JSON.parse(data.countries);
+				}
 			}, error=>{
 				let snackBarRef = this.snackBar.open('Failed to retrieve country list', '', {
 					duration: 5000,
@@ -113,6 +118,7 @@ export class TravelerInfoComponent implements OnInit {
 				if(this.traveler['emergencyContact']['relation']==undefined){
 					this.traveler['emergencyContact']['relation'] = '';
 				}
+				this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
 			}, error=>{
 				let snackBarRef = this.snackBar.open('Failed to get Traveler Information to edit', '', {
 					duration: 5000,
@@ -125,6 +131,10 @@ export class TravelerInfoComponent implements OnInit {
 
 	selectTravelerGender(traveler, event){
 		this.traveler['gender'] = event;
+	}
+
+	selectTravelerCountry(traveler, event){
+		this.traveler['nationality'] = event;
 	}
 
 	submitTravelerDetails(travelerDetail:any){
@@ -146,7 +156,7 @@ export class TravelerInfoComponent implements OnInit {
 		this.movementService.submitTravelerDetails(this.traveler)
 			.subscribe(createResponse=>{
 				let snackBarRef = this.snackBar.open('Traveler Information Created Successfully!', '', {
-					duration: 5000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					this._route.navigate([`/app/bookings/booking-details/${this.bookingId}`]);
@@ -167,7 +177,7 @@ export class TravelerInfoComponent implements OnInit {
 		this.movementService.updateTravelerDetails(this.traveler)
 			.subscribe(updateResponse=>{
 				let snackBarRef = this.snackBar.open('Traveler Information Updated Successfully!', '', {
-					duration: 5000,
+					duration: 3000,
 				});
 				snackBarRef.afterDismissed().subscribe(() => {
 					if(this.redirectPath == 'booking-details'){
@@ -210,7 +220,7 @@ export class TravelerInfoComponent implements OnInit {
 		    var reader = new FileReader();
 		    let fileData = event.target.files[0];
 		    if(fileData.size <= 1000000){
-		    	if(fileData.type === 'image/jpeg'){
+		    	if(fileData.type === 'image/jpeg' || fileData.type === 'image/png'){
 				    reader.onload = (event) => {
 				    	if(this.traveler['attachments'] == undefined){
 				    		this.traveler['attachments'] = {};
@@ -225,7 +235,7 @@ export class TravelerInfoComponent implements OnInit {
 				    };
 				    reader.readAsDataURL(event.target.files[0]);
 		    	}else{
-		    		this.snackBar.open('Only .jpg extension is allowed', '', {
+		    		this.snackBar.open('Only Jpeg/png files allowed', '', {
 						duration: 5000,
 					});
 		    	}

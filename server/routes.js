@@ -20,6 +20,7 @@ module.exports = function(app){
 	app.use('/api/features', superAuth, require('./api/features'));
 	app.use('/api/packages', superAuth, require('./api/packages'));
 	app.post('/trekengineApp/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
+	app.get('/trekengineApp/travellers/getCountryList', require('./api/travellers/travellers.controller').getCountryList);
 	app.get('/trekengineApp/travellers', (req, res) => {
 		res.render('iframes/traveler-details-form.template.ejs');
 	});

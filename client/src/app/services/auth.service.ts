@@ -59,7 +59,7 @@ export class AuthService {
 
 	logout(){
 		this.clearCookies();
-		this._route.navigate(['/home']);
+		this._route.navigate(['/login']);
 	}
 
 	validateToken(authToken:string){

@@ -259,7 +259,7 @@
 				<div class="card-content">
 					<h3 class="card-title">Traveler List</h3>
 					<div class="right" *ngIf="auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light" (click)="openTravelerModal({}, 'add')">
+						<a class="btn-floating waves-effect waves-light" routerLink="/app/movements/traveler-info/booking/{{bookingId}}">
 							<i class="material-icons">add</i>
 						</a>
 					</div>

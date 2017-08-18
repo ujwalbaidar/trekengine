@@ -104,52 +104,48 @@ exports.sendActivationLink = function(req, res){
 
 function generateActivationLink(userEmail){
 	return new Promise((resolve, reject)=>{
-		Packages.find({"status" : true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
-	    	if(packageErr){
-	    		reject(packageErr);
-	    	}else{
-	    		queryUser({email: userEmail})
-	    			.then(userInfo=>{
-						let mailOptions = {};
-						mailOptions = {
-							from: config.appEmail.senderAddress,
-						    to: userEmail, 
-						    subject: 'Trek Engine: Registration Success',
-						};
+		queryUser({email: userEmail})
+			.then(userInfo=>{
+				let mailOptions = {};
+				mailOptions = {
+					from: config.appEmail.senderAddress,
+				    to: userEmail, 
+				    subject: 'Activate Your Trek Engine Account',
+				};
+				let jwtSignData = {
+					userName: userInfo[0].firstName,
+					email: userEmail,
+					freeUser: true
+				};
 
-						let jwtSignData = {
-							email: userEmail,
-							packageType: packages[0].name,
-							packageCost: packages[0].cost,
-							trialPeriod: packages[0].trialPeriod,
-							priorityLevel: packages[0].priorityLevel,
-							features: JSON.stringify(packages[0].featureIds)
-						};
+				let jwtSignOptions = {
+					expiresIn: config.activateAccount.expireTime, 
+					algorithm: config.activateAccount.algorithm 
+				};
 
-						let jwtSignOptions = {
-							expiresIn: config.activateAccount.expireTime, 
-							algorithm: config.activateAccount.algorithm 
-						};
-
-						let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
-						let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
-						mailOptions.html = ejs.render(templateString, { userName:userInfo[0].firstName, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
-						mailOptions.text = htmlToText.fromString(mailOptions.html, {
-			    			wordwrap: 130
-						});
-						sendEmail(mailOptions)
-							.then(mailInfo=>{
-								resolve(mailInfo);
-							})
-							.catch(mailErr=>{
-								reject(mailErr);
-							});
-	    			})
-	    			.catch(userInfoErr=>{
-	    				reject(userInfoErr);
-	    			});
-	    	}
-	    });
+				let token = jwt.sign(jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+				let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
+				mailOptions.html = ejs.render(
+					templateString, { 
+						userName: userInfo[0].firstName, 
+						userEmail: userEmail,
+						appLink: config.webHost,
+						webHost: config.webHost+'/authorization/token/'+token+'/validate-user' 
+					});
+				mailOptions.text = htmlToText.fromString(mailOptions.html, {
+	    			wordwrap: 130
+				});
+				sendEmail(mailOptions)
+					.then(mailInfo=>{
+						resolve(mailInfo);
+					})
+					.catch(mailErr=>{
+						reject(mailErr);
+					});
+			})
+			.catch(userInfoErr=>{
+				reject(userInfoErr);
+			});
 	});
 }
 
@@ -164,6 +160,113 @@ function saveUser(userObj){
 			}
 		});
 	})
+}
+
+exports.activateUser = function(req, res){
+	jwt.verify(req.headers.registrationtoken, config.activateAccount.secretKey, { algorithms: config.activateAccount.algorithm }, function(err, decoded) {
+			if(err){
+				if(err.name == 'TokenExpiredError'){
+					let decodedRegistrationToken = jwt.decode(req.headers.registrationtoken);
+
+					let mailOptions = {
+						from: config.appEmail.senderAddress,
+					    to: decodedRegistrationToken.email, 
+					    subject: 'Activate Your Trek Engine Account',
+					};
+
+					let jwtSignData = {
+							userName: decodedRegistrationToken.userName,
+							email: decodedRegistrationToken.email,
+							freeUser: true							
+						};
+
+					let jwtSignOptions = {
+						expiresIn: config.activateAccount.expireTime, 
+						algorithm: config.activateAccount.algorithm 
+					}
+					let token = jwt.sign( jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
+
+					let templateString = fs.readFileSync('server/templates/userRegistraion.ejs', 'utf-8');
+
+					mailOptions.html = ejs.render(
+						templateString, { 
+							userName: decodedRegistrationToken.userName, 
+							userEmail: decodedRegistrationToken.email,
+							appLink: config.webHost,
+							webHost: config.webHost+'/authorization/token/'+token+'/validate-user' 
+						}
+					);
+					mailOptions.text = htmlToText.fromString(mailOptions.html, {
+					    wordwrap: 130
+					});
+					sendEmail(mailOptions)
+						.then(mailInfo=>{
+							res.status(200).json({success: false, data: 'expire-err'})
+						})
+						.catch(mailErr=>{
+							res.status(400).json({success:false, data:mailErr});
+						});
+				}else{
+					res.status(400).send({success:false, data: err, message: 'Invalid Token!'});
+				}
+			}else{
+				User.findOne({email: decoded.email},(err, userData)=>{
+					if(err){
+						res.status(400).send({success:false, data: err});
+					}else{
+						if(userData.status == false){
+							Packages.find({"status" : true}).sort({priorityLevel:-1}).limit(1).exec((packageErr, packages)=>{
+								if(packageErr){
+									res.status(400).send({success:false, data: packageErr, message: 'Failed to retrieve package'});
+								}else{
+									let currentDateTime = new Date();
+										currentDateTime.setHours(0,0,0,0);
+									let activateDate = Math.floor(currentDateTime/1000);
+									var	expireDate=0;
+									if(decoded.packageCost>0){
+										expireDate = activateDate+decoded.trialPeriod*24*3600;
+									}else{
+										expireDate = activateDate+1*24*3600;
+									}
+									let packageObj = {
+										userId: userData._id,
+										packageType: packages[0].packageType,
+										packageCost: packages[0].packageCost,
+										trialPeriod: packages[0].trialPeriod,
+										priorityLevel: packages[0].priorityLevel,
+										activatesOn: activateDate,
+										expiresOn: expireDate,
+										remainingDays: (decoded.packageCost>0)?decoded.trialPeriod:1,
+										features: packages[0].featureIds,
+										usesDays: 0,
+										freeUser: true,
+										onHold: false,
+										status: true,
+										packagePayment: true
+									};
+
+									User.update({email: decoded.email, status: false}, {status: true}, (err, updateData)=>{
+										if(err){
+											res.status(400).send({success:false, data: err, message: 'Failed to activate account'});
+										}else{
+											saveUserPackage(packageObj)
+												.then(billingData=>{
+													res.status(200).json({success: false, data: 'active'});
+												})
+												.catch(billingErr=>{
+													res.status(400).json({success:false, data:billingErr});
+												});
+										}
+									});
+								}
+							});
+						}else{
+							res.status(200).json({success: false, data: 'already-active'});
+						}
+					}
+				})
+			}
+		});
 }
 
 exports.findAllUser = function(req, res){
@@ -703,101 +806,7 @@ exports.updateUserPassword = function(req, res){
 	}
 }
 
-exports.activateUser = function(req, res){
-	jwt.verify(req.headers.registrationtoken, config.activateAccount.secretKey, { algorithms: config.activateAccount.algorithm }, function(err, decoded) {
-			if(err){
-				if(err.name == 'TokenExpiredError'){
-					let decodedRegistrationToken = jwt.decode(req.headers.registrationtoken);
 
-					let mailOptions = {
-						from: config.appEmail.senderAddress,
-					    to: decodedRegistrationToken.email, 
-					    subject: 'Trek Engine: Registration Success',
-					};
-
-					let jwtSignData = {
-							email: decodedRegistrationToken.email,
-							packageType: decodedRegistrationToken.packageType,
-							packageCost: decodedRegistrationToken.packageCost,
-							trialPeriod: decodedRegistrationToken.trialPeriod,
-							priorityLevel: decodedRegistrationToken.priorityLevel,
-							features: decodedRegistrationToken.features
-						};
-
-					let jwtSignOptions = {
-						expiresIn: config.activateAccount.expireTime, 
-						algorithm: config.activateAccount.algorithm 
-					}
-					let token = jwt.sign( jwtSignData, config.activateAccount.secretKey, jwtSignOptions);
-
-					let templateString = fs.readFileSync('server/templates/userRegistrationRefreshToken.ejs', 'utf-8');
-					mailOptions.html = ejs.render(templateString, { userName:req.body.fname, webHost: config.webHost+'/authorization/token/'+token+'/validate-user' });
-					mailOptions.text = htmlToText.fromString(mailOptions.html, {
-					    wordwrap: 130
-					});
-					sendEmail(mailOptions)
-						.then(mailInfo=>{
-							res.status(200).json({success: false, data: 'expire-err'})
-						})
-						.catch(mailErr=>{
-							res.status(400).json({success:false, data:mailErr});
-						});
-				}else{
-					res.status(400).send({success:false, data: err, message: 'Invalid Token!'});
-				}
-			}else{
-				User.findOne({email: decoded.email},(err, userData)=>{
-					if(err){
-						res.status(400).send({success:false, data: err});
-					}else{
-						if(userData.status == false){
-							User.update({email: decoded.email, status: false}, {status: true}, (err, updateData)=>{
-								if(err){
-									res.status(400).send({success:false, data: err, message: 'Failed to activate account'});
-								}else{
-									let currentDateTime = new Date();
-										currentDateTime.setHours(0,0,0,0);
-										let activateDate = Math.floor(currentDateTime/1000);
-										var	expireDate=0;
-										if(decoded.packageCost>0){
-											expireDate = activateDate+decoded.trialPeriod*24*3600;
-										}else{
-											expireDate = activateDate+1*24*3600;
-										}
-										let packageObj = {
-											userId: userData._id,
-											packageType: decoded.packageType,
-											packageCost: decoded.packageCost,
-											trialPeriod: decoded.trialPeriod,
-											priorityLevel: decoded.priorityLevel,
-											activatesOn: activateDate,
-											expiresOn: expireDate,
-											remainingDays: (decoded.packageCost>0)?decoded.trialPeriod:1,
-											features: JSON.parse(decoded.features),
-											usesDays: 0,
-											freeUser: true,
-											onHold: false,
-											status: true,
-											packagePayment: true
-										};
-										
-										saveUserPackage(packageObj)
-											.then(billingData=>{
-												res.status(200).json({success: false, data: 'already-active'});
-											})
-											.catch(billingErr=>{
-												res.status(400).json({success:false, data:billingErr});
-											});
-								}
-							});
-						}else{
-							res.status(200).json({success: false, data: 'already-active'});
-						}
-					}
-				})
-			}
-		});
-}
 
 exports.forgotPasswordEmail = function(req, res){
 	queryUser(req.body)
@@ -1142,11 +1151,6 @@ exports.saveOauthUser = function(req, res){
 }
 
 exports.getCountryList = function(req, res){
-	request('https://restcountries.eu/rest/v2/all', function (error, response, body) {
-		if(error){
-			res.status(400).json({success: false, data: error, message: 'Failed to retrieve country list'});
-		}else{
-			res.status(200).json({data:{success: true, countries: body, message: 'All countries retrieved successfully!'}});
-		}
-	});
+	let countries = fs.readFileSync('server/static-data/countries.json', 'utf-8');
+	res.status(200).json({data:{success: true, countries: countries, message: 'All countries retrieved successfully!'}});
 }
