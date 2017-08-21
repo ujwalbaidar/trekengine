@@ -2,13 +2,19 @@
 	<div md-dialog-content>
 		
 		<div class="row">
-			<div class="col s6">
+			<div class="col s11">
 				<h5>
 					{{title}}
 				</h5>
 			</div>
-			<div class="col s6 right-align">
+			<div class="col s1 right-align">
 				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12">
+				<p>You will get reminder for each of the date. you can change how you would like to be reminder from <a (click)="navigateToProfile()">here.</a></p>		
 			</div>
 		</div>
 
