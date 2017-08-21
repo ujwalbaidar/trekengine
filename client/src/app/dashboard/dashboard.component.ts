@@ -13,14 +13,13 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		let cookieIdx = this._cookieService.get('idx');
+		/*let cookieIdx = this._cookieService.get('idx');
 		if (parseInt(cookieIdx) === 20) {
 			this._route.navigate(['/app/bookings']);
 		}else if(parseInt(cookieIdx) === 30){
 			this._route.navigate(['/app/movements']);
 		}else{
-			// this._route.navigate(['/app/movements']);
-		}
+		}*/
 	}
 
 }

@@ -5,6 +5,7 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { MovementsService, AuthService } from '../../services/index';
 import { Booking } from '../../models/models';
 import { FormControl } from '@angular/forms';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
   selector: 'bookings',
@@ -15,12 +16,14 @@ export class BookingsComponent implements OnInit  {
 	bookings: any;
 	bookingErr: string;
 	isAvailable: boolean = false;
+	cookieData: any;
 
 	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
 		this.authService.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
 					this.isAvailable = true;
+					this.cookieData = cookieObj;
 				}
 			});
 	}
@@ -38,12 +41,27 @@ export class BookingsComponent implements OnInit  {
 	}
 
 	deleteBooking(deleteId: string, index: number) {
-		this.movementService.deleteBooking(deleteId)
-			.subscribe(deleteStatus=>{
-				this.bookings.splice(index,1);
-			}, error => {
-				this.bookingErr = 'Failed to Delete Booking Details';
-			});
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+    		let selectedOption = parseInt(result);
+    		if(selectedOption == 1){
+    			this.movementService.deleteBooking(deleteId)
+					.subscribe(deleteStatus=>{
+						this.bookings.splice(index,1);
+					}, error => {
+						this.bookingErr = 'Failed to Delete Booking Details';
+					});
+    		}
+    	});
+		
 	}
 
 	openAddBookingModal(editData:Booking=<Booking>{}){
