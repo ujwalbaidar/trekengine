@@ -1,7 +1,7 @@
 <div>
 	<div>
 		<h5>
-			{{ 'Traverler Details Form' }}
+			{{ 'Traverler Detail Form' }}
 		</h5>
 	</div>
 	<div *ngIf="getIframe==true; else travelerForm">
@@ -65,7 +65,7 @@
 						</div>
 						<div>
 							<select required class="browser-default" [(ngModel)]="traveler.gender" name="gender" #gender="ngModel" (ngModelChange)="selectTravelerGender(traveler, $event)">
-								<option [value]="gender.value" *ngFor="let gender of genders">
+								<option [value]="gender.viewValue" *ngFor="let gender of genders">
 									<span>{{gender.viewValue}}</span>
 								</option>
 							</select>
@@ -76,13 +76,23 @@
 					</div>
 
 					<div class="col s4">
-						<label for="nationality" class="active">
-							<strong>
-								{{'Country'}}
-							</strong>
-							<span class="required-label-mark">{{' *'}}</span>
-						</label>
-						<input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required>
+						<div>
+							<label for="nationality" class="active">
+								<strong>
+									{{'Country'}}
+								</strong>
+								<span class="required-label-mark">{{' *'}}</span>
+							</label>
+						</div>
+						<div>
+							<select required class="browser-default" [(ngModel)]="traveler.nationality" name="nationality" #nationality="ngModel" (ngModelChange)="selectTravelerCountry(traveler, $event)">
+								<!-- <option value="" selected>Select a Country</option> -->
+								<option [value]="country.name" *ngFor="let country of countries">
+									<span>{{country.name}}</span>
+								</option>
+							</select>
+						</div>
+						<!-- <input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required> -->
 						<div *ngIf="nationality?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
@@ -298,7 +308,7 @@
 					<input type="checkbox" (click)=submitHotelConfirmation(traveler.hotel.confirmation) class="filled-in" id="hotelConfirmation" [checked]="traveler.hotel.confirmation"/>
 					<label for="hotelConfirmation">
 						<strong>
-							{{'Have you Booked the Hotel?'}}
+							{{'Have you booked a hotel?'}}
 						</strong>
 					</label>
 				</div>
@@ -341,7 +351,8 @@
 								{{'Message Box'}}
 							</strong>
 						</label>
-						<input id="messageBox" type="text" name="messageBox" class="validate" [(ngModel)]="traveler.messageBox">
+						<textarea id="messageBox" class="materialize-textarea validate" [(ngModel)]="traveler.messageBox" [ngModelOptions]="{standalone: true}"></textarea>
+						<!-- <input id="messageBox" type="text" name="messageBox" class="validate" [(ngModel)]="traveler.messageBox"> -->
 					</div>
 		        </div>
 

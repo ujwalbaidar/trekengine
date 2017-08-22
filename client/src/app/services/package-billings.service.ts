@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { AuthService } from './index';
+import { AuthService } from './auth.service';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';

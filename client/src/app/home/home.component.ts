@@ -1,30 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { NotificationsService, AuthService } from '../services/index';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 declare var jQuery:any;
 import { environment } from '../../environments/environment';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { MdDialog, MdDialogRef } from '@angular/material';
+import { BookingsDialogComponent } from '../movements/bookings/bookings.component';
+
 @Component({
   selector: '',
   providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 	cookieData:any;
 	notifications: any;
 	notificationErr: any;
 	sideMenuArr:any;
 	active: string;
 
-	constructor(public _cookieService:CookieService, public authService: AuthService, private _route: Router, public notificationsService: NotificationsService, private location: Location){
+	constructor(
+		public _cookieService:CookieService, 
+		public authService: AuthService, 
+		private _route: Router, 
+		public notificationsService: NotificationsService, 
+		private location: Location, 
+		public dialog: MdDialog
+	){
 		this.getUnreadNotifications();
 	}
 	
 	ngOnInit(){
 		this.cookieData = this._cookieService.getAll();
-		jQuery(".dropdown-button").dropdown();
+
 		jQuery(".button-collapse").sideNav({
 			closeOnClick: true
 		});
@@ -41,6 +51,18 @@ export class HomeComponent implements OnInit {
 					iconName: 'fa fa-book',
 					status: true,
 					subMenu: [
+						{
+							menu: 'All Bookings',
+							routePath: '/app/bookings',
+							iconName: 'fa fa-book'
+						},
+						{
+							menu: 'Add New Booking',
+							routePath: '/app/movements/trip-details',
+							iconName: 'fa fa-book',
+							openModal: true,
+							modalFunction: 'openAddBookingModal'
+						},
 						{
 							menu: 'Trip Details',
 							routePath: '/app/movements/trip-details',
@@ -102,13 +124,22 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
+	ngAfterViewInit() {
+		jQuery(".dropdown-button").dropdown();
+		jQuery(".dropdown-bookings").dropdown();
+	}
+
 	logout() {
 		this._cookieService.removeAll();
-		window.location.href = environment.webUrl+'/home';
+		window.location.href = environment.webUrl+'/login';
 	}
 
 	dropDownNav(){
 		jQuery(".dropdown-button").dropdown();
+	}
+
+	dropDownBookingsTab(){
+		jQuery(".dropdown-bookings").dropdown();
 	}
 
 	dropDownNotifications(){
@@ -156,11 +187,33 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	redirectSidemenu(path, level){
-		if(path !== undefined){
-			this._route.navigate([path]);
+	redirectSidemenu(path, level, openModal, modalFunction){
+		if(openModal !== undefined && modalFunction !== undefined){
+			this[modalFunction]();
 		}else{
-			jQuery('.collapsible').collapsible();
+			if(path !== undefined){
+				this._route.navigate([path]);
+			}else{
+				jQuery('.collapsible').collapsible();
+			}
 		}
+
+	}
+
+	openAddBookingModal(){
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+
+		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
+		dialogRef.afterClosed().subscribe(result => {
+			if(result !== 'opt-cancel'){
+				this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
+			}
+    	});
 	}
 }

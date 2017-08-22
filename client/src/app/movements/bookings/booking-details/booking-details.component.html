@@ -94,7 +94,7 @@
 					</div>
 					<div [hidden]="trip" class="row">
 						<div class="col s6">
-							<p>Trip Details not added yet. Please add Trip Details!</p>
+							<p>Trip Departure and Arrival Details are not added yet. Please add them.</p>
 						</div>
 						<div class="col s6 m6 right-align" *ngIf="auths.idx && auths.idx ==='20'">
 							<a class="btn-floating waves-effect waves-light" (click)="openTripDatesModal()"><i class="material-icons">add</i></a>
@@ -259,7 +259,7 @@
 				<div class="card-content">
 					<h3 class="card-title">Traveler List</h3>
 					<div class="right" *ngIf="auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light" (click)="openTravelerModal({}, 'add')">
+						<a class="btn-floating waves-effect waves-light" routerLink="/app/movements/traveler-info/booking/{{bookingId}}">
 							<i class="material-icons">add</i>
 						</a>
 					</div>

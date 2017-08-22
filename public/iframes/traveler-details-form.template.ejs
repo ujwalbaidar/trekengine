@@ -1,55 +1,27 @@
 <html>
 	<head>
+		<!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css"> -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+		<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.common-material.min.css" />
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.min.css" />
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.mobile.min.css" />
 		
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+	<!-- 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script> -->
 
+		<script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.all.min.js"></script>
 		<!-- Angular Material Library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-	</head>
-		<style>
-			.mydp .selection {
-				width: 70%;
-			}
-
-			.add-round-button-icon {
-				bottom: 0;
-			    position: fixed;
-			    right: 35px;
-			    padding-bottom: 100px;
-			}
-
-			.required-label-mark {
-				color: #e85858;
-			}
-
-			.clear-dialogBox {
-				color: #b1b1b1;
-			}
-
-			.full-width-btn {
-				width: 100%
-			}
-
-			.full-width-btn-div {
-				width: 90%
-			}
-
-			.full-width-btn-div .btn {
-				width: 100%
-			}
-		</style>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script> -->
 	</head>
 	<body>
-		<div ng-app="travellersApp" ng-controller="appCtrl">
+		<div ng-app="travellersApp" ng-controller="appCtrl" ng-init="init()">
 			
 			<form class="col s12" ng-submit="submitTravellerDetails(travelerDetailForm.$valid)" name="travelerDetailForm" novalidate>
 				
@@ -115,24 +87,33 @@
 							</strong>
 							<span class="required-label-mark">{{' *'}}</span>
 						</label>
-						<input id="nationality" type="text" name="nationality" class="validate" ng-model="traveller.nationality" required>
+					    <select name="nationality" style="display: block;" ng-model="traveller.nationality" ng-options="country.name for country in countries" required></select>
+
 						<p ng-if="submitted && travelerDetailForm.nationality.$error.required">
 							This Field is Requierd!
 						</p>
 					</div>
 
 					<div class="col s4">
+						<label for="dob" class="active">
+							<strong>
+								{{'Birth Date'}}
+							</strong>
+							<span class="required-label-mark">{{' *'}}</span>
+						</label>
 						<div class="row">
-							<label for="dob" class="active">
-								<strong>
-									{{'BirthDate'}}
-								</strong>
-								<span class="required-label-mark">{{' *'}}</span>
-							</label>
+							<input 
+								id = "dob",
+								name = "dob"
+								onkeydown="return false;"
+								kendo-date-picker
+				            	ng-model="traveller.dob"
+				            	k-format="'yyyy-MM-dd'"
+				            	style="width: 50%;" 
+				            	required />
+							<!-- <md-datepicker id="dob" name="dob" ng-model="traveller.dob" md-open-on-focus required></md-datepicker> -->
 						</div>
-						<div class="row">
-							<md-datepicker id="dob" name="dob" ng-model="traveller.dob" md-open-on-focus required></md-datepicker>
-						</div>
+
 						<p ng-if="submitted && travelerDetailForm.dob.$error.required">
 							This Field is Requierd!
 						</p>
@@ -317,7 +298,16 @@
 								</label>
 							</div>
 							<div class="row">
-								<md-datepicker id="pickupDate" name="pickupDate" ng-model="traveller.airportPickup.date" md-open-on-focus required></md-datepicker>
+								<!-- <md-datepicker id="pickupDate" name="pickupDate" ng-model="traveller.airportPickup.date" md-open-on-focus required></md-datepicker> -->
+								<input 
+									id = "pickupDate",
+									name = "pickupDate"
+									onkeydown="return false;"
+									kendo-date-picker
+					            	ng-model="traveller.airportPickup.date"
+					            	k-format="'yyyy-MM-dd'"
+					            	style="width: 50%;" 
+					            	required />
 								<p ng-if="traveller.airportPickup.confirmation && submitted && travelerDetailForm.pickupDate.$error.required">This Field is Requierd!</p>
 							</div>
 						</div>
@@ -328,7 +318,7 @@
 					<input type="checkbox" ng-click=submitHotelConfirmation(traveller.hotel.confirmation) class="filled-in" id="hotelConfirmation" ng-model="traveller.hotel.confirmation"/>
 					<label for="hotelConfirmation">
 						<strong>
-							{{'Have you Booked the Hotel?'}}
+							{{'Have you booked a hotel?'}}
 						</strong>
 					</label>
 				</div>
@@ -371,7 +361,7 @@
 								{{'Message Box'}}
 							</strong>
 						</label>
-						<textarea id="messageBox" class="materialize-textarea" data-length="120" ng-model="traveller.messageBox"></textarea>
+						<textarea id="messageBox" class="materialize-textarea" ng-model="traveller.messageBox"></textarea>
 					</div>
 		        </div>
 				<div class="row">
@@ -380,7 +370,7 @@
 			</form>
 		</div>
 		<script>
-			var app = angular.module('travellersApp', ['ngCookies', 'ngMaterial', 'ngMessages']);
+			var app = angular.module('travellersApp', ['ngCookies', "kendo.directives"]);
 
 			app.directive('fileModel', ['$parse', function ($parse) {
 				return {
@@ -412,13 +402,35 @@
 				];
 				$scope.traveller.gender = $scope.genders[0];
 
+				$scope.init = function(){
+					$scope.getCountryLists();
+				}
+
+				$scope.getCountryLists = function(){
+					$http({
+						url: $window.frameElement.getAttribute('src')+'/getCountryList', 
+						data:$scope.traveller, 
+						headers:{
+							webHeader: JSON.stringify($cookies.getAll()),
+							webOrigin: window.location.origin
+						}
+					})
+					.then(countries=>{
+						$scope.countries = JSON.parse(countries.data.data.countries);
+					})
+					.catch(errorResponse=>{
+						$scope.submitProgress = false;
+						alert('Failed to retrieve country list!!')
+					});
+				}
+
 				$scope.previewUpload = function(uploadType){
 					$scope.attachmentErr = {};
 					var preview = document.querySelector('.'+uploadType);
 					$timeout(function(){ 
 						var attachment = $scope.traveller[uploadType];
 						if(attachment.size <= 1000000){
-							if(attachment.type == 'image/jpeg'){
+							if(attachment.type == 'image/jpeg' || attachment.type == 'image/png'){
 								var reader  = new FileReader();
 								reader.addEventListener("load", function () {
 									preview.src = reader.result;
@@ -466,7 +478,7 @@
 								month: new Date($scope.traveller.dob).getMonth()+1,
 								year: new Date($scope.traveller.dob).getFullYear()
 							}
-							let jsDate = $scope.traveller.dob.toISOString()
+							let jsDate = new Date($scope.traveller.dob).toISOString()
 							$scope.traveller.birthDate = {
 								epoc: epoc,
 								formatted: date.day+'-'+date.month+'-'+date.year,
@@ -481,7 +493,7 @@
 								month: new Date($scope.traveller.airportPickup.date).getMonth()+1,
 								year: new Date($scope.traveller.airportPickup.date).getFullYear()
 							}
-							let jsDate = $scope.traveller.airportPickup.date.toISOString()
+							let jsDate = new Date($scope.traveller.airportPickup.date).toISOString()
 							$scope.traveller.airportPickupDate = {
 								epoc: epoc,
 								formatted: date.day+'-'+date.month+'-'+date.year,
@@ -492,6 +504,7 @@
 
 						$scope.submitProgress = true;
 						$scope.traveller.gender = $scope.traveller.gender.value;
+						$scope.traveller.nationality = $scope.traveller.nationality.name;
 						var iframeSource = $window.frameElement.getAttribute('src');
 						$http({
 								method:'post', 

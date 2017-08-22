@@ -8,19 +8,22 @@
 		<p>Hi <%= userName %>,</p>
 	</div>
 	<div>
-		<h3>Just one more click</h><br>
-	</div>
-	<div>
-		Welcome to TrekEngine! Join us by clicking below link to activate your account.
-	</div>
-	<div style="padding-top: 50px;padding-bottom: 50px">
-		<a href="<%= webHost %>" style="text-decoration: none;background-color: lime; color: white;">
-			Activate Account
+		<p>The first step to getting started with Trek Engine is to activate your account by clicking this link: </p>
+		<a href="<%= webHost %>">
+			<%= webHost %>
 		</a>
 	</div>
 	<div>
-		<strong>Kind Regards,</strong><br>
-		<strong>Trek Engine Team</strong>
+		<p>
+		Once you’ve activated your account, log in at <%= appLink %> using the email <%= userEmail %> and password you created your account with.
+		</p>
+	</div>
+	<div>
+		<p>You can give us a call or write to us anytime if you need any support.</p>
+	</div>
+	<div>
+		<p>Thank you.</p>
+		<p>Trek Engine Team.</p>
 	</div>
 </body>
 </html>
