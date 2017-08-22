@@ -24,6 +24,10 @@ export class AppComponent implements OnInit {
 	){}
 
 	ngOnInit(){
+		if(window.name && window.name == 'GoogleAuth'){
+		 	window.opener.location.reload();
+			window.close();
+		}
 		this.navigateAppRoute();
 	}
 

@@ -7,6 +7,7 @@ import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import { MovementsService, UserService, AuthService } from '../../services/index';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
   selector: 'trip-details',
@@ -40,12 +41,27 @@ export class TripDetailsComponent implements OnInit {
 	}
 
 	deleteTrip(deleteId: string, index: number) {
-		this.movementServie.deleteUserTrekInfos(deleteId)
-		.subscribe(deleteStatus=>{
-			this.trips.splice(index,1);
-		}, error => {
-			alert('failed to delete record')
-		});
+		
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+	    	dialogRef.afterClosed().subscribe(result => {
+	    		let selectedOption = parseInt(result);
+    			if(selectedOption == 1){
+					this.movementServie.deleteUserTrekInfos(deleteId)
+						.subscribe(deleteStatus=>{
+							this.trips.splice(index,1);
+						}, error => {
+							// console.log
+						});
+    			}
+			});
 	}
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
