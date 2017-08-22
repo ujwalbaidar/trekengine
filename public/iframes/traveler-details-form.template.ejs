@@ -504,6 +504,7 @@
 
 						$scope.submitProgress = true;
 						$scope.traveller.gender = $scope.traveller.gender.value;
+						$scope.traveller.nationality = $scope.traveller.nationality.name;
 						var iframeSource = $window.frameElement.getAttribute('src');
 						$http({
 								method:'post', 

@@ -8,6 +8,7 @@ import { Traveler } from '../../models/models';
 declare var jQuery:any;
 import { MdSnackBar } from '@angular/material';
 import { environment } from '../../../environments/environment';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
   selector: 'traveler-details',
@@ -61,12 +62,27 @@ export class TravellerDetailsComponent implements OnInit {
 	}
 
 	deleteTravelerDetails(travelerId:string, index:number) {
-		this.movementServie.deleteTravelerDetails(travelerId)
-		.subscribe(deleteRes=>{
-				this.travelers.splice(index, 1);
-			}, deleteError=>{
-				console.log(deleteError);
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+	    	dialogRef.afterClosed().subscribe(result => {
+	    		let selectedOption = parseInt(result);
+    			if(selectedOption == 1){
+					this.movementServie.deleteTravelerDetails(travelerId)
+						.subscribe(deleteRes=>{
+								this.travelers.splice(index, 1);
+							}, deleteError=>{
+								console.log(deleteError);
+							});
+    			}
 			});
+		
 	}
 }
 

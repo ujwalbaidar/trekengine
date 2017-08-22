@@ -1,5 +1,14 @@
 <div class="trip-list-page">	
-	<h3 class="main-title">Trip Lists</h3>
+	<div class="row">
+		<div>
+			<a class="btn waves-effect waves-light" (click)="openAddTripModal()">
+				Add New
+			</a>
+		</div>
+		<div>
+			<h3 class="main-title">Trip Lists</h3>
+		</div>
+	</div>
 	<table class="trip-list-table responsive-table highlight" *ngIf="trips && trips.length>0; else emptyTrips">
 		<thead>
 			<tr>
@@ -12,7 +21,7 @@
 		<tbody>
 			<tr *ngFor="let trip of trips; let i = index;">
 				<td>{{ trip.name }}</td>
-				<td>{{ trip.cost }}</td>
+				<td>{{ trip.cost | currency:'USD':true }}</td>
 				<td>
 					<span [ngClass]="(trip.status==true)?'active':'inactive'">
 						<i [ngClass]="(trip.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
@@ -33,9 +42,9 @@
 		<h5 class="center-align">Trip Record is empty! Please add trip to bookings.</h5>
 	</ng-template>
 
-	<div class="add-round-button-icon">
+	<!-- <div class="add-round-button-icon">
 		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddTripModal()">
 			<i class="material-icons">add</i>
 		</a>
-	</div>
+	</div> -->
 </div>
