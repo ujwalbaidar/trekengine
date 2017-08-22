@@ -9,6 +9,7 @@ const Bookings = mongoose.model('Bookings');
 let AppCalendarLib = require('../users/appCalendar');
 let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
+
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
 		Travelers.find({userId: req.headers.userId }, (err, travelers)=>{
@@ -90,11 +91,14 @@ exports.createTravellers = function(req, res) {
 }
 
 function saveAttachments(dataObj, requestFor) {
-
 	return new Promise((res, rej)=>{
 		let profileAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
-				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.profileAttachment.type == 'image/png'){
+					var profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.profileAttachment.type == 'image/jpeg'){
+					var profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
 				if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
 					if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
 						fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
@@ -137,7 +141,12 @@ function saveAttachments(dataObj, requestFor) {
 		});
 		let savePassportAttachments = new Promise((resolve, reject)=>{
 			if(dataObj.passportAttachment && (dataObj.passportAttachment.name!==undefined)){
-				let passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.passportAttachment.type == 'image/png'){
+					var passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.passportAttachment.type == 'image/jpeg'){
+					var passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
+
 				if(dataObj.imageAttachments && dataObj.imageAttachments.passport){
 					fs.stat("attachments/"+dataObj.imageAttachments.passport, (err, stat) => {
 						if(!err){
@@ -178,7 +187,11 @@ function saveAttachments(dataObj, requestFor) {
 
 		let insuranceAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.insuranceAttachment && (dataObj.insuranceAttachment.name!==undefined)){
-				let insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.imageAttachments.type == 'image/png'){
+					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.imageAttachments.type == 'image/jpeg'){
+					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
 				if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
 					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
 						if(!err){
@@ -661,4 +674,9 @@ function processUpdataTraveler(travelerData, headerData){
 				});
 			});
 	});
+}
+
+exports.getCountryList = function(req, res){
+	let countries = fs.readFileSync('server/static-data/countries.json', 'utf-8');
+	res.status(200).json({data:{success: true, countries: countries, message: 'All countries retrieved successfully!'}});
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovementsService } from '../../services';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { TravellerDetailsDialogComponent } from '../index';
+import { TravellerDetailsDialogComponent } from '../traveller-details/traveller-details.component';
 @Component({
   selector: 'app-airport-pickup-details',
   templateUrl: './airport-pickup-details.component.html',

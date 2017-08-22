@@ -5,6 +5,7 @@ import { ProfilePassword } from '../models/models';
 import { AuthService } from '../services';
 import { MdSnackBar } from '@angular/material';
 import { User } from '../models/models';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +43,7 @@ export class ProfileComponent implements OnInit {
 	hrs: any;
 	mins: any;
 	submittedForm: boolean = false;
+	travelerIframeUrl: string;
 
 	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
 		let timePicker = this.authService.developTimePicker();
@@ -51,6 +53,7 @@ export class ProfileComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.travelerIframeUrl = environment.webUrl+'/trekengineApp/travellers';
 		if(window.name && window.name == 'GoogleAuth'){
 		 	window.opener.location.reload();
 			window.close();

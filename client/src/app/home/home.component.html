@@ -1,9 +1,14 @@
 <ul id="navDropdown" class="dropdown-content">
-		<!-- <li [routerLink]="['profile']"><a>Profile</a></li> -->
-		<li routerLink="/app/package-billings" *ngIf="cookieData.idx<=20"><a>Package Billings</a></li>
-		<li routerLink="/app/billing-history" *ngIf="cookieData.idx==20"><a>Billings History</a></li>
-		<li class="divider"></li>
-		<li (click)="logout()"><a>Logout</a></li>
+	<!-- <li [routerLink]="['profile']"><a>Profile</a></li> -->
+	<li routerLink="/app/package-billings" *ngIf="cookieData.idx<=20"><a>Package Billings</a></li>
+	<li routerLink="/app/billing-history" *ngIf="cookieData.idx==20"><a>Billings History</a></li>
+	<li class="divider"></li>
+	<li (click)="logout()"><a>Logout</a></li>
+</ul>
+
+<ul id="bookingsDropdown" class="dropdown-content">
+	<li routerLink="/app/bookings" *ngIf="cookieData.idx<=20"><a>All Bookings</a></li>
+	<li (click)="openAddBookingModal()"><a>Add New Booking</a></li>
 </ul>
 
 <ul id="notificationDropdown" class="dropdown-content collection">
@@ -29,16 +34,20 @@
 			<li *ngIf="cookieData.idx==10">
 				<a routerLink="/app/app-packages">Packages</a>
 			</li>
-			<li *ngIf="cookieData.idx==20">
-				<a routerLink="/app/bookings">Bookings</a>
+			
+			<li (click)="dropDownBookingsTab()" *ngIf="cookieData.idx==20" >
+				<a class="dropdown-bookings" data-activates="bookingsDropdown">
+					<i class="fa fa-book">Bookings</i>
+				</a>
 			</li>
+			
 			<li *ngIf="cookieData.idx>=20">
 				<a routerLink="/app/movements">Movements</a>
 			</li>
 			<li *ngIf="cookieData.idx==20">
 				<a routerLink="/app/analytics">Analytics</a>
 			</li>
-			<li *ngIf="cookieData.idx==20">
+			<li>
 				<a routerLink="/app/profile"><i class="fa fa-user-circle"></i></a>
 			</li>
 			<li (click)="getUnreadNotifications()">
@@ -105,7 +114,7 @@
 	<aside id="sidebar">
 		<ul class="navigation collapsible" data-collapsible="accordion">
 			<li *ngFor="let sideMenu of sideMenuArr">
-				<a (click)="redirectSidemenu(sideMenu.routePath, 1)" [ngClass]="(sideMenu.subMenu && sideMenu.subMenu.length>0)?'collapsible-header':''">
+				<a (click)="redirectSidemenu(sideMenu.routePath, 1, sideMenu.openModal, sideMenu.modalFunction)" [ngClass]="(sideMenu.subMenu && sideMenu.subMenu.length>0)?'collapsible-header':''">
 					<i *ngIf="sideMenu.iconName" class="{{sideMenu.iconName}}"></i>
 					<span>{{ sideMenu.menu }}</span>
 					<span class="arrow fa fa-angle-down" *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0"></span>
@@ -113,7 +122,7 @@
 				<div *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0" class="collapsible-body">
 					<ul class="collapsible" data-collapsible="accordion">
 						<li *ngFor="let subMenu of sideMenu.subMenu">
-							<a (click)="redirectSidemenu(subMenu.routePath, 2)" [ngClass]="(subMenu.subMenuChild && subMenu.subMenuChild.length>0)?'collapsible-header':''">
+							<a (click)="redirectSidemenu(subMenu.routePath, 2, subMenu.openModal, subMenu.modalFunction)" [ngClass]="(subMenu.subMenuChild && subMenu.subMenuChild.length>0)?'collapsible-header':''">
 								<i *ngIf="subMenu.iconName" class="{{subMenu.iconName}}"></i>
 								<span>{{ subMenu.menu }}</span>
 								<span class="arrow fa fa-angle-down" *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0"></span>
@@ -121,7 +130,7 @@
 							<div *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0" class="collapsible-body">
 								<ul>
 									<li *ngFor="let subMenuChild of subMenu.subMenuChild">
-										<a (click)="redirectSidemenu(subMenuChild.routePath, 3)">
+										<a (click)="redirectSidemenu(subMenuChild.routePath, 3, subMenuChild.openModal, subMenuChild.modalFunction)">
 											<i *ngIf="subMenuChild.iconName" class="{{sideMenu.iconName}}"></i>
 											<span>{{ subMenuChild.menu }}</span>
 										</a>
