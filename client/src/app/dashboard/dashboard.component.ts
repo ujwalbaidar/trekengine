@@ -13,6 +13,10 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		if(window.name && window.name == 'GoogleAuth'){
+		 	window.opener.location.reload();
+			window.close();
+		}
 		/*let cookieIdx = this._cookieService.get('idx');
 		if (parseInt(cookieIdx) === 20) {
 			this._route.navigate(['/app/bookings']);

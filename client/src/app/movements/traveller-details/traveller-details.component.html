@@ -1,5 +1,14 @@
 <div class="traveller-list-page">
-	<h3>Traveler Lists</h3>
+	<div class="row">
+		<div>
+			<a class="btn waves-effect waves-light"  routerLink="/app/movements/traveler-info">
+				Add New
+			</a>
+		</div>
+		<div>
+			<h3 class="main-title">Traveler List</h3>
+		</div>
+	</div>
 	<table class="traveller-list-table responsive-table highlight" *ngIf="travelers && travelers.length>0; else emptyTravelers">
 		<thead>
 			<tr>
@@ -58,9 +67,9 @@
 	<ng-template #emptyTravelers>
 		<h5 class="center-align">Traveler Record is empty! Please add records!</h5>
 	</ng-template>
-	<div class="add-round-button-icon">
+	<!-- <div class="add-round-button-icon">
 		<a class="btn-floating btn-large waves-effect waves-light red" routerLink="/app/movements/traveler-info">
 			<i class="material-icons">add</i>
 		</a>
-	</div>
+	</div> -->
 </div>

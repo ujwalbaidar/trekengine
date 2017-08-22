@@ -1,5 +1,14 @@
 <div class="guid-list-page">
-	<h3>Guide Lists</h3>
+	<div class="row">
+		<div>
+			<a class="btn waves-effect waves-light" (click)="openAddGuideModal()">
+				Add New
+			</a>
+		</div>
+		<div>
+			<h3 class="main-title">Guide Lists</h3>
+		</div>
+	</div>
 	<table class="guid-list-table responsive-table highlight" *ngIf="guideUsers && guideUsers.length>0; else emptyGuides">
 		<thead>
 			<tr>
@@ -21,11 +30,11 @@
 		</tbody>
 	</table>
 	<div class="add-round-button-icon">
-		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
+		<!-- <a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddGuideModal()">
 			<i class="material-icons">add</i>
-		</a>
+		</a> -->
 		<ng-template #emptyGuides>
-			<h5 class="center-align">Guide Record is empty! Please add guide records.</h5>
+			<h5 class="center-align">Guide Record is empty! Please <a (click)="openAddGuideModal()"> add guide </a>records.</h5>
 		</ng-template>
 	</div>
 </div>

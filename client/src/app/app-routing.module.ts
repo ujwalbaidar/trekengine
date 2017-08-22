@@ -94,6 +94,7 @@ const appRoutes: Routes = [
 					{ path: 'traveler-info', component: TravelerInfoComponent, canActivate: [RoleResolverService] },
 					{ path: 'traveler-info/booking/:bookingId', component: TravelerInfoComponent },
 					{ path: 'traveler-info/booking/:bookingId/traveler/:travelerId/redirect/:redirectPath', component: TravelerInfoComponent },
+					{ path: 'traveler-info/booking/traveler/:travelerId/redirect/:redirectPath', component: TravelerInfoComponent },
 				]
 			},
 			{ 

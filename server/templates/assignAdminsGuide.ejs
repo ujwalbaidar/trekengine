@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+	</head>
+	<body>
+		<div>
+			<p>Hi <%= guideFirstName %>,</p>
+			<p><%= adminFullName%> has invited you to join <%= adminCompanyName%> team as a guide.</p>
+		</div>
+		<div>
+			<p>
+				Please click <a href="<%= webhost %>">here</a> with your login credentials. Then go to <a href="<%= notificationPageLink %>">notification page</a> to accept the invitation.
+			</p>
+		</div>
+		<div>
+			<strong>Login Details:</strong>
+			<div>
+				Username/Email: <%= guideEmail %>
+			</div>
+			<div>
+				Password: <%= guidePassword %>
+			</div>
+		</div>
+		<div>
+			<p>You can write to us anytime if you need any support.</p>
+		</div>
+		<div>
+			<p>Thank you.</p>
+		</div>
+		<div>
+			<p>Trek Engine team.</p>
+		</div>
+	</body>
+</html>

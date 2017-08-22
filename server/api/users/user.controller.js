@@ -487,74 +487,34 @@ exports.addGuideToAdmin = function(req, res){
 	if(req.headers && req.headers.userId && req.headers.role == 20){
 		let currentDateTime = new Date();
 		let expireDateTime = currentDateTime.getTime()+24*3600*1000;
-
-		queryUser({email:req.body.email})
-			.then(userInfo=>{
-				if(userInfo && userInfo.length>0){
-					let saveObj = {
-						sentTo: userInfo[0].email,
-						sentBy: req.headers.email,
-						subject: 'add-as-guide',
-						notificationType: 'request'
-					}
-					createNotifications(saveObj)
-						.then((notificationData)=>{
-							mailOptions = {
-								from: config.appEmail.senderAddress,
-							    to: userInfo[0].email, 
-							    subject: 'Request to assign as Guide',
-							    text: `You have been requested to accept role of guide for ${req.headers.email}. Please Login to ${config.webHost+'//app/notifications'}, to accept the request, using your credentials: Email: ${userInfo[0].email} `,
-							    html: `<p>You have been requested to accept role of guide for ${req.headers.email}.</p>
-							    	<p> Please Login to ${config.webHost+'/app/notifications'}, to accept the request, using your credentials: </p>
-							    	<p>Email: ${userInfo[0].email} </p>`,
-							};
-							sendEmail(mailOptions)
-								.then(mailInfo=>{
-									io.emit(userInfo[0].email+'_notifications', notificationData);
-									res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
-								})
-								.catch(mailErr=>{
-									res.status(400).json({success:false, data: mailErr});
-								});
-						})
-						.catch(notificationError=>{
-							res.status(400).json({success:false, data: notificationError});
-						});
-				}else{
-					let guideInfo = {
-						firstName: req.body.firstName,
-						lastName: req.body.lastName,
-						email: req.body.email,
-						role: 30,
-						admins: [],
-						status: true
-					};
-
-
-					createGuide(guideInfo, req.headers.userId, true)
-						.then(guideDetails=>{
+						
+		queryUser({email:req.headers.email})
+			.then(adminUserInfo=>{
+				let adminInfo = adminUserInfo[0];
+				
+				queryUser({email:req.body.email})
+					.then(userInfo=>{
+						if(userInfo && userInfo.length>0){
 							let saveObj = {
-								sentTo: guideDetails.email,
+								sentTo: userInfo[0].email,
 								sentBy: req.headers.email,
 								subject: 'add-as-guide',
 								notificationType: 'request'
-							};
+							}
 							createNotifications(saveObj)
 								.then((notificationData)=>{
 									mailOptions = {
 										from: config.appEmail.senderAddress,
-									    to: guideDetails.email, 
+									    to: userInfo[0].email, 
 									    subject: 'Request to assign as Guide',
-									    text: `You have been requested to join as guide by ${req.headers.email}. Please Login to ${config.webHost}, using following credentials: Email: ${guideDetails.email} Password: ${guideDetails.password} Note: Please update your profile to secure your details`,
-									    html: `<p>You have been requested to join as guide by ${req.headers.email}.</p>
-									    	<p> Please Login to ${config.webHost+'/login'}, using following credentials: </p>
-									    	<p>Email: ${guideDetails.email} </p>
-									    	<p>Password: ${guideDetails.password}</p>
-									    	<p>Note: Please update your profile to secure your details</p>`
+									    text: `You have been requested to accept role of guide for ${req.headers.email}. Please Login to ${config.webHost+'//app/notifications'}, to accept the request, using your credentials: Email: ${userInfo[0].email} `,
+									    html: `<p>You have been requested to accept role of guide for ${req.headers.email}.</p>
+									    	<p> Please Login to ${config.webHost+'/app/notifications'}, to accept the request, using your credentials: </p>
+									    	<p>Email: ${userInfo[0].email} </p>`,
 									};
 									sendEmail(mailOptions)
 										.then(mailInfo=>{
-											io.emit(guideDetails.email+'_notifications', notificationData);
+											io.emit(userInfo[0].email+'_notifications', notificationData);
 											res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
 										})
 										.catch(mailErr=>{
@@ -564,14 +524,76 @@ exports.addGuideToAdmin = function(req, res){
 								.catch(notificationError=>{
 									res.status(400).json({success:false, data: notificationError});
 								});
-						})
-						.catch(guideErr=>{
-							res.status(400).json({success:false, data: guideErr});
-						});
-				}
+						}else{
+							let guideInfo = {
+								firstName: req.body.firstName,
+								lastName: req.body.lastName,
+								email: req.body.email,
+								role: 30,
+								admins: [],
+								status: true
+							};
+
+							createGuide(guideInfo, req.headers.userId, true)
+								.then(guideDetails=>{
+									let saveObj = {
+										sentTo: guideDetails.email,
+										sentBy: req.headers.email,
+										subject: 'add-as-guide',
+										notificationType: 'request'
+									};
+									createNotifications(saveObj)
+										.then((notificationData)=>{
+											let title = adminInfo.firstName+' '+adminInfo.lastName + ' has invited you to join' + adminInfo.organizationName +" on TrekEngine.com";
+
+											let templateString = fs.readFileSync('server/templates/assignAdminsGuide.ejs', 'utf-8');
+											let mailOptions = {
+												from: config.appEmail.senderAddress,
+											    to: guideDetails.email, 
+											    subject: title,
+											};
+											let mailParams = { 
+													title: title,
+													guideFirstName: req.body.firstName,
+													adminFullName: adminInfo.firstName+' '+adminInfo.lastName,
+													adminCompanyName: adminInfo.organizationName,
+													webhost: config.webHost,
+													notificationPageLink: config.webHost+'/app/notifications',
+													guideEmail: req.body.email,
+													guidePassword: guideDetails.password
+												};
+
+											mailOptions.html = ejs.render(templateString, mailParams);
+											mailOptions.text = htmlToText.fromString(mailOptions.html, {
+											    wordwrap: 130
+											});
+											
+											sendEmail(mailOptions)
+												.then(mailInfo=>{
+													console.log(mailInfo)
+													io.emit(guideDetails.email+'_notifications', notificationData);
+													res.status(200).send({success: true, data: {mailInfo: mailInfo, type: 'notified'} });
+												})
+												.catch(mailErr=>{
+													console.log(mailErr)
+													res.status(400).json({success:false, data: mailErr});
+												});
+										})
+										.catch(notificationError=>{
+											res.status(400).json({success:false, data: notificationError});
+										});
+								})
+								.catch(guideErr=>{
+									res.status(400).json({success:false, data: guideErr});
+								});
+						}
+					})
+					.catch(userInfoErr=>{
+						res.status(400).json({success:false, data: userInfoErr});
+					});
 			})
-			.catch(userInfoErr=>{
-				res.status(400).json({success:false, data: userInfoErr});
+			.catch(adminUserErr=>{
+				res.status(400).json({success:false, data: adminUserErr});
 			});
 	}
 }
@@ -954,93 +976,111 @@ exports.validateCode = function(req, res){
 			.then(oAuthTokens => {
 				oAuth.getUserInfo(oAuthTokens)
 					.then(userInfo=>{
-						queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
-							.then(users=>{
-								if(users.length>0){
-									if(users[0]['processCompletion']==true && users[0]['status']==true){
-										let user = users[0];
-										if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
-											var updateUserQuery = {
-												email: userInfo.email
-											};
-											var userUpdateObj = {
-												"googleAuths.access_token":oAuthTokens.access_token, 
-												"googleAuths.refresh_token":oAuthTokens.refresh_token,
-												"googleAuths.token_type": oAuthTokens.token_type,
-												"googleAuths.expires_in": oAuthTokens.expires_in,
-												"googleAuths.id_token": oAuthTokens.id_token,
-												"googleAuths.email": userInfo.email
-											};
-										}else{
-											var updateUserQuery = { 
-												"googleAuths.email": userInfo.email 
-											};
-											var userUpdateObj = {
-												"googleAuths.access_token":oAuthTokens.access_token, 
-												"googleAuths.refresh_token":oAuthTokens.refresh_token
-											};
-										}
-
-										User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
-											if(updateErr){
-												res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
-											}else{
-												PackageBillings.findOne({userId: user._id, status: true, onHold: false},(userBillingErr, billingInfo)=>{
-													if(userBillingErr){
-														res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
-													}else{
-														let token = jwt.sign({
-																email: user.email, 
-																userId: user._id, 
-																role: user.role, 
-																remainingDays: billingInfo.remainingDays, 
-																packageType: billingInfo.priorityLevel
-															}, 
-															config.loginAuth.secretKey, 
-															{
-																expiresIn: config.loginAuth.expireTime, 
-																algorithm: config.loginAuth.algorithm 
-															});
-														res.status(200).json({
-															success: true, 
-															data: {
-																token: token,
-																index: user.role,
-																remainingDays: billingInfo.remainingDays, 
-																packageType: billingInfo.priorityLevel,
-																email: user.email,
-																isNew: false
-															}, 
-															message: "Failed to update user tokens!"
-														});
-													}
-												});
-											}
-										});
-									}else{
-										res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
-									}
+						if(req.body.email){
+							var userUpdateObj = {
+								"googleAuths.access_token":oAuthTokens.access_token, 
+								"googleAuths.refresh_token":oAuthTokens.refresh_token,
+								"googleAuths.token_type": oAuthTokens.token_type,
+								"googleAuths.expires_in": oAuthTokens.expires_in,
+								"googleAuths.id_token": oAuthTokens.id_token,
+								"googleAuths.email": userInfo.email
+							};
+							User.update({email:req.body.email}, userUpdateObj, (err, userUpdateResp)=>{
+								if(err){
+									res.status(400).json({success: false, data: err});
 								}else{
-									let userObj = {
-										firstName: userInfo.given_name,
-										lastName: userInfo.family_name,
-										email: userInfo.email,
-										role: 20,
-										googleAuths: oAuthTokens
-									};
-
-									saveUser(userObj)
-										.then(saveUserResp=>{
-											res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});
-										})
-										.catch(saveUserErr=>{
-											res.status(200).json({data:{success: true, userEmail: userInfo.email}});
-										});
-
+									res.status(200).json({success: true, data: userUpdateResp});
 								}
-							}).catch(userErr=>{
-								res.status(400).json({success: false, error: userErr, message: "Failed to query user!"});
 							});
+						}else{
+							queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
+								.then(users=>{
+									if(users.length>0){
+										if(users[0]['processCompletion']==true && users[0]['status']==true){
+											let user = users[0];
+											if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
+												var updateUserQuery = {
+													email: userInfo.email
+												};
+												var userUpdateObj = {
+													"googleAuths.access_token":oAuthTokens.access_token, 
+													"googleAuths.refresh_token":oAuthTokens.refresh_token,
+													"googleAuths.token_type": oAuthTokens.token_type,
+													"googleAuths.expires_in": oAuthTokens.expires_in,
+													"googleAuths.id_token": oAuthTokens.id_token,
+													"googleAuths.email": userInfo.email
+												};
+											}else{
+												var updateUserQuery = { 
+													"googleAuths.email": userInfo.email 
+												};
+												var userUpdateObj = {
+													"googleAuths.access_token":oAuthTokens.access_token, 
+													"googleAuths.refresh_token":oAuthTokens.refresh_token
+												};
+											}
+
+											User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
+												if(updateErr){
+													res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
+												}else{
+													PackageBillings.findOne({userId: user._id, status: true, onHold: false},(userBillingErr, billingInfo)=>{
+														if(userBillingErr){
+															res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
+														}else{
+															let token = jwt.sign({
+																	email: user.email, 
+																	userId: user._id, 
+																	role: user.role, 
+																	remainingDays: billingInfo.remainingDays, 
+																	packageType: billingInfo.priorityLevel
+																}, 
+																config.loginAuth.secretKey, 
+																{
+																	expiresIn: config.loginAuth.expireTime, 
+																	algorithm: config.loginAuth.algorithm 
+																});
+															res.status(200).json({
+																success: true, 
+																data: {
+																	token: token,
+																	index: user.role,
+																	remainingDays: billingInfo.remainingDays, 
+																	packageType: billingInfo.priorityLevel,
+																	email: user.email,
+																	isNew: false
+																}, 
+																message: "Failed to update user tokens!"
+															});
+														}
+													});
+												}
+											});
+										}else{
+											res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+										}
+									}else{
+										let userObj = {
+											firstName: userInfo.given_name,
+											lastName: userInfo.family_name,
+											email: userInfo.email,
+											role: 20,
+											googleAuths: oAuthTokens
+										};
+
+										saveUser(userObj)
+											.then(saveUserResp=>{
+												res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});
+											})
+											.catch(saveUserErr=>{
+												res.status(200).json({data:{success: true, userEmail: userInfo.email}});
+											});
+
+									}
+								}).catch(userErr=>{
+									res.status(400).json({success: false, error: userErr, message: "Failed to query user!"});
+								});
+						}
 					})
 					.catch(googleUserErr=>{
 						res.status(200).json({status:true, data: userInfo});

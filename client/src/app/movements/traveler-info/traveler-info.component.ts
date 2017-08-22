@@ -26,8 +26,8 @@ export class TravelerInfoComponent implements OnInit {
 	public mins: any;
 	public traveler: Traveler = <Traveler>{};
 	public genders = [
-	    {value: 'male', viewValue: 'Male'},
-	    {value: 'female', viewValue: 'Female'}
+	    {value: 'male', viewValue: 'male'},
+	    {value: 'female', viewValue: 'female'}
 	];
 	public myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
@@ -70,8 +70,12 @@ export class TravelerInfoComponent implements OnInit {
 		jQuery('#messageBox').val('New Text');
 		jQuery('#messageBox').trigger('autoresize');
 		if(this.bookingId == undefined){
-			this.getIframe = true;
-			this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
+			if(this.travelerId == undefined){
+				this.getIframe = true;
+				this.travellerDetailUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.webUrl+'/trekengineApp/travellers');
+			}else{
+				this.getTravelerInfo();
+			}
 		}else{
 			if(this.travelerId == undefined){
 				this.traveler['gender'] = 'male';
