@@ -46,7 +46,14 @@
 								</p>
 							</ng-template>
 							<div class="btn-holder">
-								<a *ngIf="loggedIn; else publicBilling;" (click)="selectPackage(packageDetail)" class="waves-effect waves-light btn btn-start btn-large" [attr.disabled]="(disableBillingBtn==true || (_cookieService.get('remainingDays')-0)>2)?true:null">pay bill</a>
+								<a 
+									*ngIf="loggedIn; else publicBilling;" 
+									(click)="checkoutPackage(packageDetail.packages._id)" 
+									class="waves-effect waves-light btn btn-start btn-large" 
+									[attr.disabled]="(disableBillingBtn==true || (_cookieService.get('remainingDays')-0)>2)?true:null"
+								>
+									pay bill
+								</a>
 								<ng-template #publicBilling>
 									<a class="waves-effect waves-light btn btn-start btn-large" [routerLink]="['/register']">
 										{{ (packageDetail.packages.cost==0) ? 'Start Now' : 'Free '+ packageDetail.packages.trialPeriod + '-day Trial' }}
