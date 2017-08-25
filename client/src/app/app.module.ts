@@ -18,7 +18,8 @@ import {
   AuthResolverService,
   RoleResolverService,
   NotificationsService,
-  AnalyticsService
+  AnalyticsService,
+  BillingCheckoutService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -124,7 +125,8 @@ enableProdMode();
     AuthResolverService,
     RoleResolverService,
     NotificationsService,
-    AnalyticsService
+    AnalyticsService,
+    BillingCheckoutService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

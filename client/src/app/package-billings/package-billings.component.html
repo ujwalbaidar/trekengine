@@ -46,12 +46,10 @@
 								</p>
 							</ng-template>
 							<div class="btn-holder">
-								<a 
-									*ngIf="loggedIn; else publicBilling;" 
+								<a *ngIf="loggedIn; else publicBilling;" 
 									(click)="checkoutPackage(packageDetail.packages._id)" 
 									class="waves-effect waves-light btn btn-start btn-large" 
-									[attr.disabled]="(disableBillingBtn==true || (_cookieService.get('remainingDays')-0)>2)?true:null"
-								>
+									[attr.disabled]="(disableBillingBtn==true || (_cookieService.get('remainingDays')-0)>2)?true:null">
 									pay bill
 								</a>
 								<ng-template #publicBilling>

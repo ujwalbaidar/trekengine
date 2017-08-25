@@ -33,5 +33,9 @@
 		"expireTime": "1d",
 		"algorithm": "HS256"
 	},
+	"paypal":{
+		"client_id": "AYKfZ-QNwVyVp0meBP8UQIUzUqhzUksbfksY7zLZgwi1wicp5psa-7H848E7dyV7MyDzdvox5OLjLrL1",
+		"client_secret": "EDFkUbuyHfYkhEPuBQWWqNFcIKqi1RIqGUGG3z5NVZoi1f6tH7TxMix_O1CekODecYGy7zJ7XQqGivFe"
+	},
 	"timezone": "Asia/Kathmandu"
 }

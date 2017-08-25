@@ -66,7 +66,7 @@ exports.getPackageById = function(req, res){
 			}else{
 				res.status(200).json({success: true, data: packages, msg: 'package by id retried successfully.'});
 			}
-		})
+		});
 	}else{
 		res.status(401).json({success:false, message: 'Login is Required!'});
 	}

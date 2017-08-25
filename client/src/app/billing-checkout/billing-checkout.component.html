@@ -10,14 +10,17 @@
 					<th>Item Cost</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr></tr>
+			<tbody *ngIf="storageData.product === 'package'">
+				<tr *ngFor="let checkoutItem of checkoutItems">
+					<td>{{checkoutItem.name+' Package'}}</td>
+					<td>{{storageData.billingType ==='annual'?checkoutItem.annualCost:checkoutItem.cost}}</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
 	<div class="personal-info">
 		<form class="checkout-form col s12" (ngSubmit)="submitCheckoutForm(checkoutForm.form)" #checkoutForm="ngForm" novalidate>
-			<div>
+		<!-- 	<div>
 				<h5>Personal Info</h5>
 			</div>
 
@@ -66,24 +69,20 @@
 				<div class="error-msg" *ngIf="duplicateEmailErr && subittedCheckoutForm">
 					{{duplicateEmailErr}}
 				</div>
-			</div>
+			</div> -->
 
 			<div class="col s12">
 				<h5>Payment Method</h5>
 			</div>
 
 			<div class="col s12">
-				<p>
-					<input class="with-gap" name="paymentMethod" type="radio" id="paypal" checked />
-					<label for="paypal">Paypal</label>
-				</p>
-				<p>
-					<input class="with-gap" name="paymentMethod" type="radio" id="esewa" />
-					<label for="esewa">eSewa</label>
+				<p *ngFor="let paymentMethod of paymentMethods">
+					<input [(ngModel)]="checkout.paymentMethod" type="radio" class="with-gap" name="itemPayment" [value]="paymentMethod.name" id="{{paymentMethod.name}}" (change)="onPaymentMethodChange(paymentMethod)" />
+					<label for="{{paymentMethod.name}}">{{paymentMethod.name}}</label>
 				</p>
 			</div>
 			<div class="col s12">
-				<button>Proceed Payment with Paypal</button>
+				<button>Proceed Payment with {{checkout.paymentMethod}}</button>
 			</div>
 		</form>
 	</div>
