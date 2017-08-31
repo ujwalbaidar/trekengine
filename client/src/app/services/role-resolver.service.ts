@@ -40,7 +40,7 @@ export class RoleResolverService implements CanActivate {
 				'/app/profile', 
 				'/app/notifications', 
 				'/app/package-billings', 
-				'/app/app-packages/details' 
+				'/app/app-packages/details'
 			],
 			20: [ 
 				'/app',
@@ -61,7 +61,10 @@ export class RoleResolverService implements CanActivate {
 				'/app/analytics/audience/gender',
 				'/app/analytics/audience/country',
 				'/app/analytics/trip/overview',
-				'/app/analytics/trip/trip-booking'
+				'/app/analytics/trip/trip-booking',
+				'/app/checkout',
+				'/app/checkout/success/true',
+				'/app/checkout/success/false'
 			],
 			30: [ 
 				'/app', 

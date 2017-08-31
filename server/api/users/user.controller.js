@@ -21,6 +21,11 @@ const ejs = require('ejs');
 const htmlToText = require('html-to-text');
 let OAuthLib = require('../../library/oAuth/oAuth');
 const request = require('request');
+const Bookings = mongoose.model('Bookings');
+const Flights = mongoose.model('Flights');
+const Travelers = mongoose.model('Travelers');
+const TripInfos = mongoose.model('TripInfos');
+const Trips = mongoose.model('Trips');
 
 /**
 * Create User on register
@@ -230,8 +235,8 @@ exports.activateUser = function(req, res){
 									}
 									let packageObj = {
 										userId: userData._id,
-										packageType: packages[0].packageType,
-										packageCost: packages[0].packageCost,
+										packageType: packages[0].name,
+										packageCost: packages[0].cost,
 										trialPeriod: packages[0].trialPeriod,
 										priorityLevel: packages[0].priorityLevel,
 										activatesOn: activateDate,
@@ -1177,7 +1182,7 @@ exports.saveOauthUser = function(req, res){
 											}});
 									})
 									.catch(billingErr=>{
-										res.status(400).json({status:false, data: billingErr, message: 'Failed to save user package'});
+										res.status(400).json({success:false, data: billingErr, message: 'Failed to save user package'});
 									});
 							}
 						});
@@ -1193,4 +1198,118 @@ exports.saveOauthUser = function(req, res){
 exports.getCountryList = function(req, res){
 	let countries = fs.readFileSync('server/static-data/countries.json', 'utf-8');
 	res.status(200).json({data:{success: true, countries: countries, message: 'All countries retrieved successfully!'}});
+}
+
+exports.deleteUserInfo = function(req, res){
+	if(req.headers && req.headers.role && req.headers.role===10){
+		if(req.headers.deleteuser !== undefined){
+			var deleteUserId = req.headers.deleteuser;
+			User.findOne({_id: mongoose.Types.ObjectId(deleteUserId)}, (userInfoErr, userInfo)=>{
+				if(userInfoErr){
+					res.status(400).json({success: false, data: '', message: 'Failed to retrieve user informations'});
+				}else{
+					var deleteUser = new Promise((resolve, reject)=>{
+						User.remove({_id: mongoose.Types.ObjectId(deleteUserId)},(deleteUserErr, deleteUser)=>{
+							if(deleteUserErr){
+								reject(deleteUserErr);
+							}else{
+								resolve(deleteUser);
+							}
+						});
+					});
+
+					var deleteUserBookings = new Promise((resolve, reject)=>{
+						Bookings.remove({ userId: deleteUserId },(deleteBookingErr, deleteBooking)=>{
+							if(deleteBookingErr){
+								reject(deleteBookingErr);
+							}else{
+								resolve(deleteBooking);
+							}
+						});
+					});
+
+					var deleteUserFlights = new Promise((resolve, reject)=>{
+						Flights.remove({ userId: deleteUserId },(deleteFlightErr, deleteFlightInfo)=>{
+							if(deleteFlightErr){
+								reject(deleteFlightErr);
+							}else{
+								resolve(deleteFlightInfo);
+							}
+						});
+					});
+
+					var deleteUserNotifications = new Promise((resolve, reject)=>{
+						Notifications.remove({ sentTo: userInfo.email },(deleteNotificationsErr, deleteNotificaions)=>{
+							if(deleteNotificationsErr){
+								reject(deleteNotificationsErr);
+							}else{
+								resolve(deleteNotificaions);
+							}
+						});
+					});
+
+					var deleteUserPackageBillings = new Promise((resolve, reject)=>{
+						PackageBillings.remove({ userId: deleteUserId },(deletePackageBillingsErr, deletePackageBillings)=>{
+							if(deletePackageBillingsErr){
+								reject(deletePackageBillingsErr);
+							}else{
+								resolve(deletePackageBillings);
+							}
+						});
+					});
+
+					var deleteUserTravelers = new Promise((resolve, reject)=>{
+						Travelers.remove({ userId: deleteUserId },(deleteTravelersErr, deleteTravelers)=>{
+							if(deleteTravelersErr){
+								reject(deleteTravelersErr);
+							}else{
+								resolve(deleteTravelers);
+							}
+						});
+					});
+
+					var deleteUserTripInfos = new Promise((resolve, reject)=>{
+						TripInfos.remove({ userId: deleteUserId },(deleteTripInfosErr, deleteTripInfos)=>{
+							if(deleteTripInfosErr){
+								reject(deleteTripInfosErr);
+							}else{
+								resolve(deleteTripInfos);
+							}
+						});
+					});
+
+					var deleteUserTrips = new Promise((resolve, reject)=>{
+						Trips.remove({ userId: deleteUserId },(deleteTripsErr, deleteTrips)=>{
+							if(deleteTripsErr){
+								reject(deleteTripsErr);
+							}else{
+								resolve(deleteTrips);
+							}
+						});
+					});
+
+					Promise.all([
+						deleteUser,
+						deleteUserBookings,
+						deleteUserFlights,
+						deleteUserNotifications,
+						deleteUserPackageBillings,
+						deleteUserTravelers,
+						deleteUserTripInfos,
+						deleteUserTrips
+					])
+					.then(values=>{
+						res.status(200).json({data:{success:true, data:{}, message: "successfully deleted all records."}})
+					})
+					.catch(reasons=>{
+						res.status(400).json({success: false, data: reasons, message: "Failed to delete user records."});
+					})
+				}
+			});
+		}else{
+			res.status(400).json({success: false, data: '', message: 'Delete user id is not provided'});
+		}
+	}else{
+		res.status(400).json({success: false, data: '', message: 'Not authorized for this action'});
+	}
 }

@@ -18,7 +18,8 @@ import {
   AuthResolverService,
   RoleResolverService,
   NotificationsService,
-  AnalyticsService
+  AnalyticsService,
+  BillingCheckoutService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -61,6 +62,7 @@ import { ValidateRegisterComponent } from './register/validate-register/validate
 
 import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
 import { ConfirmationBoxComponent } from './confirmation-box/confirmation-box.component';
+import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
 
 
 enableProdMode();
@@ -97,7 +99,8 @@ enableProdMode();
     ValidateRegisterComponent,
     TravelerInfoComponent,
     DeleteConfimationDialogComponent,
-    ConfirmationBoxComponent
+    ConfirmationBoxComponent,
+    BillingCheckoutComponent
     
   ],
   imports: [
@@ -122,7 +125,8 @@ enableProdMode();
     AuthResolverService,
     RoleResolverService,
     NotificationsService,
-    AnalyticsService
+    AnalyticsService,
+    BillingCheckoutService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
