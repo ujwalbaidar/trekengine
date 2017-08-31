@@ -15,7 +15,7 @@ class PaymentMethods {
 	processPaypalCheckouts(itemDetails, productId, userId, billingType){
 		return new Promise((resolve, reject)=>{
 			paypal.configure({
-				'mode': 'sandbox',
+				'mode': this.mode,
 				'client_id': this.clientId,
 				'client_secret': this.clientSecret
 			});
