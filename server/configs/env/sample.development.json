@@ -34,8 +34,13 @@
 		"algorithm": "HS256"
 	},
 	"paypal":{
-		"client_id": "AYKfZ-QNwVyVp0meBP8UQIUzUqhzUksbfksY7zLZgwi1wicp5psa-7H848E7dyV7MyDzdvox5OLjLrL1",
-		"client_secret": "EDFkUbuyHfYkhEPuBQWWqNFcIKqi1RIqGUGG3z5NVZoi1f6tH7TxMix_O1CekODecYGy7zJ7XQqGivFe"
+		"mode": "sandbox",
+		"client_id": "AVLlYi8gVmDn00ol4vAiuaiQhVyPfsi7B5Y2CgKOu2GGLcXMHhRMmDyIiagY4s6Phc46A2Igiv50C13c",
+		"client_secret": "EACa7RAOWXksd2cZl9tqlFEKg6vS60tjrDEzfAib9jagS4siJK9oaRdtOCoSzgXbFd7xsS-V-qwtW2iz",
+		"redirect_urls": {
+			"return_url": "http://localhost:5000/trekengineApp/checkouts/success",
+			"cancel_url": "http://localhost:5000/trekengineApp/checkouts/cancel"
+		}
 	},
 	"timezone": "Asia/Kathmandu"
 }

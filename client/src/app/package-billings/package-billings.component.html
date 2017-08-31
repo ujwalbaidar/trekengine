@@ -42,7 +42,7 @@
 							</p>
 							<ng-template #limitedPeriod>
 								<p>
-									{{'for '+packageDetail.packages.days+' days'}}
+									{{(selectedDuration==true)?('for '+packageDetail.packages.days+' days'):('for 365 days')}}
 								</p>
 							</ng-template>
 							<div class="btn-holder">

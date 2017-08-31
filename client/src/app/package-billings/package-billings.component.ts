@@ -122,9 +122,9 @@ export class PackageBillingsComponent implements OnInit {
 			productId: packageId
 		};
 		if(this.selectedDuration == true){
-			checkoutObject['billingType'] = 'annual';
-		}else{
 			checkoutObject['billingType'] = 'monthly';
+		}else{
+			checkoutObject['billingType'] = 'annual';
 		}
 
 		if(JSON.stringify(checkoutObject) !== '{}'){

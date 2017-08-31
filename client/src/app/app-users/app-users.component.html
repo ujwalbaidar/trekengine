@@ -26,6 +26,7 @@
 					</span>
 				</td>
 				<td>
+					<a (click)="deleteUserInfo(user._id)">Delete</a>
 					<a [routerLink]="[user._id, 'billing-history']">Billing History</a>
 				</td>
 			</tr>

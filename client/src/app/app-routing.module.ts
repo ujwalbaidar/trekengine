@@ -95,7 +95,8 @@ const appRoutes: Routes = [
 			{ path: 'bookings/booking-details/:bookingId', component: BookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'notifications', component: NotificationsComponent },
 			{ path: 'profile', component: ProfileComponent },
-			{ path: 'checkout', component: BillingCheckoutComponent }
+			{ path: 'checkout', component: BillingCheckoutComponent, canActivate: [RoleResolverService]  },
+			{ path: 'checkout/success/:success', component: BillingCheckoutComponent, canActivate: [RoleResolverService] },
 			// { path: 'analytics/trip/overview', component: TripOverviewComponent, canActivate: [RoleResolverService] },
 			// { path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
 		]

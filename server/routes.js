@@ -3,7 +3,6 @@ const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('./configs/config')[env];
-const paypal = require('paypal-rest-sdk');
 
 module.exports = function(app){
 	app.use('/api/users', require('./api/users'));
@@ -32,30 +31,10 @@ module.exports = function(app){
 	app.get('/trekengineApp/validateAuthToken', decodeAuthToken);
 	app.use('/api/analytics', auth, require('./api/analytics'));
 	app.use('/api/checkouts', auth, require('./api/checkouts'));
-	app.get('/trekengineApp/checkouts/success', (req, res)=>{
-		var paymentId = req.query.paymentId;
-	    var payerId = { 'payer_id': req.query.PayerID };
+	app.get('/trekengineApp/checkouts/success/product/:productId/user/:userId/billing/:billingType', require('./api/checkouts/checkouts.controller').submitCheckoutInfos);
 
-	    paypal.payment.execute(paymentId, payerId, function(error, payment){
-	        if(error){
-	            console.error(error);
-	        } else {
-	        	console.log(payment)
-	            /*if (payment.state === 'approved'){ 
-	                res.send('payment completed successfully');
-	                console.log(payment);
-	            } else {
-	                res.send('payment not successful');
-	            }*/
-	        }
-	    });
-		/*console.log("------------------------------------------------")
-		console.log(req.query);
-		res.send("Payment transfered successfully.");
-		console.log("------------------------------------------------")*/
-	});
 	app.get('/trekengineApp/checkouts/cancel', (req, res)=>{
-		console.log('cancel');
+		res.redirect('/app/package-billings');
 	});
 
 	app.route('*')
