@@ -106,7 +106,15 @@ export class ValidateRegisterComponent implements OnInit {
 						this.setCookies(authInfos)
 							.then(success=>{
 								if(success){
-									this._route.navigate(['/app']);
+									if (parseInt(authInfos.index) === 20) {
+										this._route.navigate(['/app/bookings']);
+									}else if(parseInt(authInfos.index) === 30){
+										this._route.navigate(['/app/movements']);
+									}else if(parseInt(authInfos.index) === 10){
+										this._route.navigate(['/app']);
+									}else{
+										this._route.navigate(['/app/profile']);
+									}
 								}
 							});
 					}
