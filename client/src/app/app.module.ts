@@ -21,7 +21,8 @@ import {
   AuthResolverService,
   RoleResolverService,
   NotificationsService,
-  AnalyticsService
+  AnalyticsService,
+  BillingCheckoutService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -75,6 +76,7 @@ import { GoogleChartComponent } from './google-chart/google-chart.component';
 import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-details/audience-age-details.component';
 import { AudienceCountryDetailsComponent } from './analytics/audience/audience-country-details/audience-country-details.component';
 import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
+import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
 
 enableProdMode();
 
@@ -123,6 +125,7 @@ enableProdMode();
     AudienceAgeDetailsComponent,
     AudienceCountryDetailsComponent,
     MaxAgeGroupPipe,
+    BillingCheckoutComponent
   ],
   imports: [
     BrowserModule,
@@ -147,7 +150,8 @@ enableProdMode();
     AuthResolverService,
     RoleResolverService,
     NotificationsService,
-    AnalyticsService
+    AnalyticsService,
+    BillingCheckoutService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

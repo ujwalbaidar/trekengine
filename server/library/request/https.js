@@ -67,7 +67,7 @@ class HttpsCalls {
                     data += chunk;
                 });
                 res.on('end', () => {
-                    if (res.statusCode === 200) {
+                    if (res.statusCode === 200 || res.statusCode === 201) {
                         try {
                             let dataObj = JSON.parse(data);
                             resolve(dataObj);

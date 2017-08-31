@@ -134,3 +134,10 @@ export class ProfilePassword {
 	userPassword: string;
 	confirmPassword: string;
 }
+
+export class Checkout {
+	fname: string;
+	lname: string;
+	email: string;
+	paymentMethod: string;
+}

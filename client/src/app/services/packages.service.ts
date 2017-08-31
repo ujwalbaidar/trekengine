@@ -35,6 +35,16 @@ export class PackagesService {
 			.catch(this.handleError);
 	}
 
+	queryPackageById(packageId:any){
+		let params: URLSearchParams = new URLSearchParams();
+		params.set('packageId', packageId);
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/auth/packages/getPackageById', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	submitAppPackage(appPackage:Object){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });

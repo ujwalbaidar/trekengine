@@ -1,0 +1,45 @@
+<div class="checkout-page">
+	<div>
+		<h2>Checkout</h2>
+	</div>
+	<div *ngIf="processCheckout==true;else displayCheckoutMessage">
+		<div class="item-table">
+			<table>
+				<thead>
+					<tr>
+						<th>Item Name</th>
+						<th>Item Cost</th>
+					</tr>
+				</thead>
+				<tbody *ngIf="storageData.product === 'package'">
+					<tr *ngFor="let checkoutItem of checkoutItems">
+						<td>{{checkoutItem.name+' Package'}}</td>
+						<td>{{storageData.billingType ==='annual'?(checkoutItem.annualCost*12|currency:'USD':true:'1.0-0'):(checkoutItem.cost|currency:'USD':true:'1.0-0')}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="personal-info">
+			<form class="checkout-form col s12" (ngSubmit)="submitCheckoutForm(checkoutForm.form)" #checkoutForm="ngForm" novalidate>
+				<div class="col s12">
+					<h5>Payment Method</h5>
+				</div>
+
+				<div class="col s12">
+					<p *ngFor="let paymentMethod of paymentMethods">
+						<input [(ngModel)]="checkout.paymentMethod" type="radio" class="with-gap" name="itemPayment" [value]="paymentMethod.name" id="{{paymentMethod.name}}" (change)="onPaymentMethodChange(paymentMethod)" />
+						<label for="{{paymentMethod.name}}">{{paymentMethod.name}}</label>
+					</p>
+				</div>
+				<div class="col s12">
+					<button>Proceed Payment with {{checkout.paymentMethod}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<ng-template #displayCheckoutMessage>
+		<div>
+			{{checkoutMessage}}
+		</div>
+	</ng-template>
+</div>
