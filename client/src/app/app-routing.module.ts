@@ -101,7 +101,7 @@ const appRoutes: Routes = [
 			// { path: 'analytics/trip/trip-booking', component: TripBookingComponent, canActivate: [RoleResolverService] }
 		]
 	},
-	// { path: '**', redirectTo: '/login', pathMatch: 'full' }
+	{ path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
 
 @NgModule({
