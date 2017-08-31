@@ -98,6 +98,14 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	deleteUserInfo(userId:String){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), deleteUser: userId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/userInfo/deleteUserInfo', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getUserInfo(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
     	let options = new RequestOptions({ headers: headers });

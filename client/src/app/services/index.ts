@@ -8,3 +8,4 @@ export { AuthResolverService } from './auth-resolver.service';
 export { RoleResolverService } from './role-resolver.service';
 export { NotificationsService } from './notifications.service';
 export { AnalyticsService } from './analytics.service';
+export { BillingCheckoutService } from './billing-checkout.service';
