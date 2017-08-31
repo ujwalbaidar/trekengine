@@ -17,6 +17,7 @@ export class BillingCheckoutComponent implements OnInit {
 	checkoutItems: any;
 	processCheckout: Boolean = false;
 	submitCheckoutBtn: Boolean = false;
+
 	public paymentMethods = [
 		{name: 'Paypal', value: 'Paypal', status: true},
 		// {name: 'eSewa', value: 'eSewa', status: false}
@@ -93,6 +94,7 @@ export class BillingCheckoutComponent implements OnInit {
 	}
 
 	submitCheckoutForm(){
+		this.submitCheckoutBtn = true;
 		switch (this.storageData.product){
 			case "package":
 				this.submitPackageCheckout();
