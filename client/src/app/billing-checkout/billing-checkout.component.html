@@ -32,7 +32,8 @@
 					</p>
 				</div>
 				<div class="col s12">
-					<button>Proceed Payment with {{checkout.paymentMethod}}</button>
+					<button class="waves-effect waves-light btn" [disabled]="submitCheckoutBtn">Proceed Payment with {{checkout.paymentMethod}}</button>
+					<span *ngIf="submitCheckoutBtn">Loading....</span>
 				</div>
 			</form>
 		</div>
