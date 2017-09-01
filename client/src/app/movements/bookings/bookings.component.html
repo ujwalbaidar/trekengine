@@ -15,7 +15,7 @@
 					<td>Total Cost</td>
 					<td>Advance Paid</td>
 					<td>Due Amount</td>
-					<td>Status</td>
+					<!-- <td>Status</td> -->
 					<td>Actions</td>
 				</tr>
 			</thead>
@@ -28,11 +28,11 @@
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD':true }}</td>
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD':true }}</td>
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD':true }}</td>
-					<td>
+					<!-- <td>
 						<span [ngClass]="(booking.status==true)?'active':'inactive'">
 							<i [ngClass]="(booking.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 						</span>
-					</td>
+					</td> -->
 
 					<td>
 						<a class="delete" (click)="deleteBooking(booking._id, i)">
@@ -43,7 +43,7 @@
 			</tbody>
 		</table>
 		<ng-template #emptyBookings>
-			<h5 class="center-align">
+			<h5 class="center-align" *ngIf="isAvailable">
 				Hi {{cookieData.userName}}, the first step is to add a booking record. To add your first booking, please click <a (click)="openAddBookingModal()">here</a>.
 				<!-- Booking Record is empty! Please <a (click)="openAddBookingModal()">Add Records</a>. -->
 			</h5>
