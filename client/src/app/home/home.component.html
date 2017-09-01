@@ -8,7 +8,7 @@
 
 <ul id="bookingsDropdown" class="dropdown-content">
 	<li routerLink="/app/bookings" *ngIf="cookieData.idx<=20"><a>All Bookings</a></li>
-	<li (click)="openAddBookingModal()"><a>Add New Booking</a></li>
+	<li *ngIf="isAvailable === true && authService.validatedUser" (click)="openAddBookingModal()"><a>Add New Booking</a></li>
 </ul>
 
 <ul id="notificationDropdown" class="dropdown-content collection">
@@ -122,11 +122,18 @@
 				<div *ngIf="sideMenu.subMenu && sideMenu.subMenu.length>0" class="collapsible-body">
 					<ul class="collapsible" data-collapsible="accordion">
 						<li *ngFor="let subMenu of sideMenu.subMenu">
-							<a (click)="redirectSidemenu(subMenu.routePath, 2, subMenu.openModal, subMenu.modalFunction)" [ngClass]="(subMenu.subMenuChild && subMenu.subMenuChild.length>0)?'collapsible-header':''">
+							<a *ngIf="!subMenu.checkValidUser;else checkValidUserTpl" (click)="redirectSidemenu(subMenu.routePath, 2, subMenu.openModal, subMenu.modalFunction)" [ngClass]="(subMenu.subMenuChild && subMenu.subMenuChild.length>0)?'collapsible-header':''">
 								<i *ngIf="subMenu.iconName" class="{{subMenu.iconName}}"></i>
 								<span>{{ subMenu.menu }}</span>
 								<span class="arrow fa fa-angle-down" *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0"></span>
 							</a>
+							<ng-template #checkValidUserTpl>
+								<a *ngIf="authService.validatedUser" (click)="redirectSidemenu(subMenu.routePath, 2, subMenu.openModal, subMenu.modalFunction)" [ngClass]="(subMenu.subMenuChild && subMenu.subMenuChild.length>0)?'collapsible-header':''">
+									<i *ngIf="subMenu.iconName" class="{{subMenu.iconName}}"></i>
+									<span>{{ subMenu.menu }}</span>
+									<span class="arrow fa fa-angle-down" *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0"></span>
+								</a>
+							</ng-template>
 							<div *ngIf="subMenu.subMenuChild && subMenu.subMenuChild.length>0" class="collapsible-body">
 								<ul>
 									<li *ngFor="let subMenuChild of subMenu.subMenuChild">

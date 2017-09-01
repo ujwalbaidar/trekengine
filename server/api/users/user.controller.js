@@ -377,7 +377,8 @@ exports.loginUser = function(req, res){
 													config.loginAuth.secretKey, 
 													{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
 												);
-											res.status(200).json({success:true, message: "Authorised Successfully", data: {token: token, index: user.role, email: user.email}});
+											let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
+											res.status(200).json({success:true, message: "Authorised Successfully", data: data});
 										}
 									}
 								});

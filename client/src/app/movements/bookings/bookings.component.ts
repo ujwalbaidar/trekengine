@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MovementsService, AuthService } from '../../services/index';
@@ -12,23 +12,29 @@ import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialo
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.css']
 })
-export class BookingsComponent implements OnInit  {
+export class BookingsComponent implements OnInit, AfterViewInit  {
 	bookings: any;
 	bookingErr: string;
 	isAvailable: boolean = false;
 	cookieData: any;
 
 	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
-		this.authService.getCookies()
-			.then(cookieObj=>{
-				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
-					this.isAvailable = true;
-					this.cookieData = cookieObj;
-				}
-			});
+		
 	}
 	ngOnInit(){
 		this.getBookingList();
+	}
+	
+	ngAfterViewInit(){
+		this.authService.getCookies()
+			.then(cookieObj=>{
+				if(cookieObj!==undefined && cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
+					this.isAvailable = true;
+					this.cookieData = cookieObj;
+				}else{
+					this.isAvailable = false;
+				}
+			});
 	}
 
 	getBookingList() {

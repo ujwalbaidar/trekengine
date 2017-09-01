@@ -35,7 +35,7 @@ export class LoginComponent{
 		if(form.valid == true){
 			this.userService.loginUser(this.user)
 				.subscribe(loginUser=>{
-					if(loginUser.success === true){
+ 					if(loginUser.success === true){
 						this.submittedLoginForm = false;
 						this.authService.setCookies('authToken',loginUser['token']);
 						this.authService.setCookies('idx',loginUser['index']);
@@ -48,6 +48,8 @@ export class LoginComponent{
 							if(loginUser['remainingDays']>0){
 								this.authService['validatedUser'] = true;
 							}
+						}else{
+							this.authService['validatedUser'] = false;
 						}
 
 						if (parseInt(loginUser.index) === 20) {

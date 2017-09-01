@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	notificationErr: any;
 	sideMenuArr:any;
 	active: string;
+	isAvailable: boolean = false;
 
 	constructor(
 		public _cookieService:CookieService, 
@@ -30,98 +31,116 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		public dialog: MdDialog
 	){
 		this.getUnreadNotifications();
+		this.authService.getCookies()
+			.then(cookieObj=>{
+				this.cookieData = cookieObj;
+				if(cookieObj && cookieObj['idx'] && parseInt(cookieObj['idx']) === 20){
+					this.sideMenuArr =[
+						{
+							menu: 'Movements',
+							routePath: '/app/movements',
+							iconName: 'fa fa-home',
+							status: true,
+							checkValidUser: false
+						},{
+							menu: 'Bookings',
+							iconName: 'fa fa-book',
+							status: true,
+							checkValidUser: false,
+							subMenu: [
+								{
+									menu: 'All Bookings',
+									routePath: '/app/bookings',
+									iconName: 'fa fa-book',
+									checkValidUser: false
+								},
+								{
+									menu: 'Add New Booking',
+									routePath: '/app/movements/trip-details',
+									iconName: 'fa fa-book',
+									openModal: true,
+									modalFunction: 'openAddBookingModal',
+									checkValidUser: true
+								},
+								{
+									menu: 'Trip Details',
+									routePath: '/app/movements/trip-details',
+									iconName: 'fa fa-calendar-o',
+									checkValidUser: false
+								},{
+									menu: 'Guide Details',
+									routePath: '/app/movements/guide-details',
+									iconName: 'fa fa-book',
+									checkValidUser: false
+								},{
+									menu: 'Flight Details',
+									routePath: '/app/movements/flight-details',
+									iconName: 'fa fa-plane',
+									checkValidUser: false
+								},{
+									menu: 'Traveler Details',
+									routePath: '/app/movements/traveller-details',
+									iconName: 'fa fa-car',
+									checkValidUser: false
+								},{
+									menu: 'Traveler Pickup Details',
+									routePath: '/app/movements/airport-pickup-details',
+									iconName: 'fa fa-car',
+									checkValidUser: false
+								}
+							]
+						}/*,{
+							menu: 'Analytics',
+							status: false,
+							subMenu: [
+								{
+									menu: 'Audience',
+									subMenuChild: [
+										{
+											menu: 'Overview',
+											routePath: '/app/analytics/audience/overview',
+										},{
+											menu: 'Age',
+											routePath: '/app/analytics/audience/age-analytics',
+										},{
+											menu: 'Country',
+											routePath: '/app/analytics/audience/country-analytics',
+										},{
+											menu: 'Gender',
+											routePath: '/app/analytics/audience/gender-analytics',
+										}
+									]
+								},{
+									menu: 'Trip',
+									subMenuChild: [
+										{
+											menu: 'Overview',
+											routePath: '/app/analytics/trip/overview',
+										},{
+											menu: 'Trip Booking',
+											routePath: '/app/analytics/trip/trip-booking',
+										}
+									]
+								}
+							]
+						}*/
+					];
+					if(cookieObj!==undefined && cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
+						this.isAvailable = true;
+					}else{
+						this.isAvailable = false;
+					}
+				}
+			});
 	}
 	
 	ngOnInit(){
-		this.cookieData = this._cookieService.getAll();
-
 		jQuery(".button-collapse").sideNav({
 			closeOnClick: true
 		});
 		jQuery(".collapsible").collapsible();
-		if(this.cookieData && this.cookieData.idx && parseInt(this.cookieData.idx) === 20){
-			this.sideMenuArr =[
-				{
-					menu: 'Movements',
-					routePath: '/app/movements',
-					iconName: 'fa fa-home',
-					status: true,
-				},{
-					menu: 'Bookings',
-					iconName: 'fa fa-book',
-					status: true,
-					subMenu: [
-						{
-							menu: 'All Bookings',
-							routePath: '/app/bookings',
-							iconName: 'fa fa-book'
-						},
-						{
-							menu: 'Add New Booking',
-							routePath: '/app/movements/trip-details',
-							iconName: 'fa fa-book',
-							openModal: true,
-							modalFunction: 'openAddBookingModal'
-						},
-						{
-							menu: 'Trip Details',
-							routePath: '/app/movements/trip-details',
-							iconName: 'fa fa-calendar-o'
-						},{
-							menu: 'Guide Details',
-							routePath: '/app/movements/guide-details',
-							iconName: 'fa fa-book'
-						},{
-							menu: 'Flight Details',
-							routePath: '/app/movements/flight-details',
-							iconName: 'fa fa-plane'
-						},{
-							menu: 'Traveler Details',
-							routePath: '/app/movements/traveller-details',
-							iconName: 'fa fa-car'
-						},{
-							menu: 'Traveler Pickup Details',
-							routePath: '/app/movements/airport-pickup-details',
-							iconName: 'fa fa-car'
-						}
-					]
-				}/*,{
-					menu: 'Analytics',
-					status: false,
-					subMenu: [
-						{
-							menu: 'Audience',
-							subMenuChild: [
-								{
-									menu: 'Overview',
-									routePath: '/app/analytics/audience/overview',
-								},{
-									menu: 'Age',
-									routePath: '/app/analytics/audience/age-analytics',
-								},{
-									menu: 'Country',
-									routePath: '/app/analytics/audience/country-analytics',
-								},{
-									menu: 'Gender',
-									routePath: '/app/analytics/audience/gender-analytics',
-								}
-							]
-						},{
-							menu: 'Trip',
-							subMenuChild: [
-								{
-									menu: 'Overview',
-									routePath: '/app/analytics/trip/overview',
-								},{
-									menu: 'Trip Booking',
-									routePath: '/app/analytics/trip/trip-booking',
-								}
-							]
-						}
-					]
-				}*/
-			];
-		}
+		
+
 	}
 
 	ngAfterViewInit() {
