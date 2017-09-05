@@ -231,7 +231,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
 		dialogRef.afterClosed().subscribe(result => {
 			if(result !== 'opt-cancel'){
-				this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
+				let path = window.location.pathname;
+				if(path.includes('/app/bookings/booking-details/') === true){
+					window.location.href = environment.webUrl+'/app/bookings/booking-details/'+result.bookingId;
+				}else{
+					this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
+				}
 			}
     	});
 	}
