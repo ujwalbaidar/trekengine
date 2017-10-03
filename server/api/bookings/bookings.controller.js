@@ -14,11 +14,32 @@ let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
 exports.getAllBooking = function(req,res){
 	if(req.headers && req.headers.userId){
-		Bookings.find({userId: req.headers.userId }).sort({createdDate: -1}).exec((err, bookings)=>{
+		let dbQuery = [
+			{
+				$match: {
+					userId: req.headers.userId
+				}
+			},
+			{
+				$sort: {_id: -1}
+			}
+		];
+		var aggregateQuery = Bookings.aggregate(dbQuery);
+		aggregateQuery.exec((err, bookingResponse)=>{
 			if(err){
-				res.status(400).json({success:false, data:err});
+				res.status(400).json({success: false, data: err, msg: 'Failed to retrieve booking data'});
 			}else{
-				res.status(200).json({success:true, data:bookings});
+				let totalBookings = bookingResponse.length;
+				let limitValue = 10;
+				let skipValue = (req.query.queryPage * limitValue);
+				aggregateQuery.skip(skipValue).limit(limitValue).exec((err, bookings)=>{
+					if(err){
+						res.status(400).json({success:false, data:err, msg: 'Failed to retrieve booking data'});
+					}else{
+						let totalBookingPages = Math.ceil(totalBookings/limitValue);
+						res.status(200).json({success:true, data:{bookings: bookings, totalBookings: totalBookingPages}});
+					}
+				});
 			}
 		});
 	}else{

@@ -17,12 +17,14 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 	bookingErr: string;
 	isAvailable: boolean = false;
 	cookieData: any;
+	public currentBookingPage:number = 0;
+	public totalBookingPages: any;
 
 	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
 		
 	}
 	ngOnInit(){
-		this.getBookingList();
+		this.getBookingList(this.currentBookingPage);
 	}
 	
 	ngAfterViewInit(){
@@ -37,14 +39,20 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 			});
 	}
 
-	getBookingList() {
-		this.movementService.getBookings()
-			.subscribe(bookings=>{
-				this.bookings = bookings;
+	getBookingList(currentBookingPage) {
+		this.movementService.getBookings([{queryPage: currentBookingPage}])
+			.subscribe(bookingsData=>{
+				this.totalBookingPages = new Array( bookingsData.totalBookings );
+				this.bookings = bookingsData.bookings;
 			}, bookingErr=>{
 				this.bookingErr = 'Failed to Load Booking Details';
 			});
 	}
+
+	changePagination(index){
+  		this.currentBookingPage = index;
+  		this.getBookingList(index);
+  	}
 
 	deleteBooking(deleteId: string, index: number) {
 		let dialogOptions = {
