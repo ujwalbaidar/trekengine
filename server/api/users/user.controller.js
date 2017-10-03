@@ -1034,30 +1034,40 @@ exports.validateCode = function(req, res){
 														if(userBillingErr){
 															res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
 														}else{
-															let token = jwt.sign({
-																	email: user.email, 
-																	userId: user._id, 
-																	role: user.role, 
-																	remainingDays: billingInfo.remainingDays, 
-																	packageType: billingInfo.priorityLevel
-																}, 
-																config.loginAuth.secretKey, 
-																{
-																	expiresIn: config.loginAuth.expireTime, 
-																	algorithm: config.loginAuth.algorithm 
+															if(billingInfo && billingInfo.length>0){
+																let token = jwt.sign({
+																		email: user.email, 
+																		userId: user._id, 
+																		role: user.role, 
+																		remainingDays: billingInfo.remainingDays, 
+																		packageType: billingInfo.priorityLevel
+																	}, 
+																	config.loginAuth.secretKey, 
+																	{
+																		expiresIn: config.loginAuth.expireTime, 
+																		algorithm: config.loginAuth.algorithm 
+																	});
+																res.status(200).json({
+																	success: true, 
+																	data: {
+																		token: token,
+																		index: user.role,
+																		remainingDays: billingInfo.remainingDays, 
+																		packageType: billingInfo.priorityLevel,
+																		email: user.email,
+																		isNew: false
+																	}, 
+																	message: "Failed to update user tokens!"
 																});
-															res.status(200).json({
-																success: true, 
-																data: {
-																	token: token,
-																	index: user.role,
-																	remainingDays: billingInfo.remainingDays, 
-																	packageType: billingInfo.priorityLevel,
-																	email: user.email,
-																	isNew: false
-																}, 
-																message: "Failed to update user tokens!"
-															});
+															}else{
+																let token = jwt.sign(
+																		{email:user.email, userId: user._id, role: user.role}, 
+																		config.loginAuth.secretKey, 
+																		{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+																	);
+																let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
+																res.status(200).json({success:true, message: "Authorised Successfully", data: data});
+															}
 														}
 													});
 												}
