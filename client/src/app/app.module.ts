@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MyDatePickerModule } from 'mydatepicker';
+import { ChartsModule } from '@progress/kendo-angular-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { 
   AuthService, 
@@ -138,7 +139,8 @@ enableProdMode();
     ReactiveFormsModule,
     HttpModule,
     CookieModule.forRoot(),
-    CommonModule
+    CommonModule,
+    ChartsModule
   ],
   providers: [
     AuthService, 

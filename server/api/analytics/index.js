@@ -12,5 +12,6 @@ router.get('/audience/country-details', analyticsController.getAudienceDetailsBy
 router.get('/trek/overview', analyticsController.getTrekOverview);
 router.get('/trek/booikings', analyticsController.getTrekBookingAnalytics);
 router.get('/trek/bookings-details', analyticsController.getBookingAnalysisDetails);
+router.get('/trek/monthly-bookings', analyticsController.getMonthlyBookings);
 
 module.exports = router;

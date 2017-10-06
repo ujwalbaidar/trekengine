@@ -109,6 +109,14 @@ export class AnalyticsService {
 			.catch(this.handleError);
 	}
 
+	getMonthlyBookings(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/trek/monthly-bookings', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	private extractData(res: Response) {
     	let body = res.json();
     	return body.data || { };

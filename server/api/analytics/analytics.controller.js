@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Bookings = mongoose.model('Bookings');
 const TripInfos = mongoose.model('TripInfos');
 const Travelers = mongoose.model('Travelers');
+const Trips = mongoose.model('Trips');
 
 const getTrekOverview = (req, res) => {
     if(req.headers && req.headers.userId){
@@ -1011,6 +1012,128 @@ const getAudienceDetailsByCountry = (req, res) =>{
     }
 }
 
+const getMonthlyBookings = (req, res) =>{
+	if(req.headers && req.headers.userId){
+		Trips.aggregate([
+		    {
+		        $match:{
+		            "userId" : req.headers.userId, 
+		            status: true
+		        }
+		    },
+		    {
+		        $project:{
+		            _id: 0,
+		            departureDate: 1
+		        }
+		    },
+		    {
+		        $group: {
+		            _id: {
+		                year: "$departureDate.date.year",
+		                month: "$departureDate.date.month"
+		            },
+		            totalBookings: { $sum: 1 }
+		        }       
+		    },
+		    {
+		        $project: {
+		            _id: "$_id.month",
+		            year: "$_id.year",
+		            totalBookings: 1,
+		            month: {
+		                $switch:{
+		                    branches:[
+		                        {
+		                            case: { $eq: [ "$_id.month", 1 ] },
+		                            then: "Jan"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 2 ] },
+		                            then: "Feb"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 3 ] },
+		                            then: "Mar"
+		                        },{
+		                            case: { $eq: [ "$_id.month", 4 ] },
+		                            then: "Apr"
+		                        },{
+		                            case: { $eq: [ "$_id.month", 5 ] },
+		                            then: "May"
+		                        },{
+		                            case: { $eq: [ "$_id.month", 6 ] },
+		                            then: "Jun"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 7 ] },
+		                            then: "Jul"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 8 ] },
+		                            then: "Aug"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 9 ] },
+		                            then: "Sept"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 10 ] },
+		                            then: "Oct"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 11 ] },
+		                            then: "Nov"
+		                        },
+		                        {
+		                            case: { $eq: [ "$_id.month", 12 ] },
+		                            then: "Dec"
+		                        }
+		                    ]
+		                }
+		            }
+		        }
+		    },
+		    {
+		        $group:{
+		            _id: "$year",
+		            data: { $push: "$$ROOT"}
+		        }
+		    }
+    ]).exec((err, monthlyBookings)=>{
+	        if(err){
+	            res.status(400).json({success:false, data: err, message:'Failed to retrieve monthly booking count!'});
+	        }else{
+
+	        	let salesBookingYears = [];
+	        	let salesBookingData = [];
+	        	for(let i=0;i<monthlyBookings.length;i++){
+		        	let monthlyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	        		salesBookingYears.push(monthlyBookings[i]['_id']);
+	        		salesBookingData.push([]);
+	        		for(let j=0; j<monthlyBookings[i].data.length;j++){
+		        		let monthlyBookingObj = monthlyBookings[i].data[j];
+		        		monthlyData[(monthlyBookingObj._id)-1] = monthlyBookingObj.totalBookings;
+		        		if(j == (monthlyBookings[i].data.length-1)){
+		        			salesBookingData[i] = monthlyData;
+			        		if(i === (monthlyBookings.length-1)){
+			        			let monthlyBookingCountsObj = {
+			        				salesBookingYears: salesBookingYears,
+			        				salesBookingYearsData:salesBookingData 
+			        			};
+					            res.status(200).json({success:true, data: monthlyBookingCountsObj, message: 'Monthly bookings count retrieved successfully!'});
+			        			// console.log(bookingData)
+			        		}
+		        		}
+	        		}
+	        	}
+	        }
+	    });
+	}else{
+        res.status(401).json({success:false, message: 'Login is Required!'});
+    }
+}
+
 module.exports = {
     getTrekOverview,
     getTrekBookingAnalytics,
@@ -1020,5 +1143,7 @@ module.exports = {
 	getAudienceByGender,
     getAudienceByCountry,
     getAudienceDetailsByAge,
-    getAudienceDetailsByCountry
+    getAudienceDetailsByCountry,
+    getMonthlyBookings
 };
+
