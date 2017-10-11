@@ -12,7 +12,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Number of Booking</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalBookings']}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalBookings']}}</span>
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Sales Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
@@ -28,7 +28,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Advance Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
@@ -36,20 +36,23 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Due Amount</h5>
-					<span *ngIf="mostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD':true}}</span>
 				</div>
 			</div>
 		</div>
+		<ng-template #emptyMostSoldInfo>
+			<span>0</span>
+		</ng-template>
 	</div>
 
 	<div class="row">
-		<div class="col s12 m6">
+		<div class="col s12 m6" *ngIf="monthlyBookings && monthlyBookings.salesBookingYearsData !==undefined">
 			<div class="card">
 				<div class="card-content">
 					<h5>
 						Booking Analytics by Months
 					</h5>
-					<div *ngIf="monthlyBookings && monthlyBookings.salesBookingYearsData !==undefined">
+					<div>
 						<kendo-chart>
 							<kendo-chart-title text="Total Bookings Each Months"></kendo-chart-title>
 							<kendo-chart-legend position="bottom" orientation="horizontal"></kendo-chart-legend>
@@ -78,14 +81,14 @@
 			</div>
 		</div>
 
-		<div class="col s12 m6">
+		<div class="col s12 m6" *ngIf="treks && treks.length>0;else emptyTrekFilter">
 			<div class="card">
 				<div class="card-content">
 					<div>
 						<h5>Upcoming Trips This week</h5>
 					</div>
 					<div>
-						<table class="movement-list-table responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
+						<table class="movement-list-table responsive-table highlight">
 							<thead>
 								<tr>
 									<th>Group Name</th>
@@ -121,10 +124,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col s12 m6">
+		<div class="col s12 m6" *ngIf="columnChartStackData && columnChartStackData.length>0">
 			<div class="card">
 				<div class="card-content">
-					<div *ngIf="columnChartStackData && columnChartStackData.length>0">
+					<div>
 						<kendo-chart>
 							<kendo-chart-title position="bottom" text="Traveler overview on the basis of age groups"></kendo-chart-title>
 							<kendo-chart-category-axis>
@@ -142,10 +145,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="col s12 m6">
+		<div class="col s12 m6" *ngIf="pieData && pieData.length>0">
 			<div class="card">
 				<div class="card-content">
-					<div *ngIf="pieData && pieData.length>0">
+					<div>
 						<kendo-chart>
 							<kendo-chart-title text="Gender Audience Pie Chart"></kendo-chart-title>
 

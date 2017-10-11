@@ -53,10 +53,10 @@ const appRoutes: Routes = [
 			{ path: 'register', component: RegisterComponent },
 			{ path: 'register/service/:serviceType', component: RegisterComponent },
 			{ path: 'register/validate/:code/:loginType/:authuser/:prompt/:session_state', component: ValidateRegisterComponent },
+			{ path: 'register/validate/:loginType/:code', component: ValidateRegisterComponent },
 			{ path: 'authorization/token/:token/validate-user', component: ActivateTokenComponent },
 			{ path: 'change-password/token/:token/reset', component: ChangePasswordComponent },
 			{ path: 'forgot-password', component: ForgotPasswordComponent }
-
 		] 
 	},
 	{ 

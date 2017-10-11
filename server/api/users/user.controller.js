@@ -941,7 +941,7 @@ exports.resetUserPassword = function(req, res){
 
 exports.getOauthUrl = function(req, res){
 	let authUrl = [];
-	let oAuthTypes = ['google'];
+	let oAuthTypes = ['google', 'facebook'];
 	for(let i=0; i<oAuthTypes.length; i++){
 		let loginType = oAuthTypes[i];
 		let oAuthOptions = {
@@ -949,13 +949,20 @@ exports.getOauthUrl = function(req, res){
 			clientId: config[loginType]['client_id'],
 			clientSecret: config[loginType]['client_secret'],
 			redirectUrl: config.webHost+'/register/validate?loginType='+loginType,
-			oAuthAccess: {
+		};
+		if(loginType === 'google'){
+			oAuthOptions.oAuthAccess = {
 				access_type:'offline', 
 				scope: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"],
 				approval_prompt: 'force',
 				response_type: 'code'
-			}
-		};
+			};
+		}else{
+			oAuthOptions.oAuthAccess = {
+				scope: ["email", "public_profile"]
+			};
+		}
+
 		let oAuth = new OAuthLib(oAuthOptions);
 		oAuth.getOAuthUrl()
 			.then(oAuthUrl=>{
@@ -977,12 +984,14 @@ exports.validateCode = function(req, res){
 			redirectUrl: config.webHost+'/register/validate?loginType='+req.body.loginType,
 			code: req.body.code
 		};
+
 		let oAuth = new OAuthLib(oAuthOptions);
 		oAuth.getTokens()
 			.then(oAuthTokens => {
 				oAuth.getUserInfo(oAuthTokens)
 					.then(userInfo=>{
-						if(req.body.email){
+						let authsType = req.body.loginType + 'Auths';
+						if(req.body.email && req.body.loginType === 'google'){
 							var userUpdateObj = {
 								"googleAuths.access_token":oAuthTokens.access_token, 
 								"googleAuths.refresh_token":oAuthTokens.refresh_token,
@@ -999,33 +1008,35 @@ exports.validateCode = function(req, res){
 								}
 							});
 						}else{
-							queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
+							if(req.body.loginType === 'google'){
+								var authsQuery = { "googleAuths.email": userInfo.email };
+							}else if(req.body.loginType === 'facebook'){
+								var authsQuery = { "facebookAuths.email": userInfo.email };
+							}
+							queryUser({ $or: [ { "email": userInfo.email } , authsQuery] })
 								.then(users=>{
 									if(users.length>0){
 										if(users[0]['processCompletion']==true && users[0]['status']==true){
 											let user = users[0];
-											if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
+											var updateUserQuery = {};
+											updateUserQuery[authsType] = {};
+											var userUpdateObj = {};
+											userUpdateObj[authsType] = {};
+											if(users[0][authsType] === undefined || users[0][authsType]['access_token'] === undefined){
 												var updateUserQuery = {
 													email: userInfo.email
 												};
-												var userUpdateObj = {
-													"googleAuths.access_token":oAuthTokens.access_token, 
-													"googleAuths.refresh_token":oAuthTokens.refresh_token,
-													"googleAuths.token_type": oAuthTokens.token_type,
-													"googleAuths.expires_in": oAuthTokens.expires_in,
-													"googleAuths.id_token": oAuthTokens.id_token,
-													"googleAuths.email": userInfo.email
-												};
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
 											}else{
-												var updateUserQuery = { 
-													"googleAuths.email": userInfo.email 
-												};
-												var userUpdateObj = {
-													"googleAuths.access_token":oAuthTokens.access_token, 
-													"googleAuths.refresh_token":oAuthTokens.refresh_token
-												};
+												updateUserQuery[authsType]['email'] = userInfo.email ;
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
 											}
-
 											User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
 												if(updateErr){
 													res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
@@ -1034,7 +1045,7 @@ exports.validateCode = function(req, res){
 														if(userBillingErr){
 															res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
 														}else{
-															if(billingInfo && billingInfo.length>0){
+															if(billingInfo){
 																let token = jwt.sign({
 																		email: user.email, 
 																		userId: user._id, 
@@ -1073,17 +1084,44 @@ exports.validateCode = function(req, res){
 												}
 											});
 										}else{
-											res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+											var updateUserQuery = {};
+											updateUserQuery[authsType] = {};
+											var userUpdateObj = {};
+											userUpdateObj[authsType] = {};
+											if(users[0][authsType] === undefined){
+												var updateUserQuery = {
+													email: userInfo.email
+												};
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
+
+												User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
+													if(updateErr){
+														res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
+													}else{
+														res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+													}
+												});
+											}else{
+												res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+											}
 										}
 									}else{
 										let userObj = {
-											firstName: userInfo.given_name,
-											lastName: userInfo.family_name,
+											firstName: userInfo.given_name||userInfo.first_name,
+											lastName: userInfo.family_name||userInfo.last_name,
 											email: userInfo.email,
-											role: 20,
-											googleAuths: oAuthTokens
+											role: 20
 										};
-
+										if(req.body.loginType === 'google'){
+											userObj.googleAuths = oAuthTokens;
+										}else if(req.body.loginType === 'facebook'){
+											userObj.facebookAuths = oAuthTokens;
+										}
 										saveUser(userObj)
 											.then(saveUserResp=>{
 												res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});
@@ -1132,7 +1170,6 @@ exports.saveOauthUser = function(req, res){
 					userUpdateObj.domain = req.body.userData.domain;
 					userUpdateObj.domain.siteUrl = req.body.userData.domain.protocol+req.body.userData.domain.website;
 				}
-
 				User.update({email: userObj.email}, userUpdateObj, (userUpdateErr, userUpdateResp)=>{
 					if(userUpdateErr){
 						res.status(400).json({status: false, data: userUpdateErr, message: 'Failed to update user informations.'});

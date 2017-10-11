@@ -18,6 +18,7 @@ let UserSchema = new mongoose.Schema({
 		siteUrl: String
 	},
 	googleAuths: Object,
+	facebookAuths: Object,
 	package: {
 		packageId: String,
 		expireDate: String,

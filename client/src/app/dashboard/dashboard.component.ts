@@ -104,30 +104,32 @@ export class DashboardComponent implements OnInit {
 			.subscribe(overviewData=>{
 				this.audienceAgeGenderGroups = overviewData[0];
 				this.audienceCountryGroups = overviewData[1];
-				let totalTraveler = overviewData[0]['count'];
+				if(overviewData[0]){
+					let totalTraveler = overviewData[0]['count'];
 
-   				this.pieData.push( 
-   					{ category: 'Male', value: overviewData[0]['male'] },
-	    			{ category: 'Female', value: overviewData[0]['female'] }
-    			);
+	   				this.pieData.push( 
+	   					{ category: 'Male', value: overviewData[0]['male'] },
+		    			{ category: 'Female', value: overviewData[0]['female'] }
+	    			);
 
-    			this.columnChartData.push(
-					overviewData[0]['18-24'],
-					overviewData[0]['25-34'],
-					overviewData[0]['35-44'],
-					overviewData[0]['45-54'],
-					overviewData[0]['55-64'],
-					overviewData[0]['65+']
-				);
+	    			this.columnChartData.push(
+						overviewData[0]['18-24'],
+						overviewData[0]['25-34'],
+						overviewData[0]['35-44'],
+						overviewData[0]['45-54'],
+						overviewData[0]['55-64'],
+						overviewData[0]['65+']
+					);
 
-				this.columnChartStackData.push(
-					overviewData[0]['18-24']>0?totalTraveler - overviewData[0]['18-24']:0,
-					overviewData[0]['25-34']>0?totalTraveler - overviewData[0]['25-34']:0,
-					overviewData[0]['35-44']>0?totalTraveler - overviewData[0]['35-44']:0,
-					overviewData[0]['45-54']>0?totalTraveler - overviewData[0]['45-54']:0,
-					overviewData[0]['55-64']>0?totalTraveler - overviewData[0]['55-64']:0,
-					overviewData[0]['65+']>0?totalTraveler - overviewData[0]['65+']:0
-				);
+					this.columnChartStackData.push(
+						overviewData[0]['18-24']>0?totalTraveler - overviewData[0]['18-24']:0,
+						overviewData[0]['25-34']>0?totalTraveler - overviewData[0]['25-34']:0,
+						overviewData[0]['35-44']>0?totalTraveler - overviewData[0]['35-44']:0,
+						overviewData[0]['45-54']>0?totalTraveler - overviewData[0]['45-54']:0,
+						overviewData[0]['55-64']>0?totalTraveler - overviewData[0]['55-64']:0,
+						overviewData[0]['65+']>0?totalTraveler - overviewData[0]['65+']:0
+					);
+				}
    				
 			}, overviewDataErr=>{
 				this.snackBar.open('Error has been occured to retrieve Audience Overview Data.', '', {

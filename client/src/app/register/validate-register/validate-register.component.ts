@@ -120,12 +120,12 @@ export class ValidateRegisterComponent implements OnInit {
 					}
 				}
 			}, authError=>{
-				this.snackBar.open('Error has been occured for the action.', '', {
-					duration: 3000,
-				});
-				setTimeout(()=>{ 
-					location.reload();
-				}, 3000);
+				// this.snackBar.open('Error has been occured for the action.', '', {
+				// 	duration: 3000,
+				// });
+				// setTimeout(()=>{ 
+				// 	location.reload();
+				// }, 3000);
 			});
 	}
 
