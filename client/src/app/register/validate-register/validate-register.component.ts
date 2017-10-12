@@ -135,6 +135,7 @@ export class ValidateRegisterComponent implements OnInit {
 			this.authService.setCookies('idx',cookieParams['index']);
 			this.authService.setCookies('hostOrigin', window.location.origin);
 			this.authService.setCookies('email', cookieParams['email']);
+			this.authService.setCookies('userName', cookieParams['userName']);
 			if(cookieParams['packageType'] && cookieParams['remainingDays']) {
 				this.authService.setCookies('packageType',cookieParams['packageType']);
 				this.authService.setCookies('remainingDays',cookieParams['remainingDays']);

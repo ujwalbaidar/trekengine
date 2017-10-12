@@ -953,7 +953,15 @@ exports.getOauthUrl = function(req, res){
 		if(loginType === 'google'){
 			oAuthOptions.oAuthAccess = {
 				access_type:'offline', 
-				scope: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"],
+				scope: [
+					"openid", 
+					"email", 
+					"https://www.googleapis.com/auth/userinfo.profile", 
+					"https://www.googleapis.com/auth/calendar", 
+					// "https://www.googleapis.com/auth/user.birthday.read", 
+					// "https://www.googleapis.com/auth/plus.login",
+					// "https://www.googleapis.com/auth/plus.me"
+				],
 				approval_prompt: 'force',
 				response_type: 'code'
 			};
@@ -990,6 +998,7 @@ exports.validateCode = function(req, res){
 			.then(oAuthTokens => {
 				oAuth.getUserInfo(oAuthTokens)
 					.then(userInfo=>{
+						console.log(userInfo)
 						let authsType = req.body.loginType + 'Auths';
 						if(req.body.email && req.body.loginType === 'google'){
 							var userUpdateObj = {
@@ -1049,6 +1058,7 @@ exports.validateCode = function(req, res){
 																let token = jwt.sign({
 																		email: user.email, 
 																		userId: user._id, 
+																		userName: user.firstName,
 																		role: user.role, 
 																		remainingDays: billingInfo.remainingDays, 
 																		packageType: billingInfo.priorityLevel
@@ -1066,9 +1076,10 @@ exports.validateCode = function(req, res){
 																		remainingDays: billingInfo.remainingDays, 
 																		packageType: billingInfo.priorityLevel,
 																		email: user.email,
-																		isNew: false
+																		isNew: false,
+																		userName: user.firstName,
 																	}, 
-																	message: "Failed to update user tokens!"
+																	message: "Authorised Successfully"
 																});
 															}else{
 																let token = jwt.sign(
@@ -1115,13 +1126,17 @@ exports.validateCode = function(req, res){
 											firstName: userInfo.given_name||userInfo.first_name,
 											lastName: userInfo.family_name||userInfo.last_name,
 											email: userInfo.email,
-											role: 20
+											role: 20,
 										};
+										if(userInfo.gender && (userInfo.gender === 'male' || userInfo.gender === 'female')){
+											userObj.gender = userInfo.gender;
+										}
 										if(req.body.loginType === 'google'){
 											userObj.googleAuths = oAuthTokens;
 										}else if(req.body.loginType === 'facebook'){
 											userObj.facebookAuths = oAuthTokens;
 										}
+									
 										saveUser(userObj)
 											.then(saveUserResp=>{
 												res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});

@@ -359,7 +359,7 @@ const getBookingAnalysisDetails = (req, res)=>{
 		                    "65+":"$result.65+",
 		                    "male":"$result.male",
 		                    "female":"$result.female",
-		                    "tripName" : "Pokhara Trip",
+		                    "tripName" : "$result.tripName",
             				"totalBookings" : 3
 		                }
 		            }
@@ -1122,7 +1122,6 @@ const getMonthlyBookings = (req, res) =>{
 			        				salesBookingYearsData:salesBookingData 
 			        			};
 					            res.status(200).json({success:true, data: monthlyBookingCountsObj, message: 'Monthly bookings count retrieved successfully!'});
-			        			// console.log(bookingData)
 			        		}
 		        		}
 	        		}

@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 import { MdSnackBar } from '@angular/material';
 import { AnalyticsService } from '../services/index';
 import { MovementsService } from '../services/index';
+import { AuthService } from '../services/index';
 import * as moment from 'moment';
+import { BookingsDialogComponent } from '../movements/bookings/bookings.component';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 	public cookieIdx: Number;
 	public mostSoldInfo: any;
 	public mostSoldNumbers: any;
@@ -30,8 +33,10 @@ export class DashboardComponent implements OnInit {
 	public pieData: any = [];
 	public columnChartData: any = [];
 	public columnChartStackData: any = [];
+	public cookieData: any;
+	public isAvailable: boolean = false;
 
-	constructor(public _cookieService:CookieService, private _route:Router, private analyticsService:AnalyticsService, public snackBar: MdSnackBar, public movementService: MovementsService) { 
+	constructor(public _cookieService:CookieService, private _route:Router, private analyticsService:AnalyticsService, private authService: AuthService,  public snackBar: MdSnackBar, public movementService: MovementsService, public dialog: MdDialog) { 
 	}
 
 	ngOnInit() {
@@ -53,6 +58,18 @@ export class DashboardComponent implements OnInit {
 			this._route.navigate(['/app/movements']);
 		}else{
 		}*/
+	}
+
+	ngAfterViewInit(){
+		this.authService.getCookies()
+			.then(cookieObj=>{
+				if(cookieObj!==undefined && cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
+					this.isAvailable = true;
+					this.cookieData = cookieObj;
+				}else{
+					this.isAvailable = false;
+				}
+			});
 	}
 
 	getMonthlyBookingsCounts(){
@@ -149,4 +166,21 @@ export class DashboardComponent implements OnInit {
 					});
 			});
 	}	
+
+	openAddBookingModal(){
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(BookingsDialogComponent, dialogOptions);
+		dialogRef.afterClosed().subscribe(result => {
+			if(result !== 'opt-cancel'){
+				this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
+			}
+    	});
+	}
 }

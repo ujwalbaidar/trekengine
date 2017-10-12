@@ -88,7 +88,14 @@ module.exports = function(app){
 				let currentDate = new Date();
 				let currentTime = Math.ceil(currentDate.getTime()/1000);
 				if(decoded.exp>currentTime){
-					res.status(200).send({success:true, data: { role: decoded.role, email: decoded.email, remainingDays: decoded.remainingDays, packageType: decoded.packageType}});
+					let data = { 
+						role: decoded.role, 
+						email: decoded.email, 
+						remainingDays: decoded.remainingDays, 
+						packageType: decoded.packageType, 
+						userName: decoded.userName
+					};
+					res.status(200).send({success:true, data: data });
 				}else{
 					res.status(401).send({success:false, message: 'Login is Required!'});
 				}

@@ -18,7 +18,7 @@
 				<tr *ngFor="let ageAnalytics of ageAnalyticsData; let idx=index" (click)="navigateToAgeDetails(ageAnalytics._id)">
 					<td>{{ idx+1 }}</td>
 					<td>{{ ageAnalytics._id }}</td>
-					<td>{{ ageAnalytics.root.length }}</td>
+					<td>{{ ageAnalytics.root | sumTotalPipe:'count' }}</td>
 					<td>{{ ageAnalytics.totalSales | currency:'USD':true}}</td>
 				</tr>
 			</tbody>

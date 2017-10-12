@@ -32,7 +32,7 @@
 			<tbody *ngIf="countryDetailData && countryDetailData.length>0;else EmptyAnalyticsData;">
 				<tr *ngFor="let countryDetail of countryDetailData; let idx=index">
 					<td>{{ idx+1 }}</td>
-					<td>{{ countryDetail._id.bookingId + ' ' + countryDetail._id.tripName }}</td>
+					<td>{{ countryDetail._id.tripName }}</td>
 					<td>{{ countryDetail.root.length }}</td>
 					<td>{{ (countryDetail.male/countryDetail.countTravelers) | percent:'1.2-2' }}</td>
 					<td>{{ (countryDetail.female/countryDetail.countTravelers) | percent:'1.2-2' }}</td>

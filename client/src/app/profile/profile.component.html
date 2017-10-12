@@ -338,30 +338,41 @@
 					<div class="card-action">
 						<div *ngIf="userInfo">
 							<div class="row">
-								<div class="col s4">
-									<label for="firstName" [ngClass]="{'active':(userInfo.firstName!=undefined)}">First Name</label>
+								<div class="col s4" [ngClass]="[(firstName.errors && (firstName.dirty || firstName.touched))?'err-div':'']">
+									<label for="firstName">
+										<strong>
+											{{'First Name'}}
+										</strong>
+										<span class="required-label-mark">{{' *'}}</span>
+									</label>
+
 									<input id="firstName" type="text" class="validate" name="firstName" [(ngModel)]="userInfo.firstName" #firstName="ngModel" [value] = "userInfo.firstName" required>
-									<div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)"
-										class="alert alert-danger">
-										<div [hidden]="!firstName.errors.required">
-											This Field is Required!
-										</div>
+
+									<div class="error-msg" *ngIf="firstName.errors && (firstName.dirty || firstName.touched)">
+										This Field is Required!
 									</div>
 								</div>
+
 								<div class="col s4">
 									<label for="middleName" [ngClass]="{'active':(userInfo.middleName!=undefined)}">Middle Name</label>
 									<input id="middleName" type="text" class="validate" name="middleName" [(ngModel)]="userInfo.middleName" #middleName="ngModel" [value] = "userInfo.middleName">
 								</div>
-								<div class="col s4">
-									<label for="lastName" [ngClass]="{'active':(userInfo.lastName!=undefined)}">Last Name</label>
+								
+								<div class="col s4" [ngClass]="[(lastName.errors && (lastName.dirty || lastName.touched))?'err-div':'']">
+									<label for="lastName">
+										<strong>
+											{{'Last Name'}}
+										</strong>
+										<span class="required-label-mark">{{' *'}}</span>
+									</label>
+
 									<input id="lastName" type="text" class="validate" name="lastName" [(ngModel)]="userInfo.lastName" #lastName="ngModel" [value] = "userInfo.lastName" required>
-									<div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)"
-										class="alert alert-danger">
-										<div [hidden]="!lastName.errors.required">
-											This Field is Required!
-										</div>
+
+									<div class="error-msg" *ngIf="lastName.errors && (lastName.dirty || lastName.touched)">
+										This Field is Required!
 									</div>
 								</div>
+
 							</div>
 							<div class="row">
 								<div class="col s4">
@@ -401,39 +412,60 @@
 								</div>
 
 								<div class="col s4">
-									<div class="row">
+									<div class="col s2">
 										<label class="active" for="domain">
 											<strong>
 												{{'Website Domain'}}
 											</strong>
 										</label>
-									</div>
-									<div class="col s1">
 										<md-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
 											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
 												{{protocol.value}}
 											</md-option>
 										</md-select>
 									</div>
-									<div class="col s2">
-										
-									</div>
-									<div class="col s9">
+									<div class="col s2"></div>
+									<!-- <div class="col s9">
 										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel">
 									</div>
 									<div class="row">
 										<span>e.g.:"http://www.yoursite.com"</span>
+									</div> -->
+									<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
+										<label for="domainWebsite">
+											<strong>
+												{{'Company Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+
+										<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>
+										<div>
+											<span>e.g.:"http://www.yoursite.com"</span>
+										</div>
+										<div class="error-msg" *ngIf="domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched)">
+											This Field is Required!
+										</div>
 									</div>
 								</div>
 							</div>
 
 							<div class="row">
-								<div class="col s4">
-									<label for="organizationName" [ngClass]="{'active':(userInfo.organizationName!=undefined)}">
-										Company Name
+								<div class="col s4" [ngClass]="[(organizationName.errors && (organizationName.dirty || organizationName.touched))?'err-div':'']">
+									<label for="organizationName">
+										<strong>
+											{{'Company Name'}}
+										</strong>
+										<span class="required-label-mark">{{' *'}}</span>
 									</label>
-									<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="userInfo.organizationName" #organizationName="ngModel" [value] = "userInfo.organizationName">
+
+									<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="userInfo.organizationName" #organizationName="ngModel" [value] = "userInfo.organizationName" required>
+
+									<div class="error-msg" *ngIf="organizationName.errors && (organizationName.dirty || organizationName.touched)">
+										This Field is Required!
+									</div>
 								</div>
+
 								<div class="col s4">
 									<label for="organizationContact" [ngClass]="{'active':(userInfo.organizationContact!=undefined)}">
 										Company Contact

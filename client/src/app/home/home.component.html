@@ -138,7 +138,7 @@
 								<ul>
 									<li *ngFor="let subMenuChild of subMenu.subMenuChild">
 										<a (click)="redirectSidemenu(subMenuChild.routePath, 3, subMenuChild.openModal, subMenuChild.modalFunction)">
-											<i *ngIf="subMenuChild.iconName" class="{{sideMenu.iconName}}"></i>
+											<i *ngIf="subMenuChild.iconName" class="{{subMenuChild.iconName}}"></i>
 											<span>{{ subMenuChild.menu }}</span>
 										</a>
 									</li>
