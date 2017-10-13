@@ -156,6 +156,14 @@ const getTrekBookingAnalytics = (req, res)=>{
 		            foreignField: "name",
 		            as: "tripInfos"
 		        }
+		    },
+		    {
+		        $unwind: "$tripInfos"
+		    },
+		    {
+		        $match: {
+		            "tripInfos.userId" : req.headers.userId
+		        }
 		    }
 		]).exec((err, analyticsData)=>{
 	        if(err){

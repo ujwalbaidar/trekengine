@@ -27,7 +27,7 @@ export class TripBookingComponent implements OnInit {
 	}
 
 	redirectDetails(tripInfo){
-		let tripId = tripInfo[0]._id;
+		let tripId = tripInfo._id;
 		this._route.navigate(['/app/analytics/trip/trip-booking/details',tripId]);
 	}
 }

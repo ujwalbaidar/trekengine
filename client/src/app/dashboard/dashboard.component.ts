@@ -35,7 +35,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	public columnChartStackData: any = [];
 	public cookieData: any;
 	public isAvailable: boolean = false;
-
+	public totalTraveler: number;
+	
 	constructor(public _cookieService:CookieService, private _route:Router, private analyticsService:AnalyticsService, private authService: AuthService,  public snackBar: MdSnackBar, public movementService: MovementsService, public dialog: MdDialog) { 
 	}
 
@@ -122,7 +123,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				this.audienceAgeGenderGroups = overviewData[0];
 				this.audienceCountryGroups = overviewData[1];
 				if(overviewData[0]){
-					let totalTraveler = overviewData[0]['count'];
+					this.totalTraveler = overviewData[0]['count'];
 
 	   				this.pieData.push( 
 	   					{ category: 'Male', value: overviewData[0]['male'] },
@@ -139,12 +140,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					);
 
 					this.columnChartStackData.push(
-						overviewData[0]['18-24']>0?totalTraveler - overviewData[0]['18-24']:0,
-						overviewData[0]['25-34']>0?totalTraveler - overviewData[0]['25-34']:0,
-						overviewData[0]['35-44']>0?totalTraveler - overviewData[0]['35-44']:0,
-						overviewData[0]['45-54']>0?totalTraveler - overviewData[0]['45-54']:0,
-						overviewData[0]['55-64']>0?totalTraveler - overviewData[0]['55-64']:0,
-						overviewData[0]['65+']>0?totalTraveler - overviewData[0]['65+']:0
+						overviewData[0]['18-24']>0?this.totalTraveler - overviewData[0]['18-24']:0,
+						overviewData[0]['25-34']>0?this.totalTraveler - overviewData[0]['25-34']:0,
+						overviewData[0]['35-44']>0?this.totalTraveler - overviewData[0]['35-44']:0,
+						overviewData[0]['45-54']>0?this.totalTraveler - overviewData[0]['45-54']:0,
+						overviewData[0]['55-64']>0?this.totalTraveler - overviewData[0]['55-64']:0,
+						overviewData[0]['65+']>0?this.totalTraveler - overviewData[0]['65+']:0
 					);
 				}
    				

@@ -14,9 +14,10 @@ export class TripBookingDetailsComponent implements OnInit{
 	public tableData: any;
 	public resultData: any;
 
-	public pie_ChartData: any = [];
+	public pieData: any = [];
 	public pie_ChartOptions:any;
-	public column_ChartData: any = [];
+	public columnChartData: any = [];
+	public columnChartStackData: any = [];
 	public column_ChartOptions:any;
 
   	constructor(private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
@@ -29,40 +30,26 @@ export class TripBookingDetailsComponent implements OnInit{
 	               		if(analyticsDetails.result && analyticsDetails.result.length>0){
 							let resultData = analyticsDetails.result[0];
 							this.resultData = resultData;
-							this.pie_ChartData.push(
-								['Gender', 'Gender Percentage'],
-								['Male', (resultData.male/resultData.totalTraveler)*100],
-								['Female', (resultData.female/resultData.totalTraveler)*100]
+							this.pieData.push( 
+			   					{ category: 'Male', value: resultData.male },
+				    			{ category: 'Female', value: resultData.female }
+			    			);
+			    			this.columnChartData.push(
+								resultData['18-24'],
+								resultData['25-34'],
+								resultData['35-44'],
+								resultData['45-54'],
+								resultData['55-64'],
+								resultData['65+']
 							);
-
-							this.pie_ChartOptions = {
-								title: 'Traveler Pie chart',
-								width: 900,
-								height: 500
-							};
-
-							this.column_ChartData.push(
-								["Age", "Total Traveler", { role: "style" }],
-								["18-24", ((resultData['18-24'])/resultData['totalTraveler'])*100, "#6495ED"],
-								["25-34", ((resultData['25-34'])/resultData['totalTraveler'])*100, "#6495ED"],
-								["35-44", ((resultData['35-44'])/resultData['totalTraveler'])*100, "#6495ED"],
-								["45-54", ((resultData['45-54'])/resultData['totalTraveler'])*100, "#6495ED"],
-								["55-64", ((resultData['55-64'])/resultData['totalTraveler'])*100, "#6495ED"],
-								["65+", ((resultData['65+'])/resultData['totalTraveler'])*100, "#6495ED"]
-							);
-
-							this.column_ChartOptions = {
-								title: "Trip Details Age Group Chart",
-								width: 600,
-								height: 400,
-								bar: {groupWidth: "95%"},
-								legend: { position: "none" },
-								vAxis: {
-									minValue: 0,
-									maxValue: 100,
-									format: '#\'%\''
-								},
-							};
+							this.columnChartStackData.push(
+								resultData['18-24']>0?resultData.totalTraveler - resultData['18-24']:0,
+								resultData['25-34']>0?resultData.totalTraveler - resultData['25-34']:0,
+								resultData['35-44']>0?resultData.totalTraveler - resultData['35-44']:0,
+								resultData['45-54']>0?resultData.totalTraveler - resultData['45-54']:0,
+								resultData['55-64']>0?resultData.totalTraveler - resultData['55-64']:0,
+								resultData['65+']>0?resultData.totalTraveler - resultData['65+']:0
+							);;
 						}
 	             }, analyticsErr=>{
 	               this.analyticsErr = analyticsErr;

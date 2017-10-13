@@ -23,40 +23,99 @@
 		Average Age Group: {{resultData.avgAge | number }}
 	</div>
 </div>
-<div class="row">
+<div class="row" *ngIf="resultData">
 	<div class="col s12 m12">
-		<div id="pie_chart" [chartData]="pie_ChartData" [chartOptions] = "pie_ChartOptions" chartType="PieChart" GoogleChart></div>
+		<div class="card">
+			<div class="card-content">
+				<div>
+					<h5>{{resultData.tripName}} Gender Oververview</h5>
+				</div>
+				<div *ngIf="pieData && pieData.length>0 else emptyGenderData">
+					<kendo-chart>
+						<kendo-chart-title text="Gender Audience Pie Chart"></kendo-chart-title>
+
+						<kendo-chart-legend position="right"></kendo-chart-legend>
+						
+						<kendo-chart-tooltip>
+							<ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category" let-series="series">
+								Total {{ category }} Counts: {{value}} ({{ value/resultData.totalTraveler *100 | number : '1.2-2'}}%)
+							</ng-template>
+				        </kendo-chart-tooltip>
+						
+						<kendo-chart-series>
+							<kendo-chart-series-item type="pie"
+								[data]="pieData"
+								field="value"
+								categoryField="category">
+									<kendo-chart-series-item-labels visible="true" content="categoryField"></kendo-chart-series-item-labels>
+							</kendo-chart-series-item>
+						</kendo-chart-series>
+					</kendo-chart>
+				</div>
+				<ng-template #emptyGenderData>
+					<span>No any Traveler data found for gender overview chart</span>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+	<div class="col s12 m12">
+		<div class="col s12 m12">
+		<div class="card">
+			<div class="card-content">
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>Country Name</th>
+							<th>Total Travelers</th>
+							<th>Total Sales</th>
+						</tr>
+					</thead>
+					<tbody *ngIf="tableData && tableData.length>0;else EmptyAnalyticsData;">
+						<tr *ngFor="let tableInfo of tableData; let idx=index">
+							<td>{{ idx+1 }}</td>
+							<td>{{ tableInfo.country }}</td>
+							<td>{{ tableInfo.totalTraveler }}</td>
+							<td>{{ tableInfo.totalCost | currency:'USD':true }}</td>
+						</tr>
+					</tbody>
+					<ng-template #EmptyAnalyticsData>
+						<tbody>
+							<tr>
+								<td>There is no data for this view</td>
+							</tr>
+						</tbody>
+					</ng-template>
+				</table>
+			</div>
+		</div>
 	</div>
 	
 	<div class="col s12 m12">
-		<table>
-			<thead>
-				<tr>
-					<th></th>
-					<th>Country Name</th>
-					<th>Total Travelers</th>
-					<th>Total Sales</th>
-				</tr>
-			</thead>
-			<tbody *ngIf="tableData && tableData.length>0;else EmptyAnalyticsData;">
-				<tr *ngFor="let tableInfo of tableData; let idx=index">
-					<td>{{ idx+1 }}</td>
-					<td>{{ tableInfo.country }}</td>
-					<td>{{ tableInfo.totalTraveler }}</td>
-					<td>{{ tableInfo.totalCost | currency:'USD':true }}</td>
-				</tr>
-			</tbody>
-			<ng-template #EmptyAnalyticsData>
-				<tbody>
-					<tr>
-						<td>There is no data for this view</td>
-					</tr>
-				</tbody>
-			</ng-template>
-		</table>
-	</div>
-	
-	<div class="col s12 m12">
-		<div id="column_chart" [chartData]="column_ChartData" [chartOptions] = "column_ChartOptions" chartType="ColumnChart" GoogleChart></div>
+		<div class="card">
+			<div class="card-content">
+				<div>
+					<h5>{{resultData.tripName}} Traveler By Age Group</h5>
+				</div>
+				<div *ngIf="columnChartStackData && columnChartStackData.length>0 else emptyTravelerRecord">
+					<kendo-chart>
+						<kendo-chart-title position="bottom" text="Traveler overview on the basis of age groups"></kendo-chart-title>
+						<kendo-chart-category-axis>
+		          			<kendo-chart-category-axis-item [categories]="['18-24', '25-34', '35-44', '45-54', '55-64', '65+']">
+		          			</kendo-chart-category-axis-item>
+		      			</kendo-chart-category-axis>
+						<kendo-chart-series>
+							<kendo-chart-series-item type="column" [tooltip]="{ visible: 'true' }" [stack]="{ type: '100%' }" [data]="columnChartData">
+							</kendo-chart-series-item>
+							<kendo-chart-series-item type="column" [data]="columnChartStackData">
+	        				</kendo-chart-series-item>
+						</kendo-chart-series>
+					</kendo-chart>
+				</div>
+				<ng-template #emptyTravelerRecord>
+					<span>No any Traveler data found for {{resultData.tripName}} Traverler Overview</span>
+				</ng-template>
+			</div>
+		</div>
 	</div>
 </div>
