@@ -28,8 +28,8 @@ export class TripBookingDetailsComponent implements OnInit{
 	             	.subscribe(analyticsDetails=>{
 	               		this.tableData = analyticsDetails.tableData;
 	               		if(analyticsDetails.result && analyticsDetails.result.length>0){
+							this.resultData = analyticsDetails.result[0];
 							let resultData = analyticsDetails.result[0];
-							this.resultData = resultData;
 							this.pieData.push( 
 			   					{ category: 'Male', value: resultData.male },
 				    			{ category: 'Female', value: resultData.female }
