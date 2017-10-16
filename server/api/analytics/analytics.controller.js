@@ -204,7 +204,7 @@ const getBookingAnalysisDetails = (req, res)=>{
 		    },
 		    {
 		        $match:{
-		            "bookings.userId": "59df13efad46ce23b7c3c6f9"
+		            "bookings.userId": userId
 		        }
 		    },
 		    {
