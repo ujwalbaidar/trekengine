@@ -11,7 +11,7 @@
 		Number of Bookings: {{resultData.totalBookings}}
 	</div>
 	<div>
-		Number of travellers: {{resultData.totalTraveler}}
+		Number of travellers: {{resultData.totalinsertedTraverler}}
 	</div>
 	<div>
 		Average Price: {{resultData.avgPrice | currency:'USD':true }}
@@ -30,7 +30,7 @@
 				<div>
 					<h5>{{resultData.tripName}} Gender Oververview</h5>
 				</div>
-				<div *ngIf="pieData && pieData.length>0 else emptyGenderData">
+				<div *ngIf="pieData && pieData.length>0 && resultData.totalinsertedTraverler>0; else emptyGenderData">
 					<kendo-chart>
 						<kendo-chart-title text="Gender Audience Pie Chart"></kendo-chart-title>
 
@@ -62,7 +62,7 @@
 		<div class="col s12 m12">
 		<div class="card">
 			<div class="card-content">
-				<table>
+				<table *ngIf="resultData.totalinsertedTraverler>0;else emptycountrytraveler">
 					<thead>
 						<tr>
 							<th></th>
@@ -87,6 +87,9 @@
 						</tbody>
 					</ng-template>
 				</table>
+				<ng-template #emptycountrytraveler>
+					<span>No any Traveler data found for country analytics</span>
+				</ng-template>
 			</div>
 		</div>
 	</div>
@@ -97,7 +100,7 @@
 				<div>
 					<h5>{{resultData.tripName}} Traveler By Age Group</h5>
 				</div>
-				<div *ngIf="columnChartStackData && columnChartStackData.length>0 else emptyTravelerRecord">
+				<div *ngIf="columnChartStackData && columnChartStackData.length>0 && resultData.totalinsertedTraverler>0; else emptyTravelerRecord">
 					<kendo-chart>
 						<kendo-chart-title position="bottom" text="Traveler overview on the basis of age groups"></kendo-chart-title>
 						<kendo-chart-category-axis>

@@ -51,9 +51,9 @@ export class TripBookingDetailsComponent implements OnInit{
 								resultData['65+']>0?resultData.totalTraveler - resultData['65+']:0
 							);;
 						}
-	             }, analyticsErr=>{
-	               this.analyticsErr = analyticsErr;
-	             });
+					}, analyticsErr=>{
+						this.analyticsErr = analyticsErr;
+					});
 	    });
   	}
 }
