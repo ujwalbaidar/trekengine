@@ -1,0 +1,134 @@
+<div class="row">
+	<h4>User Details</h4>
+</div>
+<div class="row">
+	<div class="col s12 m12">
+		<div class="card">
+			<div>
+				<span class="card-title">Profile</span>
+			</div>
+			<div class="card-content" *ngIf="userDetails">
+				<div>
+					<strong>{{userDetails.firstName+" "+ userDetails.lastName}}</strong>
+				</div>
+				<div>
+					<span>
+						{{userDetails.email}}
+					</span>
+				</div>
+				<div>
+					<span>
+						Process Completion: {{(userDetails.processCompletion === true)?'Completed':'Incomplete'}}
+					</span>
+				</div>
+				<div>
+					<span>
+						Organization Name: {{userDetails.organizationName}}
+					</span>
+				</div>
+				<div>
+					Organization Url: 
+					<span *ngIf="userDetails.domain.siteUrl">
+						{{userDetails.domain.siteUrl}}
+					</span>
+				</div>
+				<div>
+					<span>
+						Customer Since {{userDetails.createdDate|date}}
+					</span>
+				</div>
+				<div>
+					<span>
+						Active Package: {{activeUserPackage}}
+					</span>
+				</div>
+				<div>
+					<span>
+						Total Bookings: {{userDetails.totalBookings}}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col s12 m12">
+		<div class="card">
+			<div>
+				<span class="card-title">Billing History</span>
+			</div>
+			<div class="card-content" *ngIf="userDetails">
+				<div>
+					Total Spent by User: {{ userDetails.totalSales | currency:'USD':true }}
+				</div>
+				<div>
+					<a class="waves-effect waves-light btn" (click)="makeUserPayment(userDetails.userId)">Make Payment</a>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<td>Package Type</td>
+							<td>Package Cost</td>
+							<td>Activated On</td>
+							<td>Expire On</td>
+							<td>Remaining Days</td>
+							<td>Uses Days</td>
+							<td>On Hold</td>
+							<td>Is Free</td>
+							<td *ngIf="cookieIndex===10 && userId !== undefined">Paid Bill</td>
+							<td>Status</td>
+							<td *ngIf="cookieIndex===10 && userId !== undefined">Action</td>
+						</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let billing of userDetails.billingInfos; let i = index;">
+						<td>
+							{{billing.packageType}}
+						</td>
+						<td>
+							{{billing.packageCost | currency:'USD':true}}
+						</td>
+						<td>
+							{{billing.activatesOn*1000 | date}}
+						</td>
+						<td>
+							{{billing.expiresOn*1000 | date}}
+						</td>
+						<td>
+							{{billing.remainingDays}}
+						</td>
+						<td>
+							{{billing.usesDays}}
+						</td>
+						<td>
+							<span [ngClass]="(billing.onHold==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'onHold')">
+								<i [ngClass]="(billing.onHold==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+							</span>
+						</td>
+						<td>
+							<span [ngClass]="(billing.freeUser==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'freeUser')">
+								<i [ngClass]="(billing.freeUser==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+							</span>
+						</td>
+						<td *ngIf="cookieIndex===10 && userId !== undefined">
+							<span [ngClass]="(billing.packagePayment==true)?'active':'inactive'" (click)="upgradeBillPayment(i)">
+								<i [ngClass]="(billing.packagePayment==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+							</span>
+						</td>
+						<td>
+							<span [ngClass]="(billing.status==true)?'active':'inactive'" (click)="toggleBillingFlag(i, 'status')">
+								<i [ngClass]="(billing.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
+							</span>
+						</td>
+						<td *ngIf="cookieIndex===10 && userId !== undefined">
+							<a class="edit" (click)="openBillingModal(billing)">
+								<i class="material-icons">edit</i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

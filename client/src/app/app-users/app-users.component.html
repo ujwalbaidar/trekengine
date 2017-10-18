@@ -8,6 +8,8 @@
 				<td>Email</td>
 				<td>Role</td>
 				<td>Process Completion</td>
+				<td>Last Login Date</td>
+				<td>Last Login Time</td>
 				<td>Status</td>
 			</tr>
 		</thead>
@@ -21,13 +23,27 @@
 					<i [ngClass]="(user.processCompletion==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 				</td>
 				<td>
+					<span>
+						{{user.lastLoggedIn | date}}
+					</span>
+				</td>
+				<td>
+					<span>
+						{{user.lastLoggedIn | date:'shortTime'}}
+					</span>
+				</td>
+				<td>
 					<span [ngClass]="(user.status==true)?'active':'inactive'" (click)="toggleStatus(i)">
 						<i [ngClass]="(user.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 					</span>
 				</td>
 				<td>
-					<a (click)="deleteUserInfo(user._id)">Delete</a>
-					<a [routerLink]="[user._id, 'billing-history']">Billing History</a>
+					<a (click)="deleteUserInfo(user._id)">
+						<i class="material-icons">delete</i>
+					</a>
+					<a [routerLink]="[user._id, 'details']">
+						Details
+					</a>
 				</td>
 			</tr>
 		</tbody>

@@ -78,6 +78,7 @@ import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-d
 import { AudienceCountryDetailsComponent } from './analytics/audience/audience-country-details/audience-country-details.component';
 import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
+import { AppUsersDetailsComponent, AdminBillingDialogComponent } from './app-users-details/app-users-details.component';
 
 enableProdMode();
 
@@ -126,7 +127,8 @@ enableProdMode();
     AudienceAgeDetailsComponent,
     AudienceCountryDetailsComponent,
     MaxAgeGroupPipe,
-    BillingCheckoutComponent
+    BillingCheckoutComponent,
+    AppUsersDetailsComponent, AdminBillingDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -167,7 +169,8 @@ enableProdMode();
     BillingDialogComponent,
     RegisterSuccessDialogComponent,
     DeleteConfimationDialogComponent,
-    ConfirmationBoxComponent
+    ConfirmationBoxComponent,
+    AdminBillingDialogComponent
   ],
   exports:[SumTotalPipe]
 })

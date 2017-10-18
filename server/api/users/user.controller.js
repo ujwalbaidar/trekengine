@@ -75,7 +75,8 @@ exports.completeRegistrationProcess = function(req, res){
 	let updateObj = {
 		organizationName: req.body.organizationName,
 		processCompletion: true,
-		updatedDate: new Date()
+		updatedDate: new Date(),
+		lastLoggedIn: new Date()
 	}
 	if(req.body.domain){
     	updateObj.domain = req.body.domain;
@@ -340,48 +341,54 @@ exports.loginUser = function(req, res){
 					if (user.role==20) {
 						if(user.processCompletion == true){
 							if(user.status == true){
-								PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
-									if (billingErr) {
-										res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+								User.update({email:req.body.email}, {lastLoggedIn: new Date()}, (userUpdateErr, userUpdate)=>{
+									if(userUpdateErr){
+										res.status(400).json({data: {success: false, errorCode: 4, userData: {email:req.body.email}, msg: 'Failed to update login Record!'}});
 									}else{
-										if(billingResponse){
-											let token = jwt.sign(
-													{
-														email:user.email, 
-														userId: user._id, 
-														role: user.role, 
-														remainingDays: billingResponse.remainingDays, 
-														packageType: billingResponse.priorityLevel
-													}, 
-													config.loginAuth.secretKey, 
-													{
-														expiresIn: config.loginAuth.expireTime, 
-														algorithm: config.loginAuth.algorithm 
-													}
-												);
-											res.status(200).json({
-												success:true, 
-												message: "Authorised Successfully",
-												data: {
-													success: true,
-													token: token, 
-													index: user.role, 
-													remainingDays: billingResponse.remainingDays, 
-													packageType: billingResponse.priorityLevel,
-													email: req.body.email,
-													userName: user.firstName
-												}});
-										}else{
-											let token = jwt.sign(
-													{email:user.email, userId: user._id, role: user.role}, 
-													config.loginAuth.secretKey, 
-													{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
-												);
-											let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
-											res.status(200).json({success:true, message: "Authorised Successfully", data: data});
-										}
+										PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
+											if (billingErr) {
+												res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+											}else{
+												if(billingResponse){
+													let token = jwt.sign(
+															{
+																email:user.email, 
+																userId: user._id, 
+																role: user.role, 
+																remainingDays: billingResponse.remainingDays, 
+																packageType: billingResponse.priorityLevel
+															}, 
+															config.loginAuth.secretKey, 
+															{
+																expiresIn: config.loginAuth.expireTime, 
+																algorithm: config.loginAuth.algorithm 
+															}
+														);
+													res.status(200).json({
+														success:true, 
+														message: "Authorised Successfully",
+														data: {
+															success: true,
+															token: token, 
+															index: user.role, 
+															remainingDays: billingResponse.remainingDays, 
+															packageType: billingResponse.priorityLevel,
+															email: req.body.email,
+															userName: user.firstName
+														}});
+												}else{
+													let token = jwt.sign(
+															{email:user.email, userId: user._id, role: user.role}, 
+															config.loginAuth.secretKey, 
+															{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+														);
+													let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
+													res.status(200).json({success:true, message: "Authorised Successfully", data: data});
+												}
+											}
+										});
 									}
-								});
+								})
 							}else{
 								res.status(200).json({data: {success: false, errorCode: 6, userData: {email:req.body.email}, msg: 'Account is Inactive!'}});
 							}
@@ -998,7 +1005,6 @@ exports.validateCode = function(req, res){
 			.then(oAuthTokens => {
 				oAuth.getUserInfo(oAuthTokens)
 					.then(userInfo=>{
-						console.log(userInfo)
 						let authsType = req.body.loginType + 'Auths';
 						if(req.body.email && req.body.loginType === 'google'){
 							var userUpdateObj = {
@@ -1007,7 +1013,8 @@ exports.validateCode = function(req, res){
 								"googleAuths.token_type": oAuthTokens.token_type,
 								"googleAuths.expires_in": oAuthTokens.expires_in,
 								"googleAuths.id_token": oAuthTokens.id_token,
-								"googleAuths.email": userInfo.email
+								"googleAuths.email": userInfo.email,
+								"lastLoggedIn": new Date()
 							};
 							User.update({email:req.body.email}, userUpdateObj, (err, userUpdateResp)=>{
 								if(err){
@@ -1028,8 +1035,9 @@ exports.validateCode = function(req, res){
 										if(users[0]['processCompletion']==true && users[0]['status']==true){
 											let user = users[0];
 											var updateUserQuery = {};
-											updateUserQuery[authsType] = {};
-											var userUpdateObj = {};
+											var userUpdateObj = {
+												lastLoggedIn: new Date()
+											};
 											userUpdateObj[authsType] = {};
 											if(users[0][authsType] === undefined || users[0][authsType]['access_token'] === undefined){
 												var updateUserQuery = {
@@ -1042,10 +1050,15 @@ exports.validateCode = function(req, res){
 												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
 												userUpdateObj[authsType]['email'] = userInfo.email;
 											}else{
-												updateUserQuery[authsType]['email'] = userInfo.email ;
+												updateUserQuery[authsType+".email"] = userInfo.email ;
 												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
 												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
 											}
+
 											User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
 												if(updateErr){
 													res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
@@ -1109,6 +1122,7 @@ exports.validateCode = function(req, res){
 												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
 												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
 												userUpdateObj[authsType]['email'] = userInfo.email;
+												userUpdateObj['lastLoggedIn'] = new Date();
 
 												User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
 													if(updateErr){
@@ -1372,6 +1386,121 @@ exports.deleteUserInfo = function(req, res){
 		}else{
 			res.status(400).json({success: false, data: '', message: 'Delete user id is not provided'});
 		}
+	}else{
+		res.status(400).json({success: false, data: '', message: 'Not authorized for this action'});
+	}
+}
+
+exports.getAuthUserDetails = function(req, res){
+	if(req.headers && req.headers.role && req.headers.role===10){
+		let userId = req.query.userId;
+		User.aggregate([
+		    {
+		        $match:{"_id" : mongoose.Types.ObjectId(userId)}
+		    },
+		    {
+		        $project: {
+		            _id: 0,
+		            firstName: 1,
+		            lastName: 1,
+		            email: 1,
+		            processCompletion: 1,
+		            domain: 1,
+		            organizationName: 1,
+		            lastLoggedIng: 1,
+		            createdDate: 1,
+		            userId: userId
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "bookings",
+		            localField: "userId",
+		            foreignField: "userId",
+		            as: "bookingInfos"
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "packagebillings",
+		            localField: "userId",
+		            foreignField: "userId",
+		            as: "billingInfos"
+		        }
+		    },
+		    {
+		        $unwind: "$billingInfos"
+		    },
+		    {
+			    $sort: { "billingInfos.createdDate": -1}
+			},
+		    {
+		        $group: {
+		            _id: {
+		                firstName: "$firstName",
+		                lastName: "$lastName",
+		                email: "$email",
+		                processCompletion: "$processCompletion",
+		                domain: "$domain",
+		                organizationName: "$organizationName",
+		                lastLoggedIn: "$lastLoggedIn",
+		                createdDate: "$createdDate",
+		                userId: "$userId",
+		                totalBookings: "$totalBookings",
+		                bookingInfos: "$bookingInfos"
+		            },
+		            billingInfos: {
+		                $push: "$billingInfos"
+		            },
+		            "totalSales": {
+		                "$sum": {
+		                    "$cond": [
+		                        {"$eq": ["$billingInfos.freeUser",false]},
+		                        "$billingInfos.packageCost",
+		                        0 
+		                    ]
+		                }
+		            },
+		            "activePackage": {
+		                "$addToSet": {
+		                    "$cond": [
+		                        {"$eq": ["$billingInfos.status",true]},
+		                        "$billingInfos.packageType",
+		                        ""
+		                    ]
+		                }
+		            }
+		        }
+		    },
+		    {
+		        $project:{
+		            _id: 0,
+		            firstName: "$_id.firstName",
+		            lastName: "$_id.lastName",
+		            email: "$_id.email",
+		            processCompletion: "$_id.processCompletion",
+		            domain: "$_id.domain",
+		            organizationName: "$_id.organizationName",
+		            lastLoggedIng: "$_id.lastLoggedIng",
+		            createdDate: "$_id.createdDate",
+		            userId: "$_id.userId",
+		            totalBookings: { $size: "$_id.bookingInfos" },
+		            totalSales: 1,
+		            billingInfos: 1,
+		            activePackage:1
+		        }
+		    }
+		]).exec((err, userInfo) => {
+			if(err){
+				res.status(400).json({success: true, data: '', message: 'Unable to retrieve user information'});
+			}else{
+				let data = {
+					userInfo: userInfo[0],
+					activePackage: userInfo[0]['activePackage'].join("") || []
+				}
+				res.status(200).json({success: true, data: data, message: 'User information retrieved successfully'});
+			}
+		});
 	}else{
 		res.status(400).json({success: false, data: '', message: 'Not authorized for this action'});
 	}

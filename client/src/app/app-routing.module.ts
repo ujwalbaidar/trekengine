@@ -12,6 +12,7 @@ import { PackageDetailsComponent } from './packages/package-details/package-deta
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { BillingHistoryComponent } from './billing-history/billing-history.component';
 import { AppUsersComponent } from './app-users/app-users.component';
+import { AppUsersDetailsComponent } from './app-users-details/app-users-details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -72,6 +73,11 @@ const appRoutes: Routes = [
 			{ 
 				path: 'app-users', 
 				component: AppUsersComponent,
+				canActivate: [RoleResolverService]
+        	},
+        	{ 
+				path: 'app-users/:userId/details', 
+				component: AppUsersDetailsComponent,
 				canActivate: [RoleResolverService]
         	},
         	{ path: 'app-users/:userId/billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },

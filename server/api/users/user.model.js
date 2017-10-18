@@ -52,6 +52,7 @@ let UserSchema = new mongoose.Schema({
 	dailyTripNotification: { type: Boolean, default: true },
 	weeklyTripNotification: { type: Boolean, default: true },
 	processCompletion: { type: Boolean, default: false },
+	lastLoggedIn: { type: Date },
 	createdDate: {
 		type: Date, 
 		default: new Date()
