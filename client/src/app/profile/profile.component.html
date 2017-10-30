@@ -432,12 +432,6 @@
 										<span>e.g.:"http://www.yoursite.com"</span>
 									</div> -->
 									<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
-										<label for="domainWebsite">
-											<strong>
-												{{'Company Name'}}
-											</strong>
-											<span class="required-label-mark">{{' *'}}</span>
-										</label>
 
 										<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>
 										<div>
