@@ -183,13 +183,15 @@
 								</div>
 
 								<div class="row">
-									<div class="row">
+									<div class="col s12">
 										<label class="active" for="domain">
 											<strong>
 												{{'Website Domain'}}
 											</strong>
 										</label>
 									</div>
+								</div>
+								<div class="row">
 									<div class="col s3">
 										<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
 											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
@@ -201,11 +203,12 @@
 									<div class="col s9">
 										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
 									</div>
-									<div class="row">
+								</div>
+								<div class="row">
+									<div class="col s12">
 										<span>e.g.:"http://www.yoursite.com"</span>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col s12">
 										<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn" type="submit">
