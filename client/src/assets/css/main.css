@@ -916,3 +916,10 @@ nav .button-collapse{float: right;}
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+
+/*Profile Page style*/
+.profile-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 1.363em;
+}

@@ -341,7 +341,12 @@ exports.loginUser = function(req, res){
 					if (user.role==20) {
 						if(user.processCompletion == true){
 							if(user.status == true){
-								User.update({email:req.body.email}, {lastLoggedIn: new Date()}, (userUpdateErr, userUpdate)=>{
+								let updateObj = {
+									lastLoggedIn: new Date(), 
+									$inc: {loginCount: 1}
+								};
+								
+								User.update({email:req.body.email}, updateObj, (userUpdateErr, userUpdate)=>{
 									if(userUpdateErr){
 										res.status(400).json({data: {success: false, errorCode: 4, userData: {email:req.body.email}, msg: 'Failed to update login Record!'}});
 									}else{

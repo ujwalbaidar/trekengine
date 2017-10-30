@@ -62,6 +62,7 @@ let UserSchema = new mongoose.Schema({
 		default: new Date()
 	},
 	guides:[],
-	admins: []
+	admins: [],
+	loginCount: Number
 });
 mongoose.model('User', UserSchema);
