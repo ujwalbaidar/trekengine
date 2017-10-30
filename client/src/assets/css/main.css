@@ -742,3 +742,37 @@ nav .button-collapse{float: right;}
 .err-div textarea.materialize-textarea{
 	border-bottom-color: #F44336;
 }
+
+/*start 30 days free trial form style*/
+.login-company-form .form-holder{
+	max-width: 400px;
+	margin: 7% auto 0;
+}
+
+.login-company-form .form-holder form input[type="text"]{
+	border: 1px solid #9e9e9e;
+	margin: 0;
+	padding: 0 25px 0 10px;
+	height: 2.6rem;
+	color: #000;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.login-company-form .form-holder form input.valid[type="text"]{
+	box-shadow: none;
+	border-color: #26a69a;
+}
+
+.login-company-form .form-holder form input[type="text"]:focus{
+	border-color: #26a69a;
+	box-shadow: none;
+}
+
+.login-company-form .form-holder form button[type="submit"]{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
