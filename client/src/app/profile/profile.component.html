@@ -410,39 +410,27 @@
 									</div>
 
 									<div class="col s4">
-										<div class="col s2">
-											<label class="active" for="domain">
-												<strong>
-													{{'Website Domain'}}
-												</strong>
-											</label>
-											<md-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
-												<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
-													{{protocol.value}}
-												</md-option>
-											</md-select>
-										</div>
-										<div class="col s2"></div>
-										<!-- <div class="col s9">
-											<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel">
-										</div>
 										<div class="row">
-											<span>e.g.:"http://www.yoursite.com"</span>
-										</div> -->
-										<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
-											<label for="domainWebsite">
-												<strong>
-													{{'Company Name'}}
-												</strong>
-												<span class="required-label-mark">{{' *'}}</span>
-											</label>
-
-											<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>
-											<div>
-												<span>e.g.:"http://www.yoursite.com"</span>
+											<div class="col s4">
+												<label class="active" for="domain">
+													<strong>
+														{{'Website Domain'}}
+													</strong>
+												</label>
+												<md-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
+													<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+														{{protocol.value}}
+													</md-option>
+												</md-select>
 											</div>
-											<div class="error-msg" *ngIf="domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched)">
-												This Field is Required!
+											<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
+												<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>
+												<div>
+													<span>e.g.:"http://www.yoursite.com"</span>
+												</div>
+												<div class="error-msg" *ngIf="domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched)">
+													This Field is Required!
+												</div>
 											</div>
 										</div>
 									</div>
