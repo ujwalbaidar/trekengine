@@ -176,9 +176,28 @@ nav .button-collapse{float: right;}
     white-space: nowrap;
 	width: 100%;
 	text-transform: none;
+	background: #3B5998 !important;
+	box-shadow: none;
 }
 
-.login-page .form-holder .loginbtn-facebook:before{}
+.login-page .form-holder .loginbtn-facebook:before{
+	background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png") no-repeat scroll 6px 6px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 4px rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.login-page .form-holder .loginbtn-facebook:hover,
+.login-page .form-holder .loginbtn-facebook:focus{
+	box-shadow: none;
+	background: #547fd9 !important;
+}
 
 .login-page .form-holder .btn-submit,
 .forgot-password-page .form-holder .btn-submit{
