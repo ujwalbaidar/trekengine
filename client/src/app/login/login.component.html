@@ -115,15 +115,17 @@
 											</strong>
 										</label>
 									</div>
-									<div class="col s12">
-										<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
-											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
-												{{protocol.value}}
-											</md-option>
-										</md-select>
-									</div>
-									<div class="col s12">
-										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
+									<div class="row">
+										<div class="col s3">
+											<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
+												<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+													{{protocol.value}}
+												</md-option>
+											</md-select>
+										</div>
+										<div class="col s9">
+											<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
+										</div>
 									</div>
 								</div>
 
