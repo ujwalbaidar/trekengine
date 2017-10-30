@@ -14,13 +14,15 @@
 							</div>
 
 							<div class="row">
-								<div *ngFor="let authUrl of authUrls">
-									<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
-										Signup with Google
-									</button>
-									<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
-										Login with Facebook
-									</button>
+								<div class="col s12">
+									<div *ngFor="let authUrl of authUrls">
+										<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+											Signup with Google
+										</button>
+										<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+											Login with Facebook
+										</button>
+									</div>
 								</div>
 							</div>
 
