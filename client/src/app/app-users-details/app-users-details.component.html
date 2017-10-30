@@ -75,9 +75,9 @@
 							<td>Uses Days</td>
 							<td>On Hold</td>
 							<td>Is Free</td>
-							<td *ngIf="cookieIndex===10 && userId !== undefined">Paid Bill</td>
+							<td>Paid Bill</td>
 							<td>Status</td>
-							<td *ngIf="cookieIndex===10 && userId !== undefined">Action</td>
+							<td>Action</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -110,7 +110,7 @@
 								<i [ngClass]="(billing.freeUser==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 							</span>
 						</td>
-						<td *ngIf="cookieIndex===10 && userId !== undefined">
+						<td>
 							<span [ngClass]="(billing.packagePayment==true)?'active':'inactive'" (click)="upgradeBillPayment(i)">
 								<i [ngClass]="(billing.packagePayment==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 							</span>
@@ -120,7 +120,7 @@
 								<i [ngClass]="(billing.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 							</span>
 						</td>
-						<td *ngIf="cookieIndex===10 && userId !== undefined">
+						<td>
 							<a class="edit" (click)="openBillingModal(billing)">
 								<i class="material-icons">edit</i>
 							</a>

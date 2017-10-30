@@ -80,7 +80,7 @@ const appRoutes: Routes = [
 				component: AppUsersDetailsComponent,
 				canActivate: [RoleResolverService]
         	},
-        	{ path: 'app-users/:userId/billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
+        	// { path: 'app-users/:userId/billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
 			{ path: 'package-billings', component: PackageBillingsComponent, canActivate: [RoleResolverService] },
 			{ path: 'billing-history', component: BillingHistoryComponent, canActivate: [RoleResolverService] },
 			{ path: 'app-features', component: FeaturesComponent, canActivate: [RoleResolverService] },

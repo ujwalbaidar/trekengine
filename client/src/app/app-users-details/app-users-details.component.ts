@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, UserService, PackagesService, PackageBillingsService } from '../services';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MdSnackBar } from '@angular/material';
+import { BillingHistory } from '../models/models';
+import { BillingDialogComponent } from '../billing-history/billing-history.component';
 
 @Component({
   selector: 'app-app-users-details',
@@ -64,6 +66,32 @@ export class AppUsersDetailsComponent implements OnInit {
 	    	});
 		}
 	}
+
+	openBillingModal(editData:BillingHistory=<BillingHistory>{}){
+  		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		if(JSON.stringify(editData) !== '{}'){
+			dialogOptions["data"]["billingHistory"] = editData;
+		}
+		let dialogRef = this.dialog.open(BillingDialogComponent, dialogOptions);
+		dialogRef.afterClosed().subscribe(result => {
+			if(result.success == false){
+				this.snackBar.open('Error has been occured for the action.', '', {
+						duration: 3000,
+					});
+					setTimeout(()=>{ 
+						location.reload();
+					}, 3000);
+			}else{
+      			this.ngOnInit();
+			}
+    	});
+  	}
 
 }
 

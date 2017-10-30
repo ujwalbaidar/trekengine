@@ -345,7 +345,7 @@ exports.loginUser = function(req, res){
 									lastLoggedIn: new Date(), 
 									$inc: {loginCount: 1}
 								};
-								
+
 								User.update({email:req.body.email}, updateObj, (userUpdateErr, userUpdate)=>{
 									if(userUpdateErr){
 										res.status(400).json({data: {success: false, errorCode: 4, userData: {email:req.body.email}, msg: 'Failed to update login Record!'}});
@@ -1012,14 +1012,14 @@ exports.validateCode = function(req, res){
 					.then(userInfo=>{
 						let authsType = req.body.loginType + 'Auths';
 						if(req.body.email && req.body.loginType === 'google'){
+							/* This is to update token information only*/
 							var userUpdateObj = {
 								"googleAuths.access_token":oAuthTokens.access_token, 
 								"googleAuths.refresh_token":oAuthTokens.refresh_token,
 								"googleAuths.token_type": oAuthTokens.token_type,
 								"googleAuths.expires_in": oAuthTokens.expires_in,
 								"googleAuths.id_token": oAuthTokens.id_token,
-								"googleAuths.email": userInfo.email,
-								"lastLoggedIn": new Date()
+								"googleAuths.email": userInfo.email
 							};
 							User.update({email:req.body.email}, userUpdateObj, (err, userUpdateResp)=>{
 								if(err){
@@ -1041,7 +1041,8 @@ exports.validateCode = function(req, res){
 											let user = users[0];
 											var updateUserQuery = {};
 											var userUpdateObj = {
-												lastLoggedIn: new Date()
+												lastLoggedIn: new Date(),
+												$inc: {loginCount: 1}
 											};
 											userUpdateObj[authsType] = {};
 											if(users[0][authsType] === undefined || users[0][authsType]['access_token'] === undefined){
@@ -1128,6 +1129,7 @@ exports.validateCode = function(req, res){
 												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
 												userUpdateObj[authsType]['email'] = userInfo.email;
 												userUpdateObj['lastLoggedIn'] = new Date();
+												userUpdateObj['loginCount'] = 1;
 
 												User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
 													if(updateErr){
@@ -1141,21 +1143,27 @@ exports.validateCode = function(req, res){
 											}
 										}
 									}else{
+										/* First oauth authenticaiton*/
 										let userObj = {
 											firstName: userInfo.given_name||userInfo.first_name,
 											lastName: userInfo.family_name||userInfo.last_name,
 											email: userInfo.email,
 											role: 20,
+											lastLoggedIn: new Date(),
+											loginCount: 1
+
 										};
 										if(userInfo.gender && (userInfo.gender === 'male' || userInfo.gender === 'female')){
 											userObj.gender = userInfo.gender;
 										}
 										if(req.body.loginType === 'google'){
 											userObj.googleAuths = oAuthTokens;
+											userObj.googleAuths['email'] = userInfo.email;
 										}else if(req.body.loginType === 'facebook'){
 											userObj.facebookAuths = oAuthTokens;
+											userObj.facebookAuths['email'] = userInfo.email;
 										}
-									
+
 										saveUser(userObj)
 											.then(saveUserResp=>{
 												res.status(200).json({data:{success: true, userEmail: userInfo.email, isNew: true, loginType: req.body.loginType}});
