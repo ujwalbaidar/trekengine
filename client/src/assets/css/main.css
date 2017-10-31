@@ -468,7 +468,8 @@ nav .button-collapse{float: right;}
 .trip-list-page .main-title,
 .traveller-list-page .main-title,
 .flight-list-page .main-title,
-.traveller-pickup-list-page .main-title{
+.traveller-pickup-list-page .main-title,
+.traverler-detail-form .main-title{
 	font-weight: 300;
 	font-size: 22px;
 	line-height: 30px;

@@ -1,8 +1,8 @@
-<div>
+<div class="traverler-detail-form">
 	<div>
-		<h5>
+		<h3 class="main-title">
 			{{ 'Traverler Detail Form' }}
-		</h5>
+		</h3>
 	</div>
 	<div *ngIf="getIframe==true; else travelerForm">
 		<div>
@@ -11,7 +11,7 @@
 	</div>
 	<ng-template #travelerForm>
 		<div>
-			<form class="col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
+			<form class="detail-form col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
 				<div class="detail-subheader col s12">
 					<strong>Basic Informations</strong>
 				</div>
