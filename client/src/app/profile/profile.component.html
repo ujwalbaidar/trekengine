@@ -402,7 +402,12 @@
 										<my-date-picker id="birthday" class="validate" name="birthday" [(ngModel)]="userInfo.birthday" #birthday="ngModel" [options]="myDatePickerOptions"></my-date-picker>
 									</div>
 									<div class="col s4">
-										<md-select placeholder="Gender" [(ngModel)]="userInfo.gender" name="gender">
+										<label class="active" for="gender">
+											<strong>
+												{{'Gender'}}
+											</strong>
+										</label>
+										<md-select [(ngModel)]="userInfo.gender" name="gender">
 											<md-option *ngFor="let gender of genders" [value]="gender.value">
 												{{gender.viewValue}}
 											</md-option>
@@ -425,9 +430,9 @@
 											</div>
 											<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
 												<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>
-												<div>
+												<!-- <div>
 													<span>e.g.:"http://www.yoursite.com"</span>
-												</div>
+												</div> -->
 												<div class="error-msg" *ngIf="domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched)">
 													This Field is Required!
 												</div>
