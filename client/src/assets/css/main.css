@@ -1014,4 +1014,11 @@ textarea.materialize-textarea:focus.valid {
   margin:0 .75rem 1rem;;
 }
 
+/*home*/
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb{
+	background: #3C8DBC;
+}
 
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar{
+	background: rgba(60, 141, 188, 0.5);
+}
