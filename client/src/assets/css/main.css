@@ -469,7 +469,10 @@ nav .button-collapse{float: right;}
 .traveller-list-page .main-title,
 .flight-list-page .main-title,
 .traveller-pickup-list-page .main-title,
-.traverler-detail-form .main-title{
+.traverler-detail-form .main-title,
+.feature-list-page .main-title,
+.package-list-page .main-title,
+.user-list-page .main-title{
 	font-weight: 300;
 	font-size: 22px;
 	line-height: 30px;
@@ -980,6 +983,7 @@ input[type=search]:focus.valid,
 textarea.materialize-textarea.valid,
 textarea.materialize-textarea:focus.valid {
 	border-bottom: 1px solid #9e9e9e;
+	color: #000;
 }
 
 .traverler-detail-form .file-field .btn{
