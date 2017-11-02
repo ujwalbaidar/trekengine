@@ -472,7 +472,8 @@ nav .button-collapse{float: right;}
 .traverler-detail-form .main-title,
 .feature-list-page .main-title,
 .package-list-page .main-title,
-.user-list-page .main-title{
+.user-list-page .main-title,
+.feature-detail-form .main-title{
 	font-weight: 300;
 	font-size: 22px;
 	line-height: 30px;
@@ -486,7 +487,8 @@ nav .button-collapse{float: right;}
 .flight-list-page .flight-list-table,
 .traveller-pickup-list-page .traveller-pickup-list-table,
 .traverler-detail-form .detail-form,
-.table_trek{
+.table_trek,
+.package-details-wrapper{
 	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 	border-radius: 5px;
 	font-size: 14px;
@@ -1025,4 +1027,38 @@ textarea.materialize-textarea:focus.valid {
 
 .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar{
 	background: rgba(60, 141, 188, 0.5);
+}
+
+.dropdown-content {
+	width: 200px !important;
+}
+
+.feature-detail-form .main-title{
+	margin-bottom: 0;
+}
+
+.package-details-wrapper{
+	padding: 15px 15px 0;
+}
+
+.package-details-wrapper .row .col{
+	padding: 0;
+}
+
+.feature-list-table,
+.package-list-table,
+.package-details-wrapper{
+	margin-bottom: 15px;
+}
+
+.package-details-wrapper .collection li:after{
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.remove-icon{
+	float: right;
+	font-size: 18px;
+	color: #F44336;
 }
