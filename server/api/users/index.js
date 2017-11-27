@@ -10,6 +10,7 @@ router.get('/findOne', userController.fineOneUser);
 router.get('/findByQuery', userController.fineUserByQuery);
 router.put('/update', userController.updateUser);
 router.delete('/delete/:userId', userController.deleteUser);
+router.delete('/deleteUserInfo', userController.deleteUserInfo);
 router.get('/seedUser', userController.seedUser);
 router.get('/listByAdmin', userController.guideListByAdmin);
 router.delete('/remove', userController.removeGuide);
@@ -24,5 +25,7 @@ router.post('/saveOauthUser', userController.saveOauthUser);
 router.post('/validateCode', userController.validateCode);
 router.put('/completeRegistrationProcess', userController.completeRegistrationProcess);
 router.post('/sendActivationLink', userController.sendActivationLink);
+router.get('/getCountryList', userController.getCountryList);
+router.get('/getAuthUserDetails', userController.getAuthUserDetails);
 
 module.exports = router;

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MovementsService, UserService } from '../../services/index';
 import { User } from '../../models/models';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
+
 @Component({
   selector: 'guide-details',
   templateUrl: './guide-details.component.html',
@@ -30,11 +32,25 @@ export class GuideDetailsComponent implements OnInit  {
 	}
 
 	removeGuide(userEmail:string, index:number) {
-		this.userService.removeUserFromList(userEmail, this.approver)
-		.subscribe(users=>{
-				this.guideUsers.splice(index, 1);
-			}, userError=>{
-				console.log(userError);
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+	    	dialogRef.afterClosed().subscribe(result => {
+	    		let selectedOption = parseInt(result);
+    			if(selectedOption == 1){
+					this.userService.removeUserFromList(userEmail, this.approver)
+					.subscribe(users=>{
+							this.guideUsers.splice(index, 1);
+						}, userError=>{
+							console.log(userError);
+						});
+    			}
 			});
 	}
 

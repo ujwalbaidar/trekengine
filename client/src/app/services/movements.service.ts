@@ -3,7 +3,7 @@ import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Router } from '@angular/router';
-import { AuthService } from './index';
+import { AuthService } from './auth.service';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
@@ -76,9 +76,15 @@ export class MovementsService {
             .catch(this.handleError.bind(this));
 	}
 
-	getBookings(){
+	getBookings(filterQuery:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<filterQuery.length;i++){
+			let key = Object.keys(filterQuery[i])[0];
+			let value = filterQuery[i][key];
+			params.set(key, value);
+		}
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
-    	let options = new RequestOptions({ headers: headers });
+    	let options = new RequestOptions({ headers: headers, search: params });
 		return this.http.get('/api/movements/bookings/findAll', options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));

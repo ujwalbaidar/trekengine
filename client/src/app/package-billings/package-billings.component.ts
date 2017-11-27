@@ -63,7 +63,7 @@ export class PackageBillingsComponent implements OnInit {
 			})
   	}
 
-  	selectPackage(featurePackage:FeaturePackage=<FeaturePackage>{}){
+  /*	selectPackage(featurePackage:FeaturePackage=<FeaturePackage>{}){
   		this.auth.getCookies()
 			.then(cookieObj=>{
 				if(cookieObj && cookieObj["authToken"] !== undefined && cookieObj["authToken"].length>0){
@@ -114,6 +114,23 @@ export class PackageBillingsComponent implements OnInit {
 					}
 				}
 			});
+  	}*/
+
+  	checkoutPackage(packageId){
+  		let checkoutObject = {
+			product: 'package',
+			productId: packageId
+		};
+		if(this.selectedDuration == true){
+			checkoutObject['billingType'] = 'monthly';
+		}else{
+			checkoutObject['billingType'] = 'annual';
+		}
+
+		if(JSON.stringify(checkoutObject) !== '{}'){
+			localStorage.setItem('checkoutData', JSON.stringify(checkoutObject));
+			this._route.navigate(['/app/checkout']);
+		}
   	}
 
   	openRegisterModal(featurePackage:FeaturePackage=<FeaturePackage>{}){

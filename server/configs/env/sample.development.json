@@ -13,6 +13,10 @@
 		"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
 		"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]
 	},
+	"facebook": {
+		"client_id": "1468298449874195",
+		"client_secret": "d2465a5e4a09c0296cfa94c541995536"
+	},
 	"loginAuth":{
 		"secretKey":"c0d3w1ng!!",
 		"expireTime": "1d",
@@ -32,6 +36,15 @@
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",
 		"algorithm": "HS256"
+	},
+	"paypal":{
+		"mode": "sandbox",
+		"client_id": "AVLlYi8gVmDn00ol4vAiuaiQhVyPfsi7B5Y2CgKOu2GGLcXMHhRMmDyIiagY4s6Phc46A2Igiv50C13c",
+		"client_secret": "EACa7RAOWXksd2cZl9tqlFEKg6vS60tjrDEzfAib9jagS4siJK9oaRdtOCoSzgXbFd7xsS-V-qwtW2iz",
+		"redirect_urls": {
+			"return_url": "http://localhost:5000/trekengineApp/checkouts/success",
+			"cancel_url": "http://localhost:5000/trekengineApp/checkouts/cancel"
+		}
 	},
 	"timezone": "Asia/Kathmandu"
 }

@@ -4,6 +4,7 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { Flight } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { MovementsService } from '../../services/index';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
   selector: 'flight-details',
@@ -34,12 +35,27 @@ export class FlightDetailsComponent implements OnInit  {
 	}
 
 	deleteFlight(flightId:string, index:number) {
-		this.movementServie.deleteFlightDetails(flightId)
-		.subscribe(users=>{
-				this.flights.splice(index, 1);
-			}, userError=>{
-				console.log(userError);
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+	    	dialogRef.afterClosed().subscribe(result => {
+	    		let selectedOption = parseInt(result);
+    			if(selectedOption == 1){
+					this.movementServie.deleteFlightDetails(flightId)
+						.subscribe(users=>{
+								this.flights.splice(index, 1);
+							}, userError=>{
+								console.log(userError);
+							});
+    			}
 			});
+		
 	}
 
 	openFlightModal(editData:Flight=<Flight>{}) {

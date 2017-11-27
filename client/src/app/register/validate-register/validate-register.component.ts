@@ -106,7 +106,15 @@ export class ValidateRegisterComponent implements OnInit {
 						this.setCookies(authInfos)
 							.then(success=>{
 								if(success){
-									this._route.navigate(['/app']);
+									if (parseInt(authInfos.index) === 20) {
+										this._route.navigate(['/app/bookings']);
+									}else if(parseInt(authInfos.index) === 30){
+										this._route.navigate(['/app/movements']);
+									}else if(parseInt(authInfos.index) === 10){
+										this._route.navigate(['/app']);
+									}else{
+										this._route.navigate(['/app/profile']);
+									}
 								}
 							});
 					}
@@ -127,6 +135,7 @@ export class ValidateRegisterComponent implements OnInit {
 			this.authService.setCookies('idx',cookieParams['index']);
 			this.authService.setCookies('hostOrigin', window.location.origin);
 			this.authService.setCookies('email', cookieParams['email']);
+			this.authService.setCookies('userName', cookieParams['userName']);
 			if(cookieParams['packageType'] && cookieParams['remainingDays']) {
 				this.authService.setCookies('packageType',cookieParams['packageType']);
 				this.authService.setCookies('remainingDays',cookieParams['remainingDays']);

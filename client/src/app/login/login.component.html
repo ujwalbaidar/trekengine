@@ -1,186 +1,218 @@
-<div class="login-page">
-	<div class="container">
-		<div class="form-holder">
-		    	<div class="card">
-		    		<div class="card-content">
-			    		<div [ngSwitch]="activePage">
-			    			<div *ngSwitchDefault>
-								<div class="row">
-									<div class="col s12">
-										<h5 class="center-align">
-											{{'Login'}}
-										</h5>
-									</div>
+<div [ngSwitch]="activePage">
+	<div *ngSwitchDefault>
+		<div class="login-page">
+			<div class="container">
+				<div class="form-holder">
+					<div class="card">
+						<div class="card-content">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Login'}}
+									</h5>
 								</div>
-
-								<div class="row">
-									<div *ngFor="let authUrl of authUrls" class="col s12">
-										<button *ngIf="authUrl.loginType==='google'" class="waves-effect waves-light loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
-											Login with Google
-										</button>
-										<button *ngIf="authUrl.loginType==='facebook'" class="loginBtn loginBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
-											Login with Facebook
-										</button>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col s12">
-										<div class="center-align or">OR</div>
-									</div>
-								</div>
-
-								<form (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
-										
-									<div class="row">
-										<div class="col s12">
-											<label for="email" [ngClass]="{'active':(user.email!=undefined)}">
-												<i class="material-icons">account_circle</i>
-											</label>
-											<input type="email" placeholder="Email" id="email" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-											<div class="error-msg" *ngIf="email?.errors?.required && submittedLoginForm">
-												This Field is Required!
-											</div>
-											<div class="error-msg" *ngIf="email?.errors?.pattern && submittedLoginForm">
-												Email is Invalid!
-											</div>
-											<div class="error-msg" *ngIf="errObj?.errType=='email'">
-												{{errObj?.message}}
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col s12">
-											<label for="password" [ngClass]="{'active':(user.password!=undefined)}">
-												<i class="material-icons">lock</i>
-											</label>
-											<input placeholder="Password" id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
-											<div class="error-msg" *ngIf="password?.errors?.required && submittedLoginForm">
-												This Field is Required!
-											</div>
-											<div class="error-msg" *ngIf="errObj?.errType=='password'">
-												{{errObj?.message}}
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col s12">
-											<button class="waves-effect waves-light btn btn-submit">{{'Login'}}</button>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col s12">
-											<a class="forgot-password" [routerLink]="['/forgot-password']">Forgot Password</a>
-										</div>
-									</div>
-
-								</form>
 							</div>
 
-							<div *ngSwitchCase="4">
-								<form (ngSubmit)="submitOrgInfo(organizationInfo.form)" #organizationInfo="ngForm" novalidate>
-									<div class="row">
-										<div class="col s12" [ngClass]="[(organizationName?.errors && subittedOrgForm)?'err-div':'']">
-											<label class="active" for="organizationName">
-												<strong>
-													{{'Company Name'}}
-												</strong>
-												<span class="required-label-mark">{{' *'}}</span>
-											</label>
-											<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="user.organizationName" #organizationName="ngModel" required>
-											<div class="error-msg" *ngIf="organizationName?.errors?.required && subittedOrgForm">
-												This Field is Required!
-											</div>
+							<div class="row">
+								<div *ngFor="let authUrl of authUrls" class="col s12">
+									<button *ngIf="authUrl.loginType==='google'" class="waves-effect waves-light loginBtn loginBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+										Login with Google
+									</button>
+									<button *ngIf="authUrl.loginType==='facebook'" class="waves-effect waves-light btn blue loginbtn-facebook" (click)="redirectOauthUrl(authUrl.url)">
+										Login with Facebook
+									</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									<div class="center-align or">OR</div>
+								</div>
+							</div>
+
+							<form (ngSubmit)="loginUser(loginForm.form)" #loginForm="ngForm" novalidate>
+										
+								<div class="row">
+									<div class="col s12">
+										<label for="email" [ngClass]="{'active':(user.email!=undefined)}">
+											<i class="material-icons">account_circle</i>
+										</label>
+										<input type="email" placeholder="Email" id="email" class="validate" name="email" [(ngModel)]="user.email" #email="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+										<div class="error-msg" *ngIf="email?.errors?.required && submittedLoginForm">
+											This Field is Required!
+										</div>
+										<div class="error-msg" *ngIf="email?.errors?.pattern && submittedLoginForm">
+											Email is Invalid!
+										</div>
+										<div class="error-msg" *ngIf="errObj?.errType=='email'">
+											{{errObj?.message}}
 										</div>
 									</div>
+								</div>
 
-									<div class="row">
-										<div class="row">
-											<label class="active" for="domain">
-												<strong>
-													{{'Website Domain'}}
-												</strong>
-											</label>
+								<div class="row">
+									<div class="col s12">
+										<label for="password" [ngClass]="{'active':(user.password!=undefined)}">
+											<i class="material-icons">lock</i>
+										</label>
+										<input placeholder="Password" id="password" type="password" class="validate" name="password" [(ngModel)]="user.password" #password="ngModel" required>
+										<div class="error-msg" *ngIf="password?.errors?.required && submittedLoginForm">
+											This Field is Required!
 										</div>
+										<div class="error-msg" *ngIf="errObj?.errType=='password'">
+											{{errObj?.message}}
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<button class="waves-effect waves-light btn btn-submit">{{'Login'}}</button>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<a class="forgot-password" [routerLink]="['/forgot-password']">Forgot Password</a>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div *ngSwitchCase="4">
+		<div class="login-company-form">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
+							<form (ngSubmit)="submitOrgInfo(organizationInfo.form)" #organizationInfo="ngForm" novalidate>
+								<div class="row">
+									<div class="col s12" [ngClass]="[(organizationName?.errors && subittedOrgForm)?'err-div':'']">
+										<label class="active" for="organizationName">
+											<strong>
+												{{'Company Name'}}
+											</strong>
+											<span class="required-label-mark">{{' *'}}</span>
+										</label>
+										<input id="organizationName" type="text" class="validate" name="organizationName" [(ngModel)]="user.organizationName" #organizationName="ngModel" required>
+										<div class="error-msg" *ngIf="organizationName?.errors?.required && subittedOrgForm">
+											This Field is Required!
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col s12">
+										<label class="active" for="domain">
+											<strong>
+												{{'Website Domain'}}
+											</strong>
+										</label>
+									</div>
+									<div class="row">
 										<div class="col s3">
 											<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
 												<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
 													{{protocol.value}}
 												</md-option>
 											</md-select>
-
 										</div>
 										<div class="col s9">
 											<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
 										</div>
-										<div class="row">
-											<span>e.g.:"http://www.yoursite.com"</span>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col s12">
-											<button [disabled]="disbleOrgSubmitBtn" class="waves-effect waves-light btn" type="submit">
-												{{'Start 30 Days Free Trial'}}
-											</button>
-										</div>
-									</div>
-
-								</form>
-
-							</div>
-
-							<div *ngSwitchCase="5">
-								<div class="row">
-									<div class="col s12">
-										<h5 class="center-align">
-											{{'Registration Success'}}
-										</h5>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col s12">
-										<strong>
-											Welcome to Trek Engine. 
-										</strong>
 									</div>
 								</div>
 
 								<div class="row">
 									<div class="col s12">
-										We have sent you an email to activate your account.
-									</div>
-								</div>
-								<div>
-									<a (click)="setLoginPage(1)">back to login</a>
-								</div>
-							</div>
-
-							<div *ngSwitchCase="7">
-								<div class="row">
-									<div class="col s12">
-										<h5 class="center-align">
-											{{'Activation Link Sent'}}
-										</h5>
+										<span>e.g.:"http://www.yoursite.com"</span>
 									</div>
 								</div>
 
 								<div class="row">
 									<div class="col s12">
-										We have sent you an email to activate your account. Please check your email provided.
+										<button [disabled]="disbleOrgSubmitBtn" class="waves-effect waves-light btn" type="submit">
+											{{'Start 30 Days Free Trial'}}
+										</button>
 									</div>
 								</div>
-								<div>
-									<a (click)="setLoginPage(1)">back to login</a>
-								</div>
-							</div>
-						</div>	
+
+							</form>
+
+						</div>
 					</div>
-
 				</div>
 			</div>
+		</div>
 	</div>
-</div>
+	
+	<div *ngSwitchCase="5">
+		<div class="registration-success-page">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Registration Success'}}
+									</h5>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12">
+									<strong>
+										Welcome to Trek Engine. 
+									</strong>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account.
+								</div>
+							</div>
+							<div>
+								<a (click)="setLoginPage(1)">back to login</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngSwitchCase="7">
+		<div class="success-msg">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="center-align">
+										{{'Activation Link Sent'}}
+									</h5>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col s12">
+									We have sent you an email to activate your account. Please check your email provided.
+								</div>
+							</div>
+							<div>
+								<a (click)="setLoginPage(1)">back to login</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	

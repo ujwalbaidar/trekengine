@@ -3,7 +3,12 @@ import { AuthService, MovementsService, UserService } from '../../../services/in
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { BookingsDialogComponent, TripDetailsDialogComponent, FlightDetailsDialogComponent, TravellerDetailsDialogComponent, TripDatesDialogComponent } from '../../index';
+
+import { BookingsDialogComponent } from '../bookings.component';
+import { TripDetailsDialogComponent, TripDatesDialogComponent } from '../../trip-details/trip-details.component';
+import { FlightDetailsDialogComponent } from '../../flight-details/flight-details.component';
+import { TravellerDetailsDialogComponent } from '../../traveller-details/traveller-details.component';
+
 declare var jQuery:any;
 import { CookieService } from 'ngx-cookie';
 

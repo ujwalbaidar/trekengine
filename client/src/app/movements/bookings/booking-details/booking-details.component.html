@@ -94,7 +94,7 @@
 					</div>
 					<div [hidden]="trip" class="row">
 						<div class="col s6">
-							<p>Trip Details not added yet. Please add Trip Details!</p>
+							<p>Trip Departure and Arrival Details are not added yet. Please add them.</p>
 						</div>
 						<div class="col s6 m6 right-align" *ngIf="auths.idx && auths.idx ==='20'">
 							<a class="btn-floating waves-effect waves-light" (click)="openTripDatesModal()"><i class="material-icons">add</i></a>
@@ -175,7 +175,7 @@
 		<div class="col s12 m6">
 			<div class="card">
 				<div class="card-content">
-					<h3 class="card-title">Flight Details</h3>
+					<h3 class="card-title">Domestic Flight Details</h3>
 					<div *ngIf="flight && flight.bookingId && auths.idx && auths.idx ==='20'">
 						<a class="btn-floating waves-effect waves-light" *ngIf="authService.validatedUser" (click)="openFlightModal(flight)">
 							<i class="material-icons">edit</i>
@@ -243,7 +243,7 @@
 					</div>
 					<div [hidden]="flight && flight.bookingId" class="row">
 						<div class="col s6">
-							<p>Flight Details not added yet. Please add Flight Details!</p>
+							<p>Flight Details not added yet. Please add Domestic Flight Details!</p>
 						</div>
 						<div class="col s6 m6 right-align" *ngIf="auths.idx && auths.idx ==='20'">
 							<a class="btn-floating waves-effect waves-light" (click)="openFlightModal()"><i class="material-icons">add</i></a>
@@ -259,9 +259,7 @@
 				<div class="card-content">
 					<h3 class="card-title">Traveler List</h3>
 					<div class="right" *ngIf="auths.idx && auths.idx ==='20'">
-						<a class="btn-floating waves-effect waves-light" (click)="openTravelerModal({}, 'add')">
-							<i class="material-icons">add</i>
-						</a>
+						<a class="waves-effect waves-light btn"  routerLink="/app/movements/traveler-info/booking/{{bookingId}}">Add New Traveler</a>
 					</div>
 				</div>
 				<div class="card-action">
@@ -279,7 +277,7 @@
 					</div>
 					<div class="row">
 						<div class="col s12">
-							<a class="waves-effect waves-light btn" (click)="selectTraveler()">Add</a>
+							<a class="waves-effect waves-light btn" (click)="selectTraveler()">Add To List</a>
 						</div>
 					</div>
 					

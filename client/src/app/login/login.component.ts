@@ -35,20 +35,32 @@ export class LoginComponent{
 		if(form.valid == true){
 			this.userService.loginUser(this.user)
 				.subscribe(loginUser=>{
-					if(loginUser.success === true){
+ 					if(loginUser.success === true){
 						this.submittedLoginForm = false;
 						this.authService.setCookies('authToken',loginUser['token']);
 						this.authService.setCookies('idx',loginUser['index']);
 						this.authService.setCookies('hostOrigin', window.location.origin);
 						this.authService.setCookies('email', loginUser['email']);
+						this.authService.setCookies('userName', loginUser['userName']);
 						if(loginUser['packageType'] && loginUser['remainingDays']) {
 							this.authService.setCookies('packageType',loginUser['packageType']);
 							this.authService.setCookies('remainingDays',loginUser['remainingDays']);
 							if(loginUser['remainingDays']>0){
 								this.authService['validatedUser'] = true;
 							}
+						}else{
+							this.authService['validatedUser'] = false;
 						}
-						this._route.navigate(['/app']);
+
+						if (parseInt(loginUser.index) === 20) {
+							this._route.navigate(['/app/bookings']);
+						}else if(parseInt(loginUser.index) === 30){
+							this._route.navigate(['/app/movements']);
+						}else if(parseInt(loginUser.index) === 10){
+							this._route.navigate(['/app']);
+						}else{
+							this._route.navigate(['/app/profile']);
+						}
 					}else{
 						if(loginUser.errorCode === 2){
 							this.errObj = {errType:'email', message: loginUser.message};

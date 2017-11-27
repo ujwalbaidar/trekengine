@@ -60,12 +60,8 @@ exports.getUsersBillings = function(req, res){
 
 exports.submitUserPackage = function(req, res){
 	var saveObj = {};
-	if(req.headers && req.headers.userId){
-		if(req.headers.role === 10){
-			var userId = req.body.selectedBillingUser;
-		}else{
-			var userId = req.headers.userId;
-		}
+	if(req.headers && req.headers.role === 10){
+		var userId = req.body.selectedBillingUser;
 		PackageBillings.aggregate([
 		    {
 		        $match:{"userId" : userId}
@@ -93,19 +89,65 @@ exports.submitUserPackage = function(req, res){
 			if(billingErr){
 				res.status(400).json({success:false, data:billingErr});
 			}else{
-				if(packageBillings[0]['active'].length>0){
-					if(packageBillings[0]['active'].length > 0){
+				if(packageBillings.length>0){
+					if(packageBillings.length>0 && packageBillings[0]['active'].length > 0){
 						packageBillings[0]['active'] = packageBillings[0]['active'].filter(function(i){ return i != null; });
 					}
-					if(packageBillings[0]['onHold'].length > 0){
+					if(packageBillings.length>0 && packageBillings[0]['onHold'].length > 0){
 						packageBillings[0]['onHold'] = packageBillings[0]['onHold'].filter(function(i){ return i != null; });
 					}
-					processUserBilling(packageBillings[0], req.body, userId, req.headers.email)
-						.then(userBillingResp=>{
-							res.status(200).json(userBillingResp);
-						}).catch(userBillingErr=>{
-							res.status(400).json(userBillingErr);
+					if(packageBillings.length>0 && packageBillings[0]['onHold'].length>=1){
+						res.status(200).json({
+							data: { 
+								success: false,
+								data: [], 
+								message: 'Failed to add package. You already have account on hold.'
+							}
 						});
+					}else{
+						if(packageBillings[0]['active'].length>0){
+							let activePackageBilling = packageBillings[0]['active'];
+							if(activePackageBilling[0].freeUser === true){
+								if(activePackageBilling[0]['packageCost'] === 0){
+									PackageBillings.update({_id: activePackageBilling[0]._id}, {status: false}, (err, updateResponse)=>{
+										if(err){
+											res.status(400).json(err);
+										}else{
+											userNewBilling(req.body, userId, req.headers.email)
+												.then(userBillingResp=>{
+													res.status(200).json(userBillingResp);
+												}).catch(userBillingErr=>{
+													res.status(400).json(userBillingErr);
+												});
+										}
+									});
+								}else{
+									createOnholdBilling(packageBillings[0], req.body, userId, req.headers.email)
+										.then(onHoldBillingResp=>{
+											res.status(200).json({success: true, data: 'Selected package has been activated.'});
+										})
+										.catch(onHoldBillingErr=>{
+											res.status(400).json(onHoldBillingErr);
+										});
+								}
+							}else{
+								createOnholdBilling(packageBillings[0], req.body, userId, req.headers.email)
+									.then(onHoldBillingResp=>{
+										res.status(200).json({success: true, data: 'Selected package has been activated.'});
+									})
+									.catch(onHoldBillingErr=>{
+										res.status(400).json(onHoldBillingErr);
+									});
+							}
+						}else{
+							userNewBilling(req.body, userId, req.headers.email)
+								.then(userBillingResp=>{
+									res.status(200).json(userBillingResp);
+								}).catch(userBillingErr=>{
+									res.status(400).json(userBillingErr);
+								});
+						}
+					}
 				}else{
 					userNewBilling(req.body, userId, req.headers.email)
 						.then(userBillingResp=>{
@@ -126,7 +168,7 @@ function processUserBilling(packageBillings, newUserBilling, userId, headerEmail
 		if(packageBillings.active.length>0){
 			if(packageBillings.active[0].packageCost === 0){
 				if(newUserBilling.packages.cost === 0){
-					resolve({success: true, data: 'Failed to add account Package. Your current account is already Basic Account.'});
+					resolve({success: true, data: 'Failed to add account Package. Your current account is already Free Account.'});
 				}else{
 					processOnholdBilling(packageBillings, newUserBilling, userId, headerEmail)
 						.then(onHoldBillingResp=>{
@@ -175,8 +217,10 @@ function userNewBilling(saveData, userId, headerEmail){
 			freeUser: false,
 			onHold: false,
 			status: true,
-			packagePayment: (saveData.packages.cost == 0)?true:false
+			packagePayment: saveData.packages.packagePayment || false,
+			paymentMethod: saveData.packages.paymentMethod || 'manual'
 		};
+
 		saveUserPackage(saveObj)
 			.then(savePackageResponse=>{
 				if(saveData.selectedBillingUserEmail){
@@ -274,8 +318,8 @@ function createOnholdBilling(packageBillings, newUserBilling, userId, headerEmai
 			features: newUserBilling.packages.featureIds,
 			usesDays: 0,
 			freeUser: false,
-			status: true,
-			packagePayment: false
+			status: false,
+			packagePayment: newUserBilling.packages.packagePayment || false
 		};
 		if(packageBillings.active[0].packageCost === 0){
 			saveObj['onHold'] = false;
@@ -288,6 +332,7 @@ function createOnholdBilling(packageBillings, newUserBilling, userId, headerEmai
 		}else{
 			var sendTo = headerEmail;
 		}
+
 		let templateString = fs.readFileSync('server/templates/userOnholdPackageBilling.ejs', 'utf-8');
 		let mailOptions = {};
 		mailOptions = {
@@ -306,6 +351,7 @@ function createOnholdBilling(packageBillings, newUserBilling, userId, headerEmai
 						resolve(mailInfo);
 					})
 					.catch(err=>{
+						console.log(err)
 						reject(err);
 					});
 			})
