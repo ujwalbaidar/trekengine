@@ -1,5 +1,6 @@
 'use strict';
 const GoogleAuthLib = require('./googleAuth');
+const FacebookAuthLib = require('./facebookAuth');
 
 class OAuthLib {
 	constructor(oAuthOpt){
@@ -10,7 +11,11 @@ class OAuthLib {
 		return new Promise((resolve, reject) => {
 			switch (this.oAuthOpt.loginMethod){
 				case 'facebook':
-					console.log('login in using facebook');
+					let facebookAuthLib = new FacebookAuthLib();
+					facebookAuthLib.getOAuthUrl(this.oAuthOpt)
+						.then(oAuthUrl=>{
+							resolve(oAuthUrl);
+						});
 					break;
 				case 'google':
 					let googleAuthLib = new GoogleAuthLib();
@@ -30,7 +35,14 @@ class OAuthLib {
 		return new Promise((resolve, reject) => {
 			switch (this.oAuthOpt.loginMethod){
 				case 'facebook':
-					console.log('login in using facebook');
+					let facebookAuthLib = new FacebookAuthLib();
+					facebookAuthLib.getOAuthTokens(this.oAuthOpt)
+						.then(oAuthTokens=>{
+							if(typeof oAuthTokens === 'string'){
+								var oAuthTokens = JSON.parse(oAuthTokens);
+							}
+							resolve(oAuthTokens);
+						});
 					break;
 				case 'google':
 					let googleAuthLib = new GoogleAuthLib();
@@ -50,10 +62,20 @@ class OAuthLib {
 	}
 
 	getUserInfo(oAuthTokens){
+		if(typeof oAuthTokens === 'string'){
+			var oAuthTokens = JSON.parse(oAuthTokens);
+		}
 		return new Promise((resolve, reject) => {
 			switch (this.oAuthOpt.loginMethod){
 				case 'facebook':
-					console.log('login in using facebook');
+					let facebookAuthLib = new FacebookAuthLib();
+					facebookAuthLib.getUserInfo(oAuthTokens.access_token)
+						.then(userInfo=>{
+							if(typeof userInfo === 'string'){
+								var userInfo = JSON.parse(userInfo);
+							}
+							resolve(userInfo);
+						});
 					break;
 				case 'google':
 					let googleAuthLib = new GoogleAuthLib();

@@ -1,1 +1,196 @@
-<h1>Dashboard</h1>
+<div>
+	<h4>Welcome to TrekEngine Dashboard</h4>
+</div>
+
+<div *ngIf="cookieIdx===10">
+	<h1>Dashboard</h1>
+</div>
+
+<div *ngIf="cookieIdx===20">
+	<h5 class="center-align" *ngIf="isAvailable && mostSoldInfo && mostSoldInfo.length === 0">
+		Hi {{cookieData.userName}}, the first step is to add a booking record. To add your first booking, please click <a (click)="openAddBookingModal()">here</a>.
+	</h5>
+	<div class="row">
+		<div class="col s12 m3">
+			<div class="card">
+				<div class="card-content">
+					<h5>Total Number of Booking</h5>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalBookings']}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m3">
+			<div class="card">
+				<div class="card-content">
+					<h5>Total Sales Amount</h5>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD':true}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m3">
+			<div class="card">
+				<div class="card-content">
+					<h5>Total Advance Amount</h5>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD':true}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m3">
+			<div class="card">
+				<div class="card-content">
+					<h5>Total Due Amount</h5>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD':true}}</span>
+				</div>
+			</div>
+		</div>
+		<ng-template #emptyMostSoldInfo>
+			<span>0</span>
+		</ng-template>
+	</div>
+
+	<div class="row">
+		<div class="col s12 m6">
+			<div class="card">
+				<div class="card-content">
+					<h5>
+						Booking Analytics by Months
+					</h5>
+					<div *ngIf="monthlyBookings && monthlyBookings.salesBookingYearsData !==undefined; else emptyAnalyticsByMonths">
+						<kendo-chart>
+							<kendo-chart-title text="Total Bookings Each Months"></kendo-chart-title>
+							<kendo-chart-legend position="bottom" orientation="horizontal"></kendo-chart-legend>
+							<kendo-chart-category-axis>
+								<kendo-chart-category-axis-item
+									[categories]="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
+									[title]="{ text: 'Months' }">
+								</kendo-chart-category-axis-item>
+					      	</kendo-chart-category-axis>
+							<kendo-chart-series>
+								<kendo-chart-series-item 
+									*ngFor="let salesBookingYearsData of monthlyBookings.salesBookingYearsData; let i = index" 
+									[stack]="false" 
+									type="area" 
+									[data]="salesBookingYearsData"
+									[name]="monthlyBookings.salesBookingYears[i]"
+									opacity="0.4"
+									[tooltip]="{ visible: 'true' }"
+									[line]="{ style: 'normal' }"
+									>
+								</kendo-chart-series-item>
+							</kendo-chart-series>
+					    </kendo-chart>
+					</div>
+					<ng-template #emptyAnalyticsByMonths>
+						<span>No any booking data has been added for booking analytics.</span>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 m6">
+			<div class="card">
+				<div class="card-content">
+					<div>
+						<h5>Upcoming Trips This week</h5>
+					</div>
+					<div>
+						<table class="movement-list-table responsive-table highlight" *ngIf="treks && treks.length>0;else emptyTrekFilter">
+							<thead>
+								<tr>
+									<th>Group Name</th>
+									<th>Trip Name</th>
+									<th>Departure Date</th>
+									<th>Arrival Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let trek of treks">
+									<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+										<span>{{ trek.groupName }}</span>
+									</td>
+									<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+										<span>{{ trek.tripName }}</span>
+									</td>
+									<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+										<span>{{ trek.trip.departureDate.formatted }}</span>
+									</td>
+									<td [routerLink]="['/app/bookings/booking-details', trek.bookingId]">
+										<span>{{ trek.trip.arrivalDate.formatted }}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<ng-template #emptyTrekFilter>
+							<span>No any movement record found for this week</span>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col s12 m6">
+			<div class="card">
+				<div class="card-content">
+					<div>
+						<h5>Traveler Overview By Age Group</h5>
+					</div>
+					<div *ngIf="columnChartStackData && columnChartStackData.length>0 else emptyTravelerRecord">
+						<kendo-chart>
+							<kendo-chart-title position="bottom" text="Traveler overview on the basis of age groups"></kendo-chart-title>
+							<kendo-chart-category-axis>
+			          			<kendo-chart-category-axis-item [categories]="['18-24', '25-34', '35-44', '45-54', '55-64', '65+']">
+			          			</kendo-chart-category-axis-item>
+			      			</kendo-chart-category-axis>
+							<kendo-chart-series>
+								<kendo-chart-series-item type="column" [tooltip]="{ visible: 'true' }" [stack]="{ type: '100%' }" [data]="columnChartData">
+								</kendo-chart-series-item>
+								<kendo-chart-series-item type="column" [data]="columnChartStackData">
+		        				</kendo-chart-series-item>
+							</kendo-chart-series>
+						</kendo-chart>
+					</div>
+					<ng-template #emptyTravelerRecord>
+						<span>No any Traveler data found for Traverler Overview</span>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m6">
+			<div class="card">
+				<div class="card-content">
+					<div>
+						<h5>Overview By Traveler Gender</h5>
+					</div>
+					<div *ngIf="pieData && pieData.length>0 else emptyGenderData">
+						<kendo-chart>
+							<kendo-chart-title text="Gender Audience Pie Chart"></kendo-chart-title>
+
+							<kendo-chart-legend position="right"></kendo-chart-legend>
+							
+							<kendo-chart-tooltip>
+								<ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category" let-series="series">
+									Total {{ category }} Counts: {{value}} ({{ value/totalTraveler *100 | number : '1.2-2'}}%)
+								</ng-template>
+					        </kendo-chart-tooltip>
+							
+							<kendo-chart-series>
+								<kendo-chart-series-item type="pie"
+									[data]="pieData"
+									field="value"
+									categoryField="category">
+										<kendo-chart-series-item-labels visible="true" content="categoryField"></kendo-chart-series-item-labels>
+								</kendo-chart-series-item>
+							</kendo-chart-series>
+						</kendo-chart>
+					</div>
+					<ng-template #emptyGenderData>
+						<span>No any Traveler data found for gender overview chart</span>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

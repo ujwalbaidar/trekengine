@@ -1,0 +1,50 @@
+<form class="add-payment-detail-form col s12" (ngSubmit)="submitUserPayment(userPayment.form)" #userPayment="ngForm" novalidate>
+	<div md-dialog-content>
+
+		<div class="row">
+			<div class="col s6">
+				<h5>
+					Make User Payment
+				</h5>
+			</div>
+			<div class="col s6 right-align">
+				<a (click)="dialogRef.close('opt-cancel')"><i class="material-icons clear-dialogBox">clear</i></a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col s12 m12">
+				<input type="radio" [(ngModel)]="selectedPackage.duration" name="selectedDuration" value="monthly" id="monthly" [checked]="selectedPackage.duration=='monthly'" (click)="onChangeDuration('monthly')">
+				<label for="monthly">Monthly</label>
+    			<input type="radio" [(ngModel)]="selectedPackage.duration" name="selectedDuration" value="annually" id="annually" [checked]="selectedPackage.duration=='annually'" (click)="onChangeDuration('annually')">
+				<label for="annually">Annually</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12 m12">
+				<select class="browser-default" name="packageName" [ngModel]="selectedPackage.index" (ngModelChange)="onPackageSelected($event)">
+					<option [value]="i" *ngFor="let package of packages;let i=index;">
+						<span *ngIf="package && package.name">
+							{{package.name}}
+						</span>
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12 m3">
+				<md-checkbox id="packagePayment" name="packagePayment" class="example-margin" [(ngModel)]="selectedPackage.packagePayment">Paid Bill</md-checkbox>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12 m12">
+				<span>
+					Total Cost: {{selectedPackage.cost | currency:'USD':true}}
+				</span>
+			</div>
+		</div>
+	</div>
+	<div md-dialog-actions>
+		<button class="waves-effect waves-light btn" type="submit">Submit</button>
+	</div>
+</form>

@@ -72,8 +72,20 @@ export class AppComponent implements OnInit {
 			}else{
 				if((this.location.path().indexOf('/register/validate?') > -1)){
 					let queryUrl = {};
-					if (location.search) location.search.substr(1).split("&").forEach(item => {let [k,v] = item.split("="); v = v && decodeURIComponent(v); (queryUrl[k] = queryUrl[k] || []).push(v)})
-					let navigateUrl = ['/register/validate',queryUrl['code'][0], queryUrl['loginType'][0], queryUrl['authuser'][0], queryUrl['prompt'][0], queryUrl['session_state'][0]]
+					if (location.search) {
+						location.search.substr(1).split("&").forEach(
+							item => {
+								let [k,v] = item.split("="); 
+								v = v && decodeURIComponent(v); 
+								(queryUrl[k] = queryUrl[k] || []).push(v)
+							})
+					}
+
+					if(queryUrl['loginType'][0]==='google'){
+						var navigateUrl = ['/register/validate',queryUrl['code'][0], queryUrl['loginType'][0], queryUrl['authuser'][0], queryUrl['prompt'][0], queryUrl['session_state'][0]];
+					}else if(queryUrl['loginType'][0]==='facebook'){
+						var navigateUrl = ['/register/validate',queryUrl['loginType'][0], queryUrl['code'][0]];
+					}
 					this._route.navigate(navigateUrl);
 				}else{
 					this._route.navigate(['/home']);

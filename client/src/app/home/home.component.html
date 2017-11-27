@@ -44,9 +44,9 @@
 			<li *ngIf="cookieData.idx>=20">
 				<a routerLink="/app/movements">Movements</a>
 			</li>
-			<!-- <li *ngIf="cookieData.idx==20">
-				<a routerLink="/app/analytics">Analytics</a>
-			</li> -->
+			<li *ngIf="cookieData.idx==20">
+				<a routerLink="/app/analytics/audience/overview">Analytics</a>
+			</li>
 			<li>
 				<a routerLink="/app/profile"><i class="fa fa-user-circle"></i></a>
 			</li>
@@ -87,9 +87,9 @@
 			<li *ngIf="cookieData.idx==20">
 				<a>Accounts</a>
 			</li>
-			<!-- <li *ngIf="cookieData.idx==20">
+			<li *ngIf="cookieData.idx==20">
 				<a>Analytics</a>
-			</li> -->
+			</li>
 			<li *ngIf="cookieData.idx==20" class="divider"></li>
 			<li> Settings </li>
 			<li>
@@ -138,7 +138,7 @@
 								<ul>
 									<li *ngFor="let subMenuChild of subMenu.subMenuChild">
 										<a (click)="redirectSidemenu(subMenuChild.routePath, 3, subMenuChild.openModal, subMenuChild.modalFunction)">
-											<i *ngIf="subMenuChild.iconName" class="{{sideMenu.iconName}}"></i>
+											<i *ngIf="subMenuChild.iconName" class="{{subMenuChild.iconName}}"></i>
 											<span>{{ subMenuChild.menu }}</span>
 										</a>
 									</li>

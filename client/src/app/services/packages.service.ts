@@ -21,6 +21,14 @@ export class PackagesService {
             .catch(this.handleError.bind(this));
 	}
 
+	getPayingPackages(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/packages/getPayingPackages', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	getAppPackageDetail(packageQuery:any){
 		let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<packageQuery.length;i++){

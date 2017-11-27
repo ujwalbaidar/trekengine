@@ -8,6 +8,7 @@ module.exports = function(app){
 	app.use('/api/users', require('./api/users'));
 	app.use('/api/seed', require('./api/users'));
 	app.use('/api/userInfo', auth ,require('./api/users'));
+	app.use('/api/authUser', superAuth ,require('./api/users'));
 	app.use('/api/movements/trips', auth ,require('./api/trips'));
 	app.use('/api/guides', auth, require('./api/users'));
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
@@ -88,7 +89,14 @@ module.exports = function(app){
 				let currentDate = new Date();
 				let currentTime = Math.ceil(currentDate.getTime()/1000);
 				if(decoded.exp>currentTime){
-					res.status(200).send({success:true, data: { role: decoded.role, email: decoded.email, remainingDays: decoded.remainingDays, packageType: decoded.packageType}});
+					let data = { 
+						role: decoded.role, 
+						email: decoded.email, 
+						remainingDays: decoded.remainingDays, 
+						packageType: decoded.packageType, 
+						userName: decoded.userName
+					};
+					res.status(200).send({success:true, data: data });
 				}else{
 					res.status(401).send({success:false, message: 'Login is Required!'});
 				}
