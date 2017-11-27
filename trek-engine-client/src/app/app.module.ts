@@ -1,4 +1,7 @@
 import { NgModule, enableProdMode }      from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { SumTotalPipe } from "./pipes/sumTotal.pipe";
+
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
@@ -60,12 +63,23 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ValidateRegisterComponent } from './register/validate-register/validate-register.component';
 
 import { DeleteConfimationDialogComponent } from './delete-confimation-dialog/delete-confimation-dialog.component';
-
+import { AudienceOverviewComponent } from './analytics/audience/audience-overview/audience-overview.component';
+import { AudienceAgeComponent } from './analytics/audience/audience-age/audience-age.component';
+import { AudienceCountryComponent } from './analytics/audience/audience-country/audience-country.component';
+import { AudienceGenderComponent } from './analytics/audience/audience-gender/audience-gender.component';
+import { TripOverviewComponent } from './analytics/trip-analytics/trip-overview/trip-overview.component';
+import { TripBookingComponent } from './analytics/trip-analytics/trip-booking/trip-booking.component';
+import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-booking-details/trip-booking-details.component';
+import { GoogleChartComponent } from './google-chart/google-chart.component';
+import { AudienceAgeDetailsComponent } from './analytics/audience/audience-age-details/audience-age-details.component';
+import { AudienceCountryDetailsComponent } from './analytics/audience/audience-country-details/audience-country-details.component';
+import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 
 enableProdMode();
 
 @NgModule({
   declarations: [
+    SumTotalPipe,
     AppComponent,
     DashboardComponent,
     HomeComponent,
@@ -95,8 +109,18 @@ enableProdMode();
     AirportPickupDetailsComponent,
     ValidateRegisterComponent,
     TravelerInfoComponent,
-    DeleteConfimationDialogComponent
-    
+    DeleteConfimationDialogComponent,
+    AudienceOverviewComponent,
+    AudienceAgeComponent,
+    AudienceCountryComponent,
+    AudienceGenderComponent,
+    TripOverviewComponent,
+    TripBookingComponent,
+    TripBookingDetailsComponent,
+    GoogleChartComponent,
+    AudienceAgeDetailsComponent,
+    AudienceCountryDetailsComponent,
+    MaxAgeGroupPipe,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +132,8 @@ enableProdMode();
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    CookieModule.forRoot()
+    CookieModule.forRoot(),
+    CommonModule
   ],
   providers: [
     AuthService, 
@@ -134,7 +159,8 @@ enableProdMode();
     BillingDialogComponent,
     RegisterSuccessDialogComponent,
     DeleteConfimationDialogComponent
-  ]
+  ],
+  exports:[SumTotalPipe]
 })
 export class AppModule { 
   constructor(overlayContainer: OverlayContainer) {

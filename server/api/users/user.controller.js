@@ -75,7 +75,8 @@ exports.completeRegistrationProcess = function(req, res){
 	let updateObj = {
 		organizationName: req.body.organizationName,
 		processCompletion: true,
-		updatedDate: new Date()
+		updatedDate: new Date(),
+		lastLoggedIn: new Date()
 	}
 	if(req.body.domain){
     	updateObj.domain = req.body.domain;
@@ -340,48 +341,59 @@ exports.loginUser = function(req, res){
 					if (user.role==20) {
 						if(user.processCompletion == true){
 							if(user.status == true){
-								PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
-									if (billingErr) {
-										res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+								let updateObj = {
+									lastLoggedIn: new Date(), 
+									$inc: {loginCount: 1}
+								};
+
+								User.update({email:req.body.email}, updateObj, (userUpdateErr, userUpdate)=>{
+									if(userUpdateErr){
+										res.status(400).json({data: {success: false, errorCode: 4, userData: {email:req.body.email}, msg: 'Failed to update login Record!'}});
 									}else{
-										if(billingResponse){
-											let token = jwt.sign(
-													{
-														email:user.email, 
-														userId: user._id, 
-														role: user.role, 
-														remainingDays: billingResponse.remainingDays, 
-														packageType: billingResponse.priorityLevel
-													}, 
-													config.loginAuth.secretKey, 
-													{
-														expiresIn: config.loginAuth.expireTime, 
-														algorithm: config.loginAuth.algorithm 
-													}
-												);
-											res.status(200).json({
-												success:true, 
-												message: "Authorised Successfully",
-												data: {
-													success: true,
-													token: token, 
-													index: user.role, 
-													remainingDays: billingResponse.remainingDays, 
-													packageType: billingResponse.priorityLevel,
-													email: req.body.email,
-													userName: user.firstName
-												}});
-										}else{
-											let token = jwt.sign(
-													{email:user.email, userId: user._id, role: user.role}, 
-													config.loginAuth.secretKey, 
-													{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
-												);
-											let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
-											res.status(200).json({success:true, message: "Authorised Successfully", data: data});
-										}
+										PackageBillings.findOne({userId:user._id, status: true, onHold: false}, (billingErr, billingResponse)=>{
+											if (billingErr) {
+												res.status(400).json({success:false, message:"Failed to verify billingSetup!", data:{errorCode:'emailErr'}});
+											}else{
+												if(billingResponse){
+													let token = jwt.sign(
+															{
+																email:user.email, 
+																userId: user._id, 
+																role: user.role, 
+																remainingDays: billingResponse.remainingDays, 
+																packageType: billingResponse.priorityLevel
+															}, 
+															config.loginAuth.secretKey, 
+															{
+																expiresIn: config.loginAuth.expireTime, 
+																algorithm: config.loginAuth.algorithm 
+															}
+														);
+													res.status(200).json({
+														success:true, 
+														message: "Authorised Successfully",
+														data: {
+															success: true,
+															token: token, 
+															index: user.role, 
+															remainingDays: billingResponse.remainingDays, 
+															packageType: billingResponse.priorityLevel,
+															email: req.body.email,
+															userName: user.firstName
+														}});
+												}else{
+													let token = jwt.sign(
+															{email:user.email, userId: user._id, role: user.role}, 
+															config.loginAuth.secretKey, 
+															{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+														);
+													let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
+													res.status(200).json({success:true, message: "Authorised Successfully", data: data});
+												}
+											}
+										});
 									}
-								});
+								})
 							}else{
 								res.status(200).json({data: {success: false, errorCode: 6, userData: {email:req.body.email}, msg: 'Account is Inactive!'}});
 							}
@@ -941,7 +953,7 @@ exports.resetUserPassword = function(req, res){
 
 exports.getOauthUrl = function(req, res){
 	let authUrl = [];
-	let oAuthTypes = ['google'];
+	let oAuthTypes = ['google', 'facebook'];
 	for(let i=0; i<oAuthTypes.length; i++){
 		let loginType = oAuthTypes[i];
 		let oAuthOptions = {
@@ -949,13 +961,28 @@ exports.getOauthUrl = function(req, res){
 			clientId: config[loginType]['client_id'],
 			clientSecret: config[loginType]['client_secret'],
 			redirectUrl: config.webHost+'/register/validate?loginType='+loginType,
-			oAuthAccess: {
+		};
+		if(loginType === 'google'){
+			oAuthOptions.oAuthAccess = {
 				access_type:'offline', 
-				scope: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"],
+				scope: [
+					"openid", 
+					"email", 
+					"https://www.googleapis.com/auth/userinfo.profile", 
+					"https://www.googleapis.com/auth/calendar", 
+					// "https://www.googleapis.com/auth/user.birthday.read", 
+					// "https://www.googleapis.com/auth/plus.login",
+					// "https://www.googleapis.com/auth/plus.me"
+				],
 				approval_prompt: 'force',
 				response_type: 'code'
-			}
-		};
+			};
+		}else{
+			oAuthOptions.oAuthAccess = {
+				scope: ["email", "public_profile"]
+			};
+		}
+
 		let oAuth = new OAuthLib(oAuthOptions);
 		oAuth.getOAuthUrl()
 			.then(oAuthUrl=>{
@@ -977,12 +1004,15 @@ exports.validateCode = function(req, res){
 			redirectUrl: config.webHost+'/register/validate?loginType='+req.body.loginType,
 			code: req.body.code
 		};
+
 		let oAuth = new OAuthLib(oAuthOptions);
 		oAuth.getTokens()
 			.then(oAuthTokens => {
 				oAuth.getUserInfo(oAuthTokens)
 					.then(userInfo=>{
-						if(req.body.email){
+						let authsType = req.body.loginType + 'Auths';
+						if(req.body.email && req.body.loginType === 'google'){
+							/* This is to update token information only*/
 							var userUpdateObj = {
 								"googleAuths.access_token":oAuthTokens.access_token, 
 								"googleAuths.refresh_token":oAuthTokens.refresh_token,
@@ -999,31 +1029,40 @@ exports.validateCode = function(req, res){
 								}
 							});
 						}else{
-							queryUser({ $or: [ { "email": userInfo.email } , { "googleAuths.email": userInfo.email } ] })
+							if(req.body.loginType === 'google'){
+								var authsQuery = { "googleAuths.email": userInfo.email };
+							}else if(req.body.loginType === 'facebook'){
+								var authsQuery = { "facebookAuths.email": userInfo.email };
+							}
+							queryUser({ $or: [ { "email": userInfo.email } , authsQuery] })
 								.then(users=>{
 									if(users.length>0){
 										if(users[0]['processCompletion']==true && users[0]['status']==true){
 											let user = users[0];
-											if(users[0]['googleAuths'] === undefined || users[0]['googleAuths']['access_token'] === undefined){
+											var updateUserQuery = {};
+											var userUpdateObj = {
+												lastLoggedIn: new Date(),
+												$inc: {loginCount: 1}
+											};
+											userUpdateObj[authsType] = {};
+											if(users[0][authsType] === undefined || users[0][authsType]['access_token'] === undefined){
 												var updateUserQuery = {
 													email: userInfo.email
 												};
-												var userUpdateObj = {
-													"googleAuths.access_token":oAuthTokens.access_token, 
-													"googleAuths.refresh_token":oAuthTokens.refresh_token,
-													"googleAuths.token_type": oAuthTokens.token_type,
-													"googleAuths.expires_in": oAuthTokens.expires_in,
-													"googleAuths.id_token": oAuthTokens.id_token,
-													"googleAuths.email": userInfo.email
-												};
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
 											}else{
-												var updateUserQuery = { 
-													"googleAuths.email": userInfo.email 
-												};
-												var userUpdateObj = {
-													"googleAuths.access_token":oAuthTokens.access_token, 
-													"googleAuths.refresh_token":oAuthTokens.refresh_token
-												};
+												updateUserQuery[authsType+".email"] = userInfo.email ;
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
 											}
 
 											User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
@@ -1034,45 +1073,96 @@ exports.validateCode = function(req, res){
 														if(userBillingErr){
 															res.status(400).json({success: false, error: userBillingErr, message: "Failed to query user billings!"});
 														}else{
-															let token = jwt.sign({
-																	email: user.email, 
-																	userId: user._id, 
-																	role: user.role, 
-																	remainingDays: billingInfo.remainingDays, 
-																	packageType: billingInfo.priorityLevel
-																}, 
-																config.loginAuth.secretKey, 
-																{
-																	expiresIn: config.loginAuth.expireTime, 
-																	algorithm: config.loginAuth.algorithm 
+															if(billingInfo){
+																let token = jwt.sign({
+																		email: user.email, 
+																		userId: user._id, 
+																		userName: user.firstName,
+																		role: user.role, 
+																		remainingDays: billingInfo.remainingDays, 
+																		packageType: billingInfo.priorityLevel
+																	}, 
+																	config.loginAuth.secretKey, 
+																	{
+																		expiresIn: config.loginAuth.expireTime, 
+																		algorithm: config.loginAuth.algorithm 
+																	});
+																res.status(200).json({
+																	success: true, 
+																	data: {
+																		token: token,
+																		index: user.role,
+																		remainingDays: billingInfo.remainingDays, 
+																		packageType: billingInfo.priorityLevel,
+																		email: user.email,
+																		isNew: false,
+																		userName: user.firstName,
+																	}, 
+																	message: "Authorised Successfully"
 																});
-															res.status(200).json({
-																success: true, 
-																data: {
-																	token: token,
-																	index: user.role,
-																	remainingDays: billingInfo.remainingDays, 
-																	packageType: billingInfo.priorityLevel,
-																	email: user.email,
-																	isNew: false
-																}, 
-																message: "Failed to update user tokens!"
-															});
+															}else{
+																let token = jwt.sign(
+																		{email:user.email, userId: user._id, role: user.role}, 
+																		config.loginAuth.secretKey, 
+																		{expiresIn: config.loginAuth.expireTime, algorithm: config.loginAuth.algorithm }
+																	);
+																let data = {success:true, userName: user.firstName, token: token, index: user.role, email: user.email};											
+																res.status(200).json({success:true, message: "Authorised Successfully", data: data});
+															}
 														}
 													});
 												}
 											});
 										}else{
-											res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+											var updateUserQuery = {};
+											updateUserQuery[authsType] = {};
+											var userUpdateObj = {};
+											userUpdateObj[authsType] = {};
+											if(users[0][authsType] === undefined){
+												var updateUserQuery = {
+													email: userInfo.email
+												};
+												userUpdateObj[authsType]['access_token'] = oAuthTokens.access_token;
+												userUpdateObj[authsType]['refresh_token'] = oAuthTokens.refresh_token || '';
+												userUpdateObj[authsType]['token_type'] = oAuthTokens.token_type ;
+												userUpdateObj[authsType]['expires_in'] = oAuthTokens.expires_in;
+												userUpdateObj[authsType]['id_token'] = oAuthTokens.id_token || '';
+												userUpdateObj[authsType]['email'] = userInfo.email;
+												userUpdateObj['lastLoggedIn'] = new Date();
+												userUpdateObj['loginCount'] = 1;
+
+												User.update(updateUserQuery, userUpdateObj, (updateErr, updateResponse)=>{
+													if(updateErr){
+														res.status(400).json({success: false, error: updateErr, message: "Failed to update user tokens!"});
+													}else{
+														res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+													}
+												});
+											}else{
+												res.status(200).json({data:{success: true, userEmail: users[0].email, isNew: true, loginType: req.body.loginType}});
+											}
 										}
 									}else{
+										/* First oauth authenticaiton*/
 										let userObj = {
-											firstName: userInfo.given_name,
-											lastName: userInfo.family_name,
+											firstName: userInfo.given_name||userInfo.first_name,
+											lastName: userInfo.family_name||userInfo.last_name,
 											email: userInfo.email,
 											role: 20,
-											googleAuths: oAuthTokens
+											lastLoggedIn: new Date(),
+											loginCount: 1
+
 										};
+										if(userInfo.gender && (userInfo.gender === 'male' || userInfo.gender === 'female')){
+											userObj.gender = userInfo.gender;
+										}
+										if(req.body.loginType === 'google'){
+											userObj.googleAuths = oAuthTokens;
+											userObj.googleAuths['email'] = userInfo.email;
+										}else if(req.body.loginType === 'facebook'){
+											userObj.facebookAuths = oAuthTokens;
+											userObj.facebookAuths['email'] = userInfo.email;
+										}
 
 										saveUser(userObj)
 											.then(saveUserResp=>{
@@ -1122,7 +1212,6 @@ exports.saveOauthUser = function(req, res){
 					userUpdateObj.domain = req.body.userData.domain;
 					userUpdateObj.domain.siteUrl = req.body.userData.domain.protocol+req.body.userData.domain.website;
 				}
-
 				User.update({email: userObj.email}, userUpdateObj, (userUpdateErr, userUpdateResp)=>{
 					if(userUpdateErr){
 						res.status(400).json({status: false, data: userUpdateErr, message: 'Failed to update user informations.'});
@@ -1310,6 +1399,121 @@ exports.deleteUserInfo = function(req, res){
 		}else{
 			res.status(400).json({success: false, data: '', message: 'Delete user id is not provided'});
 		}
+	}else{
+		res.status(400).json({success: false, data: '', message: 'Not authorized for this action'});
+	}
+}
+
+exports.getAuthUserDetails = function(req, res){
+	if(req.headers && req.headers.role && req.headers.role===10){
+		let userId = req.query.userId;
+		User.aggregate([
+		    {
+		        $match:{"_id" : mongoose.Types.ObjectId(userId)}
+		    },
+		    {
+		        $project: {
+		            _id: 0,
+		            firstName: 1,
+		            lastName: 1,
+		            email: 1,
+		            processCompletion: 1,
+		            domain: 1,
+		            organizationName: 1,
+		            lastLoggedIng: 1,
+		            createdDate: 1,
+		            userId: userId
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "bookings",
+		            localField: "userId",
+		            foreignField: "userId",
+		            as: "bookingInfos"
+		        }
+		    },
+		    {
+		        $lookup:{
+		            from: "packagebillings",
+		            localField: "userId",
+		            foreignField: "userId",
+		            as: "billingInfos"
+		        }
+		    },
+		    {
+		        $unwind: "$billingInfos"
+		    },
+		    {
+			    $sort: { "billingInfos.createdDate": -1}
+			},
+		    {
+		        $group: {
+		            _id: {
+		                firstName: "$firstName",
+		                lastName: "$lastName",
+		                email: "$email",
+		                processCompletion: "$processCompletion",
+		                domain: "$domain",
+		                organizationName: "$organizationName",
+		                lastLoggedIn: "$lastLoggedIn",
+		                createdDate: "$createdDate",
+		                userId: "$userId",
+		                totalBookings: "$totalBookings",
+		                bookingInfos: "$bookingInfos"
+		            },
+		            billingInfos: {
+		                $push: "$billingInfos"
+		            },
+		            "totalSales": {
+		                "$sum": {
+		                    "$cond": [
+		                        {"$eq": ["$billingInfos.freeUser",false]},
+		                        "$billingInfos.packageCost",
+		                        0 
+		                    ]
+		                }
+		            },
+		            "activePackage": {
+		                "$addToSet": {
+		                    "$cond": [
+		                        {"$eq": ["$billingInfos.status",true]},
+		                        "$billingInfos.packageType",
+		                        ""
+		                    ]
+		                }
+		            }
+		        }
+		    },
+		    {
+		        $project:{
+		            _id: 0,
+		            firstName: "$_id.firstName",
+		            lastName: "$_id.lastName",
+		            email: "$_id.email",
+		            processCompletion: "$_id.processCompletion",
+		            domain: "$_id.domain",
+		            organizationName: "$_id.organizationName",
+		            lastLoggedIng: "$_id.lastLoggedIng",
+		            createdDate: "$_id.createdDate",
+		            userId: "$_id.userId",
+		            totalBookings: { $size: "$_id.bookingInfos" },
+		            totalSales: 1,
+		            billingInfos: 1,
+		            activePackage:1
+		        }
+		    }
+		]).exec((err, userInfo) => {
+			if(err){
+				res.status(400).json({success: true, data: '', message: 'Unable to retrieve user information'});
+			}else{
+				let data = {
+					userInfo: userInfo[0],
+					activePackage: userInfo[0]['activePackage'].join("") || []
+				}
+				res.status(200).json({success: true, data: data, message: 'User information retrieved successfully'});
+			}
+		});
 	}else{
 		res.status(400).json({success: false, data: '', message: 'Not authorized for this action'});
 	}

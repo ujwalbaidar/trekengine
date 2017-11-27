@@ -37,11 +37,43 @@ export class HomeComponent implements OnInit, AfterViewInit {
 				if(cookieObj && cookieObj['idx'] && parseInt(cookieObj['idx']) === 20){
 					this.sideMenuArr =[
 						{
-							menu: 'Movements',
-							routePath: '/app/movements',
+							menu: 'Dashboard',
+							routePath: '/app',
 							iconName: 'fa fa-home',
 							status: true,
 							checkValidUser: false
+						},
+						{
+							menu: 'Movements',
+							iconName: 'fa fa-ravelry',
+							status: true,
+							checkValidUser: false,
+							subMenu: [
+								{
+									menu: 'List Movements',
+									routePath: '/app/movements',
+									iconName: 'fa fa-list-alt',
+									checkValidUser: false
+								},
+								{
+									menu: 'Trip Movements',
+									routePath: '/app/movements/trip-details',
+									iconName: 'fa fa-tripadvisor',
+									checkValidUser: false
+								},
+								{
+									menu: 'Airport Pickup',
+									routePath: '/app/movements/airport-pickup-details',
+									iconName: 'fa fa-car',
+									checkValidUser: false
+								},
+								{
+									menu: 'Domestic Flights',
+									routePath: '/app/movements/flight-details',
+									iconName: 'fa fa-plane',
+									checkValidUser: false
+								}
+							]
 						},{
 							menu: 'Bookings',
 							iconName: 'fa fa-book',
@@ -51,79 +83,73 @@ export class HomeComponent implements OnInit, AfterViewInit {
 								{
 									menu: 'All Bookings',
 									routePath: '/app/bookings',
-									iconName: 'fa fa-book',
+									iconName: 'fa fa-list-alt',
 									checkValidUser: false
 								},
 								{
 									menu: 'Add New Booking',
 									routePath: '/app/movements/trip-details',
-									iconName: 'fa fa-book',
+									iconName: 'fa fa-plus-square-o',
 									openModal: true,
 									modalFunction: 'openAddBookingModal',
 									checkValidUser: true
 								},
 								{
-									menu: 'Trip Details',
-									routePath: '/app/movements/trip-details',
-									iconName: 'fa fa-calendar-o',
-									checkValidUser: false
-								},{
 									menu: 'Guide Details',
 									routePath: '/app/movements/guide-details',
-									iconName: 'fa fa-book',
-									checkValidUser: false
-								},{
-									menu: 'Flight Details',
-									routePath: '/app/movements/flight-details',
-									iconName: 'fa fa-plane',
+									iconName: 'fa fa-id-card',
 									checkValidUser: false
 								},{
 									menu: 'Traveler Details',
 									routePath: '/app/movements/traveller-details',
-									iconName: 'fa fa-car',
-									checkValidUser: false
-								},{
-									menu: 'Traveler Pickup Details',
-									routePath: '/app/movements/airport-pickup-details',
-									iconName: 'fa fa-car',
+									iconName: 'fa fa-users',
 									checkValidUser: false
 								}
 							]
-						}/*,{
+						},{
 							menu: 'Analytics',
 							status: false,
+							iconName: 'fa fa-bar-chart-o',
 							subMenu: [
 								{
 									menu: 'Audience',
+									iconName: 'fa fa-line-chart',
 									subMenuChild: [
 										{
 											menu: 'Overview',
+											iconName: 'fa fa-pie-chart',
 											routePath: '/app/analytics/audience/overview',
 										},{
 											menu: 'Age',
-											routePath: '/app/analytics/audience/age-analytics',
+											iconName: 'fa fa-line-chart',
+											routePath: '/app/analytics/audience/age',
 										},{
 											menu: 'Country',
-											routePath: '/app/analytics/audience/country-analytics',
+											iconName: 'fa fa-globe',
+											routePath: '/app/analytics/audience/country',
 										},{
 											menu: 'Gender',
-											routePath: '/app/analytics/audience/gender-analytics',
+											iconName: 'fa fa-mars',
+											routePath: '/app/analytics/audience/gender',
 										}
 									]
 								},{
 									menu: 'Trip',
+									iconName: 'fa fa-area-chart',
 									subMenuChild: [
 										{
 											menu: 'Overview',
+											iconName: 'fa fa-bar-chart',
 											routePath: '/app/analytics/trip/overview',
 										},{
 											menu: 'Trip Booking',
+											iconName: 'fa fa-bus',
 											routePath: '/app/analytics/trip/trip-booking',
 										}
 									]
 								}
 							]
-						}*/
+						}
 					];
 					if(cookieObj!==undefined && cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
 						this.isAvailable = true;

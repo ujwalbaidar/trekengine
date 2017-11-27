@@ -22,6 +22,7 @@ let PackageBillingSchema = new mongoose.Schema({
 		type: Date, 
 		default: new Date()
 	},
+	paymentMethod: String,
 	paymentInfo: Object
 });
 mongoose.model('PackageBillings', PackageBillingSchema);

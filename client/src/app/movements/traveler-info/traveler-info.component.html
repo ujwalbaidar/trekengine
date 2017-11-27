@@ -1,8 +1,8 @@
-<div>
+<div class="traverler-detail-form">
 	<div>
-		<h5>
+		<h3 class="main-title">
 			{{ 'Traverler Detail Form' }}
-		</h5>
+		</h3>
 	</div>
 	<div *ngIf="getIframe==true; else travelerForm">
 		<div>
@@ -11,13 +11,13 @@
 	</div>
 	<ng-template #travelerForm>
 		<div>
-			<form class="col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
+			<form class="detail-form col s12" (ngSubmit)="submitTravelerDetails(TravelerDetail.form)" #TravelerDetail="ngForm" novalidate>
 				<div class="detail-subheader col s12">
 					<strong>Basic Informations</strong>
 				</div>
 
 				<div class="row">
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(firstName?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<label for="first_name" class="active">
 							<strong>
 								{{'First Name'}}
@@ -25,7 +25,7 @@
 							<span class="required-label-mark">{{' *'}}</span>
 						</label>
 						<input id="first_name" type="text" name="firstName" class="validate" [(ngModel)]="traveler.firstName" #firstName="ngModel" required>
-						<div *ngIf="firstName?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="firstName?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
 					</div>
@@ -39,7 +39,7 @@
 						<input id="middleName" type="text" name="middleName" class="validate" [(ngModel)]="traveler.middleName">
 					</div>
 
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(lastName?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<label for="lastName" class="active">
 							<strong>
 								{{'Last Name'}}
@@ -47,14 +47,14 @@
 							<span class="required-label-mark">{{' *'}}</span>
 						</label>
 						<input id="lastName" type="text" name="lastName" class="validate" [(ngModel)]="traveler.lastName" #lastName="ngModel" required>
-						<div *ngIf="lastName?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="lastName?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(gender?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<div>
 							<label for="gender" class="active">
 								<strong>
@@ -70,12 +70,12 @@
 								</option>
 							</select>
 						</div>
-						<div *ngIf="gender?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="gender?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
 					</div>
 
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(nationality?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<div>
 							<label for="nationality" class="active">
 								<strong>
@@ -93,12 +93,12 @@
 							</select>
 						</div>
 						<!-- <input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required> -->
-						<div *ngIf="nationality?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="nationality?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
 					</div>
 
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(dob?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<label for="dob" class="active">
 							<strong>
 								{{'Birth Date'}}
@@ -106,7 +106,7 @@
 							<span class="required-label-mark">{{' *'}}</span>
 						</label>
 						<my-date-picker required id="dob" class="validate" name="dob" [(ngModel)]="traveler.dob" #dob="ngModel" [options]="myDatePickerOptions"></my-date-picker>
-						<div *ngIf="dob?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="dob?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
 					</div>
@@ -123,7 +123,7 @@
 						<input id="permanentAddress" type="text" name="permanentAddress" class="validate" [(ngModel)]="traveler.permanentAddress">
 					</div>
 
-					<div class="col s4">
+					<div class="col s4" [ngClass]="[(email?.errors?.required && submittedTravelerForm)?'err-div':'']">
 						<label for="email" class="active">
 							<strong>
 								{{'Email'}}
@@ -138,10 +138,10 @@
 							[(ngModel)]="traveler.email" #email="ngModel" 
 							required 
 							pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-						<div *ngIf="email?.errors?.required && submittedTravelerForm">
+						<div class="error-msg" *ngIf="email?.errors?.required && submittedTravelerForm">
 								This Field is Required!
 						</div>
-						<div *ngIf="email?.errors?.pattern && submittedTravelerForm">
+						<div class="error-msg" *ngIf="email?.errors?.pattern && submittedTravelerForm">
 							Email is Invalid!
 						</div>
 					</div>
@@ -261,7 +261,7 @@
 				<div *ngIf="traveler.airportPickup.confirmation">
 
 					<div class="row">
-						<div class="col s6">
+						<div class="col s6" [ngClass]="[(traveler.airportPickup.confirmation && pickupDate?.errors?.required && submittedTravelerForm)?'err-div':'']">
 							<label for="pickupDate" class="active">
 								<strong>
 									{{'Date'}}
@@ -269,7 +269,7 @@
 								<span class="required-label-mark">{{' *'}}</span>
 							</label>
 							<my-date-picker id="pickupDate" class="validate" name="pickupDate" [(ngModel)]="traveler.airportPickup.date" #pickupDate="ngModel" [options]="myDatePickerOptions" required></my-date-picker>
-							<div *ngIf="traveler.airportPickup.confirmation && pickupDate?.errors?.required && submittedTravelerForm">
+							<div class="error-msg" *ngIf="traveler.airportPickup.confirmation && pickupDate?.errors?.required && submittedTravelerForm">
 								This Field is Required!
 							</div>
 						</div>

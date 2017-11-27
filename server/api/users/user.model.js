@@ -18,6 +18,7 @@ let UserSchema = new mongoose.Schema({
 		siteUrl: String
 	},
 	googleAuths: Object,
+	facebookAuths: Object,
 	package: {
 		packageId: String,
 		expireDate: String,
@@ -51,6 +52,7 @@ let UserSchema = new mongoose.Schema({
 	dailyTripNotification: { type: Boolean, default: true },
 	weeklyTripNotification: { type: Boolean, default: true },
 	processCompletion: { type: Boolean, default: false },
+	lastLoggedIn: { type: Date },
 	createdDate: {
 		type: Date, 
 		default: new Date()
@@ -60,6 +62,7 @@ let UserSchema = new mongoose.Schema({
 		default: new Date()
 	},
 	guides:[],
-	admins: []
+	admins: [],
+	loginCount: Number
 });
 mongoose.model('User', UserSchema);

@@ -13,12 +13,100 @@ export class AnalyticsService {
 		public authService:AuthService
 	) {}
 
+	getAudienceOverview(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/overview', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceAgeAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/age', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceByAgeDetails(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+
+		return this.http.get('/api/analytics/audience/age-details', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	getAudienceGenderAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/gender', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getAudienceCountryAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/audience/country', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}	
+
+	getAudienceByCountryDetails(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+
+		return this.http.get('/api/analytics/audience/country-details', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getTrekOverview(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
 		return this.http.get('/api/analytics/trek/overview', options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
+	}
+
+	getTrekBookingAnalytics(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/analytics/trek/booikings', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
+	getTrekBookingAnalyticsDetails(query:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<query.length;i++){
+			let key = Object.keys(query[i])[0];
+			let value = query[i][key];
+			params.set(key, value);
+		}
+
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+
+		return this.http.get('/api/analytics/trek/bookings-details', options)
+			.map(this.extractData)
+			.catch(this.handleError);
 	}
 
 	private extractData(res: Response) {

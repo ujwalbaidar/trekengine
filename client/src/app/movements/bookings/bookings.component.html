@@ -42,10 +42,24 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<div class="pagination-div" *ngIf="bookings && bookings.length>0">
+			<ul class="pagination">
+				<li [ngClass]="currentBookingPage==0 ? 'disabled' : 'waves-effect'" (click)="changePagination(0)">
+					<a><i class="material-icons">chevron_left</i></a>
+				</li>
+				<li [ngClass]="i==currentBookingPage ? 'active' : 'waves-effect'" *ngFor="let totalBookingPage of totalBookingPages; let i = index;" (click)="changePagination(i)">
+					<a>{{i+1}}</a>
+				</li>
+				<li [ngClass]="currentBookingPage==(totalTreksData-1) ? 'disabled' : 'waves-effect'" (click)="changePagination(totalTreksData-1)">
+					<a><i class="material-icons">chevron_right</i></a>
+				</li>
+			</ul>
+		</div>
+
 		<ng-template #emptyBookings>
 			<h5 class="center-align" *ngIf="isAvailable">
 				Hi {{cookieData.userName}}, the first step is to add a booking record. To add your first booking, please click <a (click)="openAddBookingModal()">here</a>.
-				<!-- Booking Record is empty! Please <a (click)="openAddBookingModal()">Add Records</a>. -->
 			</h5>
 		</ng-template>
 </div>

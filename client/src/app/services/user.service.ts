@@ -160,6 +160,20 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	getAuthUserDetails(queries:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<queries.length;i++){
+			let key = Object.keys(queries[i])[0];
+			let value = queries[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/authUser/getAuthUserDetails', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	registerOAuthUser(userData:Object, userAuths:Object){
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({ headers: headers });
