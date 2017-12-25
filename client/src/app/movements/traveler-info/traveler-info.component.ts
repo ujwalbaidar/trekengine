@@ -63,6 +63,19 @@ export class TravelerInfoComponent implements OnInit {
 		this.hrs = timePicker.hrs;
 		this.mins = timePicker.mins;
 		this.traveler = <Traveler>{emergencyContact:{}, airportPickup:{hrTime:this.hrs[0],minTime:this.mins[0]}, hotel:{}};
+		this.traveler['tripGuideCount'] = 0;
+		this.traveler['tripGuideDays'] = 0;
+		this.traveler['tripGuidePerDayCost'] = 0;
+		this.traveler['tripPoerterNumber'] = 0;
+		this.traveler['tripPoerterDays'] = 0;
+		this.traveler['tripPoerterPerDayCost'] = 0;
+		this.traveler['tripTransportationCost'] = 0;
+		this.traveler['tripAccomodationCost'] = 0;
+		this.traveler['tripFoodCost'] = 0;
+		this.traveler['tripPickupCost'] = 0;
+		this.traveler['tripPermitCost'] = 0;
+		this.traveler['tripFlightCost'] = 0;
+		this.traveler['tripHotelCost'] = 0;
 	}
 
 	ngOnInit() {

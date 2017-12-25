@@ -67,6 +67,15 @@ exports.createTravellers = function(req, res) {
 							req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 						}
 
+						req.body.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
+								(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
+								(req.body.tripTransportationCost)+
+								(req.body.tripAccomodationCost)+
+								(req.body.tripFoodCost)+
+								(req.body.tripPickupCost)+
+								(req.body.tripPermitCost)+
+								(req.body.tripFlightCost)+
+								(req.body.tripHotelCost);
 						let travelers = new Travelers(req.body);
 
 						travelers.save((err, traveler)=>{
@@ -552,7 +561,19 @@ function processAddTraveler(travelerData, headerData){
 				    let ageDate = new Date(ageDifMs);
 				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
+
+				travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
+								(travelerData.tripTransportationCost)+
+								(travelerData.tripAccomodationCost)+
+								(travelerData.tripFoodCost)+
+								(travelerData.tripPickupCost)+
+								(travelerData.tripPermitCost)+
+								(travelerData.tripFlightCost)+
+								(travelerData.tripHotelCost);
+
 				let travelers = new Travelers(travelerData);
+
 				travelers.save((err, traveler)=>{
 					if(err){
 						reject({success:false, data:err});
@@ -655,6 +676,16 @@ function processUpdataTraveler(travelerData, headerData){
 				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
+				updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
+								(travelerData.tripTransportationCost)+
+								(travelerData.tripAccomodationCost)+
+								(travelerData.tripFoodCost)+
+								(travelerData.tripPickupCost)+
+								(travelerData.tripPermitCost)+
+								(travelerData.tripFlightCost)+
+								(travelerData.tripHotelCost);
+				
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
 					if(err){
 						res.status(400).json({success:false, data:err});
