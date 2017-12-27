@@ -37,6 +37,8 @@ export class RegisterComponent implements OnInit {
 	selectedProtocol: string;
 	authUrls = [];
 	activePage: Number = 1;
+	timezones: any;
+	userTimezone: any;
 
 	constructor(
 		private userService: UserService, 
@@ -52,8 +54,17 @@ export class RegisterComponent implements OnInit {
 	
 	ngOnInit(){
 		this.getOAuthUrl();
+		this.getTimezoneList();
 	}
-	
+
+	getTimezoneList(){
+		this.userService.getTimezoneList()
+			.subscribe(timezoneData=>{
+				this.timezones = timezoneData.timezone;
+				this.user['timezone'] = timezoneData.userTimezone.zoneName;
+			});
+	}
+
 	registerUser(form:any) {
 		this.subittedRegisterForm = true;
 		if(form.valid == true){
@@ -142,6 +153,13 @@ export class RegisterComponent implements OnInit {
 		this.subittedOrgForm = true;
 		if(form.valid == true){
 			this.disbleSubmitBtn = true;
+			let userTimezone = this.timezones.find(timezoneObj=>{
+				if(timezoneObj.zoneName == this.user['timezone']){
+					return timezoneObj;
+				}
+			});
+			this.user.timezone = JSON.parse(JSON.stringify(userTimezone));
+			
 			this.userService.completeRegistrationProcess(this.user)
 				.subscribe(successResp=>{
 					if(successResp.success == true){

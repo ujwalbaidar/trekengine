@@ -11,6 +11,7 @@ export class User {
   		protocol: string;
   		website: string;
   	}
+  	timezone: any;
 }
 
 export class Trip {

@@ -63,6 +63,7 @@ let UserSchema = new mongoose.Schema({
 	},
 	guides:[],
 	admins: [],
-	loginCount: Number
+	loginCount: Number,
+	timezone: Object
 });
 mongoose.model('User', UserSchema);

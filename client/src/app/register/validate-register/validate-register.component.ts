@@ -25,6 +25,8 @@ export class ValidateRegisterComponent implements OnInit {
 	validateErr: any;
 	isNew: boolean;
 	activePage: Number = 1;
+	timezones: any;
+	userTimezone: any;
 
 	constructor(
 		public _cookieService:CookieService, 
@@ -41,13 +43,27 @@ export class ValidateRegisterComponent implements OnInit {
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
 			this.authorizeCode(params['code'], params['loginType']);
+			this.getTimezoneList();
 	    });
+	}
+
+	getTimezoneList(){
+		this.userService.getTimezoneList()
+			.subscribe(timezoneData=>{
+				this.timezones = timezoneData.timezone;
+				this.user['timezone'] = timezoneData.userTimezone.zoneName;
+			});
 	}
 
 	registerUser(form:any) {
 		this.subittedRegisterForm = true;
 		if(form.valid == true){
 			this.disbleSubmitBtn = true;
+			this.user.timezone = this.timezones.find(timezoneObj=>{
+				if(timezoneObj.zoneName == this.user['timezone']){
+					return timezoneObj;
+				}
+			});
 			this.userService.registerOAuthUser(this.user, this.userAuths)
 				.subscribe(registerResponse=>{
 					let dialogOptions = {

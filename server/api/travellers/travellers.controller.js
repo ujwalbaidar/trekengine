@@ -468,20 +468,25 @@ function travelerPickupCalendar(travelerData, userEmail){
 								let airportPickupObj = travelerData.airportPickup;
 								let epocStartDate = (airportPickupObj.date.epoc+(parseInt(airportPickupObj.hrTime)*60*60)+(parseInt(airportPickupObj.minTime)*60))*1000;
 
-								appCalendarLib.getCalendarDates(epocStartDate)
+								let arrivalTimeObj = {
+									hrTime: travelerData.airportPickup.hrTime,
+									minTime: travelerData.airportPickup.minTime
+								};
+								appCalendarLib.getCalendarDates(travelerData.airportPickup.date, arrivalTimeObj)
 									.then(calendarDates=>{
 										let user = userToken.user;
+										let userTimezone = user.timezone.zoneName || config.timezone;
 										let notificationMinutes = (parseInt(user.calendarNotification.hrTime)>0)? parseInt(user.calendarNotification.hrTime)*60+parseInt(user.calendarNotification.minTime):parseInt(user.calendarNotification.minTime);
 										let calendarObj = {
 											"summary": booking.tripName+' Airport Pickup',
 											"description": booking.tripName+" for "+ booking.groupName,
 											"start": {
 									            "dateTime": calendarDates.startDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "end": {
 									            "dateTime": calendarDates.endDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "reminders": {
 												useDefault : false,

@@ -143,35 +143,19 @@ class AppCalendarLib {
 		});
 	}
 
-	getCalendarDates(epocStartDate){
+	getCalendarDates(dateObj, timeObj){
 		return new Promise(resolve=>{
-			var fullStartDateTime = new Date(epocStartDate);
-			if(env === 'development'){
-				let isoEpocStartDate = new Date(epocStartDate);
-				let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
-				let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-				var fullStartDateTime = new Date(startDateTimeInSec);
-			}
-
-			let startDateYear = fullStartDateTime.getUTCFullYear();
-			let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
-			let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
-			let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
-			let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
-			let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
-			let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
-			let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
-
-			let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
-			let fullEndDateTime = new Date(endDateTimeInSec);
-			let endDateYear = fullEndDateTime.getUTCFullYear();
-			let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
-			let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
-			let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
-			let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
-			let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
-			let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
-			let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
+			let startDate = `${dateObj.date.year}-${dateObj.date.month}-${dateObj.date.day}`;
+			let startTime = `${timeObj.hrTime}:${timeObj.minTime}:00`;
+			let startDateTime = [startDate, startTime].join('T');
+			let epocStartDate = (dateObj.epoc+(parseInt(timeObj.hrTime)*60*60)+(parseInt(timeObj.minTime)*60))*1000;
+			let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
+			let endDateYear = epocEndDate.getFullYear();
+			let endDateMonth = epocEndDate.getMonth()+1;
+			let endDateDate = epocEndDate.getDate();
+			let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
+			let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
+			let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
 			resolve({startDateTime:startDateTime, endDateTime:endDateTime});
 		});
 	}
