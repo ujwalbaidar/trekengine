@@ -275,6 +275,21 @@
 							</div>
 						</div>
 					</div>
+					
+					<div class="card-action">
+						<div class="row">
+							<div class="col s12 m1" *ngIf="userInfo.timezone">
+								<label for="pickupTime">
+									<strong>
+										{{'Timezone: '}}
+									</strong>
+								</label>
+							</div>
+							<div class="col s12 m6">
+								{{userInfo.gmtValue +' '+ userInfo.timezone}}
+							</div>
+						</div>
+					</div>
 					<div class="card-action">
 						Form Embed
 					</div>
@@ -284,7 +299,8 @@
 								<p>Please Enter following code in your site to embed traveler form</p>
 							</div>
 							<div>
-								{{'<'+'iframe src='+travelerIframeUrl+'>'+'<'+'/iframe'+'>'}}
+								 <!-- frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:150%;width:150%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="150%" width="150%" -->
+								{{"<"+"iframe src='"+travelerIframeUrl+"'>"+"<"+"/iframe"+">"}}
 							</div>
 						</div>
 						<ng-template #nonDomain>
@@ -381,7 +397,20 @@
 										<label for="telephone" [ngClass]="{'active':(userInfo.telephone!=undefined)}">Telephone</label>
 										<input id="telephone" type="text" class="validate" name="telephone" [(ngModel)]="userInfo.telephone" #telephone="ngModel" [value] = "userInfo.telephone">
 									</div>
+									<div class="col s4">
+										<label class="active" for="timezone">
+											<strong>
+												{{'Timezone'}}
+											</strong>
+										</label>
+										<md-select id="timezone" [(ngModel)]="userInfo.timezone" name="selectedTimezone">
+											<md-option *ngFor="let timezone of timezones" [value]="timezone.zoneName">
+												{{timezone.gmtValue +' '+ timezone.zoneName}}
+											</md-option>
+										</md-select>
+									</div>	
 								</div>
+
 								<div class="row">
 									<div class="col s4">
 										<label for="street" [ngClass]="{'active':(userInfo.street!=undefined)}">Street</label>

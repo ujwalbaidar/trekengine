@@ -19,125 +19,93 @@ exports.createTrips = function(req, res) {
 			if(bookingErr){
 				res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 			}else{
-				let syncDeparture = new Promise((resolve, reject) => {
-					let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
+				User.findOne({_id: mongoose.Types.ObjectId(req.headers.userId)}, (userErr, user)=>{
 
-					var fullStartDateTime = new Date(epocStartDate);
-					if(env === 'development'){
-						let isoEpocStartDate = new Date(epocStartDate);
-						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
-						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-						var fullStartDateTime = new Date(startDateTimeInSec);
-					}
+					let syncDeparture = new Promise((resolve, reject) => {
+						let departureDate = `${req.body.departureDate.date.year}-${req.body.departureDate.date.month}-${req.body.departureDate.date.day}`;
+						let departureTime = `${req.body.departureTime.hrTime}:${req.body.departureTime.minTime}:00`;
+						let startDateTime = [departureDate, departureTime].join('T');
+						let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
+						
+						let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
+						let endDateYear = epocEndDate.getFullYear();
+						let endDateMonth = epocEndDate.getMonth()+1;
+						let endDateDate = epocEndDate.getDate();
+						let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
+						let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
+						let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
+						
+						let calendarObj = {
+							"summary": booking.tripName+' Departure Date Time',
+							"description": booking.tripName+" for "+ booking.groupName,
+							"start": {
+					            "dateTime": startDateTime,
+					            "timeZone": user.timezone.zoneName||config.timezone
+					        },
+					        "end": {
+					            "dateTime": endDateTime,
+					            "timeZone": user.timezone.zoneName||config.timezone
+					        }
+						};
+						let appCalendarLib = new AppCalendarLib();
+						appCalendarLib.saveToCalendar(req.headers.email, calendarObj, true)
+							.then(googleCalendarObj=>{
+								if(JSON.stringify(googleCalendarObj) !== "{}"){
+									resolve(googleCalendarObj)
+								}else{
+									resolve('');
+								}
+							});
+					}); 
 
-					let startDateYear = fullStartDateTime.getUTCFullYear();
-					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
-					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
-					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
-					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
-					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
-					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
-					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
+					let syncArrival = new Promise((resolve, reject) => {
+						let arrivalDate = `${req.body.arrivalDate.date.year}-${req.body.arrivalDate.date.month}-${req.body.arrivalDate.date.day}`;
+						let arrivalTime = `${req.body.arrivalTime.hrTime}:${req.body.arrivalTime.minTime}:00`;
+						let startDateTime = [arrivalDate, arrivalTime].join('T');
+						let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
+						
+						let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
+						let endDateYear = epocEndDate.getFullYear();
+						let endDateMonth = epocEndDate.getMonth()+1;
+						let endDateDate = epocEndDate.getDate();
+						let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
+						let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
+						let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
+						
+						let calendarObj = {
+							"summary": booking.tripName+' Departure Date Time',
+							"description": booking.tripName+" for "+ booking.groupName,
+							"start": {
+					            "dateTime": startDateTime,
+					            "timeZone": user.timezone.zoneName||config.timezone
+					        },
+					        "end": {
+					            "dateTime": endDateTime,
+					            "timeZone": user.timezone.zoneName||config.timezone
+					        }
+						};
 
-					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
-					let fullEndDateTime = new Date(endDateTimeInSec);
-					let endDateYear = fullEndDateTime.getUTCFullYear();
-					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
-					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
-					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
-					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
-					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
-					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
-					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
-
-					let calendarObj = {
-						"summary": booking.tripName+' Departure Date Time',
-						"description": booking.tripName+" for "+ booking.groupName,
-						"start": {
-				            "dateTime": startDateTime,
-				            "timeZone": config.timezone
-				        },
-				        "end": {
-				            "dateTime": endDateTime,
-				            "timeZone": config.timezone
-				        }
-					};
-
-					let appCalendarLib = new AppCalendarLib();
-					appCalendarLib.saveToCalendar(req.headers.email, calendarObj, true)
-						.then(googleCalendarObj=>{
-							if(JSON.stringify(googleCalendarObj) !== "{}"){
-								resolve(googleCalendarObj)
+						let appCalendarLib = new AppCalendarLib();
+						appCalendarLib.saveToCalendar(req.headers.email, calendarObj, false)
+							.then(googleCalendarObj=>{
+								if(JSON.stringify(googleCalendarObj) !== "{}"){
+									resolve(googleCalendarObj)
+								}else{
+									resolve('');
+								}
+							});
+					}); 
+					Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
+						req.body.departureCalendarObj = calendarObjects[0];
+						req.body.arrivalCalendarObj = calendarObjects[1];
+						let trips = new Trips(req.body);
+						trips.save((err, trip)=>{
+							if(err){
+								res.status(400).json({success:false, data:err});
 							}else{
-								resolve('');
+								res.status(200).json({success:true, data:trip});
 							}
 						});
-				}); 
-
-				let syncArrival = new Promise((resolve, reject) => {
-					let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
-					var fullStartDateTime = new Date(epocStartDate);
-
-					if(env === 'development'){
-						let isoEpocStartDate = new Date(epocStartDate);
-						let startDateGmtHours = -isoEpocStartDate.getTimezoneOffset()*60;
-						let startDateTimeInSec = epocStartDate + (startDateGmtHours * 1000);
-						var fullStartDateTime = new Date(startDateTimeInSec);
-					}
-
-					let startDateYear = fullStartDateTime.getUTCFullYear();
-					let startDateMonth = ((fullStartDateTime.getUTCMonth()+1)<10)?'0'+(fullStartDateTime.getUTCMonth()+1):fullStartDateTime.getUTCMonth()+1 ;
-					let startDateDay = (fullStartDateTime.getUTCDate()<10)? '0'+fullStartDateTime.getUTCDate() : fullStartDateTime.getUTCDate() ;
-					let joinStartDateArray = [startDateYear, startDateMonth, startDateDay].join('-');
-					let startDateHours = (fullStartDateTime.getUTCHours()<10)? '0'+fullStartDateTime.getUTCHours() : fullStartDateTime.getUTCHours() ;
-					let startTimeArray = (fullStartDateTime.getUTCMinutes()<10)? '0'+fullStartDateTime.getUTCMinutes() : fullStartDateTime.getUTCMinutes() ;
-					let joinStartTimeArray = [startDateHours, startTimeArray, '00'].join(':');
-					let startDateTime = [joinStartDateArray, joinStartTimeArray].join('T');
-
-					let endDateTimeInSec = fullStartDateTime.setHours(fullStartDateTime.getHours() + 1);
-					let fullEndDateTime = new Date(endDateTimeInSec);
-					let endDateYear = fullEndDateTime.getUTCFullYear();
-					let endDateMonth = ((fullEndDateTime.getUTCMonth()+1)<10)?'0'+(fullEndDateTime.getUTCMonth()+1):fullEndDateTime.getUTCMonth()+1 ;
-					let endDateDay = (fullEndDateTime.getUTCDate()<10)? '0'+fullEndDateTime.getUTCDate() : fullEndDateTime.getUTCDate() ;
-					let joinEndDateArray = [endDateYear, endDateMonth, endDateDay].join('-');
-					let endDateHours = (fullEndDateTime.getUTCHours()<10)? '0'+fullEndDateTime.getUTCHours() : fullEndDateTime.getUTCHours() ;
-					let endTimeArray = (fullEndDateTime.getUTCMinutes()<10)? '0'+fullEndDateTime.getUTCMinutes() : fullEndDateTime.getUTCMinutes() ;
-					let joinEndTimeArray = [endDateHours, endTimeArray, '00'].join(':');
-					let endDateTime = [joinEndDateArray, joinEndTimeArray].join('T');
-
-					let calendarObj = {
-						"summary": booking.tripName+' Departure Date Time',
-						"description": booking.tripName+" for "+ booking.groupName,
-						"start": {
-				            "dateTime": startDateTime,
-				            "timeZone": config.timezone
-				        },
-				        "end": {
-				            "dateTime": endDateTime,
-				            "timeZone": config.timezone
-				        }
-					};
-
-					let appCalendarLib = new AppCalendarLib();
-					appCalendarLib.saveToCalendar(req.headers.email, calendarObj, false)
-						.then(googleCalendarObj=>{
-							if(JSON.stringify(googleCalendarObj) !== "{}"){
-								resolve(googleCalendarObj)
-							}else{
-								resolve('');
-							}
-						});
-				}); 
-				Promise.all([syncDeparture, syncArrival]).then(calendarObjects => { 
-					req.body.departureCalendarObj = calendarObjects[0];
-					req.body.arrivalCalendarObj = calendarObjects[1];
-					let trips = new Trips(req.body);
-					trips.save((err, trip)=>{
-						if(err){
-							res.status(400).json({success:false, data:err});
-						}else{
-							res.status(200).json({success:true, data:trip});
-						}
 					});
 				});
 			}
@@ -256,25 +224,25 @@ function updateTripCalendar(tripData, userEmail){
 		let appCalendarLib = new AppCalendarLib();
 		appCalendarLib.queryUserTokens(userEmail)
 			.then(userToken=>{
+				let userTimezone = userToken.user.timezone.zoneName || config.timezone;
 				if(userToken.hasToken == true){
 					Bookings.findOne({bookingId: tripData.bookingId}, (bookingErr, booking)=>{
 						if(bookingErr){
 							res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 						}else{
 							let syncDeparture = new Promise((resolve, reject) => {
-								let epocStartDate = (tripData.departureDate.epoc+(parseInt(tripData.departureTime.hrTime)*60*60)+(parseInt(tripData.departureTime.minTime)*60))*1000;
-								appCalendarLib.getCalendarDates(epocStartDate)
+								appCalendarLib.getCalendarDates(tripData.departureDate, tripData.departureTime)
 									.then(calendarDates=>{
 										let calendarObj = {
 											"summary": booking.tripName+' Departure Date Time',
 											"description": booking.tripName+" for "+ booking.groupName,
 											"start": {
 									            "dateTime": calendarDates.startDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "end": {
 									            "dateTime": calendarDates.endDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        }
 										};
 										let access_token = userToken.tokenObj.access_token;
@@ -293,19 +261,18 @@ function updateTripCalendar(tripData, userEmail){
 							});
 
 							let syncArrival = new Promise((resolve, reject) => {
-								let epocStartDate = (tripData.arrivalDate.epoc+(parseInt(tripData.arrivalTime.hrTime)*60*60)+(parseInt(tripData.arrivalTime.minTime)*60))*1000;
-								appCalendarLib.getCalendarDates(epocStartDate)
+								appCalendarLib.getCalendarDates(tripData.arrivalDate, tripData.arrivalTime)
 									.then(calendarDates=>{
 										let calendarObj = {
 											"summary": booking.tripName+' Arrival Date Time',
 											"description": booking.tripName+" for "+ booking.groupName,
 											"start": {
 									            "dateTime": calendarDates.startDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "end": {
 									            "dateTime": calendarDates.endDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        }
 										};
 										let access_token = userToken.tokenObj.access_token;

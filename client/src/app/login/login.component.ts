@@ -23,10 +23,21 @@ export class LoginComponent{
 		{ 'id': '1', 'name': 'http', 'value': 'http://'},
 		{ 'id': '2', 'name': 'https', 'value': 'https://'}
 	];
+	timezones: any;
+	userTimezone: any;
 	constructor(private userService: UserService, private authService: AuthService, private _route: Router, public snackBar: MdSnackBar, public dialog: MdDialog){}
 	
 	ngOnInit(){
 		this.getOauthUrl();
+		this.getTimezoneList();
+	}
+
+	getTimezoneList(){
+		this.userService.getTimezoneList()
+			.subscribe(timezoneData=>{
+				this.timezones = timezoneData.timezone;
+				this.user['timezone'] = timezoneData.userTimezone.zoneName;
+			});
 	}
 
 	loginUser(form:any){
@@ -142,6 +153,12 @@ export class LoginComponent{
 		this.subittedOrgForm = true;
 		if(form.valid == true){
 			this.disbleOrgSubmitBtn = true;
+			let userTimezone = this.timezones.find(timezoneObj=>{
+				if(timezoneObj.zoneName == this.user['timezone']){
+					return timezoneObj;
+				}
+			});
+			this.user.timezone = JSON.parse(JSON.stringify(userTimezone));
 			this.userService.completeRegistrationProcess(this.user)
 				.subscribe(successResp=>{
 					if(successResp.success == true){

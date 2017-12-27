@@ -26,6 +26,7 @@ router.post('/validateCode', userController.validateCode);
 router.put('/completeRegistrationProcess', userController.completeRegistrationProcess);
 router.post('/sendActivationLink', userController.sendActivationLink);
 router.get('/getCountryList', userController.getCountryList);
+router.get('/getTimezoneList', userController.getTimezoneList);
 router.get('/getAuthUserDetails', userController.getAuthUserDetails);
 
 module.exports = router;

@@ -11,6 +11,7 @@ export class User {
   		protocol: string;
   		website: string;
   	}
+  	timezone: any;
 }
 
 export class Trip {
@@ -85,6 +86,22 @@ export class Traveler {
 	messageBox: string;
 	status: boolean;
 	gender: any;
+	tripGuideCount: number;
+	tripGuideDays: number;
+	tripGuidePerDayCost: number;
+	tripPoerterNumber: number;
+	tripPoerterDays: number;
+	tripPoerterPerDayCost: number;
+	tripTransportationCost: number;
+	tripTransportationRemarks: string;
+	tripAccomodationCost: number;
+	tripFoodCost: number;
+	tripPickupCost: number;
+	tripPermitCost: number;
+	tripFlightCost: number;
+	tripHotelCost: number;
+	tripHotelRemark: string;
+	tripRemark: string;
 }
 
 export class FeaturePackage {
