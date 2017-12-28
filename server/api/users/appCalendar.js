@@ -145,18 +145,12 @@ class AppCalendarLib {
 
 	getCalendarDates(dateObj, timeObj){
 		return new Promise(resolve=>{
-			let startDate = `${dateObj.date.year}-${dateObj.date.month}-${dateObj.date.day}`;
-			let startTime = `${timeObj.hrTime}:${timeObj.minTime}:00`;
-			let startDateTime = [startDate, startTime].join('T');
-			let epocStartDate = (dateObj.epoc+(parseInt(timeObj.hrTime)*60*60)+(parseInt(timeObj.minTime)*60))*1000;
-			let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
-			let endDateYear = epocEndDate.getFullYear();
-			let endDateMonth = epocEndDate.getMonth()+1;
-			let endDateDate = epocEndDate.getDate();
-			let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
-			let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
-			let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
-			resolve({startDateTime:startDateTime, endDateTime:endDateTime});
+			let epocStartDate = dateObj.epoc;
+			let startDateTime = new Date(epocStartDate*1000);
+			startDateTime.setHours(timeObj.hrTime);
+			startDateTime.setMinutes(timeObj.minTime);
+			let endDateTime = new Date(startDateTime.getTime()+(1*60*60*1000));
+			resolve({startDateTime: startDateTime, endDateTime: endDateTime});
 		});
 	}
 

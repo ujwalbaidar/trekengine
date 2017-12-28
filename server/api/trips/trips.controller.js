@@ -20,21 +20,13 @@ exports.createTrips = function(req, res) {
 				res.status(400).json({success:false, data:bookingErr, message: 'Failed to get Booking Details'});
 			}else{
 				User.findOne({_id: mongoose.Types.ObjectId(req.headers.userId)}, (userErr, user)=>{
-
 					let syncDeparture = new Promise((resolve, reject) => {
-						let departureDate = `${req.body.departureDate.date.year}-${req.body.departureDate.date.month}-${req.body.departureDate.date.day}`;
-						let departureTime = `${req.body.departureTime.hrTime}:${req.body.departureTime.minTime}:00`;
-						let startDateTime = [departureDate, departureTime].join('T');
-						let epocStartDate = (req.body.departureDate.epoc+(parseInt(req.body.departureTime.hrTime)*60*60)+(parseInt(req.body.departureTime.minTime)*60))*1000;
-						
-						let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
-						let endDateYear = epocEndDate.getFullYear();
-						let endDateMonth = epocEndDate.getMonth()+1;
-						let endDateDate = epocEndDate.getDate();
-						let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
-						let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
-						let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
-						
+						let epocStartDate = req.body.departureDate.epoc;
+						let startDateTime = new Date(epocStartDate*1000);
+						startDateTime.setHours(req.body.departureTime.hrTime);
+						startDateTime.setMinutes(req.body.departureTime.minTime);
+						let endDateTime = new Date(startDateTime.getTime()+(1*60*60*1000));
+
 						let calendarObj = {
 							"summary": booking.tripName+' Departure Date Time',
 							"description": booking.tripName+" for "+ booking.groupName,
@@ -47,6 +39,7 @@ exports.createTrips = function(req, res) {
 					            "timeZone": user.timezone.zoneName||config.timezone
 					        }
 						};
+
 						let appCalendarLib = new AppCalendarLib();
 						appCalendarLib.saveToCalendar(req.headers.email, calendarObj, true)
 							.then(googleCalendarObj=>{
@@ -59,19 +52,12 @@ exports.createTrips = function(req, res) {
 					}); 
 
 					let syncArrival = new Promise((resolve, reject) => {
-						let arrivalDate = `${req.body.arrivalDate.date.year}-${req.body.arrivalDate.date.month}-${req.body.arrivalDate.date.day}`;
-						let arrivalTime = `${req.body.arrivalTime.hrTime}:${req.body.arrivalTime.minTime}:00`;
-						let startDateTime = [arrivalDate, arrivalTime].join('T');
-						let epocStartDate = (req.body.arrivalDate.epoc+(parseInt(req.body.arrivalTime.hrTime)*60*60)+(parseInt(req.body.arrivalTime.minTime)*60))*1000;
-						
-						let epocEndDate = new Date(epocStartDate+(1*60*60*1000));
-						let endDateYear = epocEndDate.getFullYear();
-						let endDateMonth = epocEndDate.getMonth()+1;
-						let endDateDate = epocEndDate.getDate();
-						let endDateHours = epocEndDate.getHours()==0?'00':epocEndDate.getHours();
-						let endDateMinutes = epocEndDate.getMinutes()==0?'00':epocEndDate.getMinutes();
-						let endDateTime = `${endDateYear}-${endDateMonth}-${endDateDate}T${endDateHours}:${endDateMinutes}:00`;
-						
+						let epocStartDate = req.body.arrivalDate.epoc;
+						let startDateTime = new Date(epocStartDate*1000);
+						startDateTime.setHours(req.body.arrivalTime.hrTime);
+						startDateTime.setMinutes(req.body.arrivalTime.minTime);
+						let endDateTime = new Date(startDateTime.getTime()+(1*60*60*1000));
+
 						let calendarObj = {
 							"summary": booking.tripName+' Departure Date Time',
 							"description": booking.tripName+" for "+ booking.groupName,
