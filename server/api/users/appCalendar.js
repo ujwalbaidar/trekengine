@@ -30,6 +30,7 @@ class AppCalendarLib {
 							clientId: config['google']['client_id'],
 							clientSecret: config['google']['client_secret'],
 						};
+
 						let googleAuthLib = new GoogleAuthLib();
 						googleAuthLib.checkNRefreshToken(user.googleAuths, oAuthOptions)
 							.then(refhreshObj=>{
@@ -150,7 +151,7 @@ class AppCalendarLib {
 			startDateTime.setHours(timeObj.hrTime);
 			startDateTime.setMinutes(timeObj.minTime);
 			let endDateTime = new Date(startDateTime.getTime()+(1*60*60*1000));
-			resolve({startDateTime: startDateTime, endDateTime: endDateTime});
+			resolve({startDateTime: startDateTime.toISOString(), endDateTime: endDateTime.toISOString()});
 		});
 	}
 
