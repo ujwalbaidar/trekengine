@@ -44,6 +44,8 @@ export class ProfileComponent implements OnInit {
 	mins: any;
 	submittedForm: boolean = false;
 	travelerIframeUrl: string;
+	timezones: any;
+	userTimezone: any;
 
 	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
 		let timePicker = this.authService.developTimePicker();
@@ -66,6 +68,13 @@ export class ProfileComponent implements OnInit {
 		this.getOauthUrl();
 	}
 
+	getTimezoneList(){
+		this.userService.getTimezoneList()
+			.subscribe(timezoneData=>{
+				this.timezones = timezoneData.timezone;
+			});
+	}
+
 	getUserInfo(){
 		this.userService.getUserInfo()
 			.subscribe(userInfo=>{
@@ -73,6 +82,8 @@ export class ProfileComponent implements OnInit {
 				if(this.userInfo['domain'] == undefined){
 					this.userInfo['domain'] = JSON.parse(JSON.stringify({domain:'http://', website:''}));
 				}
+				this.userInfo['timezone'] = JSON.parse(JSON.stringify(userInfo.timezone.zoneName));
+				this.userInfo['gmtValue'] = JSON.parse(JSON.stringify(userInfo.timezone.gmtValue));
 				this.profile = JSON.parse(JSON.stringify(userInfo));
 			}, error=>{
 				this.userErr = error;
@@ -98,6 +109,12 @@ export class ProfileComponent implements OnInit {
 		}else{
 			this.submittedForm = true;
 			if(profileForm.valid){
+				let userTimezone = this.timezones.find(timezoneObj=>{
+					if(timezoneObj.zoneName == this.userInfo['timezone']){
+						return timezoneObj;
+					}
+				});
+				this.userInfo.timezone = JSON.parse(JSON.stringify(userTimezone));
 				this.userService.updateUserInfo(this.userInfo)
 					.subscribe(updateData=>{
 						this.submittedForm = false;
@@ -164,5 +181,6 @@ export class ProfileComponent implements OnInit {
 
 	switchEditMode(){
 		this.displayContent=false;
+		this.getTimezoneList();
 	}
 }

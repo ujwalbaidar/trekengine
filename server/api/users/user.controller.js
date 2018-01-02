@@ -74,6 +74,7 @@ exports.createUser = function(req, res){
 exports.completeRegistrationProcess = function(req, res){
 	let updateObj = {
 		organizationName: req.body.organizationName,
+		timezone: req.body.timezone,
 		processCompletion: true,
 		updatedDate: new Date(),
 		lastLoggedIn: new Date()
@@ -807,7 +808,8 @@ exports.updateUserProfile = function(req, res){
 			dailyTripNotification: req.body.dailyTripNotification,
 			weeklyTripNotification: req.body.weeklyTripNotification,
 			calendarNotification: req.body.calendarNotification,
-			status: req.body.status
+			status: req.body.status,
+			timezone: req.body.timezone
 		};
 
 
@@ -1205,7 +1207,8 @@ exports.saveOauthUser = function(req, res){
 				let userUpdateObj = {
 					organizationName: req.body.userData.organizationName,
 					status: true,
-					processCompletion: true
+					processCompletion: true,
+					timezone: req.body.userData.timezone
 				};
 
 				if(req.body.userData.domain && req.body.userData.domain.website.length>0){
@@ -1288,6 +1291,48 @@ exports.saveOauthUser = function(req, res){
 exports.getCountryList = function(req, res){
 	let countries = fs.readFileSync('server/static-data/countries.json', 'utf-8');
 	res.status(200).json({data:{success: true, countries: countries, message: 'All countries retrieved successfully!'}});
+}
+
+exports.getTimezoneList = function(req, res){
+	getIpInfo()
+		.then(ipInfo=>{
+			var timezone = JSON.parse(fs.readFileSync('server/static-data/timezone.json', 'utf-8'));
+
+			let countryCode = ipInfo.country;
+			let userTimezone = timezone.find(timezoneObj=>{
+				if(timezoneObj.countryCode == countryCode){
+					return timezoneObj;
+				}
+			});
+			
+			if(userTimezone){
+				res.status(200).json({
+					data:{
+						success: true, 
+						userTimezone: userTimezone,
+						timezone: timezone,
+						message: 'All timezone retrieved successfully!'
+					}
+				});
+			}else{
+				res.status(200).json({
+					data:{
+						success: true, 
+						userTimezone: timezone[0],
+						timezone: timezone,
+						message: 'All timezone retrieved successfully!'
+					}
+				});
+			}
+		});
+}
+
+const getIpInfo = ()=>{
+	return new Promise(resolve=>{
+		request('http://ipinfo.io', function(error, res, body) {
+			resolve(JSON.parse(body));
+		});
+	})
 }
 
 exports.deleteUserInfo = function(req, res){

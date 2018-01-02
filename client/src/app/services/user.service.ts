@@ -220,4 +220,12 @@ export class UserService {
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
+
+	getTimezoneList(){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/users/getTimezoneList', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 }

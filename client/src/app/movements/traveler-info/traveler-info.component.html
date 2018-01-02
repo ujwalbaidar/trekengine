@@ -344,6 +344,228 @@
 					</div>
 				</div>
 
+				<div class="detail-subheader col s12">
+					<strong>Trip Cost</strong>
+				</div>
+
+				<div class="row trip-cost-header">
+					<div class="col s2">
+						<span>Description</span>
+					</div>
+					<div class="col s9">
+						<span>Amount</span>
+					</div>
+					<div class="col s1">
+						<span>Total</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s2">
+						<span>Guide Cost</span>
+					</div>
+					<div class="col s3">
+						<label for="tripGuideCount">No of guide</label>
+						<input id="tripGuideCount" type="number" class="validate" name="tripGuideCount" [(ngModel)]="traveler.tripGuideCount" #tripGuideCount="ngModel">
+					</div>
+					<div class="col s3">
+						<label for="tripGuideDays">No of days</label>
+						<input id="tripGuideDays" type="number" class="validate" name="tripGuideDays" [(ngModel)]="traveler.tripGuideDays" #tripGuideDays="ngModel">
+					</div>
+					<div class="col s3">
+						<label for="tripGuidePerDayCost">Per day cost</label>
+						<input id="tripGuidePerDayCost" type="number" class="validate" name="tripGuidePerDayCost" [(ngModel)]="traveler.tripGuidePerDayCost" #tripGuidePerDayCost="ngModel">
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripGuideCount * traveler.tripGuideDays * traveler.tripGuidePerDayCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Porter Cost</span>
+					</div>
+					<div class="col s3">
+						<label for="tripPoerterNumber">No of porter</label>
+						<input id="tripPoerterNumber" type="number" class="validate" name="tripPoerterNumber" [(ngModel)]="traveler.tripPoerterNumber" #tripPoerterNumber="ngModel">
+					</div>
+					<div class="col s3">
+						<label for="tripPoerterDays">No of day</label>
+						<input id="tripPoerterDays" type="number" class="validate" name="tripPoerterDays" [(ngModel)]="traveler.tripPoerterDays" #tripPoerterDays="ngModel">
+					</div>
+					<div class="col s3">
+						<label for="tripPoerterPerDayCost">Per day cost</label>
+						<input id="tripPoerterPerDayCost" type="number" class="validate" name="tripPoerterPerDayCost" [(ngModel)]="traveler.tripPoerterPerDayCost" #tripPoerterPerDayCost="ngModel">
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripPoerterNumber * traveler.tripPoerterDays * traveler.tripPoerterPerDayCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Transportation Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripTransportationCost">Transportation Cost</label>
+						<input id="tripTransportationCost" type="number" class="validate" name="tripTransportationCost" [(ngModel)]="traveler.tripTransportationCost" #tripTransportationCost="ngModel">
+					</div>
+					<div class="col s5">
+						<label for="tripTransportationRemarks">Remarks</label>
+						<textarea id="tripTransportationRemarks" class="validate materialize-textarea" name="tripTransportationRemarks" [(ngModel)]="traveler.tripTransportationRemarks" #tripTransportationRemarks="ngModel" rows="1" style="padding:0px"></textarea>
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripTransportationCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Accomodation Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripAccomodationCost">Accomodation Cost</label>
+						<input id="tripAccomodationCost" type="number" class="validate" name="tripAccomodationCost" [(ngModel)]="traveler.tripAccomodationCost" #tripAccomodationCost="ngModel">
+					</div>
+					<div class="col s5">
+						
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripAccomodationCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Food Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripFoodCost">Food Cost</label>
+						<input id="tripFoodCost" class="validate" type="number" name="tripFoodCost" [(ngModel)]="traveler.tripFoodCost" #tripFoodCost="ngModel">
+					</div>
+					<div class="col s5">
+						
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripFoodCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Pickup/Drop Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripPickupCost">Pickup/Drop Cost</label>
+						<input id="tripPickupCost" class="validate" type="number" name="tripPickupCost" [(ngModel)]="traveler.tripPickupCost" #tripPickupCost="ngModel">
+					</div>
+					<div class="col s5">
+						
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripPickupCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Permit Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripPermitCost">Permit Cost</label>
+						<input id="tripPermitCost" class="validate" type="number" name="tripPermitCost" [(ngModel)]="traveler.tripPermitCost" #tripPermitCost="ngModel">
+					</div>
+					<div class="col s5">
+						
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripPermitCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Flight Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripFlightCost">Flight Cost</label>
+						<input id="tripFlightCost" class="validate" type="number" name="tripFlightCost" [(ngModel)]="traveler.tripFlightCost" #tripFlightCost="ngModel">
+					</div>
+					<div class="col s5">
+						
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripFlightCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>City Hotel Cost</span>
+					</div>
+					<div class="col s4">
+						<label for="tripHotelCost">City Hotel Cost</label>
+						<input id="tripHotelCost" class="validate" type="number" name="tripHotelCost" [(ngModel)]="traveler.tripHotelCost" #tripHotelCost="ngModel">
+					</div>
+					<div class="col s5">
+						<label for="tripHotelRemark">Remarks</label>
+						<textarea id="tripHotelRemark" class="validate materialize-textarea" name="tripHotelRemark" [(ngModel)]="traveler.tripHotelRemark" #tripHotelRemark="ngModel" rows="1" style="padding:0px"></textarea>
+					</div>
+					<div class="col s1">
+						<span>
+							{{traveler.tripHotelCost}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col s2">
+						<span>Remark</span>
+					</div>
+					<div class="col s5">
+						<label for="tripRemark">Remarks</label>
+						<textarea id="tripRemark" class="validate materialize-textarea" name="tripRemark" [(ngModel)]="traveler.tripRemark" #tripRemark="ngModel" rows="1" style="padding:0px"></textarea>
+					</div>
+					<div class="col s4"></div>
+					<div class="col s1"></div>
+				</div>
+
+				<div class="row">
+					<div class="col s11">
+						<span>Total Cost</span>
+					</div>
+					<div class="col s1">
+						<span>
+							{{
+								(traveler.tripGuideCount * traveler.tripGuideDays * traveler.tripGuidePerDayCost)+
+								(traveler.tripPoerterNumber * traveler.tripPoerterDays * traveler.tripPoerterPerDayCost)+
+								(traveler.tripTransportationCost)+
+								(traveler.tripAccomodationCost)+
+								(traveler.tripFoodCost)+
+								(traveler.tripPickupCost)+
+								(traveler.tripPermitCost)+
+								(traveler.tripFlightCost)+
+								(traveler.tripHotelCost)
+							}}
+						</span>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col s12">
 						<label for="messageBox" class="active">
