@@ -1,11 +1,10 @@
-<div class="user-register-page">
-	<div class="container">
-		<div class="form-holder">
-	    	<div class="card">
-	    		<div class="card-content">
-	    			<div [ngSwitch]="activePage">
-	    				<div *ngSwitchDefault>
-						
+<div [ngSwitch]="activePage">
+	<div *ngSwitchDefault>
+		<div class="user-register-page">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">				
 							<div class="row">
 								<div class="col s12">
 									<h5 class="center-align">
@@ -15,13 +14,15 @@
 							</div>
 
 							<div class="row">
-								<div *ngFor="let authUrl of authUrls">
-									<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
-										Signup with Google
-									</button>
-									<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
-										Login with Facebook
-									</button>
+								<div class="col s12">
+									<div *ngFor="let authUrl of authUrls">
+										<button *ngIf="authUrl.loginType==='google'" class="btn red waves-effect waves-light registerBtn--google" (click)="redirectOauthUrl(authUrl.url)">
+											Signup with Google
+										</button>
+										<button *ngIf="authUrl.loginType==='facebook'" class="btn blue waves-effect waves-light registerBtn--facebook" (click)="redirectOauthUrl(authUrl.url)">
+											Login with Facebook
+										</button>
+									</div>
 								</div>
 							</div>
 
@@ -156,8 +157,17 @@
 
 							</form>
 						</div>
-
-						<div *ngSwitchCase="2">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngSwitchCase="2">
+		<div class="register-company-form">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
 							<form (ngSubmit)="submitOrgInfo(organizationInfo.form)" #organizationInfo="ngForm" novalidate>
 								<div class="row">
 									<div class="col s12" [ngClass]="[(organizationName?.errors && subittedOrgForm)?'err-div':'']">
@@ -173,15 +183,27 @@
 										</div>
 									</div>
 								</div>
+								
+								<div class="row">
+									<div class="col s12">
+										<md-select [(ngModel)]="user.timezone" name="selectedTimezone">
+											<md-option *ngFor="let timezone of timezones" [value]="timezone.zoneName">
+												{{timezone.gmtValue +' '+ timezone.zoneName}}
+											</md-option>
+										</md-select>
+									</div>	
+								</div>
 
 								<div class="row">
-									<div class="row">
+									<div class="col s12">
 										<label class="active" for="domain">
 											<strong>
 												{{'Website Domain'}}
 											</strong>
 										</label>
 									</div>
+								</div>
+								<div class="row">
 									<div class="col s3">
 										<md-select [(ngModel)]="user.domain.protocol" name="selectedProtocol">
 											<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
@@ -193,11 +215,12 @@
 									<div class="col s9">
 										<input id="domain" type="text" class="validate" name="domainWebsite" [(ngModel)]="user.domain.website" #domainWebsite="ngModel">
 									</div>
-									<div class="row">
+								</div>
+								<div class="row">
+									<div class="col s12">
 										<span>e.g.:"http://www.yoursite.com"</span>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col s12">
 										<button [disabled]="disbleSubmitBtn" class="waves-effect waves-light btn" type="submit">
@@ -208,8 +231,18 @@
 
 							</form>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
 
-						<div *ngSwitchCase="4">
+	<div *ngSwitchCase="4">
+		<div class="registration-success-page">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
 							<div class="row">
 								<div class="col s12">
 									<h5 class="center-align">
@@ -231,8 +264,18 @@
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-						<div *ngSwitchCase="3">
+	<div *ngSwitchCase="3">
+		<div class="success-msg">
+			<div class="container">
+				<div class="form-holder">
+			    	<div class="card">
+			    		<div class="card-content">
 							<div class="row">
 								<div class="col s12">
 									<h5 class="center-align">
@@ -247,10 +290,8 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>

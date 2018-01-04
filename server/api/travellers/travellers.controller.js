@@ -9,6 +9,7 @@ const Bookings = mongoose.model('Bookings');
 let AppCalendarLib = require('../users/appCalendar');
 let GoogleAuthLib = require('../../library/oAuth/googleAuth');
 
+
 exports.getTravelerDetails = function(req, res) {
 	if(req.headers && req.headers.userId){
 		Travelers.find({userId: req.headers.userId }, (err, travelers)=>{
@@ -66,6 +67,15 @@ exports.createTravellers = function(req, res) {
 							req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 						}
 
+						req.body.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
+								(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
+								(req.body.tripTransportationCost)+
+								(req.body.tripAccomodationCost)+
+								(req.body.tripFoodCost)+
+								(req.body.tripPickupCost)+
+								(req.body.tripPermitCost)+
+								(req.body.tripFlightCost)+
+								(req.body.tripHotelCost);
 						let travelers = new Travelers(req.body);
 
 						travelers.save((err, traveler)=>{
@@ -90,11 +100,14 @@ exports.createTravellers = function(req, res) {
 }
 
 function saveAttachments(dataObj, requestFor) {
-
 	return new Promise((res, rej)=>{
 		let profileAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.profileAttachment && (dataObj.profileAttachment.name!==undefined)){
-				let profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.profileAttachment.type == 'image/png'){
+					var profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.profileAttachment.type == 'image/jpeg'){
+					var profileAttachment = dataObj.profileAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
 				if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
 					if(dataObj.imageAttachments && dataObj.imageAttachments.profile){
 						fs.stat("attachments/"+dataObj.imageAttachments.profile, (err, stat) => {
@@ -137,7 +150,12 @@ function saveAttachments(dataObj, requestFor) {
 		});
 		let savePassportAttachments = new Promise((resolve, reject)=>{
 			if(dataObj.passportAttachment && (dataObj.passportAttachment.name!==undefined)){
-				let passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.passportAttachment.type == 'image/png'){
+					var passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.passportAttachment.type == 'image/jpeg'){
+					var passportAttachment = dataObj.passportAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
+
 				if(dataObj.imageAttachments && dataObj.imageAttachments.passport){
 					fs.stat("attachments/"+dataObj.imageAttachments.passport, (err, stat) => {
 						if(!err){
@@ -178,7 +196,11 @@ function saveAttachments(dataObj, requestFor) {
 
 		let insuranceAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.insuranceAttachment && (dataObj.insuranceAttachment.name!==undefined)){
-				let insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				if(dataObj.imageAttachments.type == 'image/png'){
+					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
+				}else if(dataObj.imageAttachments.type == 'image/jpeg'){
+					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
+				}
 				if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
 					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
 						if(!err){
@@ -446,20 +468,25 @@ function travelerPickupCalendar(travelerData, userEmail){
 								let airportPickupObj = travelerData.airportPickup;
 								let epocStartDate = (airportPickupObj.date.epoc+(parseInt(airportPickupObj.hrTime)*60*60)+(parseInt(airportPickupObj.minTime)*60))*1000;
 
-								appCalendarLib.getCalendarDates(epocStartDate)
+								let arrivalTimeObj = {
+									hrTime: travelerData.airportPickup.hrTime,
+									minTime: travelerData.airportPickup.minTime
+								};
+								appCalendarLib.getCalendarDates(travelerData.airportPickup.date, arrivalTimeObj)
 									.then(calendarDates=>{
 										let user = userToken.user;
+										let userTimezone = user.timezone.zoneName || config.timezone;
 										let notificationMinutes = (parseInt(user.calendarNotification.hrTime)>0)? parseInt(user.calendarNotification.hrTime)*60+parseInt(user.calendarNotification.minTime):parseInt(user.calendarNotification.minTime);
 										let calendarObj = {
 											"summary": booking.tripName+' Airport Pickup',
 											"description": booking.tripName+" for "+ booking.groupName,
 											"start": {
 									            "dateTime": calendarDates.startDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "end": {
 									            "dateTime": calendarDates.endDateTime,
-									            "timeZone": config.timezone
+									            "timeZone": userTimezone
 									        },
 									        "reminders": {
 												useDefault : false,
@@ -539,7 +566,19 @@ function processAddTraveler(travelerData, headerData){
 				    let ageDate = new Date(ageDifMs);
 				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
+
+				travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
+								(travelerData.tripTransportationCost)+
+								(travelerData.tripAccomodationCost)+
+								(travelerData.tripFoodCost)+
+								(travelerData.tripPickupCost)+
+								(travelerData.tripPermitCost)+
+								(travelerData.tripFlightCost)+
+								(travelerData.tripHotelCost);
+
 				let travelers = new Travelers(travelerData);
+
 				travelers.save((err, traveler)=>{
 					if(err){
 						reject({success:false, data:err});
@@ -642,6 +681,16 @@ function processUpdataTraveler(travelerData, headerData){
 				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
+				updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
+								(travelerData.tripTransportationCost)+
+								(travelerData.tripAccomodationCost)+
+								(travelerData.tripFoodCost)+
+								(travelerData.tripPickupCost)+
+								(travelerData.tripPermitCost)+
+								(travelerData.tripFlightCost)+
+								(travelerData.tripHotelCost);
+				
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
 					if(err){
 						res.status(400).json({success:false, data:err});
@@ -661,4 +710,9 @@ function processUpdataTraveler(travelerData, headerData){
 				});
 			});
 	});
+}
+
+exports.getCountryList = function(req, res){
+	let countries = fs.readFileSync('server/static-data/countries.json', 'utf-8');
+	res.status(200).json({data:{success: true, countries: countries, message: 'All countries retrieved successfully!'}});
 }

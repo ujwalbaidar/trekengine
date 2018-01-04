@@ -7,7 +7,10 @@ class AppEmail {
 	sendEmail(){
 		return new Promise((resolve, reject)=>{
 			let transporter = nodemailer.createTransport({
-			    service: this.emailConfigs.service,
+			    // service: this.emailConfigs.service,
+			    host: 'smtp.zoho.com',
+			    port: 465,
+			    secure: true,
 			    auth: {
 			        user: this.emailConfigs.address,
 			        pass: this.emailConfigs.password
@@ -21,7 +24,7 @@ class AppEmail {
 			    	resolve(info);
 			    }
 			});
-		});
+		});             
 	}
 }
 module.exports = AppEmail;

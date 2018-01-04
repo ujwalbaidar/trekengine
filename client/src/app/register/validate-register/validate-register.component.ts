@@ -25,6 +25,8 @@ export class ValidateRegisterComponent implements OnInit {
 	validateErr: any;
 	isNew: boolean;
 	activePage: Number = 1;
+	timezones: any;
+	userTimezone: any;
 
 	constructor(
 		public _cookieService:CookieService, 
@@ -41,13 +43,27 @@ export class ValidateRegisterComponent implements OnInit {
 	ngOnInit() {
 		this.activatedRoute.params.subscribe(params => {
 			this.authorizeCode(params['code'], params['loginType']);
+			this.getTimezoneList();
 	    });
+	}
+
+	getTimezoneList(){
+		this.userService.getTimezoneList()
+			.subscribe(timezoneData=>{
+				this.timezones = timezoneData.timezone;
+				this.user['timezone'] = timezoneData.userTimezone.zoneName;
+			});
 	}
 
 	registerUser(form:any) {
 		this.subittedRegisterForm = true;
 		if(form.valid == true){
 			this.disbleSubmitBtn = true;
+			this.user.timezone = this.timezones.find(timezoneObj=>{
+				if(timezoneObj.zoneName == this.user['timezone']){
+					return timezoneObj;
+				}
+			});
 			this.userService.registerOAuthUser(this.user, this.userAuths)
 				.subscribe(registerResponse=>{
 					let dialogOptions = {
@@ -106,7 +122,15 @@ export class ValidateRegisterComponent implements OnInit {
 						this.setCookies(authInfos)
 							.then(success=>{
 								if(success){
-									this._route.navigate(['/app']);
+									if (parseInt(authInfos.index) === 20) {
+										this._route.navigate(['/app/bookings']);
+									}else if(parseInt(authInfos.index) === 30){
+										this._route.navigate(['/app/movements']);
+									}else if(parseInt(authInfos.index) === 10){
+										this._route.navigate(['/app']);
+									}else{
+										this._route.navigate(['/app/profile']);
+									}
 								}
 							});
 					}
@@ -127,6 +151,7 @@ export class ValidateRegisterComponent implements OnInit {
 			this.authService.setCookies('idx',cookieParams['index']);
 			this.authService.setCookies('hostOrigin', window.location.origin);
 			this.authService.setCookies('email', cookieParams['email']);
+			this.authService.setCookies('userName', cookieParams['userName']);
 			if(cookieParams['packageType'] && cookieParams['remainingDays']) {
 				this.authService.setCookies('packageType',cookieParams['packageType']);
 				this.authService.setCookies('remainingDays',cookieParams['remainingDays']);

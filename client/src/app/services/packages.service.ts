@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { AuthService } from './index';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class PackagesService {
@@ -21,6 +21,14 @@ export class PackagesService {
             .catch(this.handleError.bind(this));
 	}
 
+	getPayingPackages(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/packages/getPayingPackages', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	getAppPackageDetail(packageQuery:any){
 		let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<packageQuery.length;i++){
@@ -31,6 +39,16 @@ export class PackagesService {
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers, search: params });
 		return this.http.get('/api/packages/byQuery', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	queryPackageById(packageId:any){
+		let params: URLSearchParams = new URLSearchParams();
+		params.set('packageId', packageId);
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/auth/packages/getPackageById', options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}

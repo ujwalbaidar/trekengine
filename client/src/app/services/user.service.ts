@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { Http, Response, URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from './index';
+import { AuthService } from './auth.service';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -98,6 +98,14 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	deleteUserInfo(userId:String){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken'), deleteUser: userId});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.delete('/api/userInfo/deleteUserInfo', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	getUserInfo(){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken')});
     	let options = new RequestOptions({ headers: headers });
@@ -152,6 +160,20 @@ export class UserService {
 			.catch(this.handleError);
 	}
 
+	getAuthUserDetails(queries:any){
+		let params: URLSearchParams = new URLSearchParams();
+		for(let i=0;i<queries.length;i++){
+			let key = Object.keys(queries[i])[0];
+			let value = queries[i][key];
+			params.set(key, value);
+		}
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers, search: params });
+		return this.http.get('/api/authUser/getAuthUserDetails', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
 	registerOAuthUser(userData:Object, userAuths:Object){
 		let headers = new Headers({ 'Content-Type': 'application/json'});
 		let options = new RequestOptions({ headers: headers });
@@ -191,4 +213,19 @@ export class UserService {
     	}
 	}
 
+	getCountryLists(){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/users/getCountryList', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
+
+	getTimezoneList(){
+		let headers = new Headers({ 'Content-Type': 'application/json'});
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('/api/users/getTimezoneList', options)
+			.map(this.extractData)
+			.catch(this.handleError);
+	}
 }

@@ -4,7 +4,7 @@
 		<table class="traveller-pickup-list-table responsive-table highlight">
 			<thead>
 				<tr>
-					<td>BookingId</td>
+					<!-- <td>BookingId</td> -->
 					<td>Name</td>
 					<td>Email</td>
 					<td>Telephone</td>
@@ -15,9 +15,9 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let pickupDetail of pickupDetails">
-					<td (click)="openTravellerModal(pickupDetail)">
+					<!-- <td (click)="openTravellerModal(pickupDetail)">
 						{{ pickupDetail.bookingId }}
-					</td>
+					</td> -->
 					<td (click)="openTravellerModal(pickupDetail)">
 						{{ pickupDetail.firstName+' '+ pickupDetail.lastName }}
 					</td>

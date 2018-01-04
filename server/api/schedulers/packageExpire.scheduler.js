@@ -79,7 +79,7 @@ module.exports = function(io) {
     * tick socket every minutes and send billing data
     **/
     const billingOnSocket = new CronJob({
-        cronTime: '00 * * * * *',
+        cronTime: '*/10 * * * * *',
         // cronTime: '* * * * * *',
         onTick: function() {
             // console.log('cron run at:' + new Date() + 'for billing socket');

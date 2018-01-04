@@ -1,3 +1,9 @@
+*{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 html{
 	/*min-height: 100%;*/
 	height: 100%;
@@ -29,6 +35,8 @@ p{margin: 0 0 1.5em;}
 	width: 80%;
 	max-width: 100%;
 }
+
+a{cursor: pointer;}
 
 /*==============================
  Header style
@@ -124,7 +132,8 @@ nav .button-collapse{float: right;}
 
 .login-page .form-holder .loginBtn--google:before {
     background: rgba(0, 0, 0, 0) url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") no-repeat scroll 6px 6px;
-    border-right: 1px solid #106094;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 4px rgba(255, 255, 255, 0.5);
 }
 
 .login-page .form-holder .loginBtn:before {
@@ -138,7 +147,7 @@ nav .button-collapse{float: right;}
 }
 
 .login-page .form-holder .loginBtn--google {
-    background: #1685CD;
+    background: #B2392F;
     width: 100%;
 }
 
@@ -148,9 +157,9 @@ nav .button-collapse{float: right;}
     box-sizing: border-box;
     color: #fff;
     font-size: 16px;
-    line-height: 34px;
-    margin: 0;
-    padding: 0 15px 0 46px;
+    line-height: 1.2em;
+    margin: 0 0 5px;
+    padding: 5px 15px 10px 46px;
     position: relative;
     text-align: left;
     white-space: nowrap;
@@ -158,7 +167,44 @@ nav .button-collapse{float: right;}
 
 .login-page .form-holder .loginBtn--google:hover,
 .login-page .form-holder .loginBtn--google:focus{
-	background: #1373b1;
+	background: #dd473a;
+}
+
+.login-page .form-holder .loginbtn-facebook{
+	border: medium none;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.2em;
+    margin: 0 0 5px;
+    padding: 5px 15px 10px 46px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+	width: 100%;
+	text-transform: none;
+	background: #3B5998 !important;
+	box-shadow: none;
+}
+
+.login-page .form-holder .loginbtn-facebook:before{
+	background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png") no-repeat scroll 6px 6px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 4px rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.login-page .form-holder .loginbtn-facebook:hover,
+.login-page .form-holder .loginbtn-facebook:focus{
+	box-shadow: none;
+	background: #547fd9 !important;
 }
 
 .login-page .form-holder .btn-submit,
@@ -248,7 +294,14 @@ nav .button-collapse{float: right;}
 }
 
 .login-page .form-holder form label,
-.forgot-password-page .form-holder form label{color: #000;}
+.forgot-password-page .form-holder form label,
+.login-page .form-holder form label,
+.forgot-password-page .form-holder form label input{color: #000;}
+
+
+input:-webkit-autofill{
+	-webkit-text-fill-color: #000;
+}
 
 .login-page .form-holder form .or{
 	position: relative;
@@ -422,7 +475,12 @@ nav .button-collapse{float: right;}
 .trip-list-page .main-title,
 .traveller-list-page .main-title,
 .flight-list-page .main-title,
-.traveller-pickup-list-page .main-title{
+.traveller-pickup-list-page .main-title,
+.traverler-detail-form .main-title,
+.feature-list-page .main-title,
+.package-list-page .main-title,
+.user-list-page .main-title,
+.feature-detail-form .main-title{
 	font-weight: 300;
 	font-size: 22px;
 	line-height: 30px;
@@ -434,7 +492,10 @@ nav .button-collapse{float: right;}
 .trip-list-page .trip-list-table,
 .traveller-list-page .traveller-list-table,
 .flight-list-page .flight-list-table,
-.traveller-pickup-list-page .traveller-pickup-list-table{
+.traveller-pickup-list-page .traveller-pickup-list-table,
+.traverler-detail-form .detail-form,
+.table_trek,
+.package-details-wrapper{
 	box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
 	border-radius: 5px;
 	font-size: 14px;
@@ -454,7 +515,9 @@ nav .button-collapse{float: right;}
 .flight-list-page .flight-list-table td,
 .flight-list-page .flight-list-table th,
 .traveller-pickup-list-page .traveller-pickup-list-table td,
-.traveller-pickup-list-page .traveller-pickup-list-table th{
+.traveller-pickup-list-page .traveller-pickup-list-table th,
+.table_trek th,
+.table_trek td{
 	padding: 12px 15px;
 }
 
@@ -464,7 +527,10 @@ nav .button-collapse{float: right;}
 .trip-list-page .guid-list-table thead th,
 .traveller-list-page .traveller-list-table thead th,
 .flight-list-page .flight-list-table thead th,
-.traveller-pickup-list-page .traveller-pickup-list-table thead th{font-weight: 600}
+.traveller-pickup-list-page .traveller-pickup-list-table thead th,
+.table_trek thead th{
+	font-weight: 600;
+}
 
 .booking-list-page .booking-list-table tbody tr,
 .movement-list-page .movement-list-table tbody tr,
@@ -472,7 +538,8 @@ nav .button-collapse{float: right;}
 .trip-list-page .trip-list-table tbody tr,
 .traveller-list-page .traveller-list-table tbody tr,
 .flight-list-page .flight-list-table tbody tr,
-.traveller-pickup-list-page .traveller-pickup-list-table tbody tr{
+.traveller-pickup-list-page .traveller-pickup-list-table tbody tr,
+.table_trek tbody tr{
 	border-bottom: 1px solid #f0f0f0;
 }
 
@@ -703,4 +770,302 @@ nav .button-collapse{float: right;}
 .err-div input[type=search],
 .err-div textarea.materialize-textarea{
 	border-bottom-color: #F44336;
+}
+
+/*start 30 days free trial form style*/
+.login-company-form .form-holder{
+	max-width: 470px;
+	margin: 7% auto 0;
+}
+
+.login-company-form .form-holder form input.valid[type="text"]{
+	box-shadow: none;
+	border-color: #26a69a;
+}
+
+.login-company-form .form-holder form input[type="text"]:focus{
+	border-color: #26a69a;
+	box-shadow: none;
+}
+
+.login-company-form .form-holder form button[type="submit"]{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.login-company-form .form-holder form .mat-select-underline{
+	bottom: -12px;
+	background: #9e9e9e;
+}
+
+/*register company form style*/
+.register-company-form .form-holder{
+	max-width: 510px;
+	margin: 7% auto 0;
+}
+
+.register-company-form .form-holder form input.valid[type="text"]{
+	box-shadow: none;
+	border-color: #26a69a;
+}
+
+.register-company-form .form-holder form input[type="text"]:focus{
+	border-color: #26a69a;
+	box-shadow: none;
+}
+
+.register-company-form .form-holder form button[type="submit"]{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.register-company-form .form-holder form .mat-select-underline{
+	bottom: -12px;
+	background: #9e9e9e;
+}
+
+/*Success msg style*/
+.success-msg .form-holder{
+	max-width: 510px;
+	margin: 7% auto 0;
+	text-align: center;
+}
+
+/*activate-success-page style*/
+.activate-success-page .holder{
+	max-width: 510px;
+	margin: 7% auto 0;
+	padding: 24px;
+	border-radius: 2px;
+	background: #fff;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+	text-align: center;
+}
+
+/*User register page style*/
+.user-register-page .form-holder{
+	max-width: 510px;
+	margin: 7% auto 0;
+}
+
+.user-register-page .form-holder .registerBtn--google:before {
+    background: rgba(0, 0, 0, 0) url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png") no-repeat scroll 6px 6px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 4px rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.user-register-page .form-holder .registerBtn--google {
+    border: none;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.2em;
+    margin: 0 0 5px;
+    padding: 5px 15px 10px 46px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+    box-shadow: none;
+    background: #B2392F !important;
+    width: 100%;
+    text-transform: none;
+}
+
+.user-register-page .form-holder .registerBtn--google:hover,
+.user-register-page .form-holder .registerBtn--google:focus{
+	background: #dd473a !important;
+}
+
+.user-register-page .form-holder .registerBtn--facebook{
+	border: medium none;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.2em;
+    margin: 0 0 5px;
+    padding: 5px 15px 10px 46px;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+	width: 100%;
+	text-transform: none;
+	background: #3B5998 !important;
+	box-shadow: none;
+}
+
+.user-register-page .form-holder .registerBtn--facebook:before{
+	background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_facebook.png") no-repeat scroll 6px 6px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 4px rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 34px;
+}
+
+.user-register-page .form-holder .registerBtn--facebook:hover,
+.user-register-page .form-holder .registerBtn--facebook:focus{
+	box-shadow: none;
+	background: #547fd9 !important;
+}
+
+.user-register-page .form-holder button[type="submit"]{
+	width: 100%;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.mydp .selection{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/*Profile Page style*/
+.profile-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 1.363em;
+}
+
+.traverler-detail-form .detail-form {
+	padding: 15px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill, 
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border-bottom: 1px solid #9e9e9e;
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:not([type]).valid,
+input:not([type]):focus.valid,
+input[type=text].valid,
+input[type=text]:focus.valid,
+input[type=password].valid,
+input[type=password]:focus.valid,
+input[type=email].valid,
+input[type=email]:focus.valid,
+input[type=url].valid,
+input[type=url]:focus.valid,
+input[type=time].valid,
+input[type=time]:focus.valid,
+input[type=date].valid,
+input[type=date]:focus.valid,
+input[type=datetime].valid,
+input[type=datetime]:focus.valid,
+input[type=datetime-local].valid,
+input[type=datetime-local]:focus.valid,
+input[type=tel].valid,
+input[type=tel]:focus.valid,
+input[type=number].valid,
+input[type=number]:focus.valid,
+input[type=search].valid,
+input[type=search]:focus.valid,
+textarea.materialize-textarea.valid,
+textarea.materialize-textarea:focus.valid {
+	border-bottom: 1px solid #9e9e9e;
+	color: #000;
+}
+
+.traverler-detail-form .file-field .btn{
+	position: relative;
+}
+
+.traverler-detail-form .file-field input[type=file]{
+	height: 45px;
+}
+.traverler-detail-form .waves-effect span{
+	color: #fff;
+}
+
+/*analytics page*/
+.analytics-page{
+	margin-bottom: 0;
+}
+
+.analytics-page .main-title{
+	font-weight: 300;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.short-desc {
+  box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+  border-radius: 5px;
+  font-size: 14px;
+  background: #fff;
+  padding: 15px;
+  display: inline-block;
+  margin:0 .75rem 1rem;;
+}
+
+/*home*/
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb{
+	background: #3C8DBC;
+}
+
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar{
+	background: rgba(60, 141, 188, 0.5);
+}
+
+.dropdown-content {
+	width: 200px !important;
+}
+
+.feature-detail-form .main-title{
+	margin-bottom: 0;
+}
+
+.package-details-wrapper{
+	padding: 15px 15px 0;
+}
+
+.package-details-wrapper .row .col{
+	padding: 0;
+}
+
+.feature-list-table,
+.package-list-table,
+.package-details-wrapper{
+	margin-bottom: 15px;
+}
+
+.package-details-wrapper .collection li:after{
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.remove-icon{
+	float: right;
+	font-size: 18px;
+	color: #F44336;
 }

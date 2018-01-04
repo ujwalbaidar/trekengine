@@ -23,15 +23,24 @@
 		"algorithm":"sha512"
 	},
 	"appEmail":{
-		"service": "gmail",
-		"address":"trekengine.solution@gmail.com",
+		"service": "smtp.zoho.com",
+		"address":"support@trekengine.com",
 		"password":"treakengine123456789",
-		"senderAddress": "codewings<donotreply@codewings.com>"
+		"senderAddress": "trekengine<support@trekengine.com>"
 	},
 	"activateAccount":{
 		"secretKey":"c0d3w1ngR3g15ter!!",
 		"expireTime": "1d",
 		"algorithm": "HS256"
+	},
+	"paypal":{
+		"mode": "sandbox",
+		"client_id": "AVLlYi8gVmDn00ol4vAiuaiQhVyPfsi7B5Y2CgKOu2GGLcXMHhRMmDyIiagY4s6Phc46A2Igiv50C13c",
+		"client_secret": "EACa7RAOWXksd2cZl9tqlFEKg6vS60tjrDEzfAib9jagS4siJK9oaRdtOCoSzgXbFd7xsS-V-qwtW2iz",
+		"redirect_urls": {
+			"return_url": "http://localhost:5000/trekengineApp/checkouts/success",
+			"cancel_url": "http://localhost:5000/trekengineApp/checkouts/cancel"
+		}
 	},
 	"timezone": "Etc/UTC"
 }

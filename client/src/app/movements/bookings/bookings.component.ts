@@ -1,49 +1,81 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MovementsService, AuthService } from '../../services/index';
 import { Booking } from '../../models/models';
 import { FormControl } from '@angular/forms';
+import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
   selector: 'bookings',
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.css']
 })
-export class BookingsComponent implements OnInit  {
+export class BookingsComponent implements OnInit, AfterViewInit  {
 	bookings: any;
 	bookingErr: string;
 	isAvailable: boolean = false;
+	cookieData: any;
+	public currentBookingPage:number = 0;
+	public totalBookingPages: any;
 
 	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
+		
+	}
+	ngOnInit(){
+		this.getBookingList(this.currentBookingPage);
+	}
+	
+	ngAfterViewInit(){
 		this.authService.getCookies()
 			.then(cookieObj=>{
-				if(cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
+				if(cookieObj!==undefined && cookieObj['remainingDays'] && parseInt(cookieObj['remainingDays']) >=1){
 					this.isAvailable = true;
+					this.cookieData = cookieObj;
+				}else{
+					this.isAvailable = false;
 				}
 			});
 	}
-	ngOnInit(){
-		this.getBookingList();
-	}
 
-	getBookingList() {
-		this.movementService.getBookings()
-			.subscribe(bookings=>{
-				this.bookings = bookings;
+	getBookingList(currentBookingPage) {
+		this.movementService.getBookings([{queryPage: currentBookingPage}])
+			.subscribe(bookingsData=>{
+				this.totalBookingPages = new Array( bookingsData.totalBookings );
+				this.bookings = bookingsData.bookings;
 			}, bookingErr=>{
 				this.bookingErr = 'Failed to Load Booking Details';
 			});
 	}
 
+	changePagination(index){
+  		this.currentBookingPage = index;
+  		this.getBookingList(index);
+  	}
+
 	deleteBooking(deleteId: string, index: number) {
-		this.movementService.deleteBooking(deleteId)
-			.subscribe(deleteStatus=>{
-				this.bookings.splice(index,1);
-			}, error => {
-				this.bookingErr = 'Failed to Delete Booking Details';
-			});
+		let dialogOptions = {
+  			width: '600px',
+  			position: 'center',
+  			disableClose: true
+		};
+
+		dialogOptions["data"] = {};
+		
+		let dialogRef = this.dialog.open(DeleteConfimationDialogComponent, dialogOptions);
+    	dialogRef.afterClosed().subscribe(result => {
+    		let selectedOption = parseInt(result);
+    		if(selectedOption == 1){
+    			this.movementService.deleteBooking(deleteId)
+					.subscribe(deleteStatus=>{
+						this.bookings.splice(index,1);
+					}, error => {
+						this.bookingErr = 'Failed to Delete Booking Details';
+					});
+    		}
+    	});
+		
 	}
 
 	openAddBookingModal(editData:Booking=<Booking>{}){

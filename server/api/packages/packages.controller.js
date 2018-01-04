@@ -58,6 +58,20 @@ exports.getPackageByQuery = function(req, res){
 	}
 }
 
+exports.getPackageById = function(req, res){
+	if(req.headers && req.headers.userId){
+		Packages.find({_id: mongoose.Types.ObjectId(req.query.packageId)}, (err, packages)=>{
+			if(err){
+				res.status(400).json({success: false, data: err, msg: 'failed to retrive package by id.'});
+			}else{
+				res.status(200).json({success: true, data: packages, msg: 'package by id retried successfully.'});
+			}
+		});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
 exports.updatePackage = function(req, res){
 	if(req.headers && req.headers.userId && req.headers.role==10){
 		let updateData = {
@@ -91,6 +105,20 @@ exports.deletePackage = function(req, res){
 				res.status(400).json({success:false, data:err});
 			}else{
 				res.status(200).json({success:true, data:package});
+			}
+		});
+	}else{
+		res.status(401).json({success:false, message: 'Login is Required!'});
+	}
+}
+
+exports.getPayingPackages = function(req, res){
+	if(req.headers && req.headers.userId){
+		Packages.find({ cost: { $gt: 0 } }, (err, packages)=>{
+			if(err){
+				res.status(400).json({success: false, data: err, msg: 'failed to retrive package.'});
+			}else{
+				res.status(200).json({success: true, data: packages, msg: 'package retrieved successfully.'});
 			}
 		});
 	}else{

@@ -1,0 +1,52 @@
+<div class="row analytics-page">
+	<div class="col s12 m8">
+		<h3 class="main-title">Audience Age Detail Analytics</h3>
+	</div>
+</div>
+<div class="short-desc">
+	<div *ngIf="minAge && maxAge">
+		Age Group: {{minAge+'-'+maxAge}}
+	</div>
+	<div *ngIf="minAge && !maxAge">
+		Age Group: {{minAge}}
+	</div>
+	<div *ngIf="ageDetailData">
+		Number of Bookings : {{ageDetailData.length}}
+	</div>
+	<div *ngIf="ageDetailData && ageDetailData.length>0">
+		Total Sales: {{ ageDetailData[0]['totalSales'] | currency:'USD':true }}
+	</div>
+</div>
+<div class="row">
+	<div class="col s12 m12">
+		<table class="table_trek">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Trip Name</th>
+					<th>No. of Travelers</th>
+					<th>Male Percentage</th>
+					<th>Female Percentage</th>
+					<th>Total Sales</th>
+				</tr>
+			</thead>
+			<tbody *ngIf="ageDetailData && ageDetailData.length>0;else EmptyAnalyticsData;">
+				<tr *ngFor="let ageDetail of ageDetailData; let idx=index">
+					<td>{{ idx+1 }}</td>
+					<td>{{ ageDetail._id }}</td>
+					<td>{{ ageDetail.root.length }}</td>
+					<td>{{ (ageDetail.male/ageDetail.countTravelers) | percent:'1.2-2' }}</td>
+					<td>{{ (ageDetail.female/ageDetail.countTravelers) | percent:'1.2-2' }}</td>
+					<td>{{ ageDetail.sales | currency:'USD':true }}</td>
+				</tr>
+			</tbody>
+			<ng-template #EmptyAnalyticsData>
+				<tbody>
+					<tr>
+						<td>There is no data for this view</td>
+					</tr>
+				</tbody>
+			</ng-template>
+		</table>
+	</div>	
+</div>

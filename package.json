@@ -31,6 +31,7 @@
     "mongoose": "^4.8.2",
     "nodemailer": "3.1.8",
     "opn": "^4.0.2",
+    "paypal-rest-sdk": "1.7.1",
     "randomstring": "1.1.5",
     "request": "2.81.0",
     "shortid": "2.2.6",

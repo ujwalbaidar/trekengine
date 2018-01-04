@@ -8,6 +8,7 @@ module.exports = function(app){
 	app.use('/api/users', require('./api/users'));
 	app.use('/api/seed', require('./api/users'));
 	app.use('/api/userInfo', auth ,require('./api/users'));
+	app.use('/api/authUser', superAuth ,require('./api/users'));
 	app.use('/api/movements/trips', auth ,require('./api/trips'));
 	app.use('/api/guides', auth, require('./api/users'));
 	app.use('/api/movements/bookings',auth, require('./api/bookings'));
@@ -19,7 +20,9 @@ module.exports = function(app){
 	app.put('/trekengineApp/package-billings', require('./api/package-billings/package-billings.controller').updateUserPackage);
 	app.use('/api/features', superAuth, require('./api/features'));
 	app.use('/api/packages', superAuth, require('./api/packages'));
+	app.use('/api/auth/packages', auth, require('./api/packages'));
 	app.post('/trekengineApp/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
+	app.get('/trekengineApp/travellers/getCountryList', require('./api/travellers/travellers.controller').getCountryList);
 	app.get('/trekengineApp/travellers', (req, res) => {
 		res.render('iframes/traveler-details-form.template.ejs');
 	});
@@ -28,6 +31,12 @@ module.exports = function(app){
 	app.get('/trekengineApp/authorizaiton/activateUser', require('./api/users/user.controller').activateUser);
 	app.get('/trekengineApp/validateAuthToken', decodeAuthToken);
 	app.use('/api/analytics', auth, require('./api/analytics'));
+	app.use('/api/checkouts', auth, require('./api/checkouts'));
+	app.get('/trekengineApp/checkouts/success/product/:productId/user/:userId/billing/:billingType', require('./api/checkouts/checkouts.controller').submitCheckoutInfos);
+
+	app.get('/trekengineApp/checkouts/cancel', (req, res)=>{
+		res.redirect('/app/package-billings');
+	});
 
 	app.route('*')
         .get((req, res) => {
@@ -80,7 +89,14 @@ module.exports = function(app){
 				let currentDate = new Date();
 				let currentTime = Math.ceil(currentDate.getTime()/1000);
 				if(decoded.exp>currentTime){
-					res.status(200).send({success:true, data: { role: decoded.role, email: decoded.email, remainingDays: decoded.remainingDays, packageType: decoded.packageType}});
+					let data = { 
+						role: decoded.role, 
+						email: decoded.email, 
+						remainingDays: decoded.remainingDays, 
+						packageType: decoded.packageType, 
+						userName: decoded.userName
+					};
+					res.status(200).send({success:true, data: data });
 				}else{
 					res.status(401).send({success:false, message: 'Login is Required!'});
 				}
