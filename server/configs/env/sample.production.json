@@ -23,10 +23,10 @@
 		"algorithm":"sha512"
 	},
 	"appEmail":{
-		"service": "gmail",
-		"address":"trekengine.solution@gmail.com",
+		"service": "smtp.zoho.com",
+		"address":"support@trekengine.com",
 		"password":"treakengine123456789",
-		"senderAddress": "codewings<donotreply@codewings.com>"
+		"senderAddress": "trekengine<support@trekengine.com>"
 	},
 	"activateAccount":{
 		"secretKey":"c0d3w1ngR3g15ter!!",
