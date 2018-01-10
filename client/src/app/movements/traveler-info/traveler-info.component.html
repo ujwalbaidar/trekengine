@@ -92,7 +92,6 @@
 								</option>
 							</select>
 						</div>
-						<!-- <input id="nationality" type="text" name="nationality" class="validate" [(ngModel)]="traveler.nationality" #nationality="ngModel" required> -->
 						<div class="error-msg" *ngIf="nationality?.errors?.required && submittedTravelerForm">
 							This Field is Required!
 						</div>
@@ -574,7 +573,6 @@
 							</strong>
 						</label>
 						<textarea id="messageBox" class="materialize-textarea validate" [(ngModel)]="traveler.messageBox" [ngModelOptions]="{standalone: true}"></textarea>
-						<!-- <input id="messageBox" type="text" name="messageBox" class="validate" [(ngModel)]="traveler.messageBox"> -->
 					</div>
 		        </div>
 
