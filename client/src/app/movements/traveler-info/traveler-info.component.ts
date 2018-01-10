@@ -136,6 +136,21 @@ export class TravelerInfoComponent implements OnInit {
 					this.traveler['emergencyContact']['relation'] = '';
 				}
 				this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
+				if(travelerDetails['travelerTripCost'] === undefined){
+					this.traveler['tripGuideCount'] = 0;
+					this.traveler['tripGuideDays'] = 0;
+					this.traveler['tripGuidePerDayCost'] = 0;
+					this.traveler['tripPoerterNumber'] = 0;
+					this.traveler['tripPoerterDays'] = 0;
+					this.traveler['tripPoerterPerDayCost'] = 0;
+					this.traveler['tripTransportationCost'] = 0;
+					this.traveler['tripAccomodationCost'] = 0;
+					this.traveler['tripFoodCost'] = 0;
+					this.traveler['tripPickupCost'] = 0;
+					this.traveler['tripPermitCost'] = 0;
+					this.traveler['tripFlightCost'] = 0;
+					this.traveler['tripHotelCost'] = 0;
+				}
 			}, error=>{
 				let snackBarRef = this.snackBar.open('Failed to get Traveler Information to edit', '', {
 					duration: 5000,

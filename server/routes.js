@@ -24,7 +24,7 @@ module.exports = function(app){
 	app.post('/trekengineApp/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
 	app.get('/trekengineApp/travellers/getCountryList', require('./api/travellers/travellers.controller').getCountryList);
 	app.get('/trekengineApp/travellers', (req, res) => {
-		res.render('iframes/traveler-details-form.template.ejs');
+		res.render('iframeIndex');
 	});
 	app.use('/api/notifications', auth, require('./api/notifications'));
 	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
