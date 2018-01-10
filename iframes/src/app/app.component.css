@@ -1,0 +1,7 @@
+.traverler-detail-form .file-field .btn{
+	position: relative;
+}
+
+.traverler-detail-form .file-field input[type=file]{
+	height: 45px;
+}
