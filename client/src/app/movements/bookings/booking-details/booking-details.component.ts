@@ -11,6 +11,7 @@ import { TravellerDetailsDialogComponent } from '../../traveller-details/travell
 
 declare var jQuery:any;
 import { CookieService } from 'ngx-cookie';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
   selector: 'booking-details',
@@ -19,7 +20,7 @@ import { CookieService } from 'ngx-cookie';
 })
 export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 	bookingId: string;
-	booking: any;
+	booking: Booking = <Booking>{};
 	trip: any;
 	guides: any;
 	flight: any;
@@ -39,7 +40,8 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 		public userService: UserService, 
 		private route: ActivatedRoute, 
 		public dialog: MdDialog, private _route:Router,
-		public _cookieService: CookieService
+		public _cookieService: CookieService,
+		public snackBar: MdSnackBar
 	){
 		this.route.params.subscribe(params => {
 			this.bookingId = params['bookingId'];
@@ -68,6 +70,21 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 				}else{
 					this.booking = booking;
 					this.selectedTravelerArr = booking['travellers'];
+					if(booking['tripGuideCount'] === undefined){
+						this.booking['tripGuideCount'] = 0;
+						this.booking['tripGuideDays'] = 0;
+						this.booking['tripGuidePerDayCost'] = 0;
+						this.booking['tripPoerterNumber'] = 0;
+						this.booking['tripPoerterDays'] = 0;
+						this.booking['tripPoerterPerDayCost'] = 0;
+						this.booking['tripTransportationCost'] = 0;
+						this.booking['tripAccomodationCost'] = 0;
+						this.booking['tripFoodCost'] = 0;
+						this.booking['tripPickupCost'] = 0;
+						this.booking['tripPermitCost'] = 0;
+						this.booking['tripFlightCost'] = 0;
+						this.booking['tripHotelCost'] = 0;
+					}
 				}
 			}, bookingErr=>{
 				console.log(bookingErr);
@@ -267,4 +284,20 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
     	});
 	}
 
+
+	updateBookingDetails() {
+		this.movementService.updateBookingDetails(this.booking)
+			.subscribe(booking=>{
+				let snackBarRef = this.snackBar.open('Trip Cost Updated Succefully!', '', {
+					duration: 5000,
+				});
+				// this.submittedBookingForm = false;
+				// this.dialogRef.close(booking);
+			}, error=>{
+				let snackBarRef = this.snackBar.open('Failed to update trip costs!', '', {
+					duration: 5000,
+				});
+				// this.dialogRef.close(error);
+			});
+	}
 }

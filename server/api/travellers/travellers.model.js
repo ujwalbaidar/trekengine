@@ -63,8 +63,8 @@ let TravelerSchema = new mongoose.Schema({
 	gender: {
 		type:String,
 		required: true
-	},
-	tripGuideCount: Number,
+	}
+	/*tripGuideCount: Number,
 	tripGuideDays: Number,
 	tripGuidePerDayCost: Number,
 	tripPoerterNumber: Number,
@@ -80,6 +80,6 @@ let TravelerSchema = new mongoose.Schema({
 	tripHotelCost: Number,
 	tripHotelRemark: String,
 	travelerTripCost: Number,
-	tripRemark: String
+	tripRemark: String*/
 });
 mongoose.model('Travelers', TravelerSchema);

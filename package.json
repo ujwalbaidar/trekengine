@@ -28,7 +28,7 @@
     "html-to-text": "3.2.0",
     "jsonwebtoken": "7.3.0",
     "mongodb": "^2.2.22",
-    "mongoose": "^4.8.2",
+    "mongoose": "4.13.11",
     "nodemailer": "3.1.8",
     "opn": "^4.0.2",
     "paypal-rest-sdk": "1.7.1",
