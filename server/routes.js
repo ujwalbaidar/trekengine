@@ -33,10 +33,11 @@ module.exports = function(app){
 	app.use('/api/analytics', auth, require('./api/analytics'));
 	app.use('/api/checkouts', auth, require('./api/checkouts'));
 	app.get('/trekengineApp/checkouts/success/product/:productId/user/:userId/billing/:billingType', require('./api/checkouts/checkouts.controller').submitCheckoutInfos);
-
 	app.get('/trekengineApp/checkouts/cancel', (req, res)=>{
 		res.redirect('/app/package-billings');
 	});
+	
+	app.use('/api/reports', auth, require('./api/exports'));
 
 	app.route('*')
         .get((req, res) => {

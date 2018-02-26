@@ -9,3 +9,4 @@ export { RoleResolverService } from './role-resolver.service';
 export { NotificationsService } from './notifications.service';
 export { AnalyticsService } from './analytics.service';
 export { BillingCheckoutService } from './billing-checkout.service';
+export { ExportReportService } from './export-report.service';
