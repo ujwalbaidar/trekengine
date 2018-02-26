@@ -22,6 +22,14 @@ export class ExportReportService {
             .catch(this.handleError.bind(this));
 	}
 
+	exportTravelerDetails(){
+		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
+    	let options = new RequestOptions({ headers: headers });
+		return this.http.get('api/reports/exportTravelers?type=csv', options)
+            .map(this.extractData)
+            .catch(this.handleError.bind(this));
+	}
+
 	convertArrayOfObjectsToCSV(args) {  
         var result, ctr, keys, columnDelimiter, lineDelimiter, data;
 

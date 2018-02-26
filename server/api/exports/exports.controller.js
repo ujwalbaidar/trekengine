@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Bookings = mongoose.model('Bookings');
+const Travelers = mongoose.model('Travelers');
 
 const exportBookings = (req, res)=>{
 	if(req.headers && parseInt(req.headers.role) === 20){
@@ -206,6 +207,90 @@ const getBookings = (userId)=>{
 	});
 }
 
+const exportTravelers = (req, res)=>{
+	if(req.headers && parseInt(req.headers.role) === 20){
+		switch(req.query.type){
+			case 'csv':
+				getTravelerDetails(req.headers.userId)
+					.then(travelers=>{
+
+						generateTravelersCsv(travelers)
+							.then(csvArr=>{
+								res.status(200).json({data: csvArr});
+							})
+					})
+					.catch(bookingsErr=>{
+						res.status(400).json({data: bookingsErr});
+					});
+				break;
+			default:
+
+		}
+	}else{
+		res.status(401).json({success:false, data: {}, message: 'You are not authorized for this request.'});
+	}
+}
+
+const getTravelerDetails = (userId) =>{
+	return new Promise((resolve, reject)=>{
+		Travelers.find({userId: userId}, (err, travelers)=>{
+			if(err){
+				reject(err);
+			}else{
+				resolve(travelers);
+			}
+		});
+	});
+}
+
+const generateTravelersCsv = (data) => {
+	return new Promise(resolve=>{
+		let csvArr = [];
+		for(let i=0; i<data.length; i++){
+			let csvData = {
+				'BookingId': data[i]['bookingId'],
+				'First Name': data[i]['firstName'],
+				'Middle Name': data[i]['middleName'] || '',
+				'Last Name': data[i]['lastName'] || '',
+				'Gender': data[i]['gender'],
+				'Country': data[i]['nationality'],
+				'Birth Date': data[i]['dob']['formatted'],
+				'Permanent Address': data[i]['permanentAddress'] || '',
+				'Email': data[i]['email'],
+				'Telephone': data[i]['telephone'] || '',
+				'Emergency Contacts Name': data[i]['emergencyContact']['name'] || '',
+				'Emergency Contacts Phone': data[i]['emergencyContact']['number'] || '',
+				'Emergency Contacts Relation': data[i]['emergencyContact']['relation'] || '',
+				'Message': data[i]['messageBox'] || '',
+			};
+
+			if(data[i]['airportPickup']['confirmation'] == true){
+				csvData['Airport Pickup Date'] = data[i]['airportPickup']['date']['formatted'];
+				csvData['Airport Pickup Time'] = data[i]['airportPickup']['hrTime']+':'+data[i]['airportPickup']['minTime'];
+			}else{
+				csvData['Airport Pickup Date'] = '';
+				csvData['Airport Pickup Time'] = '';
+			}
+
+			if(data[i]['hotel']['confirmation'] == true){
+				csvData['Hotel Name']= data[i]['hotel']['name'] || '';
+				csvData['Hotel Address'] = data[i]['hotel']['address'] || '';
+				csvData['Hotel Telephone'] = data[i]['hotel']['telephone'] || '';
+			}else{
+				csvData['Hotel Name']= '';
+				csvData['Hotel Address'] = '';
+				csvData['Hotel Telephone'] = '';
+			}
+
+			csvArr.push(csvData);
+			if((i+1) === data.length){
+				resolve(csvArr);
+			}
+		}
+	});
+}
+
 module.exports = {
-	exportBookings
+	exportBookings,
+	exportTravelers
 }
