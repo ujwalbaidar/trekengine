@@ -13,66 +13,66 @@ export class AnalyticsService {
 		public authService:AuthService
 	) {}
 
-	getAudienceOverview(){
+	getAudienceOverview(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/audience/overview', options)
+		return this.http.post('/api/analytics/audience/overview', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
 
-	getAudienceAgeAnalytics(){
+	getAudienceAgeAnalytics(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/audience/age', options)
+		return this.http.post('/api/analytics/audience/age', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
 
-	getAudienceByAgeDetails(query:any){
-		let params: URLSearchParams = new URLSearchParams();
+	getAudienceByAgeDetails(queryOptions){
+		/*let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<query.length;i++){
 			let key = Object.keys(query[i])[0];
 			let value = query[i][key];
 			params.set(key, value);
-		}
+		}*/
 
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
-    	let options = new RequestOptions({ headers: headers, search: params });
+    	let options = new RequestOptions({ headers: headers });
 
-		return this.http.get('/api/analytics/audience/age-details', options)
+		return this.http.post('/api/analytics/audience/age-details', queryOptions, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
 
-	getAudienceGenderAnalytics(){
+	getAudienceGenderAnalytics(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/audience/gender', options)
+		return this.http.post('/api/analytics/audience/gender', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
 
-	getAudienceCountryAnalytics(){
+	getAudienceCountryAnalytics(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/audience/country', options)
+		return this.http.post('/api/analytics/audience/country', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}	
 
-	getAudienceByCountryDetails(query:any){
-		let params: URLSearchParams = new URLSearchParams();
+	getAudienceByCountryDetails(queryOptions){
+		/*let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<query.length;i++){
 			let key = Object.keys(query[i])[0];
 			let value = query[i][key];
 			params.set(key, value);
-		}
+		}*/
 
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
-    	let options = new RequestOptions({ headers: headers, search: params });
+    	let options = new RequestOptions({ headers: headers });
 
-		return this.http.get('/api/analytics/audience/country-details', options)
+		return this.http.post('/api/analytics/audience/country-details', queryOptions, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}

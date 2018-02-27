@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		}
 		if(this.cookieIdx === 20){
 			this.getTripOverview();
-			this.getAudienceOverViewData();
+			this.getAudienceOverViewData({});
 			this.getWeeksBookings();
 			this.getMonthlyBookingsCounts();
 		}
@@ -117,8 +117,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			});
 	}
 
-	getAudienceOverViewData(){
-		this.analyticsService.getAudienceOverview()
+	getAudienceOverViewData(filterDate){
+		this.analyticsService.getAudienceOverview(filterDate)
 			.subscribe(overviewData=>{
 				this.audienceAgeGenderGroups = overviewData[0];
 				this.audienceCountryGroups = overviewData[1];
