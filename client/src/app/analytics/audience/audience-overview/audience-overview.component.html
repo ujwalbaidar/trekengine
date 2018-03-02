@@ -2,6 +2,16 @@
 	<div class="col s12 m8">
 		<h3 class="main-title">Audience Overview</h3>
 	</div>
+	<div class="datepicker-holder">
+		<div class="row">
+			<div class="col s12 m2">
+				<my-date-picker name="startDate" [options]="myDatePickerOptions" [(ngModel)]="overviewStartDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+			</div>
+			<div class="col s12 m2">
+				<my-date-picker name="endDate" [options]="myDatePickerOptions" [(ngModel)]="overViewEndDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="row">
@@ -97,6 +107,6 @@
 		</table>
 	</div>
 	<div class="row">
-		<a routerLink="/app/analytics/audience/country">View Full Report</a>
+		<a routerLink="/app/analytics/audience/country" class="view-report">View Full Report</a>
 	</div>
 </div>

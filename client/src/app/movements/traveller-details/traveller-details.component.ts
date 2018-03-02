@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
-import { MovementsService, AuthService } from '../../services/index';
+import { MovementsService, AuthService, ExportReportService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
@@ -22,7 +22,8 @@ export class TravellerDetailsComponent implements OnInit {
 	constructor(
 		private _route: Router, 
 		public dialog: MdDialog, 
-		public movementServie: MovementsService
+		public movementServie: MovementsService,
+		public exportReportService:ExportReportService
 	){
 		jQuery('.materialboxed').materialbox();
 	}
@@ -83,6 +84,31 @@ export class TravellerDetailsComponent implements OnInit {
     			}
 			});
 		
+	}
+
+	exportCsv(){
+		this.exportReportService.exportTravelerDetails()
+			.subscribe(csvDataObj=>{
+				var data, filename, link;
+		        var csv = this.exportReportService.convertArrayOfObjectsToCSV({
+		            data: csvDataObj
+		        });
+		    
+		        if (csv == null) return;
+		        filename = 'booking-report.csv';
+
+		        if (!csv.match(/^data:text\/csv/i)) {
+		            csv = 'data:text/csv;charset=utf-8,' + csv;
+		        }
+		        data = encodeURI(csv);
+
+		        link = document.createElement('a');
+		        link.setAttribute('href', data);
+		        link.setAttribute('download', filename);
+		        link.click();
+			}, error=>{
+				console.log(error)
+			});
 	}
 }
 

@@ -33,11 +33,12 @@ exports.createTravellers = function(req, res) {
 						req.body.userId = validateResponse.data;
 						req.body.attachments = {};
 						if(req.body.dob){
-							req.body.dob=req.body.birthDate;
+							req.body.dob=req.body.birthDate||req.body.dob;
 						    let ageDifMs = Date.now() - (req.body.dob.epoc*1000);
 						    let ageDate = new Date(ageDifMs);
 						    req.body.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 						}
+
 						if(req.body.airportPickup && req.body.airportPickup.confirmation && req.body.airportPickup.date){
 							req.body.airportPickup.date= req.body.airportPickupDate
 						}
@@ -66,23 +67,23 @@ exports.createTravellers = function(req, res) {
 							});
 							req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 						}
-
-						req.body.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
-								(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
-								(req.body.tripTransportationCost)+
-								(req.body.tripAccomodationCost)+
-								(req.body.tripFoodCost)+
-								(req.body.tripPickupCost)+
-								(req.body.tripPermitCost)+
-								(req.body.tripFlightCost)+
-								(req.body.tripHotelCost);
+						/*if(req.body.travelerTripCost){
+							req.body.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
+									(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
+									(req.body.tripTransportationCost)+
+									(req.body.tripAccomodationCost)+
+									(req.body.tripFoodCost)+
+									(req.body.tripPickupCost)+
+									(req.body.tripPermitCost)+
+									(req.body.tripFlightCost)+
+									(req.body.tripHotelCost);
+						}*/
 						let travelers = new Travelers(req.body);
-
 						travelers.save((err, traveler)=>{
 							if(err){
 								res.status(400).json({success:false, data:err});
 							}else{
-								res.status(200).json({success:true, data:traveler});
+								res.status(200).json({data:{success: true, data:traveler, msg: "Traveler created successfully!"}});
 							}
 						});
 					})
@@ -196,11 +197,12 @@ function saveAttachments(dataObj, requestFor) {
 
 		let insuranceAttachment = new Promise((resolve, reject)=>{
 			if(dataObj.insuranceAttachment && (dataObj.insuranceAttachment.name!==undefined)){
-				if(dataObj.imageAttachments.type == 'image/png'){
+				if(dataObj.insuranceAttachment.type == 'image/png'){
 					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/png;base64,/,"");
-				}else if(dataObj.imageAttachments.type == 'image/jpeg'){
+				}else if(dataObj.insuranceAttachment.type == 'image/jpeg'){
 					var insuranceAttachment = dataObj.insuranceAttachment.imageFile.replace(/^data:image\/jpeg;base64,/,"");
 				}
+
 				if(dataObj.imageAttachments && dataObj.imageAttachments.insurance){
 					fs.stat("attachments/"+dataObj.imageAttachments.insurance, (err, stat) => {
 						if(!err){
@@ -211,10 +213,9 @@ function saveAttachments(dataObj, requestFor) {
 							});
 						}
 					});
-					
 				}
 				let dateTime = new Date().getTime();
-				fs.writeFile("attachments/insurance_" + dateTime+"_"+dataObj.insuranceAttachment.name, insuranceAttachment, 'base64', function(err) {
+				fs.writeFile("attachments/insurance_"+ dateTime+"_"+dataObj.insuranceAttachment.name, insuranceAttachment, 'base64', function(err) {
 					if(err){
 						reject(err);
 					}else{
@@ -239,7 +240,6 @@ function saveAttachments(dataObj, requestFor) {
 				}
 			}
 		});
-
 		
 
 		Promise.all([savePassportAttachments, profileAttachment, insuranceAttachment])
@@ -567,7 +567,7 @@ function processAddTraveler(travelerData, headerData){
 				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
-				travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+				/*travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
 								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
 								(travelerData.tripTransportationCost)+
 								(travelerData.tripAccomodationCost)+
@@ -575,7 +575,7 @@ function processAddTraveler(travelerData, headerData){
 								(travelerData.tripPickupCost)+
 								(travelerData.tripPermitCost)+
 								(travelerData.tripFlightCost)+
-								(travelerData.tripHotelCost);
+								(travelerData.tripHotelCost);*/
 
 				let travelers = new Travelers(travelerData);
 
@@ -681,7 +681,7 @@ function processUpdataTraveler(travelerData, headerData){
 				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
-				updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+				/*updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
 								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
 								(travelerData.tripTransportationCost)+
 								(travelerData.tripAccomodationCost)+
@@ -689,7 +689,7 @@ function processUpdataTraveler(travelerData, headerData){
 								(travelerData.tripPickupCost)+
 								(travelerData.tripPermitCost)+
 								(travelerData.tripFlightCost)+
-								(travelerData.tripHotelCost);
+								(travelerData.tripHotelCost);*/
 				
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
 					if(err){

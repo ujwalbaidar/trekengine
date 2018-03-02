@@ -319,4 +319,239 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col s12 m12">
+			<div class="card">
+				<div class="card-content">
+					<h3 class="card-title">Trip Cost</h3>
+				</div>
+				<div class="card-action">
+					<div class="detail-subheader col s12">
+						<strong>Trip Cost</strong>
+					</div>
+
+					<div class="row trip-cost-header">
+						<div class="col s2">
+							<span>Description</span>
+						</div>
+						<div class="col s9">
+							<span>Amount</span>
+						</div>
+						<div class="col s1">
+							<span>Total</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s2">
+							<span>Guide Cost</span>
+						</div>
+						<div class="col s3">
+							<label for="tripGuideCount">No of guide</label>
+							<input id="tripGuideCount" type="number" class="validate" name="tripGuideCount" [(ngModel)]="booking.tripGuideCount" #tripGuideCount="ngModel">
+						</div>
+						<div class="col s3">
+							<label for="tripGuideDays">No of days</label>
+							<input id="tripGuideDays" type="number" class="validate" name="tripGuideDays" [(ngModel)]="booking.tripGuideDays" #tripGuideDays="ngModel">
+						</div>
+						<div class="col s3">
+							<label for="tripGuidePerDayCost">Per day cost</label>
+							<input id="tripGuidePerDayCost" type="number" class="validate" name="tripGuidePerDayCost" [(ngModel)]="booking.tripGuidePerDayCost" #tripGuidePerDayCost="ngModel">
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripGuideCount * booking.tripGuideDays * booking.tripGuidePerDayCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Porter Cost</span>
+						</div>
+						<div class="col s3">
+							<label for="tripPoerterNumber">No of porter</label>
+							<input id="tripPoerterNumber" type="number" class="validate" name="tripPoerterNumber" [(ngModel)]="booking.tripPoerterNumber" #tripPoerterNumber="ngModel">
+						</div>
+						<div class="col s3">
+							<label for="tripPoerterDays">No of day</label>
+							<input id="tripPoerterDays" type="number" class="validate" name="tripPoerterDays" [(ngModel)]="booking.tripPoerterDays" #tripPoerterDays="ngModel">
+						</div>
+						<div class="col s3">
+							<label for="tripPoerterPerDayCost">Per day cost</label>
+							<input id="tripPoerterPerDayCost" type="number" class="validate" name="tripPoerterPerDayCost" [(ngModel)]="booking.tripPoerterPerDayCost" #tripPoerterPerDayCost="ngModel">
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripPoerterNumber * booking.tripPoerterDays * booking.tripPoerterPerDayCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Transportation Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripTransportationCost">Transportation Cost</label>
+							<input id="tripTransportationCost" type="number" class="validate" name="tripTransportationCost" [(ngModel)]="booking.tripTransportationCost" #tripTransportationCost="ngModel">
+						</div>
+						<div class="col s5">
+							<label for="tripTransportationRemarks">Remarks</label>
+							<textarea id="tripTransportationRemarks" class="validate materialize-textarea" name="tripTransportationRemarks" [(ngModel)]="booking.tripTransportationRemarks" #tripTransportationRemarks="ngModel" rows="1" style="padding:0px"></textarea>
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripTransportationCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Accomodation Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripAccomodationCost">Accomodation Cost</label>
+							<input id="tripAccomodationCost" type="number" class="validate" name="tripAccomodationCost" [(ngModel)]="booking.tripAccomodationCost" #tripAccomodationCost="ngModel">
+						</div>
+						<div class="col s5">
+							
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripAccomodationCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Food Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripFoodCost">Food Cost</label>
+							<input id="tripFoodCost" class="validate" type="number" name="tripFoodCost" [(ngModel)]="booking.tripFoodCost" #tripFoodCost="ngModel">
+						</div>
+						<div class="col s5">
+							
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripFoodCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Pickup/Drop Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripPickupCost">Pickup/Drop Cost</label>
+							<input id="tripPickupCost" class="validate" type="number" name="tripPickupCost" [(ngModel)]="booking.tripPickupCost" #tripPickupCost="ngModel">
+						</div>
+						<div class="col s5">
+							
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripPickupCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Permit Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripPermitCost">Permit Cost</label>
+							<input id="tripPermitCost" class="validate" type="number" name="tripPermitCost" [(ngModel)]="booking.tripPermitCost" #tripPermitCost="ngModel">
+						</div>
+						<div class="col s5">
+							
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripPermitCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Flight Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripFlightCost">Flight Cost</label>
+							<input id="tripFlightCost" class="validate" type="number" name="tripFlightCost" [(ngModel)]="booking.tripFlightCost" #tripFlightCost="ngModel">
+						</div>
+						<div class="col s5">
+							
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripFlightCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>City Hotel Cost</span>
+						</div>
+						<div class="col s4">
+							<label for="tripHotelCost">City Hotel Cost</label>
+							<input id="tripHotelCost" class="validate" type="number" name="tripHotelCost" [(ngModel)]="booking.tripHotelCost" #tripHotelCost="ngModel">
+						</div>
+						<div class="col s5">
+							<label for="tripHotelRemark">Remarks</label>
+							<textarea id="tripHotelRemark" class="validate materialize-textarea" name="tripHotelRemark" [(ngModel)]="booking.tripHotelRemark" #tripHotelRemark="ngModel" rows="1" style="padding:0px"></textarea>
+						</div>
+						<div class="col s1">
+							<span>
+								{{booking.tripHotelCost}}
+							</span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col s2">
+							<span>Remark</span>
+						</div>
+						<div class="col s5">
+							<label for="tripRemark">Remarks</label>
+							<textarea id="tripRemark" class="validate materialize-textarea" name="tripRemark" [(ngModel)]="booking.tripRemark" #tripRemark="ngModel" rows="1" style="padding:0px"></textarea>
+						</div>
+						<div class="col s4"></div>
+						<div class="col s1"></div>
+					</div>
+
+					<div class="row">
+						<div class="col s11">
+							<span>Total Cost</span>
+						</div>
+						<div class="col s1">
+							<span>
+								{{
+									(booking.tripGuideCount * booking.tripGuideDays * booking.tripGuidePerDayCost)+
+									(booking.tripPoerterNumber * booking.tripPoerterDays * booking.tripPoerterPerDayCost)+
+									(booking.tripTransportationCost)+
+									(booking.tripAccomodationCost)+
+									(booking.tripFoodCost)+
+									(booking.tripPickupCost)+
+									(booking.tripPermitCost)+
+									(booking.tripFlightCost)+
+									(booking.tripHotelCost)
+								}}
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="card-content">
+					<a class="btn primary" (click)="updateBookingDetails()">Submit</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

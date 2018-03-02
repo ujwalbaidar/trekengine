@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../../services/index';
 import { Router } from '@angular/router';
+import {IMyOptions, IMyDateModel} from 'mydatepicker';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-audience-country',
@@ -10,15 +12,42 @@ import { Router } from '@angular/router';
 export class AudienceCountryComponent implements OnInit {
 	analyticData: any;
 	analyticErr: any;
+	myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
+    };
+    analyticsStartDate: any;
+	analyticsEndDate: any;
 
 	constructor(public analyticsService:AnalyticsService, private _route: Router) { }
 
 	ngOnInit() {
-		this.getAudienceCountryAnalytics();
+		var startDate = moment().startOf('year').toDate();
+		var endDate   = moment().endOf('year').toDate();
+		
+		this.analyticsStartDate = {
+			date: {
+				year: startDate.getFullYear(),
+				month: startDate.getMonth()+1,
+				day: startDate.getDate()
+			},
+			epoc: Math.floor(startDate.getTime()/1000)
+		};
+		this.analyticsEndDate = {
+			date: {
+				year: endDate.getFullYear(),
+				month: endDate.getMonth()+1,
+				day: endDate.getDate()
+			},
+			epoc: Math.floor(endDate.getTime()/1000)
+		};
+		this.getAudienceCountryAnalytics({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
 	}
 
-	getAudienceCountryAnalytics(){
-		this.analyticsService.getAudienceCountryAnalytics()
+	getAudienceCountryAnalytics(filterDate){
+		this.analyticsService.getAudienceCountryAnalytics(filterDate)
 			.subscribe(analyticsData=>{
 				this.analyticData = analyticsData;
 			}, analyticsError=>{
@@ -30,4 +59,8 @@ export class AudienceCountryComponent implements OnInit {
 		let navigateUrl = ['/app/analytics/audience/country-details', 'countryName', countryName];
 		this._route.navigate(navigateUrl);
 	}
+
+	onCalendarToggle(event: number): void {
+		this.getAudienceCountryAnalytics({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
+  	}
 }

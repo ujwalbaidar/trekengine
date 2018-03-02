@@ -24,7 +24,7 @@ module.exports = function(app){
 	app.post('/trekengineApp/travellers/create', require('./api/travellers/travellers.controller').createTravellers);
 	app.get('/trekengineApp/travellers/getCountryList', require('./api/travellers/travellers.controller').getCountryList);
 	app.get('/trekengineApp/travellers', (req, res) => {
-		res.render('iframes/traveler-details-form.template.ejs');
+		res.render('iframeIndex');
 	});
 	app.use('/api/notifications', auth, require('./api/notifications'));
 	app.use('/api/movements/tripinfos', auth, require('./api/trip-infos'));
@@ -33,10 +33,11 @@ module.exports = function(app){
 	app.use('/api/analytics', auth, require('./api/analytics'));
 	app.use('/api/checkouts', auth, require('./api/checkouts'));
 	app.get('/trekengineApp/checkouts/success/product/:productId/user/:userId/billing/:billingType', require('./api/checkouts/checkouts.controller').submitCheckoutInfos);
-
 	app.get('/trekengineApp/checkouts/cancel', (req, res)=>{
 		res.redirect('/app/package-billings');
 	});
+	
+	app.use('/api/reports', auth, require('./api/exports'));
 
 	app.route('*')
         .get((req, res) => {

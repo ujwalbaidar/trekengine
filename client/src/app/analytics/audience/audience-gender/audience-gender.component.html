@@ -2,6 +2,16 @@
 	<div class="col s12 m8">
 		<h3 class="main-title">Audience Gender Analytics</h3>
 	</div>
+	<div class="datepicker-holder">
+		<div class="row">
+			<div class="col s12 m2">
+				<my-date-picker name="startDate" [options]="myDatePickerOptions" [(ngModel)]="analyticsStartDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+			</div>
+			<div class="col s12 m2">
+				<my-date-picker name="endDate" [options]="myDatePickerOptions" [(ngModel)]="analyticsEndDate" (calendarToggle)="onCalendarToggle($event)" required></my-date-picker>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="row">
 	<div class="col s12 m12">
