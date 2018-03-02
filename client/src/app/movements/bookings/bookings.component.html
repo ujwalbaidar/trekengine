@@ -3,6 +3,9 @@
 		<a class="btn waves-effect waves-light" (click)="openAddBookingModal()">
 			Add New
 		</a>
+		<a class="btn waves-effect waves-light" (click)="exportCsv()">
+			Export As Csv
+		</a>
 	</div>
 	<h3 class="main-title">Booking Lists</h3>
 		<table class="booking-list-table responsive-table highlight" *ngIf="bookings && bookings.length>0; else emptyBookings">

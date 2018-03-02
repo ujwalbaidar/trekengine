@@ -63,7 +63,7 @@ export class TravelerInfoComponent implements OnInit {
 		this.hrs = timePicker.hrs;
 		this.mins = timePicker.mins;
 		this.traveler = <Traveler>{emergencyContact:{}, airportPickup:{hrTime:this.hrs[0],minTime:this.mins[0]}, hotel:{}};
-		this.traveler['tripGuideCount'] = 0;
+		/*this.traveler['tripGuideCount'] = 0;
 		this.traveler['tripGuideDays'] = 0;
 		this.traveler['tripGuidePerDayCost'] = 0;
 		this.traveler['tripPoerterNumber'] = 0;
@@ -75,7 +75,7 @@ export class TravelerInfoComponent implements OnInit {
 		this.traveler['tripPickupCost'] = 0;
 		this.traveler['tripPermitCost'] = 0;
 		this.traveler['tripFlightCost'] = 0;
-		this.traveler['tripHotelCost'] = 0;
+		this.traveler['tripHotelCost'] = 0;*/
 	}
 
 	ngOnInit() {
@@ -136,7 +136,7 @@ export class TravelerInfoComponent implements OnInit {
 					this.traveler['emergencyContact']['relation'] = '';
 				}
 				this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
-				if(travelerDetails['travelerTripCost'] === undefined){
+				/*if(travelerDetails['travelerTripCost'] === undefined){
 					this.traveler['tripGuideCount'] = 0;
 					this.traveler['tripGuideDays'] = 0;
 					this.traveler['tripGuidePerDayCost'] = 0;
@@ -150,7 +150,7 @@ export class TravelerInfoComponent implements OnInit {
 					this.traveler['tripPermitCost'] = 0;
 					this.traveler['tripFlightCost'] = 0;
 					this.traveler['tripHotelCost'] = 0;
-				}
+				}*/
 			}, error=>{
 				let snackBarRef = this.snackBar.open('Failed to get Traveler Information to edit', '', {
 					duration: 5000,
