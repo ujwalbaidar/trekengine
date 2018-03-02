@@ -23,7 +23,8 @@ import {
   RoleResolverService,
   NotificationsService,
   AnalyticsService,
-  BillingCheckoutService
+  BillingCheckoutService,
+  ExportReportService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -155,7 +156,8 @@ enableProdMode();
     RoleResolverService,
     NotificationsService,
     AnalyticsService,
-    BillingCheckoutService
+    BillingCheckoutService,
+    ExportReportService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

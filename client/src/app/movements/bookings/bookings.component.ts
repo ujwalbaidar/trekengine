@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { MovementsService, AuthService } from '../../services/index';
+import { MovementsService, AuthService, ExportReportService } from '../../services/index';
 import { Booking } from '../../models/models';
 import { FormControl } from '@angular/forms';
 import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
@@ -20,7 +20,12 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 	public currentBookingPage:number = 0;
 	public totalBookingPages: any;
 
-	constructor(public movementService:MovementsService, public dialog: MdDialog, public authService: AuthService, public _route: Router){
+	constructor(
+		public movementService:MovementsService, 
+		public exportReportService:ExportReportService, 
+		public dialog: MdDialog, 
+		public authService: AuthService, 
+		public _route: Router){
 		
 	}
 	ngOnInit(){
@@ -96,6 +101,30 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 				this._route.navigate(['/app/bookings/booking-details/'+result.bookingId]);
 			}
     	});
+	}
+
+	exportCsv(){
+		this.exportReportService.exportBookingDetails()
+			.subscribe(csvDataObj=>{
+				var data, filename, link;
+		        var csv = this.exportReportService.convertArrayOfObjectsToCSV({
+		            data: csvDataObj
+		        });
+		        if (csv == null) return;
+		        filename = 'booking-report.csv';
+
+		        if (!csv.match(/^data:text\/csv/i)) {
+		            csv = 'data:text/csv;charset=utf-8,' + csv;
+		        }
+		        data = encodeURI(csv);
+
+		        link = document.createElement('a');
+		        link.setAttribute('href', data);
+		        link.setAttribute('download', filename);
+		        link.click();
+			}, error=>{
+				console.log(error)
+			});
 	}
 }
 

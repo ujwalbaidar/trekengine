@@ -9,13 +9,28 @@ const getTrekOverview = (req, res) => {
         let userId = req.headers.userId;
         let limitValue = 10;
 
+        if(req.body.startDate && req.body.endDate){
+	        let filterDate = {
+				$gte: new Date(req.body.startDate.epoc * 1000), 
+				$lte: new Date(req.body.endDate.epoc * 1000)
+			};
+			
+        	var bookingsMatchObj = {
+        		"userId" : userId,
+                "status" : true,
+                "createdDate": filterDate
+        	}
+        }else{
+        	var bookingsMatchObj = {
+        		"userId" : userId,
+                "status" : true
+        	}
+        }
+
         let bookingTotals = new Promise((resolve, reject) => {
             Bookings.aggregate([
                 {
-                    $match:{
-                        "userId" : userId,
-                        "status" : true
-                    }
+                    $match: bookingsMatchObj
                 },{
                     $group:{
                         _id: null,
@@ -45,10 +60,7 @@ const getTrekOverview = (req, res) => {
         let overviewBooking = new Promise((resolve, reject) => {
             Bookings.aggregate([
                 {
-                    $match:{
-                        "userId" : userId,
-                        "status" : true
-                    }
+                    $match: bookingsMatchObj
                 },
                 {
                     $group : {
@@ -89,11 +101,17 @@ const getTrekOverview = (req, res) => {
 const getTrekBookingAnalytics = (req, res)=>{
 	if(req.headers && req.headers.userId){
         let userId = req.headers.userId;
+        let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
+
 		Bookings.aggregate([
 		    {
 		        $match:{
 		            "userId" : userId,
-		            "status" : true
+		            "status" : true,
+					"createdDate": filterDate
 		        }
 		    },
 		    {
@@ -180,9 +198,13 @@ const getTrekBookingAnalytics = (req, res)=>{
 const getBookingAnalysisDetails = (req, res)=>{
 	if(req.headers && req.headers.userId){
         let userId = req.headers.userId;
-		let tripInfoId = req.query.tripInfoId;
+		let tripInfoId = req.body.tripInfoId;
 		let skipValue = 0;
 		let limitValue = 10;
+		let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
 
 		TripInfos.aggregate([
 		    {
@@ -204,7 +226,8 @@ const getBookingAnalysisDetails = (req, res)=>{
 		    },
 		    {
 		        $match:{
-		            "bookings.userId": userId
+		            "bookings.userId": userId,
+		            "bookings.createdDate": filterDate
 		        }
 		    },
 		    {
@@ -236,7 +259,8 @@ const getBookingAnalysisDetails = (req, res)=>{
 		            dueAmount: 1,
 		            travellerCount: 1,
 		            insertedTraverlerCount: { $size: "$travelerInfos" },
-		            travelerInfos: 1       
+		            travelerInfos: 1,
+		            createdDate: 1    
 		        }
 		    },
 		    {
@@ -434,14 +458,28 @@ const getBookingAnalysisDetails = (req, res)=>{
 const getAudienceOverview = (req, res) =>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
+		if(req.body.startDate && req.body.endDate){
+			let filterDate = {
+				$gte: new Date(req.body.startDate.epoc * 1000), 
+				$lte: new Date(req.body.endDate.epoc * 1000)
+			};
+			var travelerMatchObj = {
+		            "userId": userId,
+		            "status": true,
+		            "createdDate": filterDate
+			    };
+		}else{
+			var travelerMatchObj = {
+		            "userId": userId,
+		            "status": true,
+			    };
+		}
+
 		let ageGenderOverview = new Promise((resolve, reject)=>{
 			Travelers.aggregate([
-			    {
-			        $match:{
-			            "userId": userId,
-			            "status": true
-			        }
-			    },
+				{
+					$match: travelerMatchObj
+				},
 			    {
 			        $project: {
 			            email: 1,
@@ -499,10 +537,7 @@ const getAudienceOverview = (req, res) =>{
 		let countryOverview = new Promise((resolve, reject) => {
 			Travelers.aggregate([
 			    {
-			        $match:{
-			            "userId": userId,
-			            "status": true
-			        }
+			        $match: travelerMatchObj
 			    },
 			    {
 			        $lookup:{
@@ -562,11 +597,17 @@ const getAudienceOverview = (req, res) =>{
 const getAudienceByAge = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
+		let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
+
 		Travelers.aggregate([
 		    {
 		        $match:{
 		            "userId": userId,
-		            "status": true
+		            "status": true,
+					"createdDate": filterDate
 		        }
 		    },
 		    {
@@ -669,11 +710,17 @@ const getAudienceByAge = (req, res)=>{
 const getAudienceByGender = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
+		let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
+
 		Travelers.aggregate([
 		    {
 		        $match: {
 		            "userId" : userId,
-		            status: true
+		            status: true,
+		            "createdDate": filterDate
 		        }
 		    },
 		    {
@@ -735,7 +782,7 @@ const getAudienceByGender = (req, res)=>{
 const getAudienceByCountry = (req, res)=>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
-		getAudienceCountryData(userId)
+		getAudienceCountryData(userId, req.body)
 			.then(countryData=>{
 				res.status(200).json({success:true, data: countryData, message: 'Audience Country data retrieved successfully!'});
 			})
@@ -747,13 +794,19 @@ const getAudienceByCountry = (req, res)=>{
     }
 }
 
-function getAudienceCountryData(userId){
+function getAudienceCountryData(userId, bodyReq){
 	return new Promise((resolve, reject)=>{
+		let filterDate = {
+			$gte: new Date(bodyReq.startDate.epoc * 1000), 
+			$lte: new Date(bodyReq.endDate.epoc * 1000)
+		};
+
 		Travelers.aggregate([
 		    {
 		        $match:{
 		            "userId": userId,
-		            "status": true
+		            "status": true,
+		            "createdDate": filterDate
 		        }
 		    },
 		    {
@@ -800,13 +853,18 @@ const getAudienceDetailsByAge = (req, res) =>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
 		let limitValue = 10;
-		let minAge = parseInt(req.query.minAge);
-		let maxAge = parseInt(req.query.maxAge);
+		let minAge = parseInt(req.body.minAge);
+		let maxAge = parseInt(req.body.maxAge);
+		let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
 		Travelers.aggregate([
 		    {
 		        $match: {
 		            "userId": userId,
-		            "status": true
+		            "status": true,
+		            "createdDate": filterDate
 		        }
 		    },
 		    {
@@ -910,14 +968,19 @@ const getAudienceDetailsByCountry = (req, res) =>{
 	if(req.headers && req.headers.userId){
 		let userId = req.headers.userId;
 		let limitValue = 10;
-		let countryName = req.query.countryName;
+		let countryName = req.body.countryName;
+		let filterDate = {
+			$gte: new Date(req.body.startDate.epoc * 1000), 
+			$lte: new Date(req.body.endDate.epoc * 1000)
+		};
 
 		Travelers.aggregate([
 		    {
 		        $match: {
 		            "userId": userId,
 		            "status": true,
-		            "nationality": countryName
+		            "nationality": countryName,
+		            "createdDate": filterDate
 		        }
 		    },
 		    {

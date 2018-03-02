@@ -47,8 +47,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			window.close();
 		}
 		if(this.cookieIdx === 20){
-			this.getTripOverview();
-			this.getAudienceOverViewData();
+			this.getTripOverview({});
+			this.getAudienceOverViewData({});
 			this.getWeeksBookings();
 			this.getMonthlyBookingsCounts();
 		}
@@ -117,8 +117,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			});
 	}
 
-	getAudienceOverViewData(){
-		this.analyticsService.getAudienceOverview()
+	getAudienceOverViewData(filterDate){
+		this.analyticsService.getAudienceOverview(filterDate)
 			.subscribe(overviewData=>{
 				this.audienceAgeGenderGroups = overviewData[0];
 				this.audienceCountryGroups = overviewData[1];
@@ -156,8 +156,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			});
 	}
 
-	getTripOverview(){
-		this.analyticsService.getTrekOverview()
+	getTripOverview(filterDate){
+		this.analyticsService.getTrekOverview(filterDate)
 			.subscribe(overviewData=>{
 				this.mostSoldInfo = overviewData[0];
 				this.mostSoldNumbers = overviewData[1];

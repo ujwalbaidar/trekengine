@@ -10,7 +10,7 @@ import { AnalyticsService } from '../../../services/index';
 })
 export class TripOverviewComponent implements OnInit {
 
-	filterOpt:string = 'fixed';
+	/*filterOpt:string = 'fixed';
 
 	analyticsStartDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
@@ -27,7 +27,15 @@ export class TripOverviewComponent implements OnInit {
     };
 
     analyticsStartDate: Object;
-	analyticsEndDate: Object;
+	analyticsEndDate: Object;*/
+	myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
+    };
+    analyticsStartDate: any;
+	analyticsEndDate: any;
 
 	overviewError:any;
 	mostSoldInfo: any;
@@ -36,17 +44,37 @@ export class TripOverviewComponent implements OnInit {
 	constructor(private analyticsService:AnalyticsService) { }
 
 	ngOnInit() {
-		this.getFilterDate();
+		var startDate = moment().startOf('year').toDate();
+		var endDate   = moment().endOf('year').toDate();
+		
+		this.analyticsStartDate = {
+			date: {
+				year: startDate.getFullYear(),
+				month: startDate.getMonth()+1,
+				day: startDate.getDate()
+			},
+			epoc: Math.floor(startDate.getTime()/1000)
+		};
+		this.analyticsEndDate = {
+			date: {
+				year: endDate.getFullYear(),
+				month: endDate.getMonth()+1,
+				day: endDate.getDate()
+			},
+			epoc: Math.floor(endDate.getTime()/1000)
+		};
+		this.getTrekOverview({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
 	}
 
 	onCalendarToggle(event: number): void {
 		if(event == 2){
-			this.filterOpt = 'custom';
-			this.getFilterDate();
+			// this.filterOpt = 'custom';
+			// this.getFilterDate();
+			this.getTrekOverview({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
 		}
 	}
 
-	getFilterDate(){
+	/*getFilterDate(){
 		switch (this.filterOpt) {
 			case 'fixed':
 				let todayDate = moment();
@@ -83,10 +111,10 @@ export class TripOverviewComponent implements OnInit {
 
 	pushInput(){
 		this.getTrekOverview();
-	}
+	}*/
 
-	getTrekOverview(){
-		this.analyticsService.getTrekOverview()
+	getTrekOverview(filterDate){
+		this.analyticsService.getTrekOverview(filterDate)
 			.subscribe(overviewData=>{
 				this.mostSoldInfo = overviewData[0];
 				this.mostSoldNumbers = overviewData[1];
