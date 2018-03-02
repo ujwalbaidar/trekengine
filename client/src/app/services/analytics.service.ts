@@ -77,34 +77,34 @@ export class AnalyticsService {
 			.catch(this.handleError);
 	}
 
-	getTrekOverview(){
+	getTrekOverview(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/trek/overview', options)
+		return this.http.post('/api/analytics/trek/overview', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
 
-	getTrekBookingAnalytics(){
+	getTrekBookingAnalytics(filterDate){
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
     	let options = new RequestOptions({ headers: headers });
-		return this.http.get('/api/analytics/trek/booikings', options)
+		return this.http.post('/api/analytics/trek/bookings', filterDate, options)
             .map(this.extractData)
             .catch(this.handleError.bind(this));
 	}
 
-	getTrekBookingAnalyticsDetails(query:any){
-		let params: URLSearchParams = new URLSearchParams();
+	getTrekBookingAnalyticsDetails(queryOptions){
+		/*let params: URLSearchParams = new URLSearchParams();
 		for(let i=0;i<query.length;i++){
 			let key = Object.keys(query[i])[0];
 			let value = query[i][key];
 			params.set(key, value);
-		}
+		}*/
 
 		let headers = new Headers({ 'Content-Type': 'application/json', 'token': this._cookieService.get('authToken') });
-    	let options = new RequestOptions({ headers: headers, search: params });
+    	let options = new RequestOptions({ headers: headers });
 
-		return this.http.get('/api/analytics/trek/bookings-details', options)
+		return this.http.post('/api/analytics/trek/bookings-details', queryOptions, options)
 			.map(this.extractData)
 			.catch(this.handleError);
 	}

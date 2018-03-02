@@ -71,6 +71,8 @@ export class AudienceAgeComponent implements OnInit {
 	}
 
 	onCalendarToggle(event: number): void {
-		this.getAudienceAgeAnalytics({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
+		if(event == 2){
+			this.getAudienceAgeAnalytics({startDate: this.analyticsStartDate, endDate: this.analyticsEndDate});
+		}
   	}
 }
