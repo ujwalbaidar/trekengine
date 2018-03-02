@@ -67,7 +67,7 @@ exports.createTravellers = function(req, res) {
 							});
 							req.body.attachments.insurance = insuranceAttachmentPath[0].insuranceAttachment;
 						}
-						if(req.body.travelerTripCost){
+						/*if(req.body.travelerTripCost){
 							req.body.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
 									(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
 									(req.body.tripTransportationCost)+
@@ -77,7 +77,7 @@ exports.createTravellers = function(req, res) {
 									(req.body.tripPermitCost)+
 									(req.body.tripFlightCost)+
 									(req.body.tripHotelCost);
-						}
+						}*/
 						let travelers = new Travelers(req.body);
 						travelers.save((err, traveler)=>{
 							if(err){
@@ -567,7 +567,7 @@ function processAddTraveler(travelerData, headerData){
 				    travelerData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
-				travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+				/*travelerData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
 								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
 								(travelerData.tripTransportationCost)+
 								(travelerData.tripAccomodationCost)+
@@ -575,7 +575,7 @@ function processAddTraveler(travelerData, headerData){
 								(travelerData.tripPickupCost)+
 								(travelerData.tripPermitCost)+
 								(travelerData.tripFlightCost)+
-								(travelerData.tripHotelCost);
+								(travelerData.tripHotelCost);*/
 
 				let travelers = new Travelers(travelerData);
 
@@ -681,7 +681,7 @@ function processUpdataTraveler(travelerData, headerData){
 				    updateData.age = Math.abs(ageDate.getUTCFullYear() - 1970);
 				}
 
-				updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
+				/*updateData.travelerTripCost = (travelerData.tripGuideCount * travelerData.tripGuideDays * travelerData.tripGuidePerDayCost)+
 								(travelerData.tripPoerterNumber * travelerData.tripPoerterDays * travelerData.tripPoerterPerDayCost)+
 								(travelerData.tripTransportationCost)+
 								(travelerData.tripAccomodationCost)+
@@ -689,7 +689,7 @@ function processUpdataTraveler(travelerData, headerData){
 								(travelerData.tripPickupCost)+
 								(travelerData.tripPermitCost)+
 								(travelerData.tripFlightCost)+
-								(travelerData.tripHotelCost);
+								(travelerData.tripHotelCost);*/
 				
 				Travelers.update({_id: travelerData._id, userId: headerData.userId}, updateData, (err, travelerUpdate)=>{
 					if(err){

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../../services/index';
+import {IMyOptions, IMyDateModel} from 'mydatepicker';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-audience-overview',
@@ -11,28 +13,61 @@ export class AudienceOverviewComponent implements OnInit {
 	public audienceCountryGroups: any;
 	public overviewErr: any;
 
-	public pieData: any = [];
-	public columnChartData: any = [];
-	public columnChartStackData: any = [];
-	
+	public pieData: any;
+	public columnChartData: any;
+	public columnChartStackData: any;
+	public overviewStartDate: any;
+	public overViewEndDate: any;
+
+	myDatePickerOptions: IMyOptions = {
+        dateFormat: 'dd-mm-yyyy',
+        firstDayOfWeek: 'su',
+        sunHighlight: false,
+        editableDateField: false
+    };
+
 	constructor(public analyticsService: AnalyticsService) { }
 
 	ngOnInit() {
-		this.getAudienceOverViewData();
+		var startDate = moment().startOf('year').toDate();
+		var endDate   = moment().endOf('year').toDate();
+		
+		this.overviewStartDate = {
+			date: {
+				year: startDate.getFullYear(),
+				month: startDate.getMonth()+1,
+				day: startDate.getDate()
+			},
+			epoc: Math.floor(startDate.getTime()/1000)
+		};
+		this.overViewEndDate = {
+			date: {
+				year: endDate.getFullYear(),
+				month: endDate.getMonth()+1,
+				day: endDate.getDate()
+			},
+			epoc: Math.floor(endDate.getTime()/1000)
+		};
+
+		this.getAudienceOverViewData({startDate: this.overviewStartDate, endDate: this.overViewEndDate});
 	}
 
-	getAudienceOverViewData(){
-		this.analyticsService.getAudienceOverview()
+	getAudienceOverViewData(filterDate){
+		this.analyticsService.getAudienceOverview(filterDate)
 			.subscribe(overviewData=>{
 					this.audienceAgeGenderGroups = overviewData[0];
 					this.audienceCountryGroups = overviewData[1];
 					if(overviewData[0]){
 						let totalTraveler = overviewData[0]['count'];
+						this.pieData = [];
 
 		   				this.pieData.push( 
 		   					{ category: 'Male', value: overviewData[0]['male'] },
 			    			{ category: 'Female', value: overviewData[0]['female'] }
 		    			);
+
+		   				this.columnChartData = [];
+		   				this.columnChartStackData = [];
 
 		    			this.columnChartData.push(
 							overviewData[0]['18-24'],
@@ -56,4 +91,8 @@ export class AudienceOverviewComponent implements OnInit {
 				this.overviewErr = overviewDataErr;
 			});
 	}
+
+	onCalendarToggle(event: number): void {
+		this.getAudienceOverViewData({startDate: this.overviewStartDate, endDate: this.overViewEndDate});
+  	}
 }

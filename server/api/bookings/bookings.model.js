@@ -25,6 +25,23 @@ let BookingSchema = new mongoose.Schema({
 	updateDate: {
 		type: Date, 
 		default: new Date()
-	}
+	},
+	tripGuideCount: Number,
+	tripGuideDays: Number,
+	tripGuidePerDayCost: Number,
+	tripPoerterNumber: Number,
+	tripPoerterDays: Number,
+	tripPoerterPerDayCost: Number,
+	tripTransportationCost: Number,
+	tripTransportationRemarks: String,
+	tripAccomodationCost: Number,
+	tripFoodCost: Number,
+	tripPickupCost: Number,
+	tripPermitCost: Number,
+	tripFlightCost: Number,
+	tripHotelCost: Number,
+	tripHotelRemark: String,
+	travelerTripCost: Number,
+	tripRemark: String
 });
 mongoose.model('Bookings', BookingSchema);

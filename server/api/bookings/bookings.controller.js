@@ -78,6 +78,22 @@ exports.createBooking = function(req,res){
 			req.body.totalCost = req.body.travellerCount*req.body.tripCost;
 			req.body.dueAmount = (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid;
 			req.body.tripName = tripName;
+			req.body.tripGuideCount = 0;
+			req.body.tripGuideDays = 0;
+			req.body.tripGuidePerDayCost = 0;
+			req.body.tripPoerterNumber = 0;
+			req.body.tripPoerterDays = 0;
+			req.body.tripPoerterPerDayCost = 0;
+			req.body.tripTransportationCost = 0;
+			req.body.tripAccomodationCost = 0;
+			req.body.tripFoodCost = 0;
+			req.body.tripPickupCost = 0;
+			req.body.tripPermitCost = 0;
+			req.body.tripFlightCost = 0;
+			req.body.tripHotelCost = 0;
+			req.body.tripTransportationRemarks = '';
+			req.body.tripHotelRemark = '';
+			req.body.tripRemark = '';
 			let bookings = new Bookings(req.body);
 			bookings.save((err, bookings)=>{
 				if(err){
@@ -110,8 +126,34 @@ exports.updateBooking = function(req,res){
 			dueAmount: (req.body.travellerCount*req.body.tripCost)-req.body.advancePaid,
 			tripName: tripName,
 			selectedGuide: req.body.selectedGuide,
-			updateDate: new Date()
+			updateDate: new Date(),
+			tripGuideCount: req.body.tripGuideCount || 0,
+			tripGuideDays: req.body.tripGuideDays || 0,
+			tripGuidePerDayCost: req.body.tripGuidePerDayCost || 0,
+			tripPoerterNumber: req.body.tripPoerterNumber || 0,
+			tripPoerterDays: req.body.tripPoerterDays || 0,
+			tripPoerterPerDayCost: req.body.tripPoerterPerDayCost || 0,
+			tripTransportationCost: req.body.tripTransportationCost || 0,
+			tripAccomodationCost: req.body.tripAccomodationCost || 0,
+			tripFoodCost: req.body.tripFoodCost || 0,
+			tripPickupCost: req.body.tripPickupCost || 0,
+			tripPermitCost: req.body.tripPermitCost || 0,
+			tripFlightCost: req.body.tripFlightCost || 0,
+			tripHotelCost: req.body.tripHotelCost || 0,
+			tripTransportationRemarks: req.body.tripTransportationRemarks || '',
+			tripHotelRemark: req.body.tripHotelRemark || '',
+			tripRemark: req.body.tripRemark || ''
 		};
+
+		updateData.travelerTripCost = (req.body.tripGuideCount * req.body.tripGuideDays * req.body.tripGuidePerDayCost)+
+								(req.body.tripPoerterNumber * req.body.tripPoerterDays * req.body.tripPoerterPerDayCost)+
+								(req.body.tripTransportationCost)+
+								(req.body.tripAccomodationCost)+
+								(req.body.tripFoodCost)+
+								(req.body.tripPickupCost)+
+								(req.body.tripPermitCost)+
+								(req.body.tripFlightCost)+
+								(req.body.tripHotelCost);
 		Bookings.update({_id: req.body._id, userId: req.headers.userId}, updateData, {upsert: true}, (err, bookingUpdate)=>{
 			if(err){
 				res.status(400).json({success:false, data:err});
