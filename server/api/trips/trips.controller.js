@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const Trips = mongoose.model('Trips');
+const Travelers = mongoose.model('Travelers');
 const Bookings = mongoose.model('Bookings');
 const User = mongoose.model('User');
+const Feedbackmessage = mongoose.model('Feedbackmessage');
+
 const AppEmail = require('../../library/appEmail/appEmail');
 let env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 let config = require('../../../server/configs/config')[env];
@@ -9,6 +12,7 @@ const fs = require('fs');
 const ejs = require('ejs');
 let AppCalendarLib = require('../users/appCalendar');
 let GoogleAuthLib = require('../../library/oAuth/googleAuth');
+const htmlToText = require('html-to-text');
 
 exports.createTrips = function(req, res) {
 	if(req.headers && req.headers.userId){
@@ -929,3 +933,93 @@ exports.guideWeeklyTripNotification = function(){
 		}
 	});
 }
+
+exports.requestTripFeedback = function(){
+	var currentFullDate = new Date();
+	currentFullDate.setDate(currentFullDate.getDate() - 5);
+	let queryYear = currentFullDate.getFullYear();
+	let queryMonth = (currentFullDate.getMonth()+1)<10?'0'+(currentFullDate.getMonth()+1):(currentFullDate.getMonth()+1);
+	let queryDate = (currentFullDate.getDate())<10?'0'+(currentFullDate.getDate()):(currentFullDate.getDate());
+	let queryFullDate = `${queryDate}-${queryMonth}-${queryYear}`;
+
+	Trips.find({"arrivalDate.formatted":queryFullDate}, (err, trips) => {
+		if(err){
+			console.log(err)
+		}else{
+			if(trips.length>0){
+				for(let i=0; i<trips.length; i++){
+					getFeedbackUserLists(trips[i].userId, trips[i].bookingId)
+						.then(feedbackArray=>{
+							let travelerListArr = feedbackArray[0].toString();
+							let feedbackRequestMsg = feedbackArray[1];
+							
+							if(travelerListArr.length>0 && feedbackRequestMsg !== null){
+								let mailOptions = {
+									from: config.appEmail.senderAddress,
+								    to: travelerListArr, 
+								    subject: 'Feedback About Trip',
+								    html: feedbackRequestMsg['message']
+								};
+								mailOptions.text = htmlToText.fromString(mailOptions.html, {
+									wordwrap: 130
+								});
+								config.appEmail.mailOptions = mailOptions;
+
+								/*let appEmail = new AppEmail(config.appEmail);
+								appEmail.sendEmail()
+									.then(mailInfo=>{
+										console.log(mailInfo)
+									})
+									.catch(err=>{
+										console.log(err)
+									});*/
+							}
+						})
+						.catch(feedbackArrayErr=>{
+							console.log("send feedback request message error:", feedbackArrayErr)
+						});
+				}
+			}
+		}
+	})
+}
+
+function getFeedbackUserLists(userId, bookingId){
+	return new Promise((resolve, reject)=>{
+		let promise1 = new Promise((resolve, reject) => {
+			let travelersEmail = [];
+			Travelers.find({userId: userId, bookingId: bookingId}, {email:1, _id:0} ,(err, travelers) =>{
+				if(err){
+					reject(err);
+				}else{
+					if(travelers.length > 0){
+						for(let i=0; i< travelers.length; i++){
+							travelersEmail.push(travelers[i].email);
+							if(i === (travelers.length-1)){
+								resolve(travelersEmail);							
+							}
+						}
+					}
+				}
+			});
+		});
+
+		let promise2 = new Promise((resolve, reject) => {
+			Feedbackmessage.findOne({userId: userId}, {_id:0, message:1}, (err, feedbackMessage) => {
+				if(err){
+					reject(err)
+				}else{
+					resolve(feedbackMessage);
+				}
+			});
+		});
+		Promise.all([promise1, promise2])
+			.then((values)=>{
+				resolve(values)
+			})
+			.catch(reason=>{
+				reject(reason);
+			});
+	});
+}
+

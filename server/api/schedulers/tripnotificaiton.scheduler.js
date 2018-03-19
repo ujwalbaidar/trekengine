@@ -45,4 +45,14 @@ module.exports = function(io) {
         timeZone: 'Asia/Kathmandu'
     });
     guideWeeklyTripNotifyJob.start();
+
+    const tripFeedbackJob = new CronJob({
+        cronTime: '*/60 * * * * *',
+        onTick: function() {
+            tripCtrl.requestTripFeedback();
+        },
+        start: false,
+        timeZone: 'Asia/Kathmandu'
+    });
+    tripFeedbackJob.start();
 }

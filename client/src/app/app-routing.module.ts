@@ -43,6 +43,7 @@ import { TripBookingDetailsComponent } from './analytics/trip-analytics/trip-boo
 
 import { AuthResolverService, RoleResolverService } from './services';
 import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
+import { FeedbackmsgComponent } from './feedbackmsg/feedbackmsg.component';
 
 const appRoutes: Routes = [
 	{ 
@@ -124,6 +125,7 @@ const appRoutes: Routes = [
 			{ path: 'analytics/trip/trip-booking/details/:tripId', component: TripBookingDetailsComponent, canActivate: [RoleResolverService] },
 			{ path: 'checkout', component: BillingCheckoutComponent, canActivate: [RoleResolverService]  },
 			{ path: 'checkout/success/:success', component: BillingCheckoutComponent, canActivate: [RoleResolverService] },
+			{ path: 'feedback', canActivate: [RoleResolverService], component: FeedbackmsgComponent }
 		]
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }

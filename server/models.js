@@ -8,3 +8,4 @@ require('./api/features/feature.model');
 require('./api/packages/packages.model');
 require('./api/notifications/notifications.model');
 require('./api/trip-infos/trip-infos.model');
+require('./api/feedback-messages/feedbackMessages.model');

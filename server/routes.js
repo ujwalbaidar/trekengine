@@ -38,7 +38,8 @@ module.exports = function(app){
 	});
 	
 	app.use('/api/reports', auth, require('./api/exports'));
-
+	app.use('/api/feedback', auth, require('./api/feedback-messages'));
+	
 	app.route('*')
         .get((req, res) => {
             res.render('index');

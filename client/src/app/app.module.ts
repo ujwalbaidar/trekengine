@@ -24,7 +24,8 @@ import {
   NotificationsService,
   AnalyticsService,
   BillingCheckoutService,
-  ExportReportService
+  ExportReportService,
+  FeedbackMsgService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -80,6 +81,7 @@ import { AudienceCountryDetailsComponent } from './analytics/audience/audience-c
 import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
 import { AppUsersDetailsComponent, AdminBillingDialogComponent } from './app-users-details/app-users-details.component';
+import { FeedbackmsgComponent } from './feedbackmsg/feedbackmsg.component';
 
 enableProdMode();
 
@@ -129,7 +131,7 @@ enableProdMode();
     AudienceCountryDetailsComponent,
     MaxAgeGroupPipe,
     BillingCheckoutComponent,
-    AppUsersDetailsComponent, AdminBillingDialogComponent
+    AppUsersDetailsComponent, AdminBillingDialogComponent, FeedbackmsgComponent
   ],
   imports: [
     BrowserModule,
@@ -157,7 +159,8 @@ enableProdMode();
     NotificationsService,
     AnalyticsService,
     BillingCheckoutService,
-    ExportReportService
+    ExportReportService,
+    FeedbackMsgService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 

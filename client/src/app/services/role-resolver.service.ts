@@ -64,7 +64,8 @@ export class RoleResolverService implements CanActivate {
 				'/app/analytics/trip/trip-booking',
 				'/app/checkout',
 				'/app/checkout/success/true',
-				'/app/checkout/success/false'
+				'/app/checkout/success/false',
+				'/app/feedback',
 			],
 			30: [ 
 				'/app', 
