@@ -1,8 +1,8 @@
 <div class="booking-list-page">
 	<h3 class="main-title">Feedback Message</h3>
-	<div *ngIf="displayBlock == false;else displayInputBlock">
+	<div  *ngIf="displayBlock == false;else displayInputBlock">
 		<div *ngIf="feedbackObj">
-			{{feedbackObj.message}}
+			<div [innerHTML]="feedbackObj.message"></div>
 		</div>
 		<div>
 			<a class="btn waves-effect waves-light" (click)="toggleDiv()">
@@ -10,29 +10,9 @@
 			</a>
 		</div>
 	</div>
+
 	<ng-template #displayInputBlock>
-		<input id="feedbackmsg" class="validate" name="feedbackmsg" [(ngModel)]="feedbackObj.message" #feedbackMsg="ngModel" required>
-<!-- <quill-editor>
-<div quill-editor-toolbar>
-<span class="ql-formats">
-<button class="ql-bold" [title]="'Bold'"></button>
-</span>
-<span class="ql-formats">
-<select class="ql-align" [title]="'Aligment'">
-<option selected></option>
-<option value="center"></option>
-<option value="right"></option>
-<option value="justify"></option>
-</select>
-<select class="ql-align" [title]="'Aligment2'">
-<option selected></option>
-<option value="center"></option>
-<option value="right"></option>
-<option value="justify"></option>
-</select>
-</span>
-</div>
-</quill-editor> -->
+		<textarea [froalaEditor] [(ngModel)]="feedbackObj.message" #feedbackMsg="ngModel" ></textarea>
 		<div>
 			<a class="btn waves-effect waves-light" (click)="submitFeedbackMsg()">
 				Save

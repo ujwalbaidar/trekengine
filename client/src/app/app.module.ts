@@ -91,6 +91,7 @@ import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
 import { AppUsersDetailsComponent, AdminBillingDialogComponent } from './app-users-details/app-users-details.component';
 import { FeedbackmsgComponent } from './feedbackmsg/feedbackmsg.component';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 enableProdMode();
 
@@ -160,7 +161,9 @@ enableProdMode();
     HttpModule,
     CookieModule.forRoot(),
     CommonModule,
-    ChartsModule
+    ChartsModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot()
   ],
   providers: [
     AuthService, 
@@ -196,7 +199,7 @@ enableProdMode();
 })
 export class AppModule { 
   constructor(overlayContainer: OverlayContainer) {
-    overlayContainer.getContainerElement().classList.add('unicorn-dark-theme');
+    overlayContainer.getContainerElement().classList.add('deeppurple-amber');
     // overlayContainer.themeClass = 'deeppurple-amber';
   }
 }

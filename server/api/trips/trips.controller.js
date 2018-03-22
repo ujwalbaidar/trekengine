@@ -965,14 +965,14 @@ exports.requestTripFeedback = function(){
 								});
 								config.appEmail.mailOptions = mailOptions;
 
-								/*let appEmail = new AppEmail(config.appEmail);
+								let appEmail = new AppEmail(config.appEmail);
 								appEmail.sendEmail()
 									.then(mailInfo=>{
 										console.log(mailInfo)
 									})
 									.catch(err=>{
 										console.log(err)
-									});*/
+									});
 							}
 						})
 						.catch(feedbackArrayErr=>{
