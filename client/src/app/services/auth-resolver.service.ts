@@ -31,10 +31,12 @@ export class AuthResolverService implements CanActivate, CanActivateChild {
 	checkLogin(url: string) {
 		let cookieObj = this._cookies.getAll();
 		if(cookieObj['authToken']){
-			return this.auth.validateAuthToken(cookieObj['authToken'])
-				.then(allowRedirect=>{
-					return allowRedirect;
-				});
+			return Observable.create((observer) => {
+				this.auth.validateAuthToken(cookieObj['authToken'])
+					.then(allowRedirect=>{
+						observer.next(allowRedirect);
+					});
+		    });
 		}else{
 			this._cookies.removeAll();
 			this.router.navigate(['/home']);

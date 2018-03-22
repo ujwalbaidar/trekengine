@@ -23,11 +23,13 @@ export class RoleResolverService implements CanActivate {
 	}
 
 	validateRole(url:string) {
-		let cookieObj = this._cookies.getAll();
-		return this.checkRole(cookieObj['authToken'], url)
-			.then(allowRedirect=>{
-				return allowRedirect;
-			});
+		return Observable.create((observer) => {
+			let cookieObj = this._cookies.getAll();
+			return this.checkRole(cookieObj['authToken'], url)
+				.then(allowRedirect=>{
+					observer.next(allowRedirect);
+				});
+		});
 	}
 
 	getUrlByRole(role:string, url: string){
@@ -64,7 +66,8 @@ export class RoleResolverService implements CanActivate {
 				'/app/analytics/trip/trip-booking',
 				'/app/checkout',
 				'/app/checkout/success/true',
-				'/app/checkout/success/false'
+				'/app/checkout/success/false',
+				'/app/feedback',
 			],
 			30: [ 
 				'/app', 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { ProfilePassword } from '../models/models';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
@@ -22,7 +22,7 @@ export class ChangePasswordComponent implements OnInit {
 		private route: ActivatedRoute,
 		private _route: Router,
 		public userService: UserService,
-		public snackBar: MdSnackBar,
+		public snackBar: MatSnackBar,
 		private location: Location
 	){ }
 

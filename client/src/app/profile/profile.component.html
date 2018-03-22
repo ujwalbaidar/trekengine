@@ -206,27 +206,27 @@
 					<div class="card-action">
 						<div class="row">
 							<section class="example-section">
-								<md-slide-toggle
+								<mat-slide-toggle
 									class="example-margin"
 									(change) = toggleDailyNotification(profile.dailyTripNotification)
 									[ngModel]="profile.dailyTripNotification"
 									[color]="blue"
 									[checked]="true">
 									Notify Next Day's Trip Notification
-								</md-slide-toggle>
+								</mat-slide-toggle>
 							</section>
 							<span>Notify Everyday about next day's trip through email</span>
 						</div>
 						<div class="row">
 							<section class="example-section">
-								<md-slide-toggle
+								<mat-slide-toggle
 									class="example-margin"
 									(change) = toggleWeeklyNotification(profile.weeklyTripNotification)
 									[ngModel]="profile.weeklyTripNotification"
 									[color]="primary"
 									[checked]="false">
 									Notify this week's Trip Notification
-								</md-slide-toggle>
+								</mat-slide-toggle>
 							</section>
 							<span>Notify Everyday Sunday about this week's trip through email</span>
 						</div>
@@ -312,11 +312,11 @@
 									<div>
 										<div class="row">
 											<div class="col s3">
-												<md-select [(ngModel)]="userInfo.domain.protocol" #selectedProtocol="ngModel" name="selectedProtocol" required placeholder="Website Domain">
-													<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+												<mat-select [(ngModel)]="userInfo.domain.protocol" #selectedProtocol="ngModel" name="selectedProtocol" required placeholder="Website Domain">
+													<mat-option *ngFor="let protocol of protocols" [value]="protocol.value">
 														{{protocol.value}}
-													</md-option>
-												</md-select>
+													</mat-option>
+												</mat-select>
 												<div *ngIf="selectedProtocol?.errors?.required && submittedForm">
 													This Field is Required!
 												</div>
@@ -403,11 +403,11 @@
 												{{'Timezone'}}
 											</strong>
 										</label>
-										<md-select id="timezone" [(ngModel)]="userInfo.timezone" name="selectedTimezone">
-											<md-option *ngFor="let timezone of timezones" [value]="timezone.zoneName">
+										<mat-select id="timezone" [(ngModel)]="userInfo.timezone" name="selectedTimezone">
+											<mat-option *ngFor="let timezone of timezones" [value]="timezone.zoneName">
 												{{timezone.gmtValue +' '+ timezone.zoneName}}
-											</md-option>
-										</md-select>
+											</mat-option>
+										</mat-select>
 									</div>	
 								</div>
 
@@ -436,11 +436,11 @@
 												{{'Gender'}}
 											</strong>
 										</label>
-										<md-select [(ngModel)]="userInfo.gender" name="gender">
-											<md-option *ngFor="let gender of genders" [value]="gender.value">
+										<mat-select [(ngModel)]="userInfo.gender" name="gender">
+											<mat-option *ngFor="let gender of genders" [value]="gender.value">
 												{{gender.viewValue}}
-											</md-option>
-										</md-select>
+											</mat-option>
+										</mat-select>
 									</div>
 
 									<div class="col s4">
@@ -451,11 +451,11 @@
 														{{'Website Domain'}}
 													</strong>
 												</label>
-												<md-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
-													<md-option *ngFor="let protocol of protocols" [value]="protocol.value">
+												<mat-select [(ngModel)]="userInfo.domain.protocol" name="selectedProtocol">
+													<mat-option *ngFor="let protocol of protocols" [value]="protocol.value">
 														{{protocol.value}}
-													</md-option>
-												</md-select>
+													</mat-option>
+												</mat-select>
 											</div>
 											<div class="col s8" [ngClass]="[(domainWebsite.errors && (domainWebsite.dirty || domainWebsite.touched))?'err-div':'']">
 												<input id="domainWebsite" type="text" class="validate" name="domainWebsite" [(ngModel)]="userInfo.domain.website" #domainWebsite="ngModel" [value] = "userInfo.domainWebsite" required>

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../models/models';
 import { UserService, AuthService, PackageBillingsService } from '../services/index';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
-import { MdDialog } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
 
 @Component({
@@ -46,8 +46,8 @@ export class RegisterComponent implements OnInit {
 		private packageBillingsService: PackageBillingsService,
 		private _route: Router, 
 		private activatedRoute: ActivatedRoute,
-		public dialog: MdDialog,
-		public snackBar: MdSnackBar
+		public dialog: MatDialog,
+		public snackBar: MatSnackBar
 	){
 
 	}
@@ -75,7 +75,6 @@ export class RegisterComponent implements OnInit {
 						if(registerUser.errorCode == 2){
 							let dialogOptions = {
 					  			width: '600px',
-					  			position: 'center',
 					  			disableClose: true
 							};
 
@@ -95,7 +94,6 @@ export class RegisterComponent implements OnInit {
 						}else if(registerUser.errorCode == 4){
 							let dialogOptions = {
 					  			width: '600px',
-					  			position: 'center',
 					  			disableClose: true
 							};
 
@@ -115,7 +113,6 @@ export class RegisterComponent implements OnInit {
 						}else{
 							let dialogOptions = {
 					  			width: '600px',
-					  			position: 'center',
 					  			disableClose: true
 							};
 

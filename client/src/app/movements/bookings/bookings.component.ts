@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { MovementsService, AuthService, ExportReportService } from '../../services/index';
 import { Booking } from '../../models/models';
 import { FormControl } from '@angular/forms';
@@ -23,7 +23,7 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 	constructor(
 		public movementService:MovementsService, 
 		public exportReportService:ExportReportService, 
-		public dialog: MdDialog, 
+		public dialog: MatDialog, 
 		public authService: AuthService, 
 		public _route: Router){
 		
@@ -62,7 +62,6 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 	deleteBooking(deleteId: string, index: number) {
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -85,9 +84,7 @@ export class BookingsComponent implements OnInit, AfterViewInit  {
 
 	openAddBookingModal(editData:Booking=<Booking>{}){
 		let dialogOptions = {
-			// height: '580px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -141,15 +138,19 @@ export class BookingsDialogComponent implements OnInit {
 	tripInfos: any;
 	emptyTripName:boolean = false;
 
-	constructor(public dialogRef: MdDialogRef<BookingsDialogComponent>, public movementServie: MovementsService){
+	constructor(
+		public dialogRef: MatDialogRef<BookingsDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
+		public movementServie: MovementsService
+	){
 		this.tripInfosCtrl = new FormControl();
 		this.filteredTripInfos = this.tripInfosCtrl.valueChanges
 	        .startWith(null)
 	        .map(name => this.filterTripInfos(name));
 
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
-				this.booking = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.bookings);
+		if(data){
+			if(data.bookings){
+				this.booking = Object.assign({}, data.bookings);
 				this.title = 'Edit Booking Details';
 			}
 		}
@@ -187,7 +188,7 @@ export class BookingsDialogComponent implements OnInit {
 		this.submittedBookingForm = true;
 		if(bookingForm.valid && !this.emptyTripName){
 			this.booking.tripName = this.tripInfosCtrl.value;
-			if(this.dialogRef._containerInstance.dialogConfig.data.bookings){
+			if(this.data.bookings){
 				this.updateBookingDetails();
 			}else{
 				this.saveBookingDetails();

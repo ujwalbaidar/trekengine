@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
 	selector: 'app-forgot-password',
@@ -14,7 +14,7 @@ export class ForgotPasswordComponent implements OnInit {
 	wrongEmail:boolean;
 	notActivated:boolean;
 	userEmail:string;
-	constructor(private route: ActivatedRoute, private _route: Router, public userService: UserService, public snackBar: MdSnackBar) { }
+	constructor(private route: ActivatedRoute, private _route: Router, public userService: UserService, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 

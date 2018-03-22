@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-confirmation-box',
@@ -9,11 +9,11 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 export class ConfirmationBoxComponent implements OnInit {
 	confirmationData: any;
 
-	constructor(public dialogRef: MdDialogRef<ConfirmationBoxComponent>) { }
+	constructor(public dialogRef: MatDialogRef<ConfirmationBoxComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
 	ngOnInit() {
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			this.confirmationData = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data));
+		if(this.data){
+			this.confirmationData = JSON.parse(JSON.stringify(this.data));
 		}
 	}
 

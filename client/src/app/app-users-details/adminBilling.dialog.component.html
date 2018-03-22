@@ -33,13 +33,13 @@
 		</div>
 		<div class="row">
 			<div class="col s12 m3">
-				<md-checkbox id="packagePayment" name="packagePayment" class="example-margin" [(ngModel)]="selectedPackage.packagePayment">Paid Bill</md-checkbox>
+				<mat-checkbox id="packagePayment" name="packagePayment" class="example-margin" [(ngModel)]="selectedPackage.packagePayment">Paid Bill</mat-checkbox>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col s12 m12">
 				<span>
-					Total Cost: {{selectedPackage.cost | currency:'USD':true}}
+					Total Cost: {{selectedPackage.cost | currency:'USD'}}
 				</span>
 			</div>
 		</div>

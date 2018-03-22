@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Trip } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { FormControl } from '@angular/forms';
@@ -21,7 +21,7 @@ export class TripDetailsComponent implements OnInit {
 
 	constructor(
 		private _route: Router, 
-		public dialog: MdDialog, 
+		public dialog: MatDialog, 
 		public movementServie: MovementsService, 
 		public location: Location,
 		public userService: UserService
@@ -44,7 +44,6 @@ export class TripDetailsComponent implements OnInit {
 		
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -66,9 +65,7 @@ export class TripDetailsComponent implements OnInit {
 
 	openAddTripModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			// height: '400px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true,
   			data:{
   				bookingId: editData['bookingId']
@@ -95,27 +92,24 @@ export class TripDetailsComponent implements OnInit {
 	selector: 'trip-details-dialog',
 	templateUrl: './trip-details-dialog.html',
 })
-export class TripDetailsDialogComponent implements OnInit {
+export class TripDetailsDialogComponent {
 	trip: Trip = <Trip>{};
 	public title: string = 'Add Trip Details';
     submittedTripForm: boolean = false;
 
-	constructor(public dialogRef: MdDialogRef<TripDetailsDialogComponent>, public movementServie: MovementsService, public userService:UserService) {
-		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+	constructor(public dialogRef: MatDialogRef<TripDetailsDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public movementServie: MovementsService, public userService:UserService) {
+		let bookingId = data.bookingId;
 		this.trip['bookingId'] = bookingId;
-		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
-			this.trip = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data["records"]);
+		if(data && data["records"]){
+			this.trip = Object.assign({}, data["records"]);
 			this.title = 'Edit Trip Details';
 		}
-	}
-	
-	ngOnInit(){
 	}
 	
 	submitTripInfoDetails(tripForm:any) {
 		this.submittedTripForm = true;
 		if(tripForm.valid){
-			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
+			if(this.data && this.data["records"]){
 				this.updateTripInfoDetails();
 			}else{
 				this.saveTripInfoDetails();
@@ -151,7 +145,7 @@ export class TripDetailsDialogComponent implements OnInit {
 	selector: 'trip-dates-dialog',
 	templateUrl: './trip-dates-dialog.html',
 })
-export class TripDatesDialogComponent implements OnInit {
+export class TripDatesDialogComponent {
 	public departure_date: Object;
 	public arrival_date: Object;
 	public title: string = 'Add Trip Departure Date and Arrival Date';
@@ -169,7 +163,8 @@ export class TripDatesDialogComponent implements OnInit {
 	trip: Trip = <Trip>{};
 
 	constructor(
-		public dialogRef: MdDialogRef<TripDetailsDialogComponent>, 
+		public dialogRef: MatDialogRef<TripDetailsDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
 		public movementServie: MovementsService, 
 		public userService:UserService, 
 		public authService: AuthService,
@@ -180,10 +175,10 @@ export class TripDatesDialogComponent implements OnInit {
 		this.mins = timePicker.mins;
 		
 		this.trip = <Trip>{departureTime:{hrTime:this.hrs[0],minTime:this.mins[0]}, arrivalTime:{hrTime:this.hrs[0],minTime:this.mins[0]}};
-		let bookingId = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+		let bookingId = data.bookingId;
 		this.trip['bookingId'] = bookingId;
-		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
-			this.trip = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data["records"]));
+		if(data && data["records"]){
+			this.trip = JSON.parse(JSON.stringify(data["records"]));
 			this.title = 'Edit Trip Departure Date and Arrival Date';
 			if(this.trip.departureTime == undefined){
 				this.trip['departureTime'] = {
@@ -211,15 +206,11 @@ export class TripDatesDialogComponent implements OnInit {
 
 	}
 	
-	ngOnInit(){
-
-	}
-	
 	submitTripDates(tripDateForm:any) {
 		this.submittedTripDateForm = true;
 		if(tripDateForm.valid){
 			this.disableSubmitButton = true;
-			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data["records"]){
+			if(this.data && this.data["records"]){
 				this.updateTripDates();
 			}else{
 				this.saveTripDates();

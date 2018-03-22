@@ -5,7 +5,16 @@ import { SumTotalPipe } from "./pipes/sumTotal.pipe";
 import { BrowserModule } from '@angular/platform-browser';
 import { CookieModule } from 'ngx-cookie';
 import 'hammerjs';
-import { MaterialModule, OverlayContainer, MdSelectModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -24,7 +33,8 @@ import {
   NotificationsService,
   AnalyticsService,
   BillingCheckoutService,
-  ExportReportService
+  ExportReportService,
+  FeedbackMsgService
 } from './services/index';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -80,6 +90,7 @@ import { AudienceCountryDetailsComponent } from './analytics/audience/audience-c
 import { MaxAgeGroupPipe } from './pipes/max-age-group.pipe';
 import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.component';
 import { AppUsersDetailsComponent, AdminBillingDialogComponent } from './app-users-details/app-users-details.component';
+import { FeedbackmsgComponent } from './feedbackmsg/feedbackmsg.component';
 
 enableProdMode();
 
@@ -129,12 +140,18 @@ enableProdMode();
     AudienceCountryDetailsComponent,
     MaxAgeGroupPipe,
     BillingCheckoutComponent,
-    AppUsersDetailsComponent, AdminBillingDialogComponent
+    AppUsersDetailsComponent, AdminBillingDialogComponent, FeedbackmsgComponent
   ],
   imports: [
     BrowserModule,
-    MaterialModule,
-    MdSelectModule,
+    MatSnackBarModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     MyDatePickerModule,
     AppRoutingModule,
@@ -157,7 +174,8 @@ enableProdMode();
     NotificationsService,
     AnalyticsService,
     BillingCheckoutService,
-    ExportReportService
+    ExportReportService,
+    FeedbackMsgService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ 
@@ -178,6 +196,7 @@ enableProdMode();
 })
 export class AppModule { 
   constructor(overlayContainer: OverlayContainer) {
-    overlayContainer.themeClass = 'deeppurple-amber';
+    overlayContainer.getContainerElement().classList.add('unicorn-dark-theme');
+    // overlayContainer.themeClass = 'deeppurple-amber';
   }
 }

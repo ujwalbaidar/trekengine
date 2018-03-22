@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { PackageBillingsService, AuthService, UserService } from '../services';
 import { FeaturePackage } from '../models/models';
 import { CookieService } from 'ngx-cookie';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { RegisterComponent, RegisterSuccessDialogComponent } from '../register/register.component';
 import { Router } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-package-billings',
@@ -22,13 +22,13 @@ export class PackageBillingsComponent implements OnInit {
 	selectedDuration: boolean = true;
 
 	constructor(
-		public dialog: MdDialog,
+		public dialog: MatDialog,
 		public _route: Router,
 		private packageBillingsService:PackageBillingsService, 
 		private auth:AuthService, 
 		private _cookieService:CookieService, 
 		private userService:UserService,
-		public snackBar: MdSnackBar
+		public snackBar: MatSnackBar
 	) { }
 
 	ngOnInit() {
@@ -136,7 +136,6 @@ export class PackageBillingsComponent implements OnInit {
   	openRegisterModal(featurePackage:FeaturePackage=<FeaturePackage>{}){
 		let dialogOptions = {
   			width: '620px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -172,7 +171,6 @@ export class PackageBillingsComponent implements OnInit {
 	
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 

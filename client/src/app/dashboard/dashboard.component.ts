@@ -1,13 +1,13 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { AnalyticsService } from '../services/index';
 import { MovementsService } from '../services/index';
 import { AuthService } from '../services/index';
 import * as moment from 'moment';
 import { BookingsDialogComponent } from '../movements/bookings/bookings.component';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'dashboard',
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	public isAvailable: boolean = false;
 	public totalTraveler: number;
 	
-	constructor(public _cookieService:CookieService, private _route:Router, private analyticsService:AnalyticsService, private authService: AuthService,  public snackBar: MdSnackBar, public movementService: MovementsService, public dialog: MdDialog) { 
+	constructor(public _cookieService:CookieService, private _route:Router, private analyticsService:AnalyticsService, private authService: AuthService,  public snackBar: MatSnackBar, public movementService: MovementsService, public dialog: MatDialog) { 
 	}
 
 	ngOnInit() {
@@ -171,7 +171,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	openAddBookingModal(){
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 

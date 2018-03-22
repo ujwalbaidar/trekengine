@@ -23,7 +23,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Sales Amount</h5>
-					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalSalesAmount'] | currency:'USD'}}</span>
 				</div>
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Advance Amount</h5>
-					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalAdvanceAmount'] | currency:'USD'}}</span>
 				</div>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 			<div class="card">
 				<div class="card-content">
 					<h5>Total Due Amount</h5>
-					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD':true}}</span>
+					<span *ngIf="mostSoldInfo && mostSoldInfo.length > 0; else emptyMostSoldInfo">{{ mostSoldInfo[0]['totalDueAmount'] | currency:'USD'}}</span>
 				</div>
 			</div>
 		</div>

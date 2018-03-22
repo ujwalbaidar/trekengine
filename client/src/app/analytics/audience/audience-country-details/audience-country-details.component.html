@@ -21,7 +21,7 @@
 		Number of Bookings : {{countryDetailData.length}}
 	</div>
 	<div *ngIf="countryDetailData && countryDetailData.length>0">
-		Total Sales: {{ countryDetailData[0]['totalSales'] | currency:'USD':true }}
+		Total Sales: {{ countryDetailData[0]['totalSales'] | currency:'USD' }}
 	</div>
 </div>
 
@@ -46,7 +46,7 @@
 					<td>{{ countryDetail.root.length }}</td>
 					<td>{{ (countryDetail.male/countryDetail.countTravelers) | percent:'1.2-2' }}</td>
 					<td>{{ (countryDetail.female/countryDetail.countTravelers) | percent:'1.2-2' }}</td>
-					<td>{{ countryDetail.sales | currency:'USD':true }}</td>
+					<td>{{ countryDetail.sales | currency:'USD' }}</td>
 					<td>{{ countryDetail.root | maxAgeGroup:'countAge' }}</td>
 				</tr>
 			</tbody>

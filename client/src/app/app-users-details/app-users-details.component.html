@@ -59,7 +59,7 @@
 			</div>
 			<div class="card-content" *ngIf="userDetails">
 				<div>
-					Total Spent by User: {{ userDetails.totalSales | currency:'USD':true }}
+					Total Spent by User: {{ userDetails.totalSales | currency:'USD' }}
 				</div>
 				<div>
 					<a class="waves-effect waves-light btn" (click)="makeUserPayment(userDetails.userId)">Make Payment</a>
@@ -86,7 +86,7 @@
 							{{billing.packageType}}
 						</td>
 						<td>
-							{{billing.packageCost | currency:'USD':true}}
+							{{billing.packageCost | currency:'USD'}}
 						</td>
 						<td>
 							{{billing.activatesOn*1000 | date}}

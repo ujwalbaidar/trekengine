@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService } from '../services/';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-notifications',
@@ -10,7 +10,7 @@ import { MdSnackBar } from '@angular/material';
 export class NotificationsComponent implements OnInit {
 	public notifications;
 	public notificationErr;
-	constructor(public notificationsService:NotificationsService, public snackBar: MdSnackBar) { }
+	constructor(public notificationsService:NotificationsService, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		this.getNotifications();

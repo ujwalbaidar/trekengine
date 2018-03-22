@@ -3,7 +3,7 @@ import { UserService } from '../services';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { ProfilePassword } from '../models/models';
 import { AuthService } from '../services';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { User } from '../models/models';
 import { environment } from '../../environments/environment';
 
@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit {
 	timezones: any;
 	userTimezone: any;
 
-	constructor(public userService: UserService, public authService: AuthService, public snackBar: MdSnackBar) {
+	constructor(public userService: UserService, public authService: AuthService, public snackBar: MatSnackBar) {
 		let timePicker = this.authService.developTimePicker();
 		timePicker.hrs.push("24");
 		this.hrs = timePicker.hrs;

@@ -35,21 +35,21 @@
 					<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
 						<div class="col s12 m6">
 							<strong class="label">Trip Cost</strong>
-							<span class="data">{{booking?.tripCost | currency:'USD':true}}</span>
+							<span class="data">{{booking?.tripCost | currency:'USD'}}</span>
 						</div>
 						<div class="col s12 m6">
 							<strong class="label">Total Cost</strong>
-							<span class="data">{{booking?.totalCost | currency:'USD':true}}</span>
+							<span class="data">{{booking?.totalCost | currency:'USD'}}</span>
 						</div>
 					</div>
 					<div class="row" *ngIf="auths.idx && auths.idx ==='20'">
 						<div class="col s12 m6">
 							<strong class="label">Advance Paid</strong>
-							<span class="data">{{booking?.advancePaid | currency:'USD':true}}</span>
+							<span class="data">{{booking?.advancePaid | currency:'USD'}}</span>
 						</div>
 						<div class="col s12 m6">
 							<strong class="label">Due Amount</strong>
-							<span class="data">{{booking?.dueAmount | currency:'USD':true}}</span>
+							<span class="data">{{booking?.dueAmount | currency:'USD'}}</span>
 						</div>
 					</div>
 				</div>
@@ -290,23 +290,23 @@
 									</div>
 									<div class="text-holder">
 										<span class="name">{{traveler.firstName+' '+traveler.lastName}}</span>
-										<button md-icon-button [mdMenuTriggerFor]="menu" *ngIf="auths.idx && auths.idx ==='20'">
-											<md-icon>more_vert</md-icon>
+										<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="auths.idx && auths.idx ==='20'">
+											<mat-icon>more_vert</mat-icon>
 										</button>
-										<md-menu #menu="mdMenu" position-x='100'>
-											<button md-menu-item (click)="openTravelerModal(traveler, 'view')">
-												<md-icon>visibility</md-icon>
+										<mat-menu #menu="matMenu" position-x='100'>
+											<button mat-menu-item (click)="openTravelerModal(traveler, 'view')">
+												<mat-icon>visibility</mat-icon>
 												<span>View</span>
 											</button>
-											<button md-menu-item routerLink="/app/movements/traveler-info/booking/{{booking.bookingId}}/traveler/{{traveler._id}}/redirect/booking-details">
-												<md-icon>create</md-icon>
+											<button mat-menu-item routerLink="/app/movements/traveler-info/booking/{{booking.bookingId}}/traveler/{{traveler._id}}/redirect/booking-details">
+												<mat-icon>create</mat-icon>
 												<span>Edit</span>
 											</button>
-											<button md-menu-item (click)="removeTraveler(traveler._id, indx)">
-												<md-icon>remove</md-icon>
+											<button mat-menu-item (click)="removeTraveler(traveler._id, indx)">
+												<mat-icon>remove</mat-icon>
 												<span>Remove</span>
 											</button>
-										</md-menu>
+										</mat-menu>
 										<p>{{traveler.nationality}} <br>
 											{{traveler.email}}
 										</p>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
 	selector: 'app-delete-confimation-dialog',
@@ -7,7 +7,7 @@ import { MdDialogRef } from '@angular/material';
 	styleUrls: ['./delete-confimation-dialog.component.css']
 })
 export class DeleteConfimationDialogComponent {
-	constructor(public dialogRef: MdDialogRef<DeleteConfimationDialogComponent>) {}
+	constructor(public dialogRef: MatDialogRef<DeleteConfimationDialogComponent>) {}
 	selectedOption(selected){
 		this.dialogRef.close(selected);
 	}

@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MovementsService, UserService } from '../../services/index';
 import { User } from '../../models/models';
 import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
@@ -15,7 +15,7 @@ export class GuideDetailsComponent implements OnInit  {
 	public guideUsers:any;
 	public approver: string;
 
-	constructor(private _route: Router, public dialog: MdDialog, public movementServie: MovementsService, public userService: UserService, public location: Location){}
+	constructor(private _route: Router, public dialog: MatDialog, public movementServie: MovementsService, public userService: UserService, public location: Location){}
 
 	ngOnInit() {
 		this.getGuideLists();
@@ -34,7 +34,6 @@ export class GuideDetailsComponent implements OnInit  {
 	removeGuide(userEmail:string, index:number) {
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -56,9 +55,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideModal(){
 		let dialogOptions = {
-			// height: '440px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -73,9 +70,7 @@ export class GuideDetailsComponent implements OnInit  {
 
 	openAddGuideSuccessModal(notificationType:string){
 		let dialogOptions = {
-			// height: '200px',
   			width: '400px',
-  			position: 'center',
   			disableClose: true
 		};
 		dialogOptions["data"] = {};
@@ -99,10 +94,15 @@ export class GuideDetailsDialogComponent {
 	isNotification: boolean = false;
 	notificationType: string;
 
-	constructor(public dialogRef: MdDialogRef<GuideDetailsDialogComponent>, public movementServie: MovementsService, public userService: UserService) {
-		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.notificationType){
-				this.isNotification = true;
-				this.notificationType = this.dialogRef._containerInstance.dialogConfig.data.notificationType;
+	constructor(
+		public dialogRef: MatDialogRef<GuideDetailsDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
+		public movementServie: MovementsService, 
+		public userService: UserService
+	) {
+		if(data && data.notificationType){
+			this.isNotification = true;
+			this.notificationType = data.notificationType;
 		}
 	}
 
