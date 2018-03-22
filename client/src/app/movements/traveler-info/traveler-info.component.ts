@@ -5,7 +5,7 @@ import { MovementsService, AuthService, UserService } from '../../services/index
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { environment } from '../../../environments/environment';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
@@ -47,7 +47,7 @@ export class TravelerInfoComponent implements OnInit {
 		public movementService: MovementsService, 
 		public auth: AuthService, 
 		public userService: UserService,
-		public snackBar: MdSnackBar,
+		public snackBar: MatSnackBar,
 		private location: Location
 	) { 
 		this.route.params.subscribe(params => {
@@ -135,7 +135,10 @@ export class TravelerInfoComponent implements OnInit {
 				if(this.traveler['emergencyContact']['relation']==undefined){
 					this.traveler['emergencyContact']['relation'] = '';
 				}
-				this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
+
+				if(this.traveler['attachments']){
+					this.traveler['imageAttachments'] = JSON.parse(JSON.stringify(this.traveler['attachments']));
+				}
 				/*if(travelerDetails['travelerTripCost'] === undefined){
 					this.traveler['tripGuideCount'] = 0;
 					this.traveler['tripGuideDays'] = 0;

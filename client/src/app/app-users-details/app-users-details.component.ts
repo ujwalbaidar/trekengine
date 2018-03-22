@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, UserService, PackagesService, PackageBillingsService } from '../services';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { MdSnackBar } from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { BillingHistory } from '../models/models';
 import { BillingDialogComponent } from '../billing-history/billing-history.component';
 
@@ -14,7 +14,7 @@ import { BillingDialogComponent } from '../billing-history/billing-history.compo
 export class AppUsersDetailsComponent implements OnInit {
 	public userDetails: any;
 	public activeUserPackage: any;
-	constructor(private auth: AuthService, private userService: UserService, private route: ActivatedRoute, public dialog: MdDialog, public snackBar: MdSnackBar) { }
+	constructor(private auth: AuthService, private userService: UserService, private route: ActivatedRoute, public dialog: MatDialog, public snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		this.auth.getCookies().then(cookieData=>{
@@ -40,7 +40,7 @@ export class AppUsersDetailsComponent implements OnInit {
 		if(userId!==undefined){
 			let dialogOptions = {
 	  			width: '600px',
-	  			position: 'center',
+	  			// position: 'center',
 	  			disableClose: true,
 	  			data: {
 	  				userId: userId,
@@ -70,7 +70,7 @@ export class AppUsersDetailsComponent implements OnInit {
 	openBillingModal(editData:BillingHistory=<BillingHistory>{}){
   		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
+  			// position: 'center',
   			disableClose: true
 		};
 
@@ -106,11 +106,16 @@ export class AdminBillingDialogComponent implements OnInit {
 	public packages: any;
 	public selectedPackage: any = {};
 
-	constructor(public dialogRef: MdDialogRef<AdminBillingDialogComponent>, private packagesService: PackagesService, public PackageBillingsService: PackageBillingsService){
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			if(this.dialogRef._containerInstance.dialogConfig.data.userId){
-				this.userId = this.dialogRef._containerInstance.dialogConfig.data.userId;
-				this.selectedBillingUserEmail = this.dialogRef._containerInstance.dialogConfig.data.selectedBillingUserEmail;
+	constructor(
+		public dialogRef: MatDialogRef<AdminBillingDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
+		private packagesService: PackagesService, 
+		public PackageBillingsService: PackageBillingsService
+	){
+		if(data){
+			if(data.userId){
+				this.userId = data.userId;
+				this.selectedBillingUserEmail = data.selectedBillingUserEmail;
 			}
 		}
 	}

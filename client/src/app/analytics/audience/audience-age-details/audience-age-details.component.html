@@ -24,7 +24,7 @@
 		Number of Bookings : {{ageDetailData.length}}
 	</div>
 	<div *ngIf="ageDetailData && ageDetailData.length>0">
-		Total Sales: {{ ageDetailData[0]['totalSales'] | currency:'USD':true }}
+		Total Sales: {{ ageDetailData[0]['totalSales'] | currency:'USD' }}
 	</div>
 </div>
 <div class="row">
@@ -47,7 +47,7 @@
 					<td>{{ ageDetail.root.length }}</td>
 					<td>{{ (ageDetail.male/ageDetail.countTravelers) | percent:'1.2-2' }}</td>
 					<td>{{ (ageDetail.female/ageDetail.countTravelers) | percent:'1.2-2' }}</td>
-					<td>{{ ageDetail.sales | currency:'USD':true }}</td>
+					<td>{{ ageDetail.sales | currency:'USD' }}</td>
 				</tr>
 			</tbody>
 			<ng-template #EmptyAnalyticsData>

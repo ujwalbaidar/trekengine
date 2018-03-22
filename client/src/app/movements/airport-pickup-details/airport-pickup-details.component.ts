@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MovementsService } from '../../services';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { TravellerDetailsDialogComponent } from '../traveller-details/traveller-details.component';
 @Component({
   selector: 'app-airport-pickup-details',
@@ -11,7 +11,7 @@ export class AirportPickupDetailsComponent implements OnInit {
 	public pickupDetails;
 	public pickupInfosErr:any;
 
-	constructor(public movementsService:MovementsService, public dialog: MdDialog,) { }
+	constructor(public movementsService:MovementsService, public dialog: MatDialog,) { }
 
 	ngOnInit() {
 		this.getPickupDetails();
@@ -30,7 +30,6 @@ export class AirportPickupDetailsComponent implements OnInit {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 		dialogOptions["data"] = {};

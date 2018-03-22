@@ -23,11 +23,13 @@ export class RoleResolverService implements CanActivate {
 	}
 
 	validateRole(url:string) {
-		let cookieObj = this._cookies.getAll();
-		return this.checkRole(cookieObj['authToken'], url)
-			.then(allowRedirect=>{
-				return allowRedirect;
-			});
+		return Observable.create((observer) => {
+			let cookieObj = this._cookies.getAll();
+			return this.checkRole(cookieObj['authToken'], url)
+				.then(allowRedirect=>{
+					observer.next(allowRedirect);
+				});
+		});
 	}
 
 	getUrlByRole(role:string, url: string){

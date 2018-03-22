@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PackageBillingsService, AuthService, PackagesService } from '../services';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { BillingHistory } from '../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-billing-history',
@@ -16,7 +16,7 @@ export class BillingHistoryComponent implements OnInit {
 	billings: any;
 	billingError: any;
 	private cookieIndex: number;
-	constructor(private billingService: PackageBillingsService, private auth: AuthService, private route: ActivatedRoute, public dialog: MdDialog, public snackBar: MdSnackBar) {
+	constructor(private billingService: PackageBillingsService, private auth: AuthService, private route: ActivatedRoute, public dialog: MatDialog, public snackBar: MatSnackBar) {
 
 	}
 	
@@ -55,7 +55,6 @@ export class BillingHistoryComponent implements OnInit {
   	openBillingModal(editData:BillingHistory=<BillingHistory>{}){
   		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -140,10 +139,15 @@ export class BillingDialogComponent implements OnInit {
         editableDateField: false
     };
 
-	constructor(private packagesService: PackagesService, public dialogRef: MdDialogRef<BillingHistoryComponent>, private billingService: PackageBillingsService){
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			if(this.dialogRef._containerInstance.dialogConfig.data.billingHistory){
-				this.billingHistory = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.billingHistory);
+	constructor(
+		private packagesService: PackagesService, 
+		@Inject(MAT_DIALOG_DATA) public data: any, 
+		public dialogRef: MatDialogRef<BillingHistoryComponent>, 
+		private billingService: PackageBillingsService
+	){
+		if(data){
+			if(data.billingHistory){
+				this.billingHistory = Object.assign({}, data.billingHistory);
 				let activatesOn = new Date(this.billingHistory['activatesOn']*1000);
 				this.billingHistory['activatesOn'] = {
 					date: {
@@ -175,7 +179,7 @@ export class BillingDialogComponent implements OnInit {
 	submitBillingDetails(bookingForm:any) {
 		this.submittedBillingForm = true;
 		if(bookingForm.valid){
-			if(this.dialogRef._containerInstance.dialogConfig.data.billingHistory){
+			if(this.data.billingHistory){
 				this.updateBookingDetails();
 			}
 		}

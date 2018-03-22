@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AuthService, MovementsService, UserService } from '../../../services/index';
 import { Booking, Trip, Flight, Traveler } from '../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { BookingsDialogComponent } from '../bookings.component';
 import { TripDetailsDialogComponent, TripDatesDialogComponent } from '../../trip-details/trip-details.component';
@@ -11,7 +11,7 @@ import { TravellerDetailsDialogComponent } from '../../traveller-details/travell
 
 declare var jQuery:any;
 import { CookieService } from 'ngx-cookie';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'booking-details',
@@ -39,9 +39,9 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 		public movementService:MovementsService, 
 		public userService: UserService, 
 		private route: ActivatedRoute, 
-		public dialog: MdDialog, private _route:Router,
+		public dialog: MatDialog, private _route:Router,
 		public _cookieService: CookieService,
-		public snackBar: MdSnackBar
+		public snackBar: MatSnackBar
 	){
 		this.route.params.subscribe(params => {
 			this.bookingId = params['bookingId'];
@@ -153,7 +153,6 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 		let dialogOptions = {
 			// height: '580px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -200,9 +199,7 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 
 	openTripDatesModal(editData:Trip=<Trip>{}) {
 		let dialogOptions = {
-			// height: '350px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true,
   			data: {
   				bookingId: this.bookingId
@@ -240,7 +237,6 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 		let dialogOptions = {
 			// height: '675px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true,
   			data: {
   				bookingId: this.bookingId
@@ -262,7 +258,6 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 		let dialogOptions = {
 			height: '600px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true,
   			data: {
   				bookingId: this.bookingId,
@@ -291,13 +286,10 @@ export class BookingDetailsComponent implements OnInit, AfterViewInit  {
 				let snackBarRef = this.snackBar.open('Trip Cost Updated Succefully!', '', {
 					duration: 5000,
 				});
-				// this.submittedBookingForm = false;
-				// this.dialogRef.close(booking);
 			}, error=>{
 				let snackBarRef = this.snackBar.open('Failed to update trip costs!', '', {
 					duration: 5000,
 				});
-				// this.dialogRef.close(error);
 			});
 	}
 }

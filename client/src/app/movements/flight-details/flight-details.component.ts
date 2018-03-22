@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Flight } from '../../models/models';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { MovementsService } from '../../services/index';
@@ -17,7 +17,7 @@ export class FlightDetailsComponent implements OnInit  {
 	public flights: any;
 	constructor(
 		private _route: Router, 
-		public dialog: MdDialog, 
+		public dialog: MatDialog, 
 		public movementServie: MovementsService
 	){}
 
@@ -37,7 +37,6 @@ export class FlightDetailsComponent implements OnInit  {
 	deleteFlight(flightId:string, index:number) {
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -60,9 +59,7 @@ export class FlightDetailsComponent implements OnInit  {
 
 	openFlightModal(editData:Flight=<Flight>{}) {
 		let dialogOptions = {
-			// height: '675px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true,
   			data:{
   				bookingId:editData['bookingId']
@@ -100,17 +97,18 @@ export class FlightDetailsDialogComponent implements OnInit {
         editableDateField: false
     };
 	constructor(
-		public dialogRef: MdDialogRef<FlightDetailsDialogComponent>, 
+		public dialogRef: MatDialogRef<FlightDetailsDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
 		public movementServie: MovementsService
 	) {
 		this.developTimePicker();
-		if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.records){
-			this.flight = JSON.parse(JSON.stringify(this.dialogRef._containerInstance.dialogConfig.data.records));
-			this.flight.booking = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+		if(data && data.records){
+			this.flight = JSON.parse(JSON.stringify(data.records));
+			this.flight.booking = data.bookingId;
 			this.title = 'Edit Flight Details';
 		}else{
 			this.flight = <Flight>{departure:{hrTime:this.hrs[0], minTime:this.mins[0]}, arrival:{hrTime:this.hrs[0], minTime:this.mins[0]}};
-			this.flight["bookingId"] = this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+			this.flight["bookingId"] = data.bookingId;
 		}
 	}
 
@@ -144,7 +142,7 @@ export class FlightDetailsDialogComponent implements OnInit {
 		this.submittedFlightForm = true;
 		if(flightForm.valid){
 			this.disableSubmitButton = true;
-			if(this.dialogRef._containerInstance.dialogConfig.data && this.dialogRef._containerInstance.dialogConfig.data.records){
+			if(this.data && this.data.records){
 				this.updateFlightDetails();
 			}else{
 				this.saveFlightDetails();

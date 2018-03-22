@@ -24,10 +24,10 @@
 		Number of travellers: {{resultData.totalinsertedTraverler}}
 	</div>
 	<div>
-		Average Price: {{resultData.avgPrice | currency:'USD':true }}
+		Average Price: {{resultData.avgPrice | currency:'USD' }}
 	</div>
 	<div>
-		Total Sales Amount: {{resultData.totalSales | currency:'USD':true }}
+		Total Sales Amount: {{resultData.totalSales | currency:'USD' }}
 	</div>
 	<div>
 		Average Age Group: {{resultData.avgAge | number }}
@@ -86,7 +86,7 @@
 							<td>{{ idx+1 }}</td>
 							<td>{{ tableInfo.country }}</td>
 							<td>{{ tableInfo.totalTraveler }}</td>
-							<td>{{ tableInfo.totalCost | currency:'USD':true }}</td>
+							<td>{{ tableInfo.totalCost | currency:'USD' }}</td>
 						</tr>
 					</tbody>
 					<ng-template #EmptyAnalyticsData>

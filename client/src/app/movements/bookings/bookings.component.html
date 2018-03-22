@@ -27,10 +27,10 @@
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.groupName }}</td>
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.travellerCount }}</td>
 					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripName }}</td>
-					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost | currency:'USD':true }}</td>
-					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD':true }}</td>
-					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD':true }}</td>
-					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD':true }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.tripCost | currency:'USD' }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.totalCost | currency:'USD' }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.advancePaid | currency:'USD' }}</td>
+					<td [routerLink]="['booking-details', booking.bookingId]">{{ booking.dueAmount | currency:'USD' }}</td>
 					<!-- <td>
 						<span [ngClass]="(booking.status==true)?'active':'inactive'">
 							<i [ngClass]="(booking.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>

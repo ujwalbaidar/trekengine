@@ -46,7 +46,7 @@
 				<td (click)="openTravellerModal(travalerInfo, 'view')">
 					{{ travalerInfo.telephone }}
 				</td>
-				<td (click)="openTravellerModal(travalerInfo, 'view')">
+				<td>
 					<span [ngClass]="(travalerInfo.airportPickup.confirmation==true)?'active':'inactive'">
 						<i [ngClass]="(travalerInfo.airportPickup.confirmation==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
 					</span>

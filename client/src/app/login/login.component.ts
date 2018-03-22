@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../models/models';
 import { AuthService, UserService } from '../services/index';
 import { Router } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { ConfirmationBoxComponent } from '../confirmation-box/confirmation-box.component';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'login',
@@ -25,7 +25,7 @@ export class LoginComponent{
 	];
 	timezones: any;
 	userTimezone: any;
-	constructor(private userService: UserService, private authService: AuthService, private _route: Router, public snackBar: MdSnackBar, public dialog: MdDialog){}
+	constructor(private userService: UserService, private authService: AuthService, private _route: Router, public snackBar: MatSnackBar, public dialog: MatDialog){}
 	
 	ngOnInit(){
 		this.getOauthUrl();
@@ -80,7 +80,6 @@ export class LoginComponent{
 						}else if(loginUser.errorCode === 4){
 							let dialogOptions = {
 					  			width: '600px',
-					  			position: 'center',
 					  			disableClose: true
 							};
 
@@ -101,7 +100,6 @@ export class LoginComponent{
 						}else if(loginUser.errorCode === 6){
 							let dialogOptions = {
 					  			width: '600px',
-					  			position: 'center',
 					  			disableClose: true
 							};
 

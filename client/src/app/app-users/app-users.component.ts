@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services';
-import { MdSnackBar } from '@angular/material';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DeleteConfimationDialogComponent } from '../delete-confimation-dialog/delete-confimation-dialog.component';
 
 @Component({
@@ -13,7 +13,7 @@ export class AppUsersComponent implements OnInit {
     adminUsers:any;
 	userErr:any;
 
-	constructor(private userService:UserService, public snackBar: MdSnackBar, public dialog: MdDialog) { }
+	constructor(private userService:UserService, public snackBar: MatSnackBar, public dialog: MatDialog) { }
 
   	ngOnInit() {
 	    this.queryUser();
@@ -51,7 +51,6 @@ export class AppUsersComponent implements OnInit {
     deleteUserInfo(userId){
         let dialogOptions = {
             width: '600px',
-            position: 'center',
             disableClose: true
         };
 

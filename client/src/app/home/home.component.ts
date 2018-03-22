@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie';
 declare var jQuery:any;
 import { environment } from '../../environments/environment';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { BookingsDialogComponent } from '../movements/bookings/bookings.component';
 
 @Component({
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		private _route: Router, 
 		public notificationsService: NotificationsService, 
 		private location: Location, 
-		public dialog: MdDialog
+		public dialog: MatDialog
 	){
 		this.getUnreadNotifications();
 		this.authService.getCookies()
@@ -248,7 +248,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	openAddBookingModal(){
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 

@@ -3,7 +3,7 @@ import { Checkout } from '../models/models';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { PackagesService } from '../services/packages.service';
 import { BillingCheckoutService } from '../services/billing-checkout.service';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
 	selector: 'app-billing-checkout',
@@ -23,7 +23,7 @@ export class BillingCheckoutComponent implements OnInit {
 		// {name: 'eSewa', value: 'eSewa', status: false}
 	];
 
-	constructor(private route: ActivatedRoute, private _route:Router, public packagesService: PackagesService, public snackBar: MdSnackBar, public billingCheckoutService: BillingCheckoutService) { }
+	constructor(private route: ActivatedRoute, private _route:Router, public packagesService: PackagesService, public snackBar: MatSnackBar, public billingCheckoutService: BillingCheckoutService) { }
 
 	ngOnInit() {
 		this.checkout['paymentMethod'] = 'Paypal';

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AppFeatures } from '../models/models';
 import { FeaturesService } from '../services';
 import { DeleteConfimationDialogComponent } from '../delete-confimation-dialog/delete-confimation-dialog.component';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-features',
@@ -13,7 +13,7 @@ import { MdSnackBar } from '@angular/material';
 export class FeaturesComponent implements OnInit {
 	features:any;
 	featureErr:any;
-	constructor(public dialog: MdDialog, public featuresService:FeaturesService, public snackBar: MdSnackBar) { 
+	constructor(public dialog: MatDialog, public featuresService:FeaturesService, public snackBar: MatSnackBar) { 
 		
 	}
 
@@ -33,7 +33,6 @@ export class FeaturesComponent implements OnInit {
 	deleteFeatures(featureId, index){
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -61,7 +60,6 @@ export class FeaturesComponent implements OnInit {
 	openFeatureModal(editData:AppFeatures=<AppFeatures>{}){
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -113,30 +111,30 @@ export class FeaturesComponent implements OnInit {
 	selector: 'app-features-dialog',
 	templateUrl: './features-dialog.html',
 })
-export class AppFeaturesDialogComponent implements OnInit {
+export class AppFeaturesDialogComponent {
 	appFeatures: AppFeatures = <AppFeatures>{};
 	title: string = 'Add Feature Details';
 	submittedFeatureForm: boolean = false;
 	featureFormOnProcess: boolean = false;
 
-	constructor(public dialogRef: MdDialogRef<AppFeaturesDialogComponent>, public featuresService: FeaturesService){
-		if(this.dialogRef._containerInstance.dialogConfig.data){
-			if(this.dialogRef._containerInstance.dialogConfig.data.features){
-				this.appFeatures = Object.assign({}, this.dialogRef._containerInstance.dialogConfig.data.features);
+	constructor(
+		public dialogRef: MatDialogRef<AppFeaturesDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
+		public featuresService: FeaturesService
+	){
+		if(data){
+			if(data.features){
+				this.appFeatures = Object.assign({}, data.features);
 				this.title = 'Edit Feature Details';
 			}
 		}
-	}
-
-	ngOnInit(){
-
 	}
 
 	submitAppFeatures(featureForm:any){
 		this.submittedFeatureForm = true;
 		if(featureForm.valid){
 			this.featureFormOnProcess = true;
-			if(this.dialogRef._containerInstance.dialogConfig.data.features){
+			if(this.data.features){
 				this.updateFeatureDetails();
 			}else{
 				this.saveFeatureDetails();

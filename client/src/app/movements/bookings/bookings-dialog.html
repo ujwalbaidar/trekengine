@@ -48,13 +48,13 @@
 					<span class="required-label-mark">{{' *'}}</span>
 				</label>
 
-				<input mdInput name="tripName" [ngModel]="booking.tripName" [mdAutocomplete]="auto" [formControl]="tripInfosCtrl" required>
+				<input mdInput name="tripName" [ngModel]="booking.tripName" [matAutocomplete]="auto" [formControl]="tripInfosCtrl" required>
 
-				<md-autocomplete #auto="mdAutocomplete">
-					<md-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name" (onSelectionChange)="selectedTrip(tripInfo)">
+				<mat-autocomplete #auto="matAutocomplete">
+					<mat-option *ngFor="let tripInfo of filteredTripInfos | async" [value]="tripInfo.name" (onSelectionChange)="selectedTrip(tripInfo)">
 						{{ tripInfo.name }}
-					</md-option>
-				</md-autocomplete>
+					</mat-option>
+				</mat-autocomplete>
 				<div class="error-msg" *ngIf="emptyTripName === true && submittedBookingForm">
 					This Field is Required!
 				</div>

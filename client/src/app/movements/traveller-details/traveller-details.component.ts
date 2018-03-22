@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { MovementsService, AuthService, ExportReportService } from '../../services/index';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { Traveler } from '../../models/models';
 declare var jQuery:any;
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { environment } from '../../../environments/environment';
 import { DeleteConfimationDialogComponent } from '../../delete-confimation-dialog/delete-confimation-dialog.component';
 
@@ -21,7 +21,7 @@ export class TravellerDetailsComponent implements OnInit {
 
 	constructor(
 		private _route: Router, 
-		public dialog: MdDialog, 
+		public dialog: MatDialog, 
 		public movementServie: MovementsService,
 		public exportReportService:ExportReportService
 	){
@@ -43,9 +43,8 @@ export class TravellerDetailsComponent implements OnInit {
 	
 	openTravellerModal(data:any, actionMode:string) {
 		let dialogOptions = {
-			// height: '600px',
+			height: '600px',
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 		dialogOptions["data"] = {};
@@ -65,7 +64,6 @@ export class TravellerDetailsComponent implements OnInit {
 	deleteTravelerDetails(travelerId:string, index:number) {
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
@@ -139,13 +137,14 @@ export class TravellerDetailsDialogComponent implements OnInit {
 	];
 
 	constructor(
-		public dialogRef: MdDialogRef<TravellerDetailsDialogComponent>, 
+		public dialogRef: MatDialogRef<TravellerDetailsDialogComponent>, 
+		@Inject(MAT_DIALOG_DATA) public data: any,
 		private sanitizer: DomSanitizer, 
 		public movementService: MovementsService, 
 		public auth: AuthService, 
-		public snackBar: MdSnackBar
+		public snackBar: MatSnackBar
 	){
-		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
+		let dialogConfigData = data;
 		this.actionMode = dialogConfigData.mode;
 		let timePicker = this.auth.developTimePicker();
 		this.hrs = timePicker.hrs;
@@ -183,7 +182,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 			}
 		}else{
 			this.title = 'Add Traveler Details';
-			this.traveler['bookingId'] =  this.dialogRef._containerInstance.dialogConfig.data.bookingId;
+			this.traveler['bookingId'] =  data.bookingId;
 			this.traveler['gender'] = 'male';
 			if(this.traveler['airportPickup'] == undefined){
 				this.traveler['airportPickup'] = {
@@ -206,7 +205,7 @@ export class TravellerDetailsDialogComponent implements OnInit {
 
 	submitTravelerDetails(travelerDetail:any){
 		this.submittedTravelerForm = true;
-		let dialogConfigData = this.dialogRef._containerInstance.dialogConfig.data;
+		let dialogConfigData = this.data;
 		if(travelerDetail.valid){
 			this.submitProgress = true;
 			if(dialogConfigData.records){

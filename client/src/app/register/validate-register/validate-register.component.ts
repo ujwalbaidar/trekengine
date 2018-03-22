@@ -4,8 +4,8 @@ import { User } from '../../models/models';
 import { UserService, AuthService, PackageBillingsService } from '../../services/index';
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { MdSnackBar } from '@angular/material';
-import { MdDialog } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ConfirmationBoxComponent } from '../../confirmation-box/confirmation-box.component';
 
 @Component({
@@ -34,8 +34,8 @@ export class ValidateRegisterComponent implements OnInit {
 		private activatedRoute: ActivatedRoute, 
 		public userService: UserService, 
 		public authService: AuthService,
-		public snackBar: MdSnackBar,
-		public dialog: MdDialog
+		public snackBar: MatSnackBar,
+		public dialog: MatDialog
 	) { 
 		this.user['domain']['protocol'] = 'http://';
 	}
@@ -68,7 +68,6 @@ export class ValidateRegisterComponent implements OnInit {
 				.subscribe(registerResponse=>{
 					let dialogOptions = {
 			  			width: '600px',
-			  			position: 'center',
 			  			disableClose: true
 					};
 

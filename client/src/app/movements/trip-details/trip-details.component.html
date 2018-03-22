@@ -21,7 +21,7 @@
 		<tbody>
 			<tr *ngFor="let trip of trips; let i = index;">
 				<td>{{ trip.name }}</td>
-				<td>{{ trip.cost | currency:'USD':true }}</td>
+				<td>{{ trip.cost | currency:'USD' }}</td>
 				<td>
 					<span [ngClass]="(trip.status==true)?'active':'inactive'">
 						<i [ngClass]="(trip.status==true)?'fa fa-check':'fa fa-times'" class="fa fa-check"></i>
@@ -41,10 +41,4 @@
 	<ng-template #emptyTrips>
 		<h5 class="center-align">Trip Record is empty! Please add trip to bookings.</h5>
 	</ng-template>
-
-	<!-- <div class="add-round-button-icon">
-		<a class="btn-floating btn-large waves-effect waves-light red" (click)="openAddTripModal()">
-			<i class="material-icons">add</i>
-		</a>
-	</div> -->
 </div>

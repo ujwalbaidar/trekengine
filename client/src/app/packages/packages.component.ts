@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppPackage } from '../models/models';
 import { PackagesService } from '../services';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { DeleteConfimationDialogComponent } from '../delete-confimation-dialog/delete-confimation-dialog.component';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-packages',
@@ -13,7 +13,7 @@ import { MdSnackBar } from '@angular/material';
 export class PackagesComponent implements OnInit {
 	packages:any;
 	packageErr:any;
-	constructor(public packagesService:PackagesService, public dialog: MdDialog, public snackBar: MdSnackBar) { 
+	constructor(public packagesService:PackagesService, public dialog: MatDialog, public snackBar: MatSnackBar) { 
 		
 	}
 
@@ -33,7 +33,6 @@ export class PackagesComponent implements OnInit {
 	deletePackages(packageId, index){
 		let dialogOptions = {
   			width: '600px',
-  			position: 'center',
   			disableClose: true
 		};
 
