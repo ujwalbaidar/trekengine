@@ -46,8 +46,12 @@ module.exports = function(io) {
     });
     guideWeeklyTripNotifyJob.start();
 
+    /**
+    * Runs every day at 00:00:30
+    **/
+
     const tripFeedbackJob = new CronJob({
-        cronTime: '*/60 * * * * *',
+        cronTime: '30 00 00 * * *',
         onTick: function() {
             tripCtrl.requestTripFeedback();
         },
