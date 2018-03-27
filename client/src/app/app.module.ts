@@ -92,6 +92,7 @@ import { BillingCheckoutComponent } from './billing-checkout/billing-checkout.co
 import { AppUsersDetailsComponent, AdminBillingDialogComponent } from './app-users-details/app-users-details.component';
 import { FeedbackmsgComponent } from './feedbackmsg/feedbackmsg.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { QuillModule } from 'ngx-quill';
 
 enableProdMode();
 
@@ -163,7 +164,8 @@ enableProdMode();
     CommonModule,
     ChartsModule,
     FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot()
+    FroalaViewModule.forRoot(),
+    QuillModule
   ],
   providers: [
     AuthService, 

@@ -1,5 +1,5 @@
 export const environment = {
 	production: true,
-	webUrl: 'https://app.trekengine.com',
+	webUrl: 'https://test.trekengine.com',
 	frameSource: 'dev-app'
 };

@@ -10,9 +10,9 @@
 			</a>
 		</div>
 	</div>
-
 	<ng-template #displayInputBlock>
-		<textarea [froalaEditor] [(ngModel)]="feedbackObj.message" #feedbackMsg="ngModel" ></textarea>
+		<quill-editor [(ngModel)]="feedbackObj.message" #feedbackMsg="ngModel"></quill-editor>
+		<!-- <textarea [froalaEditor] [(ngModel)]="feedbackObj.message" #feedbackMsg="ngModel" ></textarea> -->
 		<div>
 			<a class="btn waves-effect waves-light" (click)="submitFeedbackMsg()">
 				Save
